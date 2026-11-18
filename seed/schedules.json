@@ -1,0 +1,1064 @@
+[
+  {
+    "id": "s-mob",
+    "eventTypeId": "mobilization",
+    "firstDate": "2026-10-26",
+    "repeatEveryDays": "28",
+    "lengthDays": "6"
+  },
+  {
+    "id": "s-svsmm",
+    "eventTypeId": "svs-matchmaking",
+    "firstDate": "2026-10-31",
+    "repeatEveryDays": "28",
+    "lengthDays": "2"
+  },
+  {
+    "id": "s-svsprep",
+    "eventTypeId": "svs-prep",
+    "firstDate": "2026-11-02",
+    "repeatEveryDays": "28",
+    "lengthDays": "6",
+    "endTimeUtc": "10:00"
+  },
+  {
+    "id": "s-svsbattle",
+    "eventTypeId": "svs-battle",
+    "firstDate": "2026-11-07",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "10:00",
+    "endTimeUtc": "22:00"
+  },
+  {
+    "id": "s-castle",
+    "eventTypeId": "castle-battle",
+    "firstDate": "2026-11-07",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "12:00",
+    "endTimeUtc": "17:00"
+  },
+  {
+    "id": "s-svstriage",
+    "eventTypeId": "svs-triage",
+    "firstDate": "2026-11-07",
+    "repeatEveryDays": "28",
+    "lengthDays": "3",
+    "startTimeUtc": "22:00"
+  },
+  {
+    "id": "s-showdown",
+    "eventTypeId": "showdown",
+    "firstDate": "2026-11-09",
+    "repeatEveryDays": "28",
+    "lengthDays": "7",
+    "endTimeUtc": "12:00"
+  },
+  {
+    "id": "s-wintersiege",
+    "eventTypeId": "winter-siege",
+    "firstDate": "2026-11-09",
+    "repeatEveryDays": "28",
+    "lengthDays": "7"
+  },
+  {
+    "id": "s-koi",
+    "eventTypeId": "koi",
+    "firstDate": "2026-11-16",
+    "repeatEveryDays": "28",
+    "lengthDays": "7"
+  },
+  {
+    "id": "s-sunfire",
+    "eventTypeId": "sunfire",
+    "firstDate": "2026-11-21",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "12:00",
+    "endTimeUtc": "17:00"
+  },
+  {
+    "id": "s-foundry",
+    "eventTypeId": "foundry",
+    "firstDate": "2026-10-26",
+    "repeatEveryDays": "14",
+    "lengthDays": "7"
+  },
+  {
+    "id": "s-canyon",
+    "eventTypeId": "canyon",
+    "firstDate": "2026-10-26",
+    "repeatEveryDays": "28",
+    "lengthDays": "6"
+  },
+  {
+    "id": "s-ac",
+    "eventTypeId": "alliance-championship",
+    "firstDate": "2026-11-02",
+    "repeatEveryDays": "7",
+    "lengthDays": "5",
+    "endTimeUtc": "12:00"
+  },
+  {
+    "id": "s-fortress",
+    "eventTypeId": "fortress-battles",
+    "firstDate": "2026-11-03",
+    "repeatEveryDays": "7",
+    "lengthDays": "4"
+  },
+  {
+    "id": "s-hoh",
+    "eventTypeId": "hall-of-heroes",
+    "firstDate": "2026-11-08",
+    "repeatEveryDays": "7",
+    "lengthDays": "3"
+  },
+  {
+    "id": "s-wheel",
+    "eventTypeId": "lucky-wheel",
+    "firstDate": "2026-11-03",
+    "repeatEveryDays": "14",
+    "lengthDays": "3"
+  },
+  {
+    "id": "s-beasts",
+    "eventTypeId": "defeat-beasts",
+    "firstDate": "2026-11-03",
+    "repeatEveryDays": "14",
+    "lengthDays": "2"
+  },
+  {
+    "id": "s-frosty",
+    "eventTypeId": "frosty-fortune",
+    "firstDate": "2026-10-30",
+    "repeatEveryDays": "28",
+    "lengthDays": "8"
+  },
+  {
+    "id": "s-treasure-drill",
+    "eventTypeId": "treasure-hunt-drill",
+    "firstDate": "2026-10-30",
+    "repeatEveryDays": "28",
+    "lengthDays": "7"
+  },
+  {
+    "id": "s-emporium-shop",
+    "eventTypeId": "emporium-of-enigma",
+    "firstDate": "2026-10-30",
+    "repeatEveryDays": "28",
+    "lengthDays": "8"
+  },
+  {
+    "id": "s-vault",
+    "eventTypeId": "vault-of-enigma",
+    "firstDate": "2026-11-02",
+    "repeatEveryDays": "28",
+    "lengthDays": "7",
+    "note": "SvS prep week. Every 4 weeks is not confirmed yet"
+  },
+  {
+    "id": "s-icefire",
+    "eventTypeId": "icefire-league",
+    "firstDate": "2026-11-02",
+    "repeatEveryDays": "0",
+    "lengthDays": "6"
+  },
+  {
+    "id": "s-tal-match-prediction",
+    "eventTypeId": "tal-match-prediction",
+    "firstDate": "2026-11-08",
+    "repeatEveryDays": "112",
+    "lengthDays": "14"
+  },
+  {
+    "id": "s-tal-champion-prediction",
+    "eventTypeId": "tal-champion-prediction",
+    "firstDate": "2026-11-12",
+    "repeatEveryDays": "112",
+    "lengthDays": "9"
+  },
+  {
+    "id": "s-hellfire",
+    "eventTypeId": "hellfire",
+    "firstDate": "2026-10-31",
+    "repeatEveryDays": "112",
+    "lengthDays": "23",
+    "note": "Every 4 months",
+    "sinceDate": "2025-08-18",
+    "shiftWithMoves": "yes"
+  },
+  {
+    "id": "s-merge",
+    "eventTypeId": "mergeventure",
+    "firstDate": "2026-11-06",
+    "repeatEveryDays": "28",
+    "lengthDays": "3"
+  },
+  {
+    "id": "s-snowbusters",
+    "eventTypeId": "snowbusters",
+    "firstDate": "2026-11-10",
+    "repeatEveryDays": "28",
+    "lengthDays": "3",
+    "note": "Transfer week. Seen in game 10–12 Nov 2026; every 4 weeks is from guides"
+  },
+  {
+    "id": "s-brawl",
+    "eventTypeId": "wild-brawl",
+    "firstDate": "2026-10-24",
+    "repeatEveryDays": "28",
+    "lengthDays": "2",
+    "note": "Repeat not confirmed yet"
+  },
+  {
+    "id": "s-tyrant",
+    "eventTypeId": "tyrant",
+    "firstDate": "2026-10-19",
+    "repeatEveryDays": "56",
+    "lengthDays": "9",
+    "note": "Every 2 months (8 weeks)",
+    "sinceDate": "2024-09-05",
+    "shiftWithMoves": "yes"
+  },
+  {
+    "id": "s-frostfire",
+    "eventTypeId": "frostfire",
+    "firstDate": "2026-11-03",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "note": "Tuesday of the Crazy Joe week"
+  },
+  {
+    "id": "s-flame",
+    "eventTypeId": "flame-and-fang",
+    "firstDate": "2026-11-02",
+    "repeatEveryDays": "14",
+    "lengthDays": "2",
+    "note": "Monday, every 2 weeks"
+  },
+  {
+    "id": "s-dreamscape",
+    "eventTypeId": "dreamscape",
+    "firstDate": "2026-11-18",
+    "repeatEveryDays": "28",
+    "lengthDays": "3",
+    "note": "Monthly mini-game"
+  },
+  {
+    "id": "s-bia",
+    "eventTypeId": "bia",
+    "firstDate": "2026-11-20",
+    "repeatEveryDays": "28",
+    "lengthDays": "2",
+    "note": "Sunfire week"
+  },
+  {
+    "id": "s-traderoute",
+    "eventTypeId": "trade-route",
+    "firstDate": "2026-11-09",
+    "repeatEveryDays": "28",
+    "lengthDays": "7",
+    "endTimeUtc": "04:00",
+    "note": "With Alliance Showdown"
+  },
+  {
+    "id": "s-crystal",
+    "eventTypeId": "crystal-reactivation",
+    "firstDate": "2026-11-20",
+    "repeatEveryDays": "28",
+    "lengthDays": "2",
+    "note": "Sunfire week. Some guides say every 2 weeks"
+  },
+  {
+    "id": "s-armament-plan",
+    "eventTypeId": "armament",
+    "firstDate": "2026-11-09",
+    "repeatEveryDays": "0",
+    "lengthDays": "2"
+  },
+  {
+    "id": "s-armament-2",
+    "eventTypeId": "armament",
+    "firstDate": "2026-11-13",
+    "repeatEveryDays": "0",
+    "lengthDays": "2"
+  },
+  {
+    "id": "s-officer-stone",
+    "eventTypeId": "officer-project",
+    "firstDate": "2026-11-11",
+    "repeatEveryDays": "0",
+    "lengthDays": "2"
+  },
+  {
+    "id": "s-officer-2",
+    "eventTypeId": "officer-project",
+    "firstDate": "2026-11-15",
+    "repeatEveryDays": "0",
+    "lengthDays": "2",
+    "note": "Different rewards from 11–12 Nov"
+  },
+  {
+    "id": "s-mercs",
+    "eventTypeId": "mercenaries",
+    "firstDate": "2026-11-14",
+    "repeatEveryDays": "28",
+    "lengthDays": "3",
+    "note": "Seen in game 14–16 Nov 2026; every 4 weeks is from guides"
+  },
+  {
+    "id": "s-heros-mission",
+    "eventTypeId": "heros-mission",
+    "firstDate": "2026-11-11",
+    "repeatEveryDays": "0",
+    "lengthDays": "3"
+  },
+  {
+    "id": "s-vision",
+    "eventTypeId": "vision-of-dawn",
+    "firstDate": "2026-11-10",
+    "repeatEveryDays": "0",
+    "lengthDays": "3"
+  },
+  {
+    "id": "s-mia",
+    "eventTypeId": "mia-fortune",
+    "firstDate": "2026-11-13",
+    "repeatEveryDays": "0",
+    "lengthDays": "2"
+  },
+  {
+    "id": "s-wander",
+    "eventTypeId": "wander-theater",
+    "firstDate": "2026-11-10",
+    "repeatEveryDays": "0",
+    "lengthDays": "7"
+  },
+  {
+    "id": "s-slush",
+    "eventTypeId": "slush-station",
+    "firstDate": "2026-11-18",
+    "repeatEveryDays": "0",
+    "lengthDays": "3"
+  },
+  {
+    "id": "s-shaved-ice",
+    "eventTypeId": "shaved-ice-stall",
+    "firstDate": "2026-11-18",
+    "repeatEveryDays": "0",
+    "lengthDays": "4"
+  },
+  {
+    "id": "d-dvl-bear-1",
+    "eventTypeId": "bear",
+    "allianceIds": "dvl",
+    "firstDate": "2026-11-02",
+    "repeatEveryDays": "2",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-dvl-bear-2",
+    "eventTypeId": "bear",
+    "allianceIds": "dvl",
+    "firstDate": "2026-11-02",
+    "repeatEveryDays": "2",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-dvl-joe-1",
+    "eventTypeId": "crazy-joe",
+    "allianceIds": "dvl",
+    "firstDate": "2026-11-03",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-dvl-joe-2",
+    "eventTypeId": "crazy-joe",
+    "allianceIds": "dvl",
+    "firstDate": "2026-11-05",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-dvl-foundry-1",
+    "eventTypeId": "foundry",
+    "allianceIds": "dvl",
+    "firstDate": "2026-11-01",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-dvl-foundry-2",
+    "eventTypeId": "foundry",
+    "allianceIds": "dvl",
+    "firstDate": "2026-11-01",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-dvl-canyon-1",
+    "eventTypeId": "canyon",
+    "allianceIds": "dvl",
+    "firstDate": "2026-10-31",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-dvl-canyon-2",
+    "eventTypeId": "canyon",
+    "allianceIds": "dvl",
+    "firstDate": "2026-10-31",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-dvl-mercs",
+    "eventTypeId": "mercenaries",
+    "allianceIds": "dvl",
+    "firstDate": "2026-11-16",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00"
+  },
+  {
+    "id": "d-top-bear-1",
+    "eventTypeId": "bear",
+    "allianceIds": "top",
+    "firstDate": "2026-11-02",
+    "repeatEveryDays": "2",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-top-bear-2",
+    "eventTypeId": "bear",
+    "allianceIds": "top",
+    "firstDate": "2026-11-02",
+    "repeatEveryDays": "2",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-top-joe-1",
+    "eventTypeId": "crazy-joe",
+    "allianceIds": "top",
+    "firstDate": "2026-11-03",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-top-joe-2",
+    "eventTypeId": "crazy-joe",
+    "allianceIds": "top",
+    "firstDate": "2026-11-05",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-top-foundry-1",
+    "eventTypeId": "foundry",
+    "allianceIds": "top",
+    "firstDate": "2026-11-01",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-top-foundry-2",
+    "eventTypeId": "foundry",
+    "allianceIds": "top",
+    "firstDate": "2026-11-01",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-top-canyon-1",
+    "eventTypeId": "canyon",
+    "allianceIds": "top",
+    "firstDate": "2026-10-31",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-top-canyon-2",
+    "eventTypeId": "canyon",
+    "allianceIds": "top",
+    "firstDate": "2026-10-31",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-top-mercs",
+    "eventTypeId": "mercenaries",
+    "allianceIds": "top",
+    "firstDate": "2026-11-16",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00"
+  },
+  {
+    "id": "d-sky-bear-1",
+    "eventTypeId": "bear",
+    "allianceIds": "sky",
+    "firstDate": "2026-11-02",
+    "repeatEveryDays": "2",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-sky-bear-2",
+    "eventTypeId": "bear",
+    "allianceIds": "sky",
+    "firstDate": "2026-11-02",
+    "repeatEveryDays": "2",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-sky-joe-1",
+    "eventTypeId": "crazy-joe",
+    "allianceIds": "sky",
+    "firstDate": "2026-11-03",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-sky-joe-2",
+    "eventTypeId": "crazy-joe",
+    "allianceIds": "sky",
+    "firstDate": "2026-11-05",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-sky-foundry-1",
+    "eventTypeId": "foundry",
+    "allianceIds": "sky",
+    "firstDate": "2026-11-01",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-sky-foundry-2",
+    "eventTypeId": "foundry",
+    "allianceIds": "sky",
+    "firstDate": "2026-11-01",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-sky-canyon-1",
+    "eventTypeId": "canyon",
+    "allianceIds": "sky",
+    "firstDate": "2026-10-31",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-sky-canyon-2",
+    "eventTypeId": "canyon",
+    "allianceIds": "sky",
+    "firstDate": "2026-10-31",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-sky-mercs",
+    "eventTypeId": "mercenaries",
+    "allianceIds": "sky",
+    "firstDate": "2026-11-16",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00"
+  },
+  {
+    "id": "d-fun-bear-1",
+    "eventTypeId": "bear",
+    "allianceIds": "fun",
+    "firstDate": "2026-11-02",
+    "repeatEveryDays": "2",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-fun-bear-2",
+    "eventTypeId": "bear",
+    "allianceIds": "fun",
+    "firstDate": "2026-11-02",
+    "repeatEveryDays": "2",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-fun-joe-1",
+    "eventTypeId": "crazy-joe",
+    "allianceIds": "fun",
+    "firstDate": "2026-11-03",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-fun-joe-2",
+    "eventTypeId": "crazy-joe",
+    "allianceIds": "fun",
+    "firstDate": "2026-11-05",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-fun-foundry-1",
+    "eventTypeId": "foundry",
+    "allianceIds": "fun",
+    "firstDate": "2026-11-01",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-fun-foundry-2",
+    "eventTypeId": "foundry",
+    "allianceIds": "fun",
+    "firstDate": "2026-11-01",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-fun-canyon-1",
+    "eventTypeId": "canyon",
+    "allianceIds": "fun",
+    "firstDate": "2026-10-31",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-fun-canyon-2",
+    "eventTypeId": "canyon",
+    "allianceIds": "fun",
+    "firstDate": "2026-10-31",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-fun-mercs",
+    "eventTypeId": "mercenaries",
+    "allianceIds": "fun",
+    "firstDate": "2026-11-16",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00"
+  },
+  {
+    "id": "d-ruu-bear-1",
+    "eventTypeId": "bear",
+    "allianceIds": "ruu",
+    "firstDate": "2026-11-02",
+    "repeatEveryDays": "2",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-ruu-bear-2",
+    "eventTypeId": "bear",
+    "allianceIds": "ruu",
+    "firstDate": "2026-11-02",
+    "repeatEveryDays": "2",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-ruu-joe-1",
+    "eventTypeId": "crazy-joe",
+    "allianceIds": "ruu",
+    "firstDate": "2026-11-03",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-ruu-joe-2",
+    "eventTypeId": "crazy-joe",
+    "allianceIds": "ruu",
+    "firstDate": "2026-11-05",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-ruu-foundry-1",
+    "eventTypeId": "foundry",
+    "allianceIds": "ruu",
+    "firstDate": "2026-11-01",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-ruu-foundry-2",
+    "eventTypeId": "foundry",
+    "allianceIds": "ruu",
+    "firstDate": "2026-11-01",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-ruu-canyon-1",
+    "eventTypeId": "canyon",
+    "allianceIds": "ruu",
+    "firstDate": "2026-10-31",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-ruu-canyon-2",
+    "eventTypeId": "canyon",
+    "allianceIds": "ruu",
+    "firstDate": "2026-10-31",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-ruu-mercs",
+    "eventTypeId": "mercenaries",
+    "allianceIds": "ruu",
+    "firstDate": "2026-11-16",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00"
+  },
+  {
+    "id": "d-dvl-academy-bear-1",
+    "eventTypeId": "bear",
+    "allianceIds": "dvl-academy",
+    "firstDate": "2026-11-02",
+    "repeatEveryDays": "2",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-dvl-academy-bear-2",
+    "eventTypeId": "bear",
+    "allianceIds": "dvl-academy",
+    "firstDate": "2026-11-02",
+    "repeatEveryDays": "2",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-dvl-academy-joe-1",
+    "eventTypeId": "crazy-joe",
+    "allianceIds": "dvl-academy",
+    "firstDate": "2026-11-03",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-dvl-academy-joe-2",
+    "eventTypeId": "crazy-joe",
+    "allianceIds": "dvl-academy",
+    "firstDate": "2026-11-05",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-dvl-academy-foundry-1",
+    "eventTypeId": "foundry",
+    "allianceIds": "dvl-academy",
+    "firstDate": "2026-11-01",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-dvl-academy-foundry-2",
+    "eventTypeId": "foundry",
+    "allianceIds": "dvl-academy",
+    "firstDate": "2026-11-01",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-dvl-academy-canyon-1",
+    "eventTypeId": "canyon",
+    "allianceIds": "dvl-academy",
+    "firstDate": "2026-10-31",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-dvl-academy-canyon-2",
+    "eventTypeId": "canyon",
+    "allianceIds": "dvl-academy",
+    "firstDate": "2026-10-31",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-dvl-academy-mercs",
+    "eventTypeId": "mercenaries",
+    "allianceIds": "dvl-academy",
+    "firstDate": "2026-11-16",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00"
+  },
+  {
+    "id": "d-top-academy-bear-1",
+    "eventTypeId": "bear",
+    "allianceIds": "top-academy",
+    "firstDate": "2026-11-02",
+    "repeatEveryDays": "2",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-top-academy-bear-2",
+    "eventTypeId": "bear",
+    "allianceIds": "top-academy",
+    "firstDate": "2026-11-02",
+    "repeatEveryDays": "2",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-top-academy-joe-1",
+    "eventTypeId": "crazy-joe",
+    "allianceIds": "top-academy",
+    "firstDate": "2026-11-03",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-top-academy-joe-2",
+    "eventTypeId": "crazy-joe",
+    "allianceIds": "top-academy",
+    "firstDate": "2026-11-05",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-top-academy-foundry-1",
+    "eventTypeId": "foundry",
+    "allianceIds": "top-academy",
+    "firstDate": "2026-11-01",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-top-academy-foundry-2",
+    "eventTypeId": "foundry",
+    "allianceIds": "top-academy",
+    "firstDate": "2026-11-01",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-top-academy-canyon-1",
+    "eventTypeId": "canyon",
+    "allianceIds": "top-academy",
+    "firstDate": "2026-10-31",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-top-academy-canyon-2",
+    "eventTypeId": "canyon",
+    "allianceIds": "top-academy",
+    "firstDate": "2026-10-31",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-top-academy-mercs",
+    "eventTypeId": "mercenaries",
+    "allianceIds": "top-academy",
+    "firstDate": "2026-11-16",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00"
+  },
+  {
+    "id": "d-sky-academy-bear-1",
+    "eventTypeId": "bear",
+    "allianceIds": "sky-academy",
+    "firstDate": "2026-11-02",
+    "repeatEveryDays": "2",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-sky-academy-bear-2",
+    "eventTypeId": "bear",
+    "allianceIds": "sky-academy",
+    "firstDate": "2026-11-02",
+    "repeatEveryDays": "2",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-sky-academy-joe-1",
+    "eventTypeId": "crazy-joe",
+    "allianceIds": "sky-academy",
+    "firstDate": "2026-11-03",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-sky-academy-joe-2",
+    "eventTypeId": "crazy-joe",
+    "allianceIds": "sky-academy",
+    "firstDate": "2026-11-05",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-sky-academy-foundry-1",
+    "eventTypeId": "foundry",
+    "allianceIds": "sky-academy",
+    "firstDate": "2026-11-01",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-sky-academy-foundry-2",
+    "eventTypeId": "foundry",
+    "allianceIds": "sky-academy",
+    "firstDate": "2026-11-01",
+    "repeatEveryDays": "14",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-sky-academy-canyon-1",
+    "eventTypeId": "canyon",
+    "allianceIds": "sky-academy",
+    "firstDate": "2026-10-31",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "1"
+  },
+  {
+    "id": "d-sky-academy-canyon-2",
+    "eventTypeId": "canyon",
+    "allianceIds": "sky-academy",
+    "firstDate": "2026-10-31",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00",
+    "groupNumber": "2"
+  },
+  {
+    "id": "d-sky-academy-mercs",
+    "eventTypeId": "mercenaries",
+    "allianceIds": "sky-academy",
+    "firstDate": "2026-11-16",
+    "repeatEveryDays": "28",
+    "lengthDays": "1",
+    "startTimeUtc": "00:00"
+  }
+]

@@ -1,0 +1,2857 @@
+[
+  {
+    "id": "p1",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 1,
+    "points": 71.4,
+    "sortOrder": 1
+  },
+  {
+    "id": "p2",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 1,
+    "points": 30600,
+    "sortOrder": 2
+  },
+  {
+    "id": "p3",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 1,
+    "points": 30600,
+    "sortOrder": 3
+  },
+  {
+    "id": "p4",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 1,
+    "points": 2040,
+    "sortOrder": 4
+  },
+  {
+    "id": "p5",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 1,
+    "points": 1020,
+    "sortOrder": 5
+  },
+  {
+    "id": "p6",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 1,
+    "points": 30.6,
+    "sortOrder": 6
+  },
+  {
+    "id": "p7",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 1,
+    "points": 30.6,
+    "sortOrder": 7
+  },
+  {
+    "id": "p8",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 1,
+    "points": 30.6,
+    "sortOrder": 8
+  },
+  {
+    "id": "p9",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 1,
+    "points": 30.6,
+    "sortOrder": 9
+  },
+  {
+    "id": "p10",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 2,
+    "points": 30600,
+    "sortOrder": 10
+  },
+  {
+    "id": "p11",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 2,
+    "points": 30600,
+    "sortOrder": 11
+  },
+  {
+    "id": "p12",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 2,
+    "points": 2040,
+    "sortOrder": 12
+  },
+  {
+    "id": "p13",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 2,
+    "points": 1020,
+    "sortOrder": 13
+  },
+  {
+    "id": "p14",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 2,
+    "points": 30.6,
+    "sortOrder": 14
+  },
+  {
+    "id": "p15",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 2,
+    "points": 30.6,
+    "sortOrder": 15
+  },
+  {
+    "id": "p16",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 2,
+    "points": 30.6,
+    "sortOrder": 16
+  },
+  {
+    "id": "p17",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 2,
+    "points": 30.6,
+    "sortOrder": 17
+  },
+  {
+    "id": "p18",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 2,
+    "points": 8160,
+    "sortOrder": 18
+  },
+  {
+    "id": "p19",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 2,
+    "points": 357,
+    "sortOrder": 19
+  },
+  {
+    "id": "p20",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 2,
+    "points": 1244.4,
+    "sortOrder": 20
+  },
+  {
+    "id": "p21",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 2,
+    "points": 3100.8,
+    "sortOrder": 21
+  },
+  {
+    "id": "p22",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 2,
+    "points": 2,
+    "sortOrder": 22
+  },
+  {
+    "id": "p23",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 2,
+    "points": 2,
+    "sortOrder": 23
+  },
+  {
+    "id": "p24",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 2,
+    "points": 2,
+    "sortOrder": 24
+  },
+  {
+    "id": "p25",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 2,
+    "points": 2,
+    "sortOrder": 25
+  },
+  {
+    "id": "p26",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 2,
+    "points": 6120,
+    "sortOrder": 26
+  },
+  {
+    "id": "p27",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 2,
+    "points": 61.2,
+    "sortOrder": 27
+  },
+  {
+    "id": "p28",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 3,
+    "points": 51,
+    "sortOrder": 28
+  },
+  {
+    "id": "p29",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 3,
+    "points": 15300,
+    "sortOrder": 29
+  },
+  {
+    "id": "p30",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 3,
+    "points": 1173,
+    "sortOrder": 30
+  },
+  {
+    "id": "p31",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 3,
+    "points": 71.4,
+    "sortOrder": 31
+  },
+  {
+    "id": "p32",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 3,
+    "points": 8160,
+    "sortOrder": 32
+  },
+  {
+    "id": "p33",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 3,
+    "points": 357,
+    "sortOrder": 33
+  },
+  {
+    "id": "p34",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 3,
+    "points": 1244.4,
+    "sortOrder": 34
+  },
+  {
+    "id": "p35",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 3,
+    "points": 3100.8,
+    "sortOrder": 35
+  },
+  {
+    "id": "p36",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 3,
+    "points": 30600,
+    "sortOrder": 36
+  },
+  {
+    "id": "p37",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 3,
+    "points": 9180,
+    "sortOrder": 37
+  },
+  {
+    "id": "p38",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 3,
+    "points": 9945,
+    "sortOrder": 38
+  },
+  {
+    "id": "p39",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 3,
+    "points": 10710,
+    "sortOrder": 39
+  },
+  {
+    "id": "p40",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 3,
+    "points": 11475,
+    "sortOrder": 40
+  },
+  {
+    "id": "p41",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 3,
+    "points": 12240,
+    "sortOrder": 41
+  },
+  {
+    "id": "p42",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 3,
+    "points": 6120,
+    "sortOrder": 42
+  },
+  {
+    "id": "p43",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 3,
+    "points": 61.2,
+    "sortOrder": 43
+  },
+  {
+    "id": "p44",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 3,
+    "points": 30.6,
+    "sortOrder": 44
+  },
+  {
+    "id": "p45",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 4,
+    "points": 71.4,
+    "sortOrder": 45
+  },
+  {
+    "id": "p46",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 4,
+    "points": 4080,
+    "sortOrder": 46
+  },
+  {
+    "id": "p47",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 4,
+    "points": 8160,
+    "sortOrder": 47
+  },
+  {
+    "id": "p48",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 4,
+    "points": 146880,
+    "sortOrder": 48
+  },
+  {
+    "id": "p49",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 4,
+    "points": 3.1,
+    "sortOrder": 49
+  },
+  {
+    "id": "p50",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 4,
+    "points": 4.1,
+    "sortOrder": 50
+  },
+  {
+    "id": "p51",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 4,
+    "points": 5.1,
+    "sortOrder": 51
+  },
+  {
+    "id": "p52",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 4,
+    "points": 8.2,
+    "sortOrder": 52
+  },
+  {
+    "id": "p53",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 4,
+    "points": 12.2,
+    "sortOrder": 53
+  },
+  {
+    "id": "p54",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 4,
+    "points": 18.4,
+    "sortOrder": 54
+  },
+  {
+    "id": "p55",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 4,
+    "points": 25.5,
+    "sortOrder": 55
+  },
+  {
+    "id": "p56",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 4,
+    "points": 35.7,
+    "sortOrder": 56
+  },
+  {
+    "id": "p57",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 4,
+    "points": 45.9,
+    "sortOrder": 57
+  },
+  {
+    "id": "p58",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 4,
+    "points": 61.2,
+    "sortOrder": 58
+  },
+  {
+    "id": "p59",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 4,
+    "points": 76.5,
+    "sortOrder": 59
+  },
+  {
+    "id": "p60",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 4,
+    "points": 95.9,
+    "sortOrder": 60
+  },
+  {
+    "id": "p61",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 4,
+    "sortOrder": 61
+  },
+  {
+    "id": "p62",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 5,
+    "points": 51,
+    "sortOrder": 62
+  },
+  {
+    "id": "p63",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 5,
+    "points": 15300,
+    "sortOrder": 63
+  },
+  {
+    "id": "p64",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 5,
+    "points": 1173,
+    "sortOrder": 64
+  },
+  {
+    "id": "p65",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 5,
+    "points": 146880,
+    "sortOrder": 65
+  },
+  {
+    "id": "p66",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 5,
+    "points": 36.7,
+    "sortOrder": 66
+  },
+  {
+    "id": "p67",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 5,
+    "points": 4080,
+    "sortOrder": 67
+  },
+  {
+    "id": "p68",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 5,
+    "points": 8160,
+    "sortOrder": 68
+  },
+  {
+    "id": "p69",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 5,
+    "points": 30600,
+    "sortOrder": 69
+  },
+  {
+    "id": "p70",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 5,
+    "points": 30600,
+    "sortOrder": 70
+  },
+  {
+    "id": "p71",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 5,
+    "points": 2040,
+    "sortOrder": 71
+  },
+  {
+    "id": "p72",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 5,
+    "points": 1020,
+    "sortOrder": 72
+  },
+  {
+    "id": "p73",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 5,
+    "points": 30.6,
+    "sortOrder": 73
+  },
+  {
+    "id": "p74",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 5,
+    "points": 30.6,
+    "sortOrder": 74
+  },
+  {
+    "id": "p75",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 5,
+    "points": 30.6,
+    "sortOrder": 75
+  },
+  {
+    "id": "p76",
+    "eventTypeId": "svs-prep",
+    "dayNumber": 5,
+    "points": 30.6,
+    "sortOrder": 76
+  },
+  {
+    "id": "p77",
+    "eventTypeId": "svs-battle",
+    "points": 1,
+    "sortOrder": 77
+  },
+  {
+    "id": "p78",
+    "eventTypeId": "svs-battle",
+    "points": 2,
+    "sortOrder": 78
+  },
+  {
+    "id": "p79",
+    "eventTypeId": "svs-battle",
+    "points": 3,
+    "sortOrder": 79
+  },
+  {
+    "id": "p80",
+    "eventTypeId": "svs-battle",
+    "points": 4,
+    "sortOrder": 80
+  },
+  {
+    "id": "p81",
+    "eventTypeId": "svs-battle",
+    "points": 5,
+    "sortOrder": 81
+  },
+  {
+    "id": "p82",
+    "eventTypeId": "svs-battle",
+    "points": 7,
+    "sortOrder": 82
+  },
+  {
+    "id": "p83",
+    "eventTypeId": "svs-battle",
+    "points": 9,
+    "sortOrder": 83
+  },
+  {
+    "id": "p84",
+    "eventTypeId": "svs-battle",
+    "points": 11,
+    "sortOrder": 84
+  },
+  {
+    "id": "p85",
+    "eventTypeId": "svs-battle",
+    "points": 13,
+    "sortOrder": 85
+  },
+  {
+    "id": "p86",
+    "eventTypeId": "svs-battle",
+    "points": 15,
+    "sortOrder": 86
+  },
+  {
+    "id": "p87",
+    "eventTypeId": "svs-battle",
+    "sortOrder": 87
+  },
+  {
+    "id": "p88",
+    "eventTypeId": "svs-battle",
+    "points": 1,
+    "sortOrder": 88
+  },
+  {
+    "id": "p89",
+    "eventTypeId": "castle-battle",
+    "sortOrder": 89
+  },
+  {
+    "id": "p90",
+    "eventTypeId": "castle-battle",
+    "sortOrder": 90
+  },
+  {
+    "id": "p91",
+    "eventTypeId": "castle-battle",
+    "sortOrder": 91
+  },
+  {
+    "id": "pbia1",
+    "eventTypeId": "bia",
+    "points": 1,
+    "sortOrder": 501
+  },
+  {
+    "id": "pbia2",
+    "eventTypeId": "bia",
+    "points": 2,
+    "sortOrder": 502
+  },
+  {
+    "id": "pbia3",
+    "eventTypeId": "bia",
+    "points": 3,
+    "sortOrder": 503
+  },
+  {
+    "id": "pbia4",
+    "eventTypeId": "bia",
+    "points": 4,
+    "sortOrder": 504
+  },
+  {
+    "id": "pbia5",
+    "eventTypeId": "bia",
+    "points": 5,
+    "sortOrder": 505
+  },
+  {
+    "id": "pbia6",
+    "eventTypeId": "bia",
+    "points": 7,
+    "sortOrder": 506
+  },
+  {
+    "id": "pbia7",
+    "eventTypeId": "bia",
+    "points": 9,
+    "sortOrder": 507
+  },
+  {
+    "id": "pbia8",
+    "eventTypeId": "bia",
+    "points": 11,
+    "sortOrder": 508
+  },
+  {
+    "id": "pbia9",
+    "eventTypeId": "bia",
+    "points": 13,
+    "sortOrder": 509
+  },
+  {
+    "id": "pbia10",
+    "eventTypeId": "bia",
+    "points": 15,
+    "sortOrder": 510
+  },
+  {
+    "id": "poff1",
+    "eventTypeId": "officer-project",
+    "sortOrder": 601
+  },
+  {
+    "id": "poff2",
+    "eventTypeId": "officer-project",
+    "points": 70,
+    "sortOrder": 602
+  },
+  {
+    "id": "poff3",
+    "eventTypeId": "officer-project",
+    "points": 6000,
+    "sortOrder": 603
+  },
+  {
+    "id": "poff4",
+    "eventTypeId": "officer-project",
+    "points": 12000,
+    "sortOrder": 604
+  },
+  {
+    "id": "poff5",
+    "eventTypeId": "officer-project",
+    "points": 216000,
+    "sortOrder": 605
+  },
+  {
+    "id": "poff6",
+    "eventTypeId": "officer-project",
+    "points": 1,
+    "sortOrder": 606
+  },
+  {
+    "id": "poff7",
+    "eventTypeId": "officer-project",
+    "points": 2,
+    "sortOrder": 607
+  },
+  {
+    "id": "poff8",
+    "eventTypeId": "officer-project",
+    "points": 3,
+    "sortOrder": 608
+  },
+  {
+    "id": "poff9",
+    "eventTypeId": "officer-project",
+    "points": 4,
+    "sortOrder": 609
+  },
+  {
+    "id": "poff10",
+    "eventTypeId": "officer-project",
+    "points": 6,
+    "sortOrder": 610
+  },
+  {
+    "id": "poff11",
+    "eventTypeId": "officer-project",
+    "points": 9,
+    "sortOrder": 611
+  },
+  {
+    "id": "poff12",
+    "eventTypeId": "officer-project",
+    "points": 12,
+    "sortOrder": 612
+  },
+  {
+    "id": "poff13",
+    "eventTypeId": "officer-project",
+    "points": 17,
+    "sortOrder": 613
+  },
+  {
+    "id": "poff14",
+    "eventTypeId": "officer-project",
+    "points": 22,
+    "sortOrder": 614
+  },
+  {
+    "id": "poff15",
+    "eventTypeId": "officer-project",
+    "points": 30,
+    "sortOrder": 615
+  },
+  {
+    "id": "poff16",
+    "eventTypeId": "officer-project",
+    "points": 37,
+    "sortOrder": 616
+  },
+  {
+    "id": "poff17",
+    "eventTypeId": "officer-project",
+    "points": 47,
+    "sortOrder": 617
+  },
+  {
+    "id": "poff18",
+    "eventTypeId": "officer-project",
+    "sortOrder": 618
+  },
+  {
+    "id": "psd1",
+    "eventTypeId": "showdown",
+    "dayNumber": 1,
+    "points": 10000,
+    "sortOrder": 701
+  },
+  {
+    "id": "psd2",
+    "eventTypeId": "showdown",
+    "dayNumber": 1,
+    "points": 10000,
+    "sortOrder": 702
+  },
+  {
+    "id": "psd3",
+    "eventTypeId": "showdown",
+    "dayNumber": 1,
+    "points": 18750,
+    "sortOrder": 703
+  },
+  {
+    "id": "psd4",
+    "eventTypeId": "showdown",
+    "dayNumber": 1,
+    "points": 18750,
+    "sortOrder": 704
+  },
+  {
+    "id": "psd5",
+    "eventTypeId": "showdown",
+    "dayNumber": 1,
+    "points": 1250,
+    "sortOrder": 705
+  },
+  {
+    "id": "psd6",
+    "eventTypeId": "showdown",
+    "dayNumber": 1,
+    "points": 625,
+    "sortOrder": 706
+  },
+  {
+    "id": "psd7",
+    "eventTypeId": "showdown",
+    "dayNumber": 1,
+    "points": 18,
+    "sortOrder": 707
+  },
+  {
+    "id": "psd8",
+    "eventTypeId": "showdown",
+    "dayNumber": 1,
+    "points": 18,
+    "sortOrder": 708
+  },
+  {
+    "id": "psd9",
+    "eventTypeId": "showdown",
+    "dayNumber": 1,
+    "points": 18,
+    "sortOrder": 709
+  },
+  {
+    "id": "psd10",
+    "eventTypeId": "showdown",
+    "dayNumber": 1,
+    "points": 18,
+    "sortOrder": 710
+  },
+  {
+    "id": "psd11",
+    "eventTypeId": "showdown",
+    "dayNumber": 1,
+    "points": 2,
+    "sortOrder": 711
+  },
+  {
+    "id": "psd12",
+    "eventTypeId": "showdown",
+    "dayNumber": 1,
+    "points": 2,
+    "sortOrder": 712
+  },
+  {
+    "id": "psd13",
+    "eventTypeId": "showdown",
+    "dayNumber": 1,
+    "points": 2,
+    "sortOrder": 713
+  },
+  {
+    "id": "psd14",
+    "eventTypeId": "showdown",
+    "dayNumber": 1,
+    "points": 2,
+    "sortOrder": 714
+  },
+  {
+    "id": "psd15",
+    "eventTypeId": "showdown",
+    "dayNumber": 1,
+    "points": 1,
+    "sortOrder": 715
+  },
+  {
+    "id": "psd16",
+    "eventTypeId": "showdown",
+    "dayNumber": 1,
+    "points": 3600,
+    "sortOrder": 716
+  },
+  {
+    "id": "psd17",
+    "eventTypeId": "showdown",
+    "dayNumber": 1,
+    "points": 36,
+    "sortOrder": 717
+  },
+  {
+    "id": "psd18",
+    "eventTypeId": "showdown",
+    "dayNumber": 1,
+    "points": 3000,
+    "sortOrder": 718
+  },
+  {
+    "id": "psd19",
+    "eventTypeId": "showdown",
+    "dayNumber": 2,
+    "points": 10000,
+    "sortOrder": 719
+  },
+  {
+    "id": "psd20",
+    "eventTypeId": "showdown",
+    "dayNumber": 2,
+    "points": 10000,
+    "sortOrder": 720
+  },
+  {
+    "id": "psd21",
+    "eventTypeId": "showdown",
+    "dayNumber": 2,
+    "points": 210,
+    "sortOrder": 721
+  },
+  {
+    "id": "psd22",
+    "eventTypeId": "showdown",
+    "dayNumber": 2,
+    "points": 750,
+    "sortOrder": 722
+  },
+  {
+    "id": "psd23",
+    "eventTypeId": "showdown",
+    "dayNumber": 2,
+    "points": 1875,
+    "sortOrder": 723
+  },
+  {
+    "id": "psd24",
+    "eventTypeId": "showdown",
+    "dayNumber": 2,
+    "points": 18750,
+    "sortOrder": 724
+  },
+  {
+    "id": "psd25",
+    "eventTypeId": "showdown",
+    "dayNumber": 2,
+    "points": 18750,
+    "sortOrder": 725
+  },
+  {
+    "id": "psd26",
+    "eventTypeId": "showdown",
+    "dayNumber": 2,
+    "points": 1250,
+    "sortOrder": 726
+  },
+  {
+    "id": "psd27",
+    "eventTypeId": "showdown",
+    "dayNumber": 2,
+    "points": 625,
+    "sortOrder": 727
+  },
+  {
+    "id": "psd28",
+    "eventTypeId": "showdown",
+    "dayNumber": 2,
+    "points": 18,
+    "sortOrder": 728
+  },
+  {
+    "id": "psd29",
+    "eventTypeId": "showdown",
+    "dayNumber": 2,
+    "points": 18,
+    "sortOrder": 729
+  },
+  {
+    "id": "psd30",
+    "eventTypeId": "showdown",
+    "dayNumber": 2,
+    "points": 18,
+    "sortOrder": 730
+  },
+  {
+    "id": "psd31",
+    "eventTypeId": "showdown",
+    "dayNumber": 2,
+    "points": 18,
+    "sortOrder": 731
+  },
+  {
+    "id": "psd32",
+    "eventTypeId": "showdown",
+    "dayNumber": 2,
+    "points": 1,
+    "sortOrder": 732
+  },
+  {
+    "id": "psd33",
+    "eventTypeId": "showdown",
+    "dayNumber": 2,
+    "points": 3600,
+    "sortOrder": 733
+  },
+  {
+    "id": "psd34",
+    "eventTypeId": "showdown",
+    "dayNumber": 2,
+    "points": 36,
+    "sortOrder": 734
+  },
+  {
+    "id": "psd35",
+    "eventTypeId": "showdown",
+    "dayNumber": 2,
+    "points": 3000,
+    "sortOrder": 735
+  },
+  {
+    "id": "psd36",
+    "eventTypeId": "showdown",
+    "dayNumber": 3,
+    "points": 10000,
+    "sortOrder": 736
+  },
+  {
+    "id": "psd37",
+    "eventTypeId": "showdown",
+    "dayNumber": 3,
+    "points": 10000,
+    "sortOrder": 737
+  },
+  {
+    "id": "psd38",
+    "eventTypeId": "showdown",
+    "dayNumber": 3,
+    "points": 45,
+    "sortOrder": 738
+  },
+  {
+    "id": "psd39",
+    "eventTypeId": "showdown",
+    "dayNumber": 3,
+    "points": 30,
+    "sortOrder": 739
+  },
+  {
+    "id": "psd40",
+    "eventTypeId": "showdown",
+    "dayNumber": 3,
+    "points": 9370,
+    "sortOrder": 740
+  },
+  {
+    "id": "psd41",
+    "eventTypeId": "showdown",
+    "dayNumber": 3,
+    "points": 680,
+    "sortOrder": 741
+  },
+  {
+    "id": "psd42",
+    "eventTypeId": "showdown",
+    "dayNumber": 3,
+    "points": 2,
+    "sortOrder": 742
+  },
+  {
+    "id": "psd43",
+    "eventTypeId": "showdown",
+    "dayNumber": 3,
+    "points": 2,
+    "sortOrder": 743
+  },
+  {
+    "id": "psd44",
+    "eventTypeId": "showdown",
+    "dayNumber": 3,
+    "points": 2,
+    "sortOrder": 744
+  },
+  {
+    "id": "psd45",
+    "eventTypeId": "showdown",
+    "dayNumber": 3,
+    "points": 2,
+    "sortOrder": 745
+  },
+  {
+    "id": "psd46",
+    "eventTypeId": "showdown",
+    "dayNumber": 3,
+    "points": 1,
+    "sortOrder": 746
+  },
+  {
+    "id": "psd47",
+    "eventTypeId": "showdown",
+    "dayNumber": 3,
+    "points": 3000,
+    "sortOrder": 747
+  },
+  {
+    "id": "psd48",
+    "eventTypeId": "showdown",
+    "dayNumber": 4,
+    "points": 10000,
+    "sortOrder": 748
+  },
+  {
+    "id": "psd49",
+    "eventTypeId": "showdown",
+    "dayNumber": 4,
+    "points": 10000,
+    "sortOrder": 749
+  },
+  {
+    "id": "psd50",
+    "eventTypeId": "showdown",
+    "dayNumber": 4,
+    "points": 45,
+    "sortOrder": 750
+  },
+  {
+    "id": "psd51",
+    "eventTypeId": "showdown",
+    "dayNumber": 4,
+    "points": 1875,
+    "sortOrder": 751
+  },
+  {
+    "id": "psd52",
+    "eventTypeId": "showdown",
+    "dayNumber": 4,
+    "points": 3750,
+    "sortOrder": 752
+  },
+  {
+    "id": "psd53",
+    "eventTypeId": "showdown",
+    "dayNumber": 4,
+    "points": 67500,
+    "sortOrder": 753
+  },
+  {
+    "id": "psd54",
+    "eventTypeId": "showdown",
+    "dayNumber": 4,
+    "points": 1,
+    "sortOrder": 754
+  },
+  {
+    "id": "psd55",
+    "eventTypeId": "showdown",
+    "dayNumber": 4,
+    "points": 1,
+    "sortOrder": 755
+  },
+  {
+    "id": "psd56",
+    "eventTypeId": "showdown",
+    "dayNumber": 4,
+    "points": 2,
+    "sortOrder": 756
+  },
+  {
+    "id": "psd57",
+    "eventTypeId": "showdown",
+    "dayNumber": 4,
+    "points": 3,
+    "sortOrder": 757
+  },
+  {
+    "id": "psd58",
+    "eventTypeId": "showdown",
+    "dayNumber": 4,
+    "points": 4,
+    "sortOrder": 758
+  },
+  {
+    "id": "psd59",
+    "eventTypeId": "showdown",
+    "dayNumber": 4,
+    "points": 7,
+    "sortOrder": 759
+  },
+  {
+    "id": "psd60",
+    "eventTypeId": "showdown",
+    "dayNumber": 4,
+    "points": 10,
+    "sortOrder": 760
+  },
+  {
+    "id": "psd61",
+    "eventTypeId": "showdown",
+    "dayNumber": 4,
+    "points": 14,
+    "sortOrder": 761
+  },
+  {
+    "id": "psd62",
+    "eventTypeId": "showdown",
+    "dayNumber": 4,
+    "points": 18,
+    "sortOrder": 762
+  },
+  {
+    "id": "psd63",
+    "eventTypeId": "showdown",
+    "dayNumber": 4,
+    "points": 24,
+    "sortOrder": 763
+  },
+  {
+    "id": "psd64",
+    "eventTypeId": "showdown",
+    "dayNumber": 4,
+    "points": 30,
+    "sortOrder": 764
+  },
+  {
+    "id": "psd65",
+    "eventTypeId": "showdown",
+    "dayNumber": 4,
+    "points": 38,
+    "sortOrder": 765
+  },
+  {
+    "id": "psd66",
+    "eventTypeId": "showdown",
+    "dayNumber": 4,
+    "sortOrder": 766
+  },
+  {
+    "id": "psd67",
+    "eventTypeId": "showdown",
+    "dayNumber": 4,
+    "points": 1,
+    "sortOrder": 767
+  },
+  {
+    "id": "psd68",
+    "eventTypeId": "showdown",
+    "dayNumber": 4,
+    "points": 3000,
+    "sortOrder": 768
+  },
+  {
+    "id": "psd69",
+    "eventTypeId": "showdown",
+    "dayNumber": 5,
+    "points": 10000,
+    "sortOrder": 769
+  },
+  {
+    "id": "psd70",
+    "eventTypeId": "showdown",
+    "dayNumber": 5,
+    "points": 10000,
+    "sortOrder": 770
+  },
+  {
+    "id": "psd71",
+    "eventTypeId": "showdown",
+    "dayNumber": 5,
+    "points": 22,
+    "sortOrder": 771
+  },
+  {
+    "id": "psd72",
+    "eventTypeId": "showdown",
+    "dayNumber": 5,
+    "points": 18750,
+    "sortOrder": 772
+  },
+  {
+    "id": "psd73",
+    "eventTypeId": "showdown",
+    "dayNumber": 5,
+    "points": 18750,
+    "sortOrder": 773
+  },
+  {
+    "id": "psd74",
+    "eventTypeId": "showdown",
+    "dayNumber": 5,
+    "points": 1250,
+    "sortOrder": 774
+  },
+  {
+    "id": "psd75",
+    "eventTypeId": "showdown",
+    "dayNumber": 5,
+    "points": 625,
+    "sortOrder": 775
+  },
+  {
+    "id": "psd76",
+    "eventTypeId": "showdown",
+    "dayNumber": 5,
+    "points": 18,
+    "sortOrder": 776
+  },
+  {
+    "id": "psd77",
+    "eventTypeId": "showdown",
+    "dayNumber": 5,
+    "points": 18,
+    "sortOrder": 777
+  },
+  {
+    "id": "psd78",
+    "eventTypeId": "showdown",
+    "dayNumber": 5,
+    "points": 18,
+    "sortOrder": 778
+  },
+  {
+    "id": "psd79",
+    "eventTypeId": "showdown",
+    "dayNumber": 5,
+    "points": 18,
+    "sortOrder": 779
+  },
+  {
+    "id": "psd80",
+    "eventTypeId": "showdown",
+    "dayNumber": 5,
+    "points": 1,
+    "sortOrder": 780
+  },
+  {
+    "id": "psd81",
+    "eventTypeId": "showdown",
+    "dayNumber": 5,
+    "points": 3000,
+    "sortOrder": 781
+  },
+  {
+    "id": "psd82",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 10000,
+    "sortOrder": 782
+  },
+  {
+    "id": "psd83",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 10000,
+    "sortOrder": 783
+  },
+  {
+    "id": "psd84",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 22,
+    "sortOrder": 784
+  },
+  {
+    "id": "psd85",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 45,
+    "sortOrder": 785
+  },
+  {
+    "id": "psd86",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 1875,
+    "sortOrder": 786
+  },
+  {
+    "id": "psd87",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 3750,
+    "sortOrder": 787
+  },
+  {
+    "id": "psd88",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 67500,
+    "sortOrder": 788
+  },
+  {
+    "id": "psd89",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 210,
+    "sortOrder": 789
+  },
+  {
+    "id": "psd90",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 750,
+    "sortOrder": 790
+  },
+  {
+    "id": "psd91",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 1875,
+    "sortOrder": 791
+  },
+  {
+    "id": "psd92",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 30,
+    "sortOrder": 792
+  },
+  {
+    "id": "psd93",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 9370,
+    "sortOrder": 793
+  },
+  {
+    "id": "psd94",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 680,
+    "sortOrder": 794
+  },
+  {
+    "id": "psd95",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 18750,
+    "sortOrder": 795
+  },
+  {
+    "id": "psd96",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 18750,
+    "sortOrder": 796
+  },
+  {
+    "id": "psd97",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 1250,
+    "sortOrder": 797
+  },
+  {
+    "id": "psd98",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 625,
+    "sortOrder": 798
+  },
+  {
+    "id": "psd99",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 18,
+    "sortOrder": 799
+  },
+  {
+    "id": "psd100",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 18,
+    "sortOrder": 800
+  },
+  {
+    "id": "psd101",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 18,
+    "sortOrder": 801
+  },
+  {
+    "id": "psd102",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 18,
+    "sortOrder": 802
+  },
+  {
+    "id": "psd103",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 1,
+    "sortOrder": 803
+  },
+  {
+    "id": "psd104",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "points": 3000,
+    "sortOrder": 804
+  },
+  {
+    "id": "pvod1",
+    "eventTypeId": "vision-of-dawn",
+    "sortOrder": 901
+  },
+  {
+    "id": "pvod2",
+    "eventTypeId": "vision-of-dawn",
+    "points": 2,
+    "sortOrder": 902
+  },
+  {
+    "id": "pvod3",
+    "eventTypeId": "vision-of-dawn",
+    "points": 4,
+    "sortOrder": 903
+  },
+  {
+    "id": "pvod4",
+    "eventTypeId": "vision-of-dawn",
+    "points": 2,
+    "sortOrder": 904
+  },
+  {
+    "id": "pvod5",
+    "eventTypeId": "vision-of-dawn",
+    "points": 4,
+    "sortOrder": 905
+  },
+  {
+    "id": "pvod6",
+    "eventTypeId": "vision-of-dawn",
+    "points": 2,
+    "sortOrder": 906
+  },
+  {
+    "id": "pvod7",
+    "eventTypeId": "vision-of-dawn",
+    "points": 4,
+    "sortOrder": 907
+  },
+  {
+    "id": "pvod8",
+    "eventTypeId": "vision-of-dawn",
+    "points": 2,
+    "sortOrder": 908
+  },
+  {
+    "id": "pvod9",
+    "eventTypeId": "vision-of-dawn",
+    "points": 4,
+    "sortOrder": 909
+  },
+  {
+    "id": "pvod10",
+    "eventTypeId": "vision-of-dawn",
+    "points": 10,
+    "sortOrder": 910
+  },
+  {
+    "id": "pvod11",
+    "eventTypeId": "vision-of-dawn",
+    "points": 20,
+    "sortOrder": 911
+  },
+  {
+    "id": "pvod12",
+    "eventTypeId": "vision-of-dawn",
+    "sortOrder": 912
+  },
+  {
+    "id": "pvod13",
+    "eventTypeId": "vision-of-dawn",
+    "sortOrder": 913
+  },
+  {
+    "id": "pvod14",
+    "eventTypeId": "vision-of-dawn",
+    "sortOrder": 914
+  },
+  {
+    "id": "pvod15",
+    "eventTypeId": "vision-of-dawn",
+    "sortOrder": 915
+  },
+  {
+    "id": "pvod16",
+    "eventTypeId": "vision-of-dawn",
+    "sortOrder": 916
+  },
+  {
+    "id": "pvod17",
+    "eventTypeId": "vision-of-dawn",
+    "sortOrder": 917
+  },
+  {
+    "id": "phm1",
+    "eventTypeId": "heros-mission",
+    "sortOrder": 951
+  },
+  {
+    "id": "phm2",
+    "eventTypeId": "heros-mission",
+    "sortOrder": 952
+  },
+  {
+    "id": "phm3",
+    "eventTypeId": "heros-mission",
+    "sortOrder": 953
+  },
+  {
+    "id": "phm4",
+    "eventTypeId": "heros-mission",
+    "sortOrder": 954
+  },
+  {
+    "id": "phm5",
+    "eventTypeId": "heros-mission",
+    "sortOrder": 955
+  },
+  {
+    "id": "pwt1",
+    "eventTypeId": "wander-theater",
+    "sortOrder": 1001
+  },
+  {
+    "id": "pwt2",
+    "eventTypeId": "wander-theater",
+    "points": 5,
+    "sortOrder": 1002
+  },
+  {
+    "id": "pwt3",
+    "eventTypeId": "wander-theater",
+    "points": 5,
+    "sortOrder": 1003
+  },
+  {
+    "id": "pwt4",
+    "eventTypeId": "wander-theater",
+    "points": 10,
+    "sortOrder": 1004
+  },
+  {
+    "id": "pwt5",
+    "eventTypeId": "wander-theater",
+    "points": 20,
+    "sortOrder": 1005
+  },
+  {
+    "id": "pwt6",
+    "eventTypeId": "wander-theater",
+    "sortOrder": 1006
+  },
+  {
+    "id": "pwt7",
+    "eventTypeId": "wander-theater",
+    "points": 180,
+    "sortOrder": 1007
+  },
+  {
+    "id": "pwt8",
+    "eventTypeId": "wander-theater",
+    "points": 16000,
+    "sortOrder": 1008
+  },
+  {
+    "id": "pwt9",
+    "eventTypeId": "wander-theater",
+    "points": 80,
+    "sortOrder": 1009
+  },
+  {
+    "id": "pwt10",
+    "eventTypeId": "wander-theater",
+    "points": 640,
+    "sortOrder": 1010
+  },
+  {
+    "id": "pwt11",
+    "eventTypeId": "wander-theater",
+    "points": 740,
+    "sortOrder": 1011
+  },
+  {
+    "id": "pwt12",
+    "eventTypeId": "wander-theater",
+    "points": 640,
+    "sortOrder": 1012
+  },
+  {
+    "id": "pwt13",
+    "eventTypeId": "wander-theater",
+    "points": 3200,
+    "sortOrder": 1013
+  },
+  {
+    "id": "pwt14",
+    "eventTypeId": "wander-theater",
+    "points": 500,
+    "sortOrder": 1014
+  },
+  {
+    "id": "pwt15",
+    "eventTypeId": "wander-theater",
+    "points": 500,
+    "sortOrder": 1015
+  },
+  {
+    "id": "pwt16",
+    "eventTypeId": "wander-theater",
+    "points": 500,
+    "sortOrder": 1016
+  },
+  {
+    "id": "pwt17",
+    "eventTypeId": "wander-theater",
+    "points": 500,
+    "sortOrder": 1017
+  },
+  {
+    "id": "pwt18",
+    "eventTypeId": "wander-theater",
+    "points": 500,
+    "sortOrder": 1018
+  },
+  {
+    "id": "pwt19",
+    "eventTypeId": "wander-theater",
+    "points": 850,
+    "sortOrder": 1019
+  },
+  {
+    "id": "pwt20",
+    "eventTypeId": "wander-theater",
+    "points": 280,
+    "sortOrder": 1020
+  },
+  {
+    "id": "pwt21",
+    "eventTypeId": "wander-theater",
+    "points": 280,
+    "sortOrder": 1021
+  },
+  {
+    "id": "pwt22",
+    "eventTypeId": "wander-theater",
+    "points": 170,
+    "sortOrder": 1022
+  },
+  {
+    "id": "pwt23",
+    "eventTypeId": "wander-theater",
+    "points": 700,
+    "sortOrder": 1023
+  },
+  {
+    "id": "pwt24",
+    "eventTypeId": "wander-theater",
+    "points": 100,
+    "sortOrder": 1024
+  },
+  {
+    "id": "pws1",
+    "eventTypeId": "winter-siege",
+    "list": "rules",
+    "sortOrder": 1101
+  },
+  {
+    "id": "pws2",
+    "eventTypeId": "winter-siege",
+    "list": "rules",
+    "sortOrder": 1102
+  },
+  {
+    "id": "pws3",
+    "eventTypeId": "winter-siege",
+    "list": "rules",
+    "sortOrder": 1103
+  },
+  {
+    "id": "pws4",
+    "eventTypeId": "winter-siege",
+    "list": "rules",
+    "sortOrder": 1104
+  },
+  {
+    "id": "pws5",
+    "eventTypeId": "winter-siege",
+    "list": "rules",
+    "sortOrder": 1105
+  },
+  {
+    "id": "psr1",
+    "eventTypeId": "showdown",
+    "list": "rules",
+    "sortOrder": 1201
+  },
+  {
+    "id": "psr2",
+    "eventTypeId": "showdown",
+    "list": "rules",
+    "sortOrder": 1202
+  },
+  {
+    "id": "psr3",
+    "eventTypeId": "showdown",
+    "list": "rules",
+    "imageFile": "experts/baldur.png",
+    "sortOrder": 1203
+  },
+  {
+    "id": "psr4",
+    "eventTypeId": "showdown",
+    "list": "rules",
+    "sortOrder": 1204
+  },
+  {
+    "id": "psr5",
+    "eventTypeId": "showdown",
+    "list": "rules",
+    "sortOrder": 1205
+  },
+  {
+    "id": "psr6",
+    "eventTypeId": "showdown",
+    "list": "rules",
+    "sortOrder": 1206
+  },
+  {
+    "id": "ptr1",
+    "eventTypeId": "hellfire",
+    "list": "rules",
+    "sortOrder": 1301
+  },
+  {
+    "id": "ptr2",
+    "eventTypeId": "hellfire",
+    "list": "rules",
+    "sortOrder": 1302
+  },
+  {
+    "id": "ptr3",
+    "eventTypeId": "hellfire",
+    "list": "rules",
+    "sortOrder": 1303
+  },
+  {
+    "id": "ptr4",
+    "eventTypeId": "hellfire",
+    "list": "rules",
+    "sortOrder": 1304
+  },
+  {
+    "id": "ptr5",
+    "eventTypeId": "hellfire",
+    "list": "rules",
+    "sortOrder": 1305
+  },
+  {
+    "id": "ptr6",
+    "eventTypeId": "hellfire",
+    "list": "rules",
+    "sortOrder": 1306
+  },
+  {
+    "id": "ptp1",
+    "eventTypeId": "hellfire",
+    "list": "predictions",
+    "imageFile": "items/match-stake.png",
+    "sortOrder": 1321
+  },
+  {
+    "id": "ptp2",
+    "eventTypeId": "hellfire",
+    "list": "predictions",
+    "imageFile": "items/champion-stake.png",
+    "sortOrder": 1322
+  },
+  {
+    "id": "ptp3",
+    "eventTypeId": "hellfire",
+    "list": "predictions",
+    "sortOrder": 1323
+  },
+  {
+    "id": "ptw3",
+    "eventTypeId": "hellfire",
+    "list": "rewards",
+    "sortOrder": 1343
+  },
+  {
+    "id": "ptm1",
+    "eventTypeId": "hellfire",
+    "list": "missions",
+    "sortOrder": 1361
+  },
+  {
+    "id": "ptl1",
+    "eventTypeId": "hellfire",
+    "list": "rewards",
+    "sortOrder": 1351
+  },
+  {
+    "id": "ptl2",
+    "eventTypeId": "hellfire",
+    "list": "rewards",
+    "sortOrder": 1352
+  },
+  {
+    "id": "ptl3",
+    "eventTypeId": "hellfire",
+    "list": "rewards",
+    "sortOrder": 1353
+  },
+  {
+    "id": "pkoi1",
+    "eventTypeId": "koi",
+    "dayNumber": 1,
+    "points": 2000,
+    "sortOrder": 1401
+  },
+  {
+    "id": "pkoi2",
+    "eventTypeId": "koi",
+    "dayNumber": 1,
+    "points": 1000,
+    "sortOrder": 1402
+  },
+  {
+    "id": "pkoi3",
+    "eventTypeId": "koi",
+    "dayNumber": 1,
+    "points": 30000,
+    "sortOrder": 1403
+  },
+  {
+    "id": "pkoi4",
+    "eventTypeId": "koi",
+    "dayNumber": 1,
+    "points": 30000,
+    "sortOrder": 1404
+  },
+  {
+    "id": "pkoi5",
+    "eventTypeId": "koi",
+    "dayNumber": 1,
+    "points": 30,
+    "sortOrder": 1405
+  },
+  {
+    "id": "pkoi6",
+    "eventTypeId": "koi",
+    "dayNumber": 1,
+    "points": 30,
+    "sortOrder": 1406
+  },
+  {
+    "id": "pkoi7",
+    "eventTypeId": "koi",
+    "dayNumber": 1,
+    "points": 30,
+    "sortOrder": 1407
+  },
+  {
+    "id": "pkoi8",
+    "eventTypeId": "koi",
+    "dayNumber": 1,
+    "points": 30,
+    "sortOrder": 1408
+  },
+  {
+    "id": "pkoi9",
+    "eventTypeId": "koi",
+    "dayNumber": 1,
+    "points": 70,
+    "sortOrder": 1409
+  },
+  {
+    "id": "pkoi10",
+    "eventTypeId": "koi",
+    "dayNumber": 2,
+    "points": 2000,
+    "sortOrder": 1410
+  },
+  {
+    "id": "pkoi11",
+    "eventTypeId": "koi",
+    "dayNumber": 2,
+    "points": 1000,
+    "sortOrder": 1411
+  },
+  {
+    "id": "pkoi12",
+    "eventTypeId": "koi",
+    "dayNumber": 2,
+    "points": 30000,
+    "sortOrder": 1412
+  },
+  {
+    "id": "pkoi13",
+    "eventTypeId": "koi",
+    "dayNumber": 2,
+    "points": 30000,
+    "sortOrder": 1413
+  },
+  {
+    "id": "pkoi14",
+    "eventTypeId": "koi",
+    "dayNumber": 2,
+    "points": 6000,
+    "sortOrder": 1414
+  },
+  {
+    "id": "pkoi15",
+    "eventTypeId": "koi",
+    "dayNumber": 2,
+    "points": 60,
+    "sortOrder": 1415
+  },
+  {
+    "id": "pkoi16",
+    "eventTypeId": "koi",
+    "dayNumber": 2,
+    "points": 30,
+    "sortOrder": 1416
+  },
+  {
+    "id": "pkoi17",
+    "eventTypeId": "koi",
+    "dayNumber": 2,
+    "points": 30,
+    "sortOrder": 1417
+  },
+  {
+    "id": "pkoi18",
+    "eventTypeId": "koi",
+    "dayNumber": 2,
+    "points": 30,
+    "sortOrder": 1418
+  },
+  {
+    "id": "pkoi19",
+    "eventTypeId": "koi",
+    "dayNumber": 2,
+    "points": 30,
+    "sortOrder": 1419
+  },
+  {
+    "id": "pkoi20",
+    "eventTypeId": "koi",
+    "dayNumber": 2,
+    "points": 8000,
+    "sortOrder": 1420
+  },
+  {
+    "id": "pkoi21",
+    "eventTypeId": "koi",
+    "dayNumber": 2,
+    "points": 350,
+    "sortOrder": 1421
+  },
+  {
+    "id": "pkoi22",
+    "eventTypeId": "koi",
+    "dayNumber": 2,
+    "points": 1220,
+    "sortOrder": 1422
+  },
+  {
+    "id": "pkoi23",
+    "eventTypeId": "koi",
+    "dayNumber": 2,
+    "points": 3040,
+    "sortOrder": 1423
+  },
+  {
+    "id": "pkoi24",
+    "eventTypeId": "koi",
+    "dayNumber": 2,
+    "points": 4000,
+    "sortOrder": 1424
+  },
+  {
+    "id": "pkoi25",
+    "eventTypeId": "koi",
+    "dayNumber": 2,
+    "points": 8000,
+    "sortOrder": 1425
+  },
+  {
+    "id": "pkoi26",
+    "eventTypeId": "koi",
+    "dayNumber": 2,
+    "points": 144000,
+    "sortOrder": 1426
+  },
+  {
+    "id": "pkoi27",
+    "eventTypeId": "koi",
+    "dayNumber": 3,
+    "points": 50,
+    "sortOrder": 1427
+  },
+  {
+    "id": "pkoi28",
+    "eventTypeId": "koi",
+    "dayNumber": 3,
+    "points": 15000,
+    "sortOrder": 1428
+  },
+  {
+    "id": "pkoi29",
+    "eventTypeId": "koi",
+    "dayNumber": 3,
+    "points": 1150,
+    "sortOrder": 1429
+  },
+  {
+    "id": "pkoi30",
+    "eventTypeId": "koi",
+    "dayNumber": 3,
+    "points": 6000,
+    "sortOrder": 1430
+  },
+  {
+    "id": "pkoi31",
+    "eventTypeId": "koi",
+    "dayNumber": 3,
+    "points": 60,
+    "sortOrder": 1431
+  },
+  {
+    "id": "pkoi32",
+    "eventTypeId": "koi",
+    "dayNumber": 3,
+    "points": 30,
+    "sortOrder": 1432
+  },
+  {
+    "id": "pkoi33",
+    "eventTypeId": "koi",
+    "dayNumber": 3,
+    "points": 70,
+    "sortOrder": 1433
+  },
+  {
+    "id": "pkoi34",
+    "eventTypeId": "koi",
+    "dayNumber": 3,
+    "points": 8000,
+    "sortOrder": 1434
+  },
+  {
+    "id": "pkoi35",
+    "eventTypeId": "koi",
+    "dayNumber": 3,
+    "points": 350,
+    "sortOrder": 1435
+  },
+  {
+    "id": "pkoi36",
+    "eventTypeId": "koi",
+    "dayNumber": 3,
+    "points": 1220,
+    "sortOrder": 1436
+  },
+  {
+    "id": "pkoi37",
+    "eventTypeId": "koi",
+    "dayNumber": 3,
+    "points": 3040,
+    "sortOrder": 1437
+  },
+  {
+    "id": "pkoi38",
+    "eventTypeId": "koi",
+    "dayNumber": 4,
+    "points": 70,
+    "sortOrder": 1438
+  },
+  {
+    "id": "pkoi39",
+    "eventTypeId": "koi",
+    "dayNumber": 4,
+    "points": 4000,
+    "sortOrder": 1439
+  },
+  {
+    "id": "pkoi40",
+    "eventTypeId": "koi",
+    "dayNumber": 4,
+    "points": 8000,
+    "sortOrder": 1440
+  },
+  {
+    "id": "pkoi41",
+    "eventTypeId": "koi",
+    "dayNumber": 4,
+    "points": 144000,
+    "sortOrder": 1441
+  },
+  {
+    "id": "pkoi42",
+    "eventTypeId": "koi",
+    "dayNumber": 4,
+    "points": 1,
+    "sortOrder": 1442
+  },
+  {
+    "id": "pkoi43",
+    "eventTypeId": "koi",
+    "dayNumber": 4,
+    "points": 2,
+    "sortOrder": 1443
+  },
+  {
+    "id": "pkoi44",
+    "eventTypeId": "koi",
+    "dayNumber": 4,
+    "points": 3,
+    "sortOrder": 1444
+  },
+  {
+    "id": "pkoi45",
+    "eventTypeId": "koi",
+    "dayNumber": 4,
+    "points": 5,
+    "sortOrder": 1445
+  },
+  {
+    "id": "pkoi46",
+    "eventTypeId": "koi",
+    "dayNumber": 4,
+    "points": 7,
+    "sortOrder": 1446
+  },
+  {
+    "id": "pkoi47",
+    "eventTypeId": "koi",
+    "dayNumber": 4,
+    "points": 11,
+    "sortOrder": 1447
+  },
+  {
+    "id": "pkoi48",
+    "eventTypeId": "koi",
+    "dayNumber": 4,
+    "points": 16,
+    "sortOrder": 1448
+  },
+  {
+    "id": "pkoi49",
+    "eventTypeId": "koi",
+    "dayNumber": 4,
+    "points": 23,
+    "sortOrder": 1449
+  },
+  {
+    "id": "pkoi50",
+    "eventTypeId": "koi",
+    "dayNumber": 4,
+    "points": 30,
+    "sortOrder": 1450
+  },
+  {
+    "id": "pkoi51",
+    "eventTypeId": "koi",
+    "dayNumber": 4,
+    "points": 39,
+    "sortOrder": 1451
+  },
+  {
+    "id": "pkoi52",
+    "eventTypeId": "koi",
+    "dayNumber": 4,
+    "points": 49,
+    "sortOrder": 1452
+  },
+  {
+    "id": "pkoi53",
+    "eventTypeId": "koi",
+    "dayNumber": 4,
+    "points": 61,
+    "sortOrder": 1453
+  },
+  {
+    "id": "pkoi54",
+    "eventTypeId": "koi",
+    "dayNumber": 4,
+    "sortOrder": 1454
+  },
+  {
+    "id": "pkoi55",
+    "eventTypeId": "koi",
+    "dayNumber": 5,
+    "points": 4000,
+    "sortOrder": 1455
+  },
+  {
+    "id": "pkoi56",
+    "eventTypeId": "koi",
+    "dayNumber": 5,
+    "points": 8000,
+    "sortOrder": 1456
+  },
+  {
+    "id": "pkoi57",
+    "eventTypeId": "koi",
+    "dayNumber": 5,
+    "points": 144000,
+    "sortOrder": 1457
+  },
+  {
+    "id": "pkoi58",
+    "eventTypeId": "koi",
+    "dayNumber": 5,
+    "points": 2000,
+    "sortOrder": 1458
+  },
+  {
+    "id": "pkoi59",
+    "eventTypeId": "koi",
+    "dayNumber": 5,
+    "points": 1000,
+    "sortOrder": 1459
+  },
+  {
+    "id": "pkoi60",
+    "eventTypeId": "koi",
+    "dayNumber": 5,
+    "points": 30000,
+    "sortOrder": 1460
+  },
+  {
+    "id": "pkoi61",
+    "eventTypeId": "koi",
+    "dayNumber": 5,
+    "points": 30000,
+    "sortOrder": 1461
+  },
+  {
+    "id": "pkoi62",
+    "eventTypeId": "koi",
+    "dayNumber": 5,
+    "points": 30,
+    "sortOrder": 1462
+  },
+  {
+    "id": "pkoi63",
+    "eventTypeId": "koi",
+    "dayNumber": 5,
+    "points": 30,
+    "sortOrder": 1463
+  },
+  {
+    "id": "pkoi64",
+    "eventTypeId": "koi",
+    "dayNumber": 5,
+    "points": 30,
+    "sortOrder": 1464
+  },
+  {
+    "id": "pkoi65",
+    "eventTypeId": "koi",
+    "dayNumber": 5,
+    "points": 30,
+    "sortOrder": 1465
+  },
+  {
+    "id": "pkoi66",
+    "eventTypeId": "koi",
+    "dayNumber": 6,
+    "points": 36,
+    "sortOrder": 1466
+  },
+  {
+    "id": "pkoi67",
+    "eventTypeId": "koi",
+    "dayNumber": 6,
+    "points": 1,
+    "sortOrder": 1467
+  },
+  {
+    "id": "pkoi68",
+    "eventTypeId": "koi",
+    "dayNumber": 6,
+    "points": 2,
+    "sortOrder": 1468
+  },
+  {
+    "id": "pkoi69",
+    "eventTypeId": "koi",
+    "dayNumber": 6,
+    "points": 3,
+    "sortOrder": 1469
+  },
+  {
+    "id": "pkoi70",
+    "eventTypeId": "koi",
+    "dayNumber": 6,
+    "points": 5,
+    "sortOrder": 1470
+  },
+  {
+    "id": "pkoi71",
+    "eventTypeId": "koi",
+    "dayNumber": 6,
+    "points": 7,
+    "sortOrder": 1471
+  },
+  {
+    "id": "pkoi72",
+    "eventTypeId": "koi",
+    "dayNumber": 6,
+    "points": 11,
+    "sortOrder": 1472
+  },
+  {
+    "id": "pkoi73",
+    "eventTypeId": "koi",
+    "dayNumber": 6,
+    "points": 16,
+    "sortOrder": 1473
+  },
+  {
+    "id": "pkoi74",
+    "eventTypeId": "koi",
+    "dayNumber": 6,
+    "points": 23,
+    "sortOrder": 1474
+  },
+  {
+    "id": "pkoi75",
+    "eventTypeId": "koi",
+    "dayNumber": 6,
+    "points": 30,
+    "sortOrder": 1475
+  },
+  {
+    "id": "pkoi76",
+    "eventTypeId": "koi",
+    "dayNumber": 6,
+    "points": 39,
+    "sortOrder": 1476
+  },
+  {
+    "id": "pkoi77",
+    "eventTypeId": "koi",
+    "dayNumber": 6,
+    "points": 49,
+    "sortOrder": 1477
+  },
+  {
+    "id": "pkoi78",
+    "eventTypeId": "koi",
+    "dayNumber": 6,
+    "points": 61,
+    "sortOrder": 1478
+  },
+  {
+    "id": "pkoi79",
+    "eventTypeId": "koi",
+    "dayNumber": 6,
+    "sortOrder": 1479
+  },
+  {
+    "id": "pkoi80",
+    "eventTypeId": "koi",
+    "dayNumber": 7,
+    "points": 50,
+    "sortOrder": 1480
+  },
+  {
+    "id": "pkoi81",
+    "eventTypeId": "koi",
+    "dayNumber": 7,
+    "points": 15000,
+    "sortOrder": 1481
+  },
+  {
+    "id": "pkoi82",
+    "eventTypeId": "koi",
+    "dayNumber": 7,
+    "points": 1150,
+    "sortOrder": 1482
+  },
+  {
+    "id": "pkoi83",
+    "eventTypeId": "koi",
+    "dayNumber": 7,
+    "points": 2000,
+    "sortOrder": 1483
+  },
+  {
+    "id": "pkoi84",
+    "eventTypeId": "koi",
+    "dayNumber": 7,
+    "points": 1000,
+    "sortOrder": 1484
+  },
+  {
+    "id": "pkoi85",
+    "eventTypeId": "koi",
+    "dayNumber": 7,
+    "points": 30000,
+    "sortOrder": 1485
+  },
+  {
+    "id": "pkoi86",
+    "eventTypeId": "koi",
+    "dayNumber": 7,
+    "points": 30000,
+    "sortOrder": 1486
+  },
+  {
+    "id": "pkoi87",
+    "eventTypeId": "koi",
+    "dayNumber": 7,
+    "points": 30,
+    "sortOrder": 1487
+  },
+  {
+    "id": "pkoi88",
+    "eventTypeId": "koi",
+    "dayNumber": 7,
+    "points": 30,
+    "sortOrder": 1488
+  },
+  {
+    "id": "pkoi89",
+    "eventTypeId": "koi",
+    "dayNumber": 7,
+    "points": 30,
+    "sortOrder": 1489
+  },
+  {
+    "id": "pkoi90",
+    "eventTypeId": "koi",
+    "dayNumber": 7,
+    "points": 30,
+    "sortOrder": 1490
+  },
+  {
+    "id": "pkoi91",
+    "eventTypeId": "koi",
+    "dayNumber": 7,
+    "points": 36,
+    "sortOrder": 1491
+  },
+  {
+    "id": "pkoi92",
+    "eventTypeId": "koi",
+    "dayNumber": 7,
+    "points": 3,
+    "sortOrder": 1492
+  },
+  {
+    "id": "pkoi93",
+    "eventTypeId": "koi",
+    "dayNumber": 7,
+    "points": 3,
+    "sortOrder": 1493
+  },
+  {
+    "id": "pkoi94",
+    "eventTypeId": "koi",
+    "dayNumber": 7,
+    "points": 3,
+    "sortOrder": 1494
+  },
+  {
+    "id": "pkoi95",
+    "eventTypeId": "koi",
+    "dayNumber": 7,
+    "points": 3,
+    "sortOrder": 1495
+  },
+  {
+    "id": "pkoi96",
+    "eventTypeId": "koi",
+    "dayNumber": 7,
+    "points": 350,
+    "sortOrder": 1496
+  },
+  {
+    "id": "pkoi97",
+    "eventTypeId": "koi",
+    "dayNumber": 7,
+    "points": 1220,
+    "sortOrder": 1497
+  },
+  {
+    "id": "pkoi98",
+    "eventTypeId": "koi",
+    "dayNumber": 7,
+    "points": 3040,
+    "sortOrder": 1498
+  },
+  {
+    "id": "pac1",
+    "eventTypeId": "alliance-championship",
+    "list": "rules",
+    "sortOrder": 1501
+  },
+  {
+    "id": "pac2",
+    "eventTypeId": "alliance-championship",
+    "list": "rules",
+    "sortOrder": 1502
+  },
+  {
+    "id": "pac3",
+    "eventTypeId": "alliance-championship",
+    "list": "rules",
+    "sortOrder": 1503
+  },
+  {
+    "id": "pac4",
+    "eventTypeId": "alliance-championship",
+    "list": "rules",
+    "sortOrder": 1504
+  },
+  {
+    "id": "pac5",
+    "eventTypeId": "alliance-championship",
+    "list": "rules",
+    "sortOrder": 1505
+  },
+  {
+    "id": "pacw1",
+    "eventTypeId": "alliance-championship",
+    "list": "rewards",
+    "sortOrder": 1511
+  },
+  {
+    "id": "pacw2",
+    "eventTypeId": "alliance-championship",
+    "list": "rewards",
+    "sortOrder": 1512
+  },
+  {
+    "id": "pacw3",
+    "eventTypeId": "alliance-championship",
+    "list": "rewards",
+    "sortOrder": 1513
+  },
+  {
+    "id": "pkoiw1",
+    "eventTypeId": "koi",
+    "list": "rewards",
+    "sortOrder": 1521
+  },
+  {
+    "id": "pkoiw2",
+    "eventTypeId": "koi",
+    "list": "rewards",
+    "sortOrder": 1522
+  },
+  {
+    "id": "pkoiw3",
+    "eventTypeId": "koi",
+    "list": "rewards",
+    "sortOrder": 1523
+  },
+  {
+    "id": "pkoiw4",
+    "eventTypeId": "koi",
+    "list": "rewards",
+    "sortOrder": 1524
+  },
+  {
+    "id": "pkoiw5",
+    "eventTypeId": "koi",
+    "list": "rewards",
+    "sortOrder": 1525
+  },
+  {
+    "id": "pds1",
+    "eventTypeId": "dreamscape",
+    "list": "rules",
+    "sortOrder": 1531
+  },
+  {
+    "id": "pds2",
+    "eventTypeId": "dreamscape",
+    "list": "rules",
+    "sortOrder": 1532
+  },
+  {
+    "id": "pds3",
+    "eventTypeId": "dreamscape",
+    "list": "rules",
+    "sortOrder": 1533
+  },
+  {
+    "id": "pds4",
+    "eventTypeId": "dreamscape",
+    "list": "rules",
+    "sortOrder": 1534
+  },
+  {
+    "id": "pdsw1",
+    "eventTypeId": "dreamscape",
+    "list": "rewards",
+    "sortOrder": 1541
+  },
+  {
+    "id": "pff1",
+    "eventTypeId": "frostfire",
+    "list": "rules",
+    "sortOrder": 1551
+  },
+  {
+    "id": "pff2",
+    "eventTypeId": "frostfire",
+    "list": "rules",
+    "sortOrder": 1552
+  },
+  {
+    "id": "pff3",
+    "eventTypeId": "frostfire",
+    "list": "rules",
+    "sortOrder": 1553
+  },
+  {
+    "id": "pff4",
+    "eventTypeId": "frostfire",
+    "list": "rules",
+    "sortOrder": 1554
+  },
+  {
+    "id": "pff5",
+    "eventTypeId": "frostfire",
+    "list": "rules",
+    "sortOrder": 1555
+  },
+  {
+    "id": "pffw1",
+    "eventTypeId": "frostfire",
+    "list": "rewards",
+    "sortOrder": 1561
+  },
+  {
+    "id": "pffw2",
+    "eventTypeId": "frostfire",
+    "list": "rewards",
+    "sortOrder": 1562
+  },
+  {
+    "id": "pcj1",
+    "eventTypeId": "crazy-joe",
+    "list": "rules",
+    "sortOrder": 1571
+  },
+  {
+    "id": "pcj2",
+    "eventTypeId": "crazy-joe",
+    "list": "rules",
+    "sortOrder": 1572
+  },
+  {
+    "id": "pcj3",
+    "eventTypeId": "crazy-joe",
+    "list": "rules",
+    "sortOrder": 1573
+  },
+  {
+    "id": "pcj4",
+    "eventTypeId": "crazy-joe",
+    "list": "rules",
+    "sortOrder": 1574
+  },
+  {
+    "id": "pcjw1",
+    "eventTypeId": "crazy-joe",
+    "list": "rewards",
+    "sortOrder": 1581
+  },
+  {
+    "id": "pdb1",
+    "eventTypeId": "defeat-beasts",
+    "points": 1,
+    "sortOrder": 1591
+  },
+  {
+    "id": "pdb2",
+    "eventTypeId": "defeat-beasts",
+    "points": 3,
+    "sortOrder": 1592
+  },
+  {
+    "id": "pdbr1",
+    "eventTypeId": "defeat-beasts",
+    "list": "rules",
+    "sortOrder": 1596
+  },
+  {
+    "id": "pdbw1",
+    "eventTypeId": "defeat-beasts",
+    "list": "rewards",
+    "sortOrder": 1598
+  },
+  {
+    "id": "pflw1",
+    "eventTypeId": "flame-and-fang",
+    "list": "rewards",
+    "sortOrder": 1601
+  },
+  {
+    "id": "plw1",
+    "eventTypeId": "lucky-wheel",
+    "list": "rules",
+    "sortOrder": 1611
+  },
+  {
+    "id": "plw2",
+    "eventTypeId": "lucky-wheel",
+    "list": "rules",
+    "sortOrder": 1612
+  },
+  {
+    "id": "plw3",
+    "eventTypeId": "lucky-wheel",
+    "list": "rules",
+    "sortOrder": 1613
+  },
+  {
+    "id": "plww1",
+    "eventTypeId": "lucky-wheel",
+    "list": "rewards",
+    "sortOrder": 1621
+  },
+  {
+    "id": "pwb1",
+    "eventTypeId": "wild-brawl",
+    "list": "rules",
+    "sortOrder": 1631
+  },
+  {
+    "id": "pthm1",
+    "eventTypeId": "treasure-hunt-drill",
+    "list": "missions",
+    "sortOrder": 1641
+  }
+]

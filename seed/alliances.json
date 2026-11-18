@@ -1,0 +1,69 @@
+[
+  {
+    "id": "dvl",
+    "name": "DEVILEMPIRE",
+    "tag": "DVL",
+    "baseColor": "#E3B04B",
+    "secondColor": "#9A5B2E",
+    "sortOrder": "1"
+  },
+  {
+    "id": "top",
+    "name": "TOP",
+    "tag": "TOP",
+    "baseColor": "#3D63C9",
+    "secondColor": "#F2C94C",
+    "sortOrder": "2"
+  },
+  {
+    "id": "sky",
+    "name": "LoveAndPeace",
+    "tag": "SKY",
+    "baseColor": "#D9483B",
+    "secondColor": "#9C7A6B",
+    "sortOrder": "3"
+  },
+  {
+    "id": "fun",
+    "name": "休閒動物園ღ",
+    "tag": "FUN",
+    "baseColor": "#E0552F",
+    "secondColor": "#F5A35C",
+    "sortOrder": "4"
+  },
+  {
+    "id": "ruu",
+    "name": "なちゅらるぅELT島",
+    "tag": "RUU",
+    "baseColor": "#E8603A",
+    "secondColor": "#F4F4F4",
+    "sortOrder": "5"
+  },
+  {
+    "id": "dvl-academy",
+    "name": "littledvl",
+    "tag": "dvl",
+    "mainAllianceId": "dvl",
+    "baseColor": "#E0552F",
+    "secondColor": "#F4F4F4",
+    "sortOrder": "1"
+  },
+  {
+    "id": "top-academy",
+    "name": "TOPacademy",
+    "tag": "top",
+    "mainAllianceId": "top",
+    "baseColor": "#9B4FD6",
+    "secondColor": "#F4F4F4",
+    "sortOrder": "1"
+  },
+  {
+    "id": "sky-academy",
+    "name": "SlientAndPeace",
+    "tag": "abc",
+    "mainAllianceId": "sky",
+    "baseColor": "#9B4FD6",
+    "secondColor": "#F4F4F4",
+    "sortOrder": "1"
+  }
+]

@@ -1,0 +1,634 @@
+[
+  {
+    "id": "svs",
+    "category": "state",
+    "color": "#5C8FE8",
+    "colorEnd": "#E05A5A",
+    "icon": "swords",
+    "imageFile": "svs-prep",
+    "opponentCount": "1",
+    "sortOrder": 2
+  },
+  {
+    "id": "svs-matchmaking",
+    "category": "state",
+    "color": "#6E87B8",
+    "colorEnd": "#B97C86",
+    "timelineColor": "#8494B5",
+    "icon": "swords",
+    "imageFile": "svs-prep",
+    "partOf": "svs",
+    "opponentCount": "1",
+    "sortOrder": 1
+  },
+  {
+    "id": "svs-prep",
+    "category": "state",
+    "color": "#5C8FE8",
+    "colorEnd": "#E05A5A",
+    "timelineColor": "#7C9DD6",
+    "icon": "swords",
+    "imageFile": "svs-prep",
+    "partOf": "svs",
+    "opponentCount": "1",
+    "resultType": "winloss",
+    "sortOrder": 2
+  },
+  {
+    "id": "svs-battle",
+    "category": "state",
+    "color": "#5C8FE8",
+    "colorEnd": "#E05A5A",
+    "timelineColor": "#CF7F86",
+    "icon": "swords",
+    "imageFile": "svs-prep",
+    "partOf": "svs",
+    "opponentCount": "1",
+    "resultType": "winloss",
+    "sortOrder": 3
+  },
+  {
+    "id": "castle-battle",
+    "category": "state",
+    "color": "#9B6AD0",
+    "colorEnd": "#E8484C",
+    "timelineColor": "#D9727A",
+    "icon": "castle",
+    "imageFile": "castle-battle",
+    "partOf": "svs",
+    "opponentCount": "1",
+    "resultType": "winloss",
+    "hasPresident": "yes",
+    "sortOrder": 4
+  },
+  {
+    "id": "svs-triage",
+    "category": "state",
+    "color": "#5FB8A8",
+    "colorEnd": "#3E9C9A",
+    "timelineColor": "#CF7F86>#5FB8A8",
+    "icon": "swords",
+    "imageFile": "svs-prep",
+    "partOf": "svs",
+    "sortOrder": 5
+  },
+  {
+    "id": "koi",
+    "category": "state",
+    "color": "#EDC650",
+    "colorEnd": "#D69A34",
+    "icon": "crown",
+    "sortOrder": 7
+  },
+  {
+    "id": "sunfire",
+    "category": "state",
+    "color": "#E8B85A",
+    "colorEnd": "#E07A3C",
+    "icon": "sun",
+    "imageFile": "castle-battle",
+    "hasPresident": "yes",
+    "sortOrder": 8
+  },
+  {
+    "id": "bia",
+    "category": "state",
+    "color": "#7A90C8",
+    "colorEnd": "#56649E",
+    "icon": "swords",
+    "imageFile": "bia",
+    "sortOrder": 34
+  },
+  {
+    "id": "mobilization",
+    "category": "alliance",
+    "color": "#8B78D3",
+    "colorEnd": "#C3A0E0",
+    "icon": "flag",
+    "sortOrder": 1
+  },
+  {
+    "id": "showdown",
+    "category": "alliance",
+    "color": "#4F86C6",
+    "colorEnd": "#3E63A8",
+    "icon": "shield",
+    "resultType": "winloss",
+    "sortOrder": 6
+  },
+  {
+    "id": "trade-route",
+    "category": "alliance",
+    "color": "#D69A4E",
+    "colorEnd": "#A8693A",
+    "icon": "arrows",
+    "imageFile": "truck",
+    "partOf": "showdown",
+    "sortOrder": 1
+  },
+  {
+    "id": "alliance-championship",
+    "category": "alliance",
+    "color": "#3E60A8",
+    "colorEnd": "#BC5247",
+    "icon": "trophy",
+    "imageFile": "alliance_championship",
+    "resultType": "rank",
+    "sortOrder": 21
+  },
+  {
+    "id": "fortress-battles",
+    "category": "alliance",
+    "color": "#A3A8BC",
+    "colorEnd": "#7C849E",
+    "icon": "castle",
+    "imageFile": "fortress-battle",
+    "resultType": "winloss",
+    "sortOrder": 22
+  },
+  {
+    "id": "bear",
+    "category": "alliance",
+    "color": "#A9C4D6",
+    "colorEnd": "#61BEAE",
+    "icon": "paw",
+    "groupCount": "2",
+    "sortOrder": 11
+  },
+  {
+    "id": "winter-siege",
+    "category": "alliance",
+    "color": "#5B7FD9",
+    "colorEnd": "#4D5E9D",
+    "icon": "castle",
+    "imageFile": "wintersiege",
+    "resultType": "winloss",
+    "sortOrder": 23
+  },
+  {
+    "id": "crazy-joe",
+    "category": "alliance",
+    "color": "#D0605A",
+    "colorEnd": "#A8403E",
+    "icon": "skull",
+    "imageFile": "crazy-joe",
+    "groupCount": "2",
+    "sortOrder": 12
+  },
+  {
+    "id": "foundry",
+    "category": "personal",
+    "color": "#9CC07A",
+    "colorEnd": "#6E9A55",
+    "icon": "factory",
+    "groupCount": "2",
+    "opponentCount": "1",
+    "opponentHasAlliance": "yes",
+    "resultType": "winloss",
+    "sortOrder": 9
+  },
+  {
+    "id": "canyon",
+    "category": "personal",
+    "color": "#E08A45",
+    "colorEnd": "#E8B85A",
+    "icon": "mountain",
+    "groupCount": "2",
+    "opponentCount": "2",
+    "opponentHasAlliance": "yes",
+    "resultType": "winloss",
+    "sortOrder": 10
+  },
+  {
+    "id": "mercenaries",
+    "category": "personal",
+    "color": "#C2554A",
+    "colorEnd": "#93394A",
+    "icon": "target",
+    "imageFile": "mercs",
+    "sortOrder": 13
+  },
+  {
+    "id": "frostfire",
+    "category": "personal",
+    "color": "#5B6CC8",
+    "colorEnd": "#7A6AD8",
+    "icon": "flame",
+    "slotTimes": "02:00,05:00,11:00,14:00,16:00,18:00,21:00",
+    "sortOrder": 16
+  },
+  {
+    "id": "wild-brawl",
+    "category": "personal",
+    "color": "#E07A48",
+    "colorEnd": "#C2453E",
+    "icon": "swords",
+    "imageFile": "brawl",
+    "sortOrder": 32
+  },
+  {
+    "id": "slush-station",
+    "category": "personal",
+    "color": "#6FB6E0",
+    "colorEnd": "#3E86C0",
+    "icon": "snow",
+    "sortOrder": 52
+  },
+  {
+    "id": "shaved-ice-stall",
+    "category": "personal",
+    "color": "#6FA8E0",
+    "colorEnd": "#E0A04A",
+    "icon": "gift",
+    "sortOrder": 53
+  },
+  {
+    "id": "flame-and-fang",
+    "category": "personal",
+    "color": "#6E5AB4",
+    "colorEnd": "#C34C78",
+    "icon": "flame",
+    "imageFile": "flame_fangs",
+    "sortOrder": 33
+  },
+  {
+    "id": "armament",
+    "category": "personal",
+    "color": "#B5835E",
+    "colorEnd": "#8C5E44",
+    "icon": "trophy",
+    "imageFile": "armament",
+    "sortOrder": 36
+  },
+  {
+    "id": "officer-project",
+    "category": "personal",
+    "color": "#A0704E",
+    "colorEnd": "#D0A84A",
+    "icon": "trophy",
+    "imageFile": "officer",
+    "sortOrder": 37
+  },
+  {
+    "id": "defeat-beasts",
+    "category": "personal",
+    "color": "#D8C49A",
+    "colorEnd": "#A8805A",
+    "icon": "paw",
+    "sortOrder": 25
+  },
+  {
+    "id": "heros-mission",
+    "category": "personal",
+    "color": "#C77DA8",
+    "icon": "target",
+    "sortOrder": 38
+  },
+  {
+    "id": "vision-of-dawn",
+    "category": "personal",
+    "color": "#E6B86A",
+    "icon": "sun",
+    "imageFile": "vision-of-dawn",
+    "sortOrder": 39
+  },
+  {
+    "id": "wander-theater",
+    "category": "personal",
+    "color": "#6C7FD8",
+    "colorEnd": "#B58AD9",
+    "icon": "star",
+    "sortOrder": 51
+  },
+  {
+    "id": "lucky-wheel",
+    "category": "personal",
+    "color": "#5EA4D6",
+    "colorEnd": "#3E7FC0",
+    "icon": "wheel",
+    "sortOrder": 24
+  },
+  {
+    "id": "frosty-fortune",
+    "category": "personal",
+    "color": "#5A7EC0",
+    "colorEnd": "#3E5A98",
+    "icon": "gift",
+    "imageFile": "frostyfortune",
+    "sortOrder": 26
+  },
+  {
+    "id": "treasure-hunt-drill",
+    "category": "personal",
+    "color": "#E6C25A",
+    "icon": "star",
+    "imageFile": "items/trsure-hunt-points",
+    "partOf": "frosty-fortune",
+    "sortOrder": 1
+  },
+  {
+    "id": "emporium-of-enigma",
+    "category": "personal",
+    "color": "#E07AB0",
+    "icon": "gift",
+    "imageFile": "items/thorn-of-enigma",
+    "detailsOnly": "yes",
+    "partOf": "frosty-fortune",
+    "sortOrder": 2
+  },
+  {
+    "id": "trading-station",
+    "category": "personal",
+    "color": "#D9925A",
+    "icon": "arrows",
+    "imageFile": "tundra_station",
+    "sortOrder": 46
+  },
+  {
+    "id": "treasure-hunter",
+    "category": "personal",
+    "color": "#6FA8D9",
+    "icon": "gift",
+    "imageFile": "pickaxe",
+    "sortOrder": 42
+  },
+  {
+    "id": "tundra-adventure",
+    "category": "personal",
+    "color": "#E0A85E",
+    "icon": "mountain",
+    "imageFile": "tundraadventure",
+    "sortOrder": 43
+  },
+  {
+    "id": "tundra-games",
+    "category": "personal",
+    "color": "#6CC4A8",
+    "icon": "trophy",
+    "sortOrder": 45
+  },
+  {
+    "id": "snowbusters",
+    "category": "personal",
+    "color": "#8FA2CC",
+    "colorEnd": "#6D80AE",
+    "icon": "snow",
+    "sortOrder": 14
+  },
+  {
+    "id": "dreamscape",
+    "category": "personal",
+    "color": "#B19FEC",
+    "icon": "star",
+    "sortOrder": 15
+  },
+  {
+    "id": "mergeventure",
+    "category": "personal",
+    "color": "#D2864E",
+    "colorEnd": "#E8BC5E",
+    "icon": "star",
+    "sortOrder": 17
+  },
+  {
+    "id": "fishing",
+    "category": "personal",
+    "color": "#5FB4C9",
+    "icon": "target",
+    "imageFile": "fishing",
+    "sortOrder": 40
+  },
+  {
+    "id": "tyrant",
+    "category": "state",
+    "color": "#E36F6F",
+    "icon": "dragon",
+    "detailsOnly": "yes",
+    "resultType": "rank",
+    "sortOrder": 18
+  },
+  {
+    "id": "frostwind-journey",
+    "category": "state",
+    "color": "#E36F6F",
+    "icon": "flag",
+    "partOf": "tyrant",
+    "sortOrder": 1
+  },
+  {
+    "id": "dragonborn-truck",
+    "category": "state",
+    "color": "#E36F6F",
+    "icon": "arrows",
+    "partOf": "tyrant",
+    "sortOrder": 2
+  },
+  {
+    "id": "tyrant-prediction",
+    "category": "state",
+    "color": "#E36F6F",
+    "icon": "star",
+    "partOf": "tyrant",
+    "sortOrder": 3
+  },
+  {
+    "id": "hellfire",
+    "category": "state",
+    "color": "#E0A24A",
+    "colorEnd": "#C4563C",
+    "icon": "flame",
+    "groupCount": "2",
+    "resultType": "rank",
+    "sortOrder": 19
+  },
+  {
+    "id": "tal-schedule-info",
+    "category": "state",
+    "color": "#EE8A5C",
+    "icon": "calendar",
+    "partOf": "hellfire",
+    "sortOrder": 1
+  },
+  {
+    "id": "tal-match-missions",
+    "category": "state",
+    "color": "#EE8A5C",
+    "icon": "flag",
+    "partOf": "hellfire",
+    "sortOrder": 2
+  },
+  {
+    "id": "tal-match-prediction",
+    "category": "state",
+    "color": "#B596F0",
+    "icon": "star",
+    "imageFile": "items/match-stake",
+    "partOf": "hellfire",
+    "sortOrder": 3,
+    "openWindows": [
+      {
+        "fromDay": 1,
+        "fromTime": "00:00",
+        "toDay": 2,
+        "toTime": "19:00"
+      },
+      {
+        "fromDay": 3,
+        "fromTime": "00:00",
+        "toDay": 4,
+        "toTime": "19:00"
+      },
+      {
+        "fromDay": 5,
+        "fromTime": "00:00",
+        "toDay": 6,
+        "toTime": "19:00"
+      },
+      {
+        "fromDay": 7,
+        "fromTime": "00:00",
+        "toDay": 8,
+        "toTime": "19:00"
+      },
+      {
+        "fromDay": 9,
+        "fromTime": "00:00",
+        "toDay": 10,
+        "toTime": "19:00"
+      },
+      {
+        "fromDay": 11,
+        "fromTime": "00:00",
+        "toDay": 12,
+        "toTime": "19:00"
+      },
+      {
+        "fromDay": 13,
+        "fromTime": "00:00",
+        "toDay": 14,
+        "toTime": "19:00"
+      }
+    ]
+  },
+  {
+    "id": "tal-champion-prediction",
+    "category": "state",
+    "color": "#F4CF4E",
+    "icon": "trophy",
+    "imageFile": "items/champion-stake",
+    "partOf": "hellfire",
+    "windowMark": "label",
+    "sortOrder": 4,
+    "openWindows": [
+      {
+        "fromDay": 1,
+        "fromTime": "00:00",
+        "toDay": 1,
+        "toTime": "24:00"
+      },
+      {
+        "fromDay": 3,
+        "fromTime": "00:00",
+        "toDay": 3,
+        "toTime": "24:00"
+      },
+      {
+        "fromDay": 5,
+        "fromTime": "00:00",
+        "toDay": 5,
+        "toTime": "24:00"
+      },
+      {
+        "fromDay": 7,
+        "fromTime": "00:00",
+        "toDay": 7,
+        "toTime": "24:00"
+      },
+      {
+        "fromDay": 9,
+        "fromTime": "00:00",
+        "toDay": 9,
+        "toTime": "24:00"
+      }
+    ]
+  },
+  {
+    "id": "icefire-league",
+    "category": "personal",
+    "color": "#5A78C8",
+    "colorEnd": "#5BBCE6",
+    "icon": "trophy",
+    "imageFile": "warhymn",
+    "sortOrder": 23
+  },
+  {
+    "id": "hall-of-heroes",
+    "category": "deals",
+    "color": "#E8CF78",
+    "colorEnd": "#CFA44A",
+    "icon": "star",
+    "imageFile": "hall_heroes",
+    "sortOrder": 29
+  },
+  {
+    "id": "crystal-reactivation",
+    "category": "deals",
+    "color": "#E07A5A",
+    "icon": "flame",
+    "sortOrder": 47
+  },
+  {
+    "id": "vault-of-enigma",
+    "category": "deals",
+    "color": "#C98A56",
+    "colorEnd": "#B0603E",
+    "icon": "gift",
+    "imageFile": "vault_enigma",
+    "sortOrder": 28
+  },
+  {
+    "id": "mia-fortune",
+    "category": "deals",
+    "color": "#D97FC9",
+    "icon": "star",
+    "imageFile": "mia",
+    "sortOrder": 41
+  },
+  {
+    "id": "journey-of-light",
+    "category": "deals",
+    "color": "#7FA8E8",
+    "icon": "star",
+    "imageFile": "journey_of_light",
+    "sortOrder": 48
+  },
+  {
+    "id": "shining-city",
+    "category": "deals",
+    "color": "#E6C25A",
+    "icon": "castle",
+    "sortOrder": 49
+  },
+  {
+    "id": "weekly-benefits",
+    "category": "deals",
+    "color": "#8FB0C9",
+    "icon": "calendar",
+    "sortOrder": 50
+  },
+  {
+    "id": "silver-shell",
+    "category": "deals",
+    "color": "#A9B8C9",
+    "icon": "star",
+    "sortOrder": 44
+  },
+  {
+    "id": "transfer",
+    "category": "state",
+    "color": "#D9C084",
+    "colorEnd": "#B98E54",
+    "icon": "arrows",
+    "sortOrder": 20
+  }
+]

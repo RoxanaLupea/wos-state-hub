@@ -1,0 +1,33 @@
+[
+  {
+    "key": "stateNumber",
+    "value": "1458"
+  },
+  {
+    "key": "ownerEmail",
+    "value": "owner@example.com"
+  },
+  {
+    "key": "transferFollows",
+    "value": "svs"
+  },
+  {
+    "key": "imageBaseUrl",
+    "value": "https://raw.githubusercontent.com/RoxanaLupea/form_assets/main/events/"
+  },
+  {
+    "key": "fortressSeasonStart",
+    "value": "2026-10-30"
+  },
+  {
+    "key": "signInUrl"
+  },
+  {
+    "key": "allianceDefaultsAddedFor",
+    "value": "dvl,top,sky,fun,ruu,dvl-academy,top-academy,sky-academy"
+  },
+  {
+    "key": "fortRewardsGeneration",
+    "value": "11"
+  }
+]

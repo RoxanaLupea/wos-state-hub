@@ -1,0 +1,295 @@
+[
+  {
+    "id": "st3",
+    "eventTypeId": "icefire-league",
+    "startTimeUtc": "12:00",
+    "endTimeUtc": "21:00",
+    "dayNumber": 3,
+    "sortOrder": 3
+  },
+  {
+    "id": "st4",
+    "eventTypeId": "icefire-league",
+    "startTimeUtc": "10:00",
+    "dayNumber": 4,
+    "sortOrder": 4
+  },
+  {
+    "id": "st5",
+    "eventTypeId": "icefire-league",
+    "startTimeUtc": "16:00",
+    "dayNumber": 4,
+    "sortOrder": 5
+  },
+  {
+    "id": "st6",
+    "eventTypeId": "icefire-league",
+    "startTimeUtc": "22:00",
+    "dayNumber": 4,
+    "sortOrder": 6
+  },
+  {
+    "id": "st7",
+    "eventTypeId": "icefire-league",
+    "startTimeUtc": "11:00",
+    "dayNumber": 5,
+    "sortOrder": 7
+  },
+  {
+    "id": "st8",
+    "eventTypeId": "icefire-league",
+    "startTimeUtc": "23:00",
+    "dayNumber": 5,
+    "sortOrder": 8
+  },
+  {
+    "id": "st9",
+    "eventTypeId": "icefire-league",
+    "startTimeUtc": "11:00",
+    "dayNumber": 6,
+    "sortOrder": 9
+  },
+  {
+    "id": "st10",
+    "eventTypeId": "hellfire",
+    "dayNumber": 10,
+    "sortOrder": 10
+  },
+  {
+    "id": "st11",
+    "eventTypeId": "hellfire",
+    "dayNumber": 12,
+    "sortOrder": 11
+  },
+  {
+    "id": "st12",
+    "eventTypeId": "hellfire",
+    "dayNumber": 14,
+    "sortOrder": 12
+  },
+  {
+    "id": "st13",
+    "eventTypeId": "hellfire",
+    "dayNumber": 16,
+    "sortOrder": 13
+  },
+  {
+    "id": "st14",
+    "eventTypeId": "hellfire",
+    "dayNumber": 18,
+    "sortOrder": 14
+  },
+  {
+    "id": "st15",
+    "eventTypeId": "hellfire",
+    "dayNumber": 20,
+    "sortOrder": 15
+  },
+  {
+    "id": "st16",
+    "eventTypeId": "hellfire",
+    "dayNumber": 22,
+    "sortOrder": 16
+  },
+  {
+    "id": "st17",
+    "eventTypeId": "wild-brawl",
+    "dayNumber": 1,
+    "sortOrder": 17
+  },
+  {
+    "id": "st18",
+    "eventTypeId": "wild-brawl",
+    "dayNumber": 2,
+    "sortOrder": 18
+  },
+  {
+    "id": "st25",
+    "eventTypeId": "tyrant",
+    "startTimeUtc": "11:00",
+    "endTimeUtc": "18:00",
+    "dayNumber": 7,
+    "sortOrder": 25
+  },
+  {
+    "id": "st26",
+    "eventTypeId": "tyrant",
+    "startTimeUtc": "12:00",
+    "endTimeUtc": "18:00",
+    "dayNumber": 7,
+    "sortOrder": 26
+  },
+  {
+    "id": "st34",
+    "eventTypeId": "hellfire",
+    "dayNumber": 6,
+    "sortOrder": 34
+  },
+  {
+    "id": "st35",
+    "eventTypeId": "hellfire",
+    "dayNumber": 7,
+    "sortOrder": 35
+  },
+  {
+    "id": "st57",
+    "eventTypeId": "icefire-league",
+    "startTimeUtc": "00:00",
+    "endTimeUtc": "10:00",
+    "dayNumber": 4,
+    "sortOrder": 57
+  },
+  {
+    "id": "st58",
+    "eventTypeId": "icefire-league",
+    "startTimeUtc": "10:00",
+    "endTimeUtc": "16:00",
+    "dayNumber": 4,
+    "sortOrder": 58
+  },
+  {
+    "id": "st66",
+    "eventTypeId": "alliance-championship",
+    "startTimeUtc": "23:00",
+    "endTimeUtc": "00:00",
+    "dayNumber": 2,
+    "sortOrder": 66
+  },
+  {
+    "id": "st67",
+    "eventTypeId": "alliance-championship",
+    "startTimeUtc": "00:00",
+    "endTimeUtc": "11:00",
+    "dayNumber": 3,
+    "sortOrder": 67
+  },
+  {
+    "id": "st68",
+    "eventTypeId": "alliance-championship",
+    "startTimeUtc": "11:00",
+    "endTimeUtc": "12:00",
+    "dayNumber": 3,
+    "sortOrder": 68
+  },
+  {
+    "id": "st69",
+    "eventTypeId": "alliance-championship",
+    "startTimeUtc": "12:00",
+    "endTimeUtc": "23:00",
+    "dayNumber": 3,
+    "sortOrder": 69
+  },
+  {
+    "id": "st70",
+    "eventTypeId": "alliance-championship",
+    "startTimeUtc": "23:00",
+    "endTimeUtc": "00:00",
+    "dayNumber": 3,
+    "sortOrder": 70
+  },
+  {
+    "id": "st71",
+    "eventTypeId": "alliance-championship",
+    "startTimeUtc": "00:00",
+    "endTimeUtc": "11:00",
+    "dayNumber": 4,
+    "sortOrder": 71
+  },
+  {
+    "id": "st72",
+    "eventTypeId": "alliance-championship",
+    "startTimeUtc": "11:00",
+    "endTimeUtc": "12:00",
+    "dayNumber": 4,
+    "sortOrder": 72
+  },
+  {
+    "id": "st73",
+    "eventTypeId": "alliance-championship",
+    "startTimeUtc": "12:00",
+    "endTimeUtc": "23:00",
+    "dayNumber": 4,
+    "sortOrder": 73
+  },
+  {
+    "id": "st74",
+    "eventTypeId": "alliance-championship",
+    "startTimeUtc": "23:00",
+    "endTimeUtc": "00:00",
+    "dayNumber": 4,
+    "sortOrder": 74
+  },
+  {
+    "id": "st75",
+    "eventTypeId": "alliance-championship",
+    "startTimeUtc": "00:00",
+    "endTimeUtc": "11:00",
+    "dayNumber": 5,
+    "sortOrder": 75
+  },
+  {
+    "id": "st76",
+    "eventTypeId": "alliance-championship",
+    "startTimeUtc": "11:00",
+    "endTimeUtc": "12:00",
+    "dayNumber": 5,
+    "sortOrder": 76
+  },
+  {
+    "id": "st82",
+    "eventTypeId": "showdown",
+    "dayNumber": 1,
+    "sortOrder": 82
+  },
+  {
+    "id": "st83",
+    "eventTypeId": "showdown",
+    "dayNumber": 2,
+    "sortOrder": 83
+  },
+  {
+    "id": "st84",
+    "eventTypeId": "showdown",
+    "dayNumber": 3,
+    "sortOrder": 84
+  },
+  {
+    "id": "st85",
+    "eventTypeId": "showdown",
+    "dayNumber": 4,
+    "sortOrder": 85
+  },
+  {
+    "id": "st86",
+    "eventTypeId": "showdown",
+    "dayNumber": 5,
+    "sortOrder": 86
+  },
+  {
+    "id": "st87",
+    "eventTypeId": "showdown",
+    "dayNumber": 6,
+    "sortOrder": 87
+  },
+  {
+    "id": "st88",
+    "eventTypeId": "trade-route",
+    "startTimeUtc": "00:00",
+    "dayNumber": 7,
+    "sortOrder": 88
+  },
+  {
+    "id": "st89",
+    "eventTypeId": "showdown",
+    "startTimeUtc": "23:00",
+    "dayNumber": 0,
+    "sortOrder": 89
+  },
+  {
+    "id": "st91",
+    "eventTypeId": "alliance-championship",
+    "startTimeUtc": "12:00",
+    "dayNumber": 5,
+    "sortOrder": 91
+  }
+]

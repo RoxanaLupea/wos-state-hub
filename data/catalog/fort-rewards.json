@@ -1,0 +1,1026 @@
+[
+  {
+    "id": "fr-F1-1",
+    "fort": "F1",
+    "phase": 1,
+    "itemId": "fred-shards",
+    "quantity": 420,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F1-2",
+    "fort": "F1",
+    "phase": 2,
+    "itemId": "troops-health-up-2",
+    "quantity": 60,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F1-3",
+    "fort": "F1",
+    "phase": 3,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F1-4",
+    "fort": "F1",
+    "phase": 4,
+    "itemId": "advanced-teleporter",
+    "quantity": 90,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F1-5",
+    "fort": "F1",
+    "phase": 5,
+    "itemId": "common-wild-mark",
+    "quantity": 600,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F1-6",
+    "fort": "F1",
+    "phase": 6,
+    "itemId": "troops-health-up-2",
+    "quantity": 60,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F1-7",
+    "fort": "F1",
+    "phase": 7,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F1-8",
+    "fort": "F1",
+    "phase": 8,
+    "itemId": "enhancement-xp-component",
+    "quantity": 500,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F2-1",
+    "fort": "F2",
+    "phase": 1,
+    "itemId": "advanced-teleporter",
+    "quantity": 90,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F2-2",
+    "fort": "F2",
+    "phase": 2,
+    "itemId": "fred-shards",
+    "quantity": 420,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F2-3",
+    "fort": "F2",
+    "phase": 3,
+    "itemId": "troops-health-up-2",
+    "quantity": 60,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F2-4",
+    "fort": "F2",
+    "phase": 4,
+    "itemId": "enhancement-xp-component",
+    "quantity": 500,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F2-5",
+    "fort": "F2",
+    "phase": 5,
+    "itemId": "enhancement-xp-component",
+    "quantity": 500,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F2-6",
+    "fort": "F2",
+    "phase": 6,
+    "itemId": "common-wild-mark",
+    "quantity": 600,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F2-7",
+    "fort": "F2",
+    "phase": 7,
+    "itemId": "troops-health-up-2",
+    "quantity": 60,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F2-8",
+    "fort": "F2",
+    "phase": 8,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F3-1",
+    "fort": "F3",
+    "phase": 1,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F3-2",
+    "fort": "F3",
+    "phase": 2,
+    "itemId": "advanced-teleporter",
+    "quantity": 90,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F3-3",
+    "fort": "F3",
+    "phase": 3,
+    "itemId": "blanchette-shards",
+    "quantity": 420,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F3-4",
+    "fort": "F3",
+    "phase": 4,
+    "itemId": "troops-health-up-2",
+    "quantity": 60,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F3-5",
+    "fort": "F3",
+    "phase": 5,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F3-6",
+    "fort": "F3",
+    "phase": 6,
+    "itemId": "enhancement-xp-component",
+    "quantity": 500,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F3-7",
+    "fort": "F3",
+    "phase": 7,
+    "itemId": "common-wild-mark",
+    "quantity": 600,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F3-8",
+    "fort": "F3",
+    "phase": 8,
+    "itemId": "troops-health-up-2",
+    "quantity": 60,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F4-1",
+    "fort": "F4",
+    "phase": 1,
+    "itemId": "troops-health-up-2",
+    "quantity": 60,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F4-2",
+    "fort": "F4",
+    "phase": 2,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F4-3",
+    "fort": "F4",
+    "phase": 3,
+    "itemId": "advanced-teleporter",
+    "quantity": 90,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F4-4",
+    "fort": "F4",
+    "phase": 4,
+    "itemId": "common-wild-mark",
+    "quantity": 600,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F4-5",
+    "fort": "F4",
+    "phase": 5,
+    "itemId": "advanced-teleporter",
+    "quantity": 90,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F4-6",
+    "fort": "F4",
+    "phase": 6,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F4-7",
+    "fort": "F4",
+    "phase": 7,
+    "itemId": "enhancement-xp-component",
+    "quantity": 500,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F4-8",
+    "fort": "F4",
+    "phase": 8,
+    "itemId": "common-wild-mark",
+    "quantity": 600,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F5-1",
+    "fort": "F5",
+    "phase": 1,
+    "itemId": "fred-shards",
+    "quantity": 420,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F5-2",
+    "fort": "F5",
+    "phase": 2,
+    "itemId": "troops-damage-up-2",
+    "quantity": 60,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F5-3",
+    "fort": "F5",
+    "phase": 3,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F5-4",
+    "fort": "F5",
+    "phase": 4,
+    "itemId": "enhancement-xp-component",
+    "quantity": 500,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F5-5",
+    "fort": "F5",
+    "phase": 5,
+    "itemId": "common-wild-mark",
+    "quantity": 600,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F5-6",
+    "fort": "F5",
+    "phase": 6,
+    "itemId": "troops-damage-up-2",
+    "quantity": 60,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F5-7",
+    "fort": "F5",
+    "phase": 7,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F5-8",
+    "fort": "F5",
+    "phase": 8,
+    "itemId": "enhancement-xp-component",
+    "quantity": 500,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F6-1",
+    "fort": "F6",
+    "phase": 1,
+    "itemId": "advanced-teleporter",
+    "quantity": 90,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F6-2",
+    "fort": "F6",
+    "phase": 2,
+    "itemId": "fred-shards",
+    "quantity": 420,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F6-3",
+    "fort": "F6",
+    "phase": 3,
+    "itemId": "troops-damage-up-2",
+    "quantity": 60,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F6-4",
+    "fort": "F6",
+    "phase": 4,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F6-5",
+    "fort": "F6",
+    "phase": 5,
+    "itemId": "enhancement-xp-component",
+    "quantity": 500,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F6-6",
+    "fort": "F6",
+    "phase": 6,
+    "itemId": "common-wild-mark",
+    "quantity": 600,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F6-7",
+    "fort": "F6",
+    "phase": 7,
+    "itemId": "troops-damage-up-2",
+    "quantity": 60,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F6-8",
+    "fort": "F6",
+    "phase": 8,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F7-1",
+    "fort": "F7",
+    "phase": 1,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F7-2",
+    "fort": "F7",
+    "phase": 2,
+    "itemId": "advanced-teleporter",
+    "quantity": 90,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F7-3",
+    "fort": "F7",
+    "phase": 3,
+    "itemId": "blanchette-shards",
+    "quantity": 420,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F7-4",
+    "fort": "F7",
+    "phase": 4,
+    "itemId": "advanced-teleporter",
+    "quantity": 90,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F7-5",
+    "fort": "F7",
+    "phase": 5,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F7-6",
+    "fort": "F7",
+    "phase": 6,
+    "itemId": "enhancement-xp-component",
+    "quantity": 500,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F7-7",
+    "fort": "F7",
+    "phase": 7,
+    "itemId": "common-wild-mark",
+    "quantity": 600,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F7-8",
+    "fort": "F7",
+    "phase": 8,
+    "itemId": "troops-damage-up-2",
+    "quantity": 60,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F8-1",
+    "fort": "F8",
+    "phase": 1,
+    "itemId": "troops-damage-up-2",
+    "quantity": 60,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F8-2",
+    "fort": "F8",
+    "phase": 2,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F8-3",
+    "fort": "F8",
+    "phase": 3,
+    "itemId": "advanced-teleporter",
+    "quantity": 90,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F8-4",
+    "fort": "F8",
+    "phase": 4,
+    "itemId": "common-wild-mark",
+    "quantity": 600,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F8-5",
+    "fort": "F8",
+    "phase": 5,
+    "itemId": "advanced-teleporter",
+    "quantity": 90,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F8-6",
+    "fort": "F8",
+    "phase": 6,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F8-7",
+    "fort": "F8",
+    "phase": 7,
+    "itemId": "enhancement-xp-component",
+    "quantity": 500,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F8-8",
+    "fort": "F8",
+    "phase": 8,
+    "itemId": "common-wild-mark",
+    "quantity": 600,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F9-1",
+    "fort": "F9",
+    "phase": 1,
+    "itemId": "fred-shards",
+    "quantity": 420,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F9-2",
+    "fort": "F9",
+    "phase": 2,
+    "itemId": "deployment-capacity-boost-2",
+    "quantity": 60,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F9-3",
+    "fort": "F9",
+    "phase": 3,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F9-4",
+    "fort": "F9",
+    "phase": 4,
+    "itemId": "enhancement-xp-component",
+    "quantity": 500,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F9-5",
+    "fort": "F9",
+    "phase": 5,
+    "itemId": "common-wild-mark",
+    "quantity": 600,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F9-6",
+    "fort": "F9",
+    "phase": 6,
+    "itemId": "deployment-capacity-boost-2",
+    "quantity": 60,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F9-7",
+    "fort": "F9",
+    "phase": 7,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F9-8",
+    "fort": "F9",
+    "phase": 8,
+    "itemId": "enhancement-xp-component",
+    "quantity": 500,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F10-1",
+    "fort": "F10",
+    "phase": 1,
+    "itemId": "advanced-teleporter",
+    "quantity": 90,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F10-2",
+    "fort": "F10",
+    "phase": 2,
+    "itemId": "fred-shards",
+    "quantity": 420,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F10-3",
+    "fort": "F10",
+    "phase": 3,
+    "itemId": "deployment-capacity-boost-2",
+    "quantity": 60,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F10-4",
+    "fort": "F10",
+    "phase": 4,
+    "itemId": "troops-damage-up-2",
+    "quantity": 60,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F10-5",
+    "fort": "F10",
+    "phase": 5,
+    "itemId": "enhancement-xp-component",
+    "quantity": 500,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F10-6",
+    "fort": "F10",
+    "phase": 6,
+    "itemId": "common-wild-mark",
+    "quantity": 600,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F10-7",
+    "fort": "F10",
+    "phase": 7,
+    "itemId": "deployment-capacity-boost-2",
+    "quantity": 60,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F10-8",
+    "fort": "F10",
+    "phase": 8,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F11-1",
+    "fort": "F11",
+    "phase": 1,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F11-2",
+    "fort": "F11",
+    "phase": 2,
+    "itemId": "advanced-teleporter",
+    "quantity": 90,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F11-3",
+    "fort": "F11",
+    "phase": 3,
+    "itemId": "blanchette-shards",
+    "quantity": 420,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F11-4",
+    "fort": "F11",
+    "phase": 4,
+    "itemId": "common-wild-mark",
+    "quantity": 600,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F11-5",
+    "fort": "F11",
+    "phase": 5,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F11-6",
+    "fort": "F11",
+    "phase": 6,
+    "itemId": "enhancement-xp-component",
+    "quantity": 500,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F11-7",
+    "fort": "F11",
+    "phase": 7,
+    "itemId": "common-wild-mark",
+    "quantity": 600,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F11-8",
+    "fort": "F11",
+    "phase": 8,
+    "itemId": "deployment-capacity-boost-2",
+    "quantity": 60,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F12-1",
+    "fort": "F12",
+    "phase": 1,
+    "itemId": "deployment-capacity-boost-2",
+    "quantity": 60,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-F12-2",
+    "fort": "F12",
+    "phase": 2,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F12-3",
+    "fort": "F12",
+    "phase": 3,
+    "itemId": "advanced-teleporter",
+    "quantity": 90,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F12-4",
+    "fort": "F12",
+    "phase": 4,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F12-5",
+    "fort": "F12",
+    "phase": 5,
+    "itemId": "advanced-teleporter",
+    "quantity": 90,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F12-6",
+    "fort": "F12",
+    "phase": 6,
+    "itemId": "speedup-general-1h",
+    "quantity": 400,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-F12-7",
+    "fort": "F12",
+    "phase": 7,
+    "itemId": "enhancement-xp-component",
+    "quantity": 500,
+    "tile": "purple"
+  },
+  {
+    "id": "fr-F12-8",
+    "fort": "F12",
+    "phase": 8,
+    "itemId": "common-wild-mark",
+    "quantity": 600,
+    "tile": "blue"
+  },
+  {
+    "id": "fr-SH1-1",
+    "fort": "SH1",
+    "phase": 1,
+    "itemId": "xura-shards",
+    "quantity": 420,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH1-2",
+    "fort": "SH1",
+    "phase": 2,
+    "itemId": "pet-advancement-materials-custom-chest",
+    "quantity": 100,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH1-3",
+    "fort": "SH1",
+    "phase": 3,
+    "itemId": "lucky-hero-gear-chest",
+    "quantity": 150,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH1-4",
+    "fort": "SH1",
+    "phase": 4,
+    "itemId": "blanchette-shards",
+    "quantity": 420,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH1-5",
+    "fort": "SH1",
+    "phase": 5,
+    "itemId": "gregory-shards",
+    "quantity": 420,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH1-6",
+    "fort": "SH1",
+    "phase": 6,
+    "itemId": "pet-advancement-materials-custom-chest",
+    "quantity": 100,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH1-7",
+    "fort": "SH1",
+    "phase": 7,
+    "itemId": "lucky-hero-gear-chest",
+    "quantity": 150,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH1-8",
+    "fort": "SH1",
+    "phase": 8,
+    "itemId": "blanchette-shards",
+    "quantity": 420,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH2-1",
+    "fort": "SH2",
+    "phase": 1,
+    "itemId": "fire-crystal",
+    "quantity": 600,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH2-2",
+    "fort": "SH2",
+    "phase": 2,
+    "itemId": "xura-shards",
+    "quantity": 420,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH2-3",
+    "fort": "SH2",
+    "phase": 3,
+    "itemId": "pet-advancement-materials-custom-chest",
+    "quantity": 100,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH2-4",
+    "fort": "SH2",
+    "phase": 4,
+    "itemId": "fire-crystal",
+    "quantity": 600,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH2-5",
+    "fort": "SH2",
+    "phase": 5,
+    "itemId": "fire-crystal",
+    "quantity": 600,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH2-6",
+    "fort": "SH2",
+    "phase": 6,
+    "itemId": "gregory-shards",
+    "quantity": 420,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH2-7",
+    "fort": "SH2",
+    "phase": 7,
+    "itemId": "pet-advancement-materials-custom-chest",
+    "quantity": 100,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH2-8",
+    "fort": "SH2",
+    "phase": 8,
+    "itemId": "fire-crystal",
+    "quantity": 600,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH3-1",
+    "fort": "SH3",
+    "phase": 1,
+    "itemId": "lucky-hero-gear-chest",
+    "quantity": 150,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH3-2",
+    "fort": "SH3",
+    "phase": 2,
+    "itemId": "fire-crystal",
+    "quantity": 600,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH3-3",
+    "fort": "SH3",
+    "phase": 3,
+    "itemId": "gregory-shards",
+    "quantity": 420,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH3-4",
+    "fort": "SH3",
+    "phase": 4,
+    "itemId": "pet-advancement-materials-custom-chest",
+    "quantity": 100,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH3-5",
+    "fort": "SH3",
+    "phase": 5,
+    "itemId": "lucky-hero-gear-chest",
+    "quantity": 150,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH3-6",
+    "fort": "SH3",
+    "phase": 6,
+    "itemId": "fire-crystal",
+    "quantity": 600,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH3-7",
+    "fort": "SH3",
+    "phase": 7,
+    "itemId": "fire-crystal",
+    "quantity": 600,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH3-8",
+    "fort": "SH3",
+    "phase": 8,
+    "itemId": "pet-advancement-materials-custom-chest",
+    "quantity": 100,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH4-1",
+    "fort": "SH4",
+    "phase": 1,
+    "itemId": "pet-advancement-materials-custom-chest",
+    "quantity": 100,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH4-2",
+    "fort": "SH4",
+    "phase": 2,
+    "itemId": "lucky-hero-gear-chest",
+    "quantity": 150,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH4-3",
+    "fort": "SH4",
+    "phase": 3,
+    "itemId": "fire-crystal",
+    "quantity": 600,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH4-4",
+    "fort": "SH4",
+    "phase": 4,
+    "itemId": "gregory-shards",
+    "quantity": 420,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH4-5",
+    "fort": "SH4",
+    "phase": 5,
+    "itemId": "pet-advancement-materials-custom-chest",
+    "quantity": 100,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH4-6",
+    "fort": "SH4",
+    "phase": 6,
+    "itemId": "lucky-hero-gear-chest",
+    "quantity": 150,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH4-7",
+    "fort": "SH4",
+    "phase": 7,
+    "itemId": "gregory-shards",
+    "quantity": 420,
+    "tile": "orange"
+  },
+  {
+    "id": "fr-SH4-8",
+    "fort": "SH4",
+    "phase": 8,
+    "itemId": "gregory-shards",
+    "quantity": 420,
+    "tile": "orange"
+  }
+]

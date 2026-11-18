@@ -1,0 +1,114 @@
+[
+  {
+    "id": "fh-2026-10-30-2-F1",
+    "seasonStart": "2026-10-30",
+    "fort": "F1",
+    "phase": "2",
+    "allianceId": "top"
+  },
+  {
+    "id": "fh-2026-10-30-2-F2",
+    "seasonStart": "2026-10-30",
+    "fort": "F2",
+    "phase": "2",
+    "allianceId": "ruu"
+  },
+  {
+    "id": "fh-2026-10-30-2-F3",
+    "seasonStart": "2026-10-30",
+    "fort": "F3",
+    "phase": "2",
+    "allianceId": "ruu"
+  },
+  {
+    "id": "fh-2026-10-30-2-F4",
+    "seasonStart": "2026-10-30",
+    "fort": "F4",
+    "phase": "2",
+    "allianceId": "sky"
+  },
+  {
+    "id": "fh-2026-10-30-2-F5",
+    "seasonStart": "2026-10-30",
+    "fort": "F5",
+    "phase": "2",
+    "allianceId": "dvl"
+  },
+  {
+    "id": "fh-2026-10-30-2-F6",
+    "seasonStart": "2026-10-30",
+    "fort": "F6",
+    "phase": "2",
+    "allianceId": "sky"
+  },
+  {
+    "id": "fh-2026-10-30-2-F7",
+    "seasonStart": "2026-10-30",
+    "fort": "F7",
+    "phase": "2",
+    "allianceId": "fun"
+  },
+  {
+    "id": "fh-2026-10-30-2-F8",
+    "seasonStart": "2026-10-30",
+    "fort": "F8",
+    "phase": "2",
+    "allianceId": "top"
+  },
+  {
+    "id": "fh-2026-10-30-2-F9",
+    "seasonStart": "2026-10-30",
+    "fort": "F9",
+    "phase": "2",
+    "allianceId": "dvl-academy"
+  },
+  {
+    "id": "fh-2026-10-30-2-F10",
+    "seasonStart": "2026-10-30",
+    "fort": "F10",
+    "phase": "2",
+    "allianceId": "top-academy"
+  },
+  {
+    "id": "fh-2026-10-30-2-F11",
+    "seasonStart": "2026-10-30",
+    "fort": "F11",
+    "phase": "2",
+    "allianceId": "fun"
+  },
+  {
+    "id": "fh-2026-10-30-2-F12",
+    "seasonStart": "2026-10-30",
+    "fort": "F12",
+    "phase": "2",
+    "allianceId": "dvl"
+  },
+  {
+    "id": "fh-2026-10-30-2-SH1",
+    "seasonStart": "2026-10-30",
+    "fort": "SH1",
+    "phase": "2",
+    "allianceId": "sky"
+  },
+  {
+    "id": "fh-2026-10-30-2-SH2",
+    "seasonStart": "2026-10-30",
+    "fort": "SH2",
+    "phase": "2",
+    "allianceId": "dvl"
+  },
+  {
+    "id": "fh-2026-10-30-2-SH3",
+    "seasonStart": "2026-10-30",
+    "fort": "SH3",
+    "phase": "2",
+    "allianceId": "top"
+  },
+  {
+    "id": "fh-2026-10-30-2-SH4",
+    "seasonStart": "2026-10-30",
+    "fort": "SH4",
+    "phase": "2",
+    "allianceId": "fun"
+  }
+]

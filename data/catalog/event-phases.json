@@ -1,0 +1,269 @@
+[
+  {
+    "id": "ph1",
+    "eventTypeId": "alliance-championship",
+    "fromDay": 1,
+    "toDay": 2,
+    "sortOrder": 1
+  },
+  {
+    "id": "ph2",
+    "eventTypeId": "alliance-championship",
+    "fromDay": 3,
+    "toDay": 5,
+    "sortOrder": 2
+  },
+  {
+    "id": "ph3",
+    "eventTypeId": "fortress-battles",
+    "fromDay": 1,
+    "toDay": 3,
+    "sortOrder": 3
+  },
+  {
+    "id": "ph4",
+    "eventTypeId": "fortress-battles",
+    "fromDay": 4,
+    "toDay": 4,
+    "sortOrder": 4
+  },
+  {
+    "id": "ph5",
+    "eventTypeId": "foundry",
+    "fromDay": 1,
+    "toDay": 2,
+    "sortOrder": 5
+  },
+  {
+    "id": "ph6",
+    "eventTypeId": "foundry",
+    "fromDay": 3,
+    "toDay": 4,
+    "sortOrder": 6
+  },
+  {
+    "id": "ph7",
+    "eventTypeId": "foundry",
+    "hideBar": "yes",
+    "fromDay": 5,
+    "toDay": 6,
+    "sortOrder": 7
+  },
+  {
+    "id": "ph8",
+    "eventTypeId": "foundry",
+    "hideBar": "yes",
+    "fromDay": 7,
+    "toDay": 7,
+    "sortOrder": 8
+  },
+  {
+    "id": "ph9",
+    "eventTypeId": "canyon",
+    "fromDay": 1,
+    "toDay": 2,
+    "sortOrder": 9
+  },
+  {
+    "id": "ph10",
+    "eventTypeId": "canyon",
+    "fromDay": 3,
+    "toDay": 4,
+    "sortOrder": 10
+  },
+  {
+    "id": "ph11",
+    "eventTypeId": "canyon",
+    "hideBar": "yes",
+    "fromDay": 5,
+    "toDay": 5,
+    "sortOrder": 11
+  },
+  {
+    "id": "ph12",
+    "eventTypeId": "canyon",
+    "hideBar": "yes",
+    "fromDay": 6,
+    "toDay": 6,
+    "sortOrder": 12
+  },
+  {
+    "id": "ph13",
+    "eventTypeId": "hellfire",
+    "fromDay": 1,
+    "toDay": 2,
+    "sortOrder": 13
+  },
+  {
+    "id": "ph14",
+    "eventTypeId": "hellfire",
+    "fromDay": 3,
+    "toDay": 4,
+    "sortOrder": 14
+  },
+  {
+    "id": "ph15",
+    "eventTypeId": "hellfire",
+    "fromDay": 5,
+    "toDay": 7,
+    "sortOrder": 15
+  },
+  {
+    "id": "ph16",
+    "eventTypeId": "hellfire",
+    "fromDay": 8,
+    "toDay": 8,
+    "sortOrder": 16
+  },
+  {
+    "id": "ph17",
+    "eventTypeId": "hellfire",
+    "fromDay": 9,
+    "toDay": 16,
+    "sortOrder": 17
+  },
+  {
+    "id": "ph18",
+    "eventTypeId": "hellfire",
+    "fromDay": 17,
+    "toDay": 23,
+    "sortOrder": 18
+  },
+  {
+    "id": "ph19",
+    "eventTypeId": "icefire-league",
+    "fromDay": 1,
+    "toDay": 2,
+    "sortOrder": 19
+  },
+  {
+    "id": "ph20",
+    "eventTypeId": "icefire-league",
+    "fromDay": 3,
+    "toDay": 3,
+    "sortOrder": 20
+  },
+  {
+    "id": "ph21",
+    "eventTypeId": "icefire-league",
+    "fromDay": 4,
+    "toDay": 4,
+    "sortOrder": 21
+  },
+  {
+    "id": "ph22",
+    "eventTypeId": "icefire-league",
+    "fromDay": 5,
+    "toDay": 5,
+    "sortOrder": 22
+  },
+  {
+    "id": "ph23",
+    "eventTypeId": "icefire-league",
+    "fromDay": 6,
+    "toDay": 6,
+    "sortOrder": 23
+  },
+  {
+    "id": "ph24",
+    "eventTypeId": "tyrant",
+    "fromDay": 1,
+    "toDay": 2,
+    "sortOrder": 24
+  },
+  {
+    "id": "ph25",
+    "eventTypeId": "tyrant",
+    "fromDay": 3,
+    "toDay": 4,
+    "sortOrder": 25
+  },
+  {
+    "id": "ph26",
+    "eventTypeId": "tyrant",
+    "fromDay": 5,
+    "toDay": 6,
+    "sortOrder": 26
+  },
+  {
+    "id": "ph27",
+    "eventTypeId": "tyrant",
+    "fromDay": 7,
+    "toDay": 7,
+    "sortOrder": 27
+  },
+  {
+    "id": "ph28",
+    "eventTypeId": "tyrant",
+    "fromDay": 8,
+    "toDay": 9,
+    "sortOrder": 28
+  },
+  {
+    "id": "ph29",
+    "eventTypeId": "transfer",
+    "fromDay": 1,
+    "toDay": 3,
+    "sortOrder": 29
+  },
+  {
+    "id": "ph30",
+    "eventTypeId": "transfer",
+    "fromDay": 4,
+    "toDay": 5,
+    "sortOrder": 30
+  },
+  {
+    "id": "ph31",
+    "eventTypeId": "transfer",
+    "fromDay": 6,
+    "toDay": 7,
+    "sortOrder": 31
+  },
+  {
+    "id": "ph32",
+    "eventTypeId": "winter-siege",
+    "endTimeUtc": "23:00",
+    "fromDay": 1,
+    "toDay": 2,
+    "sortOrder": 32
+  },
+  {
+    "id": "ph33",
+    "eventTypeId": "winter-siege",
+    "fromDay": 3,
+    "toDay": 4,
+    "sortOrder": 33
+  },
+  {
+    "id": "ph34",
+    "eventTypeId": "winter-siege",
+    "fromDay": 5,
+    "toDay": 5,
+    "sortOrder": 34
+  },
+  {
+    "id": "ph35",
+    "eventTypeId": "winter-siege",
+    "fromDay": 6,
+    "toDay": 6,
+    "sortOrder": 35
+  },
+  {
+    "id": "ph42",
+    "eventTypeId": "winter-siege",
+    "fromDay": 7,
+    "toDay": 7,
+    "sortOrder": 42
+  },
+  {
+    "id": "ph43",
+    "eventTypeId": "winter-siege",
+    "startTimeUtc": "23:00",
+    "endTimeUtc": "00:00",
+    "hideBar": "yes",
+    "fromDay": 2,
+    "toDay": 2,
+    "sortOrder": 43
+  }
+]

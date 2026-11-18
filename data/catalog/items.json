@@ -1,0 +1,557 @@
+[
+  {
+    "id": "giant-horn",
+    "imageFile": "items/giant-horn.png"
+  },
+  {
+    "id": "tundra-truck",
+    "imageFile": "items/tundra-truck.png"
+  },
+  {
+    "id": "alliance-token",
+    "imageFile": "items/alliance-token.png"
+  },
+  {
+    "id": "gems",
+    "imageFile": "items/gems.png"
+  },
+  {
+    "id": "gems-1000",
+    "imageFile": "items/gems-1000.png"
+  },
+  {
+    "id": "fire-crystal",
+    "imageFile": "items/fire-crystals.png"
+  },
+  {
+    "id": "refined-fire-crystal",
+    "imageFile": "items/refined-fire-crystal.png"
+  },
+  {
+    "id": "fire-crystal-shard",
+    "imageFile": "items/fire-crystal-shard.png"
+  },
+  {
+    "id": "mythic-general-hero-shard",
+    "imageFile": "items/mythic-general-hero-shard.png"
+  },
+  {
+    "id": "speedup-general-1h",
+    "imageFile": "items/speedup-general.png"
+  },
+  {
+    "id": "speedup-construction-1h",
+    "imageFile": "items/speedup-construction.png"
+  },
+  {
+    "id": "speedup-research-1h",
+    "imageFile": "items/speedup-research.png"
+  },
+  {
+    "id": "speedup-training-1h",
+    "imageFile": "items/speedup-training.png"
+  },
+  {
+    "id": "speedup-general-5m",
+    "imageFile": "items/speedup-general.png"
+  },
+  {
+    "id": "speedup-construction-5m",
+    "imageFile": "items/speedup-construction.png"
+  },
+  {
+    "id": "speedup-research-5m",
+    "imageFile": "items/speedup-research.png"
+  },
+  {
+    "id": "speedup-training-5m",
+    "imageFile": "items/speedup-training.png"
+  },
+  {
+    "id": "secured-resource-supply-chest",
+    "imageFile": "items/resource-chest-lvl-1-2.png"
+  },
+  {
+    "id": "custom-secured-resource-chest-2",
+    "imageFile": "items/custom-resource-chest-lvl-1-2.png"
+  },
+  {
+    "id": "gold-key",
+    "imageFile": "items/gold-key.png"
+  },
+  {
+    "id": "life-essence",
+    "imageFile": "items/life-essence.png"
+  },
+  {
+    "id": "meat-100k",
+    "imageFile": "items/meat.png"
+  },
+  {
+    "id": "wood-100k",
+    "imageFile": "items/wood.png"
+  },
+  {
+    "id": "coal-10k",
+    "imageFile": "items/coal.png"
+  },
+  {
+    "id": "iron-10k",
+    "imageFile": "items/iron.png"
+  },
+  {
+    "id": "coal-100k",
+    "imageFile": "items/coal.png"
+  },
+  {
+    "id": "iron-100k",
+    "imageFile": "items/iron.png"
+  },
+  {
+    "id": "enhancement-xp-component",
+    "imageFile": "items/enhancement-xp-component.png"
+  },
+  {
+    "id": "lucky-hero-gear-chest",
+    "imageFile": "items/lucky-hero-gear-chest.png"
+  },
+  {
+    "id": "truck-voucher",
+    "imageFile": "items/truck-voucher.png"
+  },
+  {
+    "id": "charm-design",
+    "imageFile": "items/charm-design.png"
+  },
+  {
+    "id": "charm-guide",
+    "imageFile": "items/charm-guide.png"
+  },
+  {
+    "id": "design-plans",
+    "imageFile": "items/design-plans.png"
+  },
+  {
+    "id": "essence-stones",
+    "imageFile": "items/essence-stones.png"
+  },
+  {
+    "id": "strength-in-unity",
+    "imageFile": "items/strength-in-unity.png"
+  },
+  {
+    "id": "sail-of-conquest",
+    "imageFile": "items/sail-of-conquest.png"
+  },
+  {
+    "id": "book-of-knowledge",
+    "imageFile": "items/book-of-knowledge.png"
+  },
+  {
+    "id": "common-expert-sigil",
+    "imageFile": "items/common-expert-sigil.png"
+  },
+  {
+    "id": "furious-sea-fortress",
+    "imageFile": "items/furious-sea-fortress.png"
+  },
+  {
+    "id": "winter-badge",
+    "imageFile": "items/winter-badge.png"
+  },
+  {
+    "id": "treasure-box",
+    "imageFile": "items/treasure-box.png"
+  },
+  {
+    "id": "showdown-win-horn",
+    "imageFile": "items/horn-gold.png"
+  },
+  {
+    "id": "champion-stake",
+    "imageFile": "items/champion-stake.png"
+  },
+  {
+    "id": "match-stake",
+    "imageFile": "items/match-stake.png"
+  },
+  {
+    "id": "march-accelerator-1",
+    "imageFile": "items/march-accelerator.png"
+  },
+  {
+    "id": "march-accelerator-2",
+    "imageFile": "items/march-accelerator.png"
+  },
+  {
+    "id": "arsenal-token",
+    "imageFile": "items/arsenal-token.png"
+  },
+  {
+    "id": "mithril",
+    "imageFile": "items/mithril.png"
+  },
+  {
+    "id": "shot-token",
+    "imageFile": "items/shot-token.png"
+  },
+  {
+    "id": "gems-100",
+    "imageFile": "items/gems-100.png"
+  },
+  {
+    "id": "speedup-general-3h",
+    "imageFile": "items/speedup-general.png"
+  },
+  {
+    "id": "hornwrath-herald-30",
+    "imageFile": "items/hornwrath-herald.png"
+  },
+  {
+    "id": "fireclaw-hunter-30",
+    "imageFile": "items/fireclaw-hunter.png"
+  },
+  {
+    "id": "fireclaw-hunter-14",
+    "imageFile": "items/fireclaw-hunter.png"
+  },
+  {
+    "id": "battlefield-tyrant",
+    "imageFile": "items/battlefield-tyrant.png"
+  },
+  {
+    "id": "war-chariot",
+    "imageFile": "items/war-chariot.png"
+  },
+  {
+    "id": "alliance-hq-skin",
+    "imageFile": "items/alliance-hq-skin.png"
+  },
+  {
+    "id": "alliance-banner-skin",
+    "imageFile": "items/alliance-banner-skin.png"
+  },
+  {
+    "id": "tundra-warlord",
+    "imageFile": "items/tundra-warlord.png"
+  },
+  {
+    "id": "alliance-banner-champion",
+    "imageFile": "items/alliance-banner-champion.png"
+  },
+  {
+    "id": "weapons-master",
+    "imageFile": "items/weapons-master.png"
+  },
+  {
+    "id": "alliance-banner-top4",
+    "imageFile": "items/alliance-banner-top4.png"
+  },
+  {
+    "id": "troops-health-up-2",
+    "imageFile": "items/troops-health-up-2.png"
+  },
+  {
+    "id": "troops-damage-up-2",
+    "imageFile": "items/troops-damage-up-2.png"
+  },
+  {
+    "id": "deployment-capacity-boost-2",
+    "imageFile": "items/deployment-capacity-boost-2.png"
+  },
+  {
+    "id": "advanced-teleporter",
+    "imageFile": "items/advanced-teleporter.png"
+  },
+  {
+    "id": "common-wild-mark",
+    "imageFile": "items/common-wild-mark.png"
+  },
+  {
+    "id": "pet-advancement-materials-custom-chest",
+    "imageFile": "items/pet-advancement-materials-custom-chest.png"
+  },
+  {
+    "id": "fred-shards",
+    "imageFile": "heroes/fred-shard.png"
+  },
+  {
+    "id": "blanchette-shards",
+    "imageFile": "heroes/blanchette-shard.png"
+  },
+  {
+    "id": "xura-shards",
+    "imageFile": "heroes/xura-shard.png"
+  },
+  {
+    "id": "gregory-shards",
+    "imageFile": "heroes/gregory-shard.png"
+  },
+  {
+    "id": "eleonora-shards",
+    "imageFile": "heroes/eleonora-shard.png"
+  },
+  {
+    "id": "lloyd-shards",
+    "imageFile": "heroes/lloyd-shard.png"
+  },
+  {
+    "id": "karol-shards",
+    "imageFile": "heroes/karol-shard.png"
+  },
+  {
+    "id": "ligeia-shards",
+    "imageFile": "heroes/ligeia-shard.png"
+  },
+  {
+    "id": "resource-supply-chest-10k",
+    "imageFile": "items/resource-chest-lvl-1-2.png"
+  },
+  {
+    "id": "secured-resource-supply-chest-10k",
+    "imageFile": "items/resource-chest-lvl-1-2.png"
+  },
+  {
+    "id": "custom-resource-chest-1",
+    "imageFile": "items/custom-resource-chest-lvl-1-2.png"
+  },
+  {
+    "id": "custom-resource-chest-2",
+    "imageFile": "items/custom-resource-chest-lvl-1-2.png"
+  },
+  {
+    "id": "custom-resource-chest-3",
+    "imageFile": "items/custom-resource-chest-lvl-3.png"
+  },
+  {
+    "id": "custom-secured-resource-chest-1",
+    "imageFile": "items/custom-resource-chest-lvl-1-2.png"
+  },
+  {
+    "id": "custom-secured-resource-chest-3",
+    "imageFile": "items/custom-resource-chest-lvl-3.png"
+  },
+  {
+    "id": "hero-xp-1k",
+    "imageFile": "items/hero-xp.png"
+  },
+  {
+    "id": "hero-xp-5k",
+    "imageFile": "items/hero-xp.png"
+  },
+  {
+    "id": "hero-xp-10k",
+    "imageFile": "items/hero-xp.png"
+  },
+  {
+    "id": "meat-10k",
+    "imageFile": "items/meat.png"
+  },
+  {
+    "id": "wood-10k",
+    "imageFile": "items/wood.png"
+  },
+  {
+    "id": "medal-of-honor",
+    "imageFile": "items/medal-of-honor.png"
+  },
+  {
+    "id": "mythic-expedition-skill-manual",
+    "imageFile": "items/mythic-expedition-skill-manual.png"
+  },
+  {
+    "id": "mythic-exploration-manual",
+    "imageFile": "items/mythic-exploration-skill-manual.png"
+  },
+  {
+    "id": "general-accessory-construction-contract",
+    "imageFile": "items/general-accessory-construction-contract.png"
+  },
+  {
+    "id": "championship-badge",
+    "imageFile": "items/championship-badge.png"
+  },
+  {
+    "id": "knight-of-the-watch",
+    "imageFile": "items/knight-of-the-watch.png"
+  },
+  {
+    "id": "knight-of-conquest",
+    "imageFile": "items/knight-of-conquest.png"
+  },
+  {
+    "id": "knights-glory-avatar-frame",
+    "imageFile": "items/knights-glory-avatar-frame.png"
+  },
+  {
+    "id": "knights-glory-nameplate",
+    "imageFile": "items/knights-glory-nameplate.png"
+  },
+  {
+    "id": "coal-1k",
+    "imageFile": "items/coal.png"
+  },
+  {
+    "id": "iron-1k",
+    "imageFile": "items/iron.png"
+  },
+  {
+    "id": "meat-10k-unsecured",
+    "imageFile": "items/meat.png"
+  },
+  {
+    "id": "wood-10k-unsecured",
+    "imageFile": "items/wood.png"
+  },
+  {
+    "id": "coal-10k-unsecured",
+    "imageFile": "items/coal.png"
+  },
+  {
+    "id": "iron-10k-unsecured",
+    "imageFile": "items/iron.png"
+  },
+  {
+    "id": "meat-1m",
+    "imageFile": "items/meat.png"
+  },
+  {
+    "id": "wood-1m",
+    "imageFile": "items/wood.png"
+  },
+  {
+    "id": "speedup-experts-1h",
+    "imageFile": "items/speedup-experts.png"
+  },
+  {
+    "id": "recall-xp",
+    "imageFile": "items/recall-xp.png"
+  },
+  {
+    "id": "dream-nest",
+    "imageFile": "items/dream-nest.png"
+  },
+  {
+    "id": "chief-gear-materials-chest",
+    "imageFile": "items/chief-gear-material-chest.png"
+  },
+  {
+    "id": "polishing-solution",
+    "imageFile": "items/polishing-solution.png"
+  },
+  {
+    "id": "hardened-alloy",
+    "imageFile": "items/hardened-alloy.png"
+  },
+  {
+    "id": "silver-key",
+    "imageFile": "items/silver-key.png"
+  },
+  {
+    "id": "mythic-general-decoration-component",
+    "imageFile": "items/mythic-general-decoration-component.png"
+  },
+  {
+    "id": "energizing-potion",
+    "imageFile": "items/energizing-potion.png"
+  },
+  {
+    "id": "nameplate-30d",
+    "imageFile": "items/koi-nameplate.png"
+  },
+  {
+    "id": "nameplate-14d",
+    "imageFile": "items/koi-nameplate.png"
+  },
+  {
+    "id": "nameplate-7d",
+    "imageFile": "items/koi-nameplate.png"
+  },
+  {
+    "id": "avatar-frame-30d",
+    "imageFile": "items/koi-avatar-frame.png"
+  },
+  {
+    "id": "avatar-frame-14d",
+    "imageFile": "items/koi-avatar-frame.png"
+  },
+  {
+    "id": "avatar-frame-7d",
+    "imageFile": "items/koi-avatar-frame.png"
+  },
+  {
+    "id": "blue-flame-avatar-frame",
+    "imageFile": "items/blue-flame-avatar-frame.png"
+  },
+  {
+    "id": "orichalcum",
+    "imageFile": "items/orichalcum.png"
+  },
+  {
+    "id": "crystallite-core",
+    "imageFile": "items/crystallite-core.png"
+  },
+  {
+    "id": "mystery-pack"
+  },
+  {
+    "id": "pioneer-badge",
+    "imageFile": "items/pioneer-badge.png"
+  },
+  {
+    "id": "treasure-hunt-points",
+    "imageFile": "items/trsure-hunt-points.png"
+  },
+  {
+    "id": "gem-of-enigma",
+    "imageFile": "items/gem-of-enigma.png"
+  },
+  {
+    "id": "thorn-of-enigma",
+    "imageFile": "items/thorn-of-enigma.png"
+  },
+  {
+    "id": "treasure-hunt-chest",
+    "imageFile": "items/treasure-hunt-chest.png"
+  },
+  {
+    "id": "enhancement-xp-component-10",
+    "imageFile": "items/enhancement-xp-component.png"
+  },
+  {
+    "id": "mystery-badge",
+    "imageFile": "items/mystery-badge.png"
+  },
+  {
+    "id": "custom-hero-widget-chest",
+    "imageFile": "items/custom-hero-widget-chest.png"
+  },
+  {
+    "id": "advanced-wild-mark",
+    "imageFile": "items/advanced-wild-mark.png"
+  },
+  {
+    "id": "windmill-village",
+    "imageFile": "items/windmill-village.png"
+  },
+  {
+    "id": "forgetown",
+    "imageFile": "items/forgetown.png"
+  },
+  {
+    "id": "brute-mammoth",
+    "imageFile": "items/brute-mammoth.png"
+  },
+  {
+    "id": "snowmobile",
+    "imageFile": "items/snowmobile.png"
+  },
+  {
+    "id": "pet-bag",
+    "imageFile": "items/pet-bag.png"
+  },
+  {
+    "id": "emporium-resource-chest",
+    "imageFile": "items/resource-chest-lvl-1-2.png"
+  }
+]
