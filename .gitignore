@@ -1,0 +1,16 @@
+# Libraries, downloaded by npm install
+node_modules/
+
+# The built site, rebuilt by GitHub on every push
+dist/
+
+# Keys and local settings, never committed
+.env
+.env.*
+!.env.example
+
+# Editor and system files
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db

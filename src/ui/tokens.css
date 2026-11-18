@@ -1,0 +1,60 @@
+/* Every colour, size and spacing value the app uses lives here, and nowhere else.
+   Change a value here and it changes everywhere it is used. */
+:root {
+  /* Page */
+  --page-color: #0C1220;
+  --page-background:
+    radial-gradient(circle at 100% 12%, rgba(150, 120, 235, 0.34), transparent 38%),
+    radial-gradient(circle at -5% 48%, rgba(90, 140, 230, 0.32), transparent 40%),
+    radial-gradient(circle at 90% 78%, rgba(70, 190, 180, 0.22), transparent 36%),
+    radial-gradient(circle at 15% 100%, rgba(225, 120, 160, 0.18), transparent 32%);
+
+  /* Glass surfaces */
+  --glass: rgba(255, 255, 255, 0.07);
+  --glass-strong: rgba(255, 255, 255, 0.11);
+  --glass-border: rgba(255, 255, 255, 0.16);
+  --glass-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 14px 34px rgba(0, 0, 0, 0.30);
+  --blur: blur(18px) saturate(140%);
+
+  /* Text */
+  --text: #EEF1F8;
+  --text-muted: #B9C2D9;
+  --text-faint: #8F9AB8;
+
+  /* Accents */
+  --accent: #AFC8F5;
+  --accent-ink: #1C2333;
+  --danger: #F2A0A0;
+
+  /* Shapes and spacing */
+  --radius: 18px;
+  --radius-small: 10px;
+  --gap-small: 6px;
+  --gap: 12px;
+  --gap-large: 20px;
+
+  /* Type */
+  --font: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font);
+  color: var(--text);
+  background-color: var(--page-color);
+  background-image: var(--page-background);
+  background-attachment: fixed;
+}
+
+/* The shared glass panel look, used by every card and bar in the app. */
+.glass {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+}
