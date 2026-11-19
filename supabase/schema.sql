@@ -393,15 +393,20 @@ create table roster_members (
 -- Numbers that would otherwise be buried in code. A game rule changes when the game
 -- changes; a state choice is how we decided to do things. Admins only.
 create table settings (
+  id                      bigserial primary key,
   setting_key             text not null,
   -- Null for a setting that applies everywhere.
   event_type_id           text,
   setting_value           text not null,
   setting_kind            text not null check (setting_kind in ('game_rule', 'state_choice')),
   updated_by              uuid,
-  updated_at              timestamptz not null default now(),
-  primary key (setting_key, event_type_id)
+  updated_at              timestamptz not null default now()
 );
+
+-- One row per setting per scope. Written as an index rather than a primary key because
+-- a primary key cannot hold a null, and null is what "applies everywhere" means here.
+create unique index settings_key_and_scope
+  on settings (setting_key, coalesce(event_type_id, ''));
 
 -- ---------------------------------------------------------------------------
 -- Transfers
@@ -478,8 +483,13 @@ create table transfer_groups (
   transfer_date           date not null,
   from_state              integer not null,
   to_state                integer not null,
-  generation              text,
-  furnace_cap             integer,
+  -- Hero generation as a number, so it sorts.
+  generation              integer,
+  -- Position on one ladder, counted in upgrades: one per furnace level up to 30, then
+  -- five per Fire Crystal level, so FC1 is 35 and FC10 is 80. The War Academy and Red
+  -- Chief Gear unlock during FC5 and take the spare numbers 56 and 57 between FC5 and
+  -- FC6. Those two are positions rather than real upgrade counts.
+  furnace_cap_upgrades    integer,
   updated_by              uuid,
   updated_at              timestamptz not null default now()
 );
