@@ -139,8 +139,7 @@ insert into schedules (id, event_type_id, first_date, repeat_every_days, length_
   ('d-sky-academy-foundry-2', 'foundry', '2026-11-01', 14, 1, '00:00', null, 'sky-academy', 2, null, null, false, false),
   ('d-sky-academy-canyon-1', 'canyon', '2026-10-31', 28, 1, '00:00', null, 'sky-academy', 1, null, null, false, false),
   ('d-sky-academy-canyon-2', 'canyon', '2026-10-31', 28, 1, '00:00', null, 'sky-academy', 2, null, null, false, false),
-  ('d-sky-academy-mercs', 'mercenaries', '2026-11-16', 28, 1, '00:00', null, 'sky-academy', null, null, null, false, false),
-  ('s-transfer', 'transfer', '2026-11-08', 28, 7, null, null, null, null, 'Opens the day after the SvS battle. The transferFollows setting says whether that is SvS or Sunfire.', null, false, false)
+  ('d-sky-academy-mercs', 'mercenaries', '2026-11-16', 28, 1, '00:00', null, 'sky-academy', null, null, null, false, false)
 on conflict (id) do update set
   event_type_id = excluded.event_type_id, first_date = excluded.first_date,
   repeat_every_days = excluded.repeat_every_days, length_days = excluded.length_days,

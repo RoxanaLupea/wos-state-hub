@@ -29,3 +29,29 @@ export async function loadAlliances(): Promise<Alliance[]> {
     sortOrder: row.sort_order
   }));
 }
+
+// The alliances loaded for this page, so a tag can be looked up wherever a time is
+// shown. Filled once the page has them.
+let allianceList: Alliance[] = [];
+
+export function rememberAlliances(alliances: Alliance[]): void {
+  allianceList = alliances;
+}
+
+export function allianceById(id: string): Alliance | undefined {
+  return allianceList.find(alliance => alliance.id === id);
+}
+
+export function allianceTag(id: string): string {
+  return allianceById(id)?.tag ?? id;
+}
+
+// An alliance and its academies count as one: a player in an academy wants to see
+// the main alliance's times too.
+export function allianceFamilyOf(allianceId: string | null): string[] {
+  const mine = allianceId ? allianceById(allianceId) : undefined;
+  if (!mine) return [];
+  const mainId = mine.mainAllianceId ?? mine.id;
+  return [mainId].concat(
+    allianceList.filter(alliance => alliance.mainAllianceId === mainId).map(alliance => alliance.id));
+}

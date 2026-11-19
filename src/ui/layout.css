@@ -1,16 +1,40 @@
-/* The frame every page sits in: the top bar, and the area under it. */
-.app-shell { display: flex; flex-direction: column; min-height: 100vh; }
+/* How the calendar and the day's details sit beside each other. On a phone they
+   stack and the details slide up over the calendar; from 1000px they sit side by
+   side, each scrolling in its own box so the window itself never scrolls. */
 
-.top-bar {
-  display: flex;
-  align-items: center;
-  gap: var(--gap);
-  padding: 12px 18px;
-  margin: 16px;
+.calendar-layout { display: flex; flex-direction: column; gap: 16px; }
+.calendar-panel { margin: 0 8px; padding: 10px 4px 4px; flex: none; }
+.side-column { display: flex; flex-direction: column; gap: 12px; }
+@media (min-width: 1000px) {
+  .calendar-layout { flex-direction: row; align-items: flex-start; }
+  .calendar-panel { flex: 1 1 auto; min-width: 0; margin: 0; padding: 10px 12px 6px; }
+  /* The month fills the screen height, so day boxes are about as tall as they are wide. */
+  .calendar-panel.month-mode { display: flex; flex-direction: column; min-height: calc(100vh - 230px); }
+  /* Every week gets the same height; a week grows only when its bars do not fit. */
+  .calendar-panel.month-mode .week-row { flex: 1 1 0; min-height: min-content; }
+  .side-column { flex: 0 0 440px; max-width: 440px; }
 }
-
-.brand { display: flex; align-items: center; }
-.brand .logo { width: auto; font-weight: 800; }
-
-.page { padding: 0 16px 16px; }
-.placeholder { color: var(--text-muted); }
+@media (min-width: 1800px) {
+  .side-column { flex-basis: 500px; max-width: 500px; }
+}
+/* Computers: the app fills the screen and the window never scrolls (its scrollbar would narrow the calendar
+   and make it jump). The calendar and the right panel each scroll in their own box; other pages scroll on their own. */
+@media (min-width: 1000px) {
+  .app { height: 100vh; height: 100dvh; min-height: 0; overflow: hidden; }
+  .app > .page { flex: 1 1 auto; min-height: 0; padding-bottom: 0; }
+  .page { overflow: hidden; }
+  .calendar-layout { flex: 1 1 auto; min-height: 0; align-items: stretch; }
+  .calendar-panel { overflow-y: auto; }
+  .calendar-panel.month-mode { min-height: 0; }
+  .side-column { min-height: 0; }
+  .next-up { flex: none; }
+  /* Its scrollbar sits in the page's margin, so the panel lines up with the tiles above it. */
+  .day-panel { flex: 1 1 auto; min-height: 0; overflow-y: auto; margin-right: -14px; padding: 0 6px 4px 0; }
+  .admin-page { overflow-y: auto; padding-bottom: 20px; margin-right: -8px; }
+  /* The space for the scrollbar is kept even when nothing scrolls, so nothing shifts when it appears. */
+  .calendar-panel, .day-panel, .admin-page { scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: rgba(175, 200, 245, 0.35) transparent; }
+  .calendar-panel::-webkit-scrollbar, .day-panel::-webkit-scrollbar, .admin-page::-webkit-scrollbar { width: 8px; }
+  .calendar-panel::-webkit-scrollbar-thumb, .day-panel::-webkit-scrollbar-thumb, .admin-page::-webkit-scrollbar-thumb { background: rgba(175, 200, 245, 0.35); border-radius: 999px; }
+  .calendar-panel::-webkit-scrollbar-track, .day-panel::-webkit-scrollbar-track, .admin-page::-webkit-scrollbar-track { background: transparent; }
+  .filter-list { max-height: min(520px, calc(100vh - 220px)); }
+}

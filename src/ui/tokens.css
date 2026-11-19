@@ -26,6 +26,11 @@
   --accent-ink: #1C2333;
   --danger: #F2A0A0;
 
+  /* The calendar week: five weekdays share the space evenly, the two weekend days
+     are a little wider because that is where most events sit. */
+  --weekend-width: 1.35fr;
+  --weekend-tint: rgba(255, 255, 255, 0.035);
+
   /* Shapes and spacing */
   --radius: 18px;
   --radius-small: 10px;
@@ -35,6 +40,11 @@
 
   /* Type */
   --font: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+/* On a wide screen the weekend days need less extra room. */
+@media (min-width: 1000px) {
+  :root { --weekend-width: 1.15fr; }
 }
 
 * { box-sizing: border-box; }

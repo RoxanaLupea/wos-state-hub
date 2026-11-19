@@ -1,0 +1,53 @@
+// One week of the calendar: the seven day boxes, and the bars laid over them.
+// The month view and the week view both draw their weeks with this, so a week looks
+// the same whichever view it is seen in.
+import { textFromDay, todayNumber } from '../calendar/days.ts';
+import { weekPieces, type WeekPieceOptions } from '../calendar/week-bars.ts';
+import { longDayText, WEEKDAY_SHORT } from './day-names.ts';
+import { escapeForPage } from './escape.ts';
+import { renderBar, type BarRenderOptions } from './bar.ts';
+import { yearAndMonthOf } from '../calendar/days.ts';
+import type { Bar } from '../calendar/bars.ts';
+
+export function weekdayNamesRow(): string {
+  return '<div class="grid7 weekday-names">' + WEEKDAY_SHORT.map((name, index) =>
+    `<div class="weekday-name${index > 4 ? ' weekend' : ''}">${name.charAt(0)}` +
+    `<span class="desktop-only-text">${name.slice(1)}</span></div>`).join('') + '</div>';
+}
+
+export interface WeekRowOptions {
+  pieceOptions: WeekPieceOptions;
+  barOptions: Omit<BarRenderOptions, 'weekStart'>;
+  chosenDay: number | null;
+  // Set in the month view, so days either side of the month are dimmed.
+  firstOfMonth?: number;
+  lastOfMonth?: number;
+  // True while an event is open, so no day box looks chosen.
+  hasOpenEvent?: boolean;
+}
+
+export function weekRow(weekStart: number, bars: Bar[], options: WeekRowOptions): string {
+  const today = todayNumber();
+
+  let boxes = '';
+  for (let column = 0; column < 7; column++) {
+    const day = weekStart + column;
+    const classes = ['day-box'];
+    if (column > 4) classes.push('weekend');
+    if (options.firstOfMonth !== undefined && options.lastOfMonth !== undefined &&
+      (day < options.firstOfMonth || day > options.lastOfMonth)) classes.push('other-month');
+    if (day === today) classes.push('today');
+    if (day === options.chosenDay && !options.hasOpenEvent) classes.push('chosen');
+    boxes += `<button type="button" class="${classes.join(' ')}" data-day="${textFromDay(day)}"` +
+      ` aria-label="${escapeForPage(longDayText(day))}"${day === today ? ' aria-current="date"' : ''}>` +
+      `<span class="day-number">${yearAndMonthOf(day).dayOfMonth}</span></button>`;
+  }
+
+  const pieces = weekPieces(bars, weekStart, options.pieceOptions);
+  const barMarkup = pieces
+    .map(piece => renderBar(piece, { ...options.barOptions, weekStart }))
+    .join('');
+
+  return `<div class="week-row"><div class="grid7 day-boxes">${boxes}</div>` +
+    `<div class="grid7 bars" data-week-start="${weekStart}">${barMarkup}</div></div>`;
+}

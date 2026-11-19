@@ -1,0 +1,15 @@
+/* The two tiles above the day's details: what is on next, and what is after it. */
+
+/* Next up tiles */
+.next-up { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0 12px; flex: none; }
+.next-tile { display: flex; flex-direction: column; gap: 3px; padding: 12px 14px; border-radius: var(--radius); }
+/* Next up: the icon, with "Next up" and the name on 2 lines to its right; the date under them. */
+.next-tile-head { display: flex; align-items: center; gap: 10px; margin-bottom: 2px; }
+.next-tile-names { display: flex; flex-direction: column; min-width: 0; }
+.next-tile-label { font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.next-tile-title { font-size: 16px; font-weight: 800; line-height: 1.2; }
+@media (min-width: 1000px) {
+  .next-up { margin: 0; }
+  .next-tile { padding: 10px 12px; }
+  .next-tile-title { font-size: 15px; }
+}

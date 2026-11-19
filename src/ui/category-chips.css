@@ -1,0 +1,37 @@
+/* The filter chips. Each one ticks a whole category on or off, and opens a list
+   where single events can be unticked inside it. */
+
+.chips { display: flex; gap: 8px; padding: 0 12px 12px; overflow-x: auto; white-space: nowrap; flex: none; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  display: inline-flex; align-items: center; gap: 5px; flex: none; height: 28px; padding: 0 12px; border-radius: 999px;
+  border: 1px solid var(--glass-border); background: var(--glass); color: var(--text-muted); font-size: 14px; font-weight: 600;
+  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+}
+.chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 800; }
+.chip-check { font-size: 13px; font-weight: 800; }
+/* Filters: the chip switches its category; its arrow opens the list of its events, each with a tick. */
+.filter-group { position: relative; display: inline-flex; }
+.filter-chip { padding: 0; gap: 0; }
+.filter-chip .filter-name, .filter-chip .filter-arrow { border: none; background: none; color: inherit; font: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.filter-chip .filter-name { padding: 6px 4px 6px 12px; }
+.filter-chip .filter-arrow { padding: 6px 12px 6px 6px; font-size: 11px; opacity: 0.85; }
+.filter-count { font-size: 11px; font-weight: 700; opacity: 0.75; }
+.filter-list { position: absolute; top: calc(100% + 6px); left: 0; z-index: 60; width: 290px; max-height: min(520px, 70vh); overflow: auto; padding: 10px;
+  border-radius: 14px; background: rgba(28, 34, 66, 0.97); border: 1px solid var(--glass-border); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5); white-space: normal; }
+.filter-list-head { display: flex; justify-content: space-between; align-items: center; margin: 2px 4px 8px;
+  font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); }
+.filter-all { border: none; background: none; color: #8FB3FF; font: inherit; font-size: 12px; font-weight: 700; letter-spacing: 0; text-transform: none; cursor: pointer; }
+.filter-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 6px; border: none; border-radius: 8px; background: none;
+  color: var(--text); font: inherit; font-size: 13.5px; font-weight: 600; text-align: left; cursor: pointer; }
+.filter-item:hover { background: rgba(255, 255, 255, 0.06); }
+.filter-item.off { opacity: 0.55; }
+.filter-item img.event-icon, .filter-item svg.event-icon { width: 22px; height: 22px; object-fit: contain; flex: none; }
+.filter-box { width: 18px; height: 18px; flex: none; border-radius: 5px; border: 2px solid #7E9BE8; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #FFFFFF; }
+.filter-box.on { background: #5B8DEF; border-color: #5B8DEF; }
+/* On phones the open list spans the screen's width under the chips. */
+#categoryChips { position: relative; overflow: visible; flex-wrap: wrap; }
+@media (max-width: 600px) { .filter-group { position: static; } .filter-list { left: 12px; right: 12px; width: auto; top: calc(100% - 6px); } }
+.chip-dot { width: 10px; height: 10px; border-radius: 999px; flex: none; }
+@media (min-width: 1000px) {
+  .chips { flex-wrap: wrap; overflow: visible; padding: 0 0 12px; }

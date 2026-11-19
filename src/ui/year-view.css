@@ -1,0 +1,52 @@
+/* The year: twelve small months, each week a row of dates with a line under it for
+   every one of the four events running that week. The colours run along a whole
+   event, so each week shows its own stretch of them. */
+
+/* Year view */
+.year-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 10px; padding: 4px 6px 10px; }
+@media (min-width: 700px) { .year-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1000px) { .year-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; } }
+.mini-month-title { border: none; background: transparent; padding: 0 0 4px; font-size: 14px; font-weight: 800; text-align: left; }
+.mini-month .grid7 { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.mini-day {
+  display: flex; align-items: center; justify-content: center; padding: 3px 0; min-height: 22px;
+  border: none; background: transparent; border-radius: 6px; font-size: 11px; font-weight: 700; color: var(--text);
+}
+.mini-day.weekend { background: var(--weekend-tint); }
+.mini-day.today { background: var(--accent); color: var(--accent-ink); }
+.mini-weekday { text-align: center; font-size: 10px; font-weight: 800; color: var(--text-faint); }
+/* Year view lines: one lane per event in a week, its logo left of the line where a run starts; the colours run
+   along the whole event (each week's piece shows its own stretch). */
+.mini-week { padding-bottom: 2px; }
+.year-lane { position: relative; height: 18px; margin-top: 2px; }
+.year-line { position: absolute; top: 0; height: 18px; padding: 0; border: none; background: none; cursor: pointer; }
+.year-line-track { position: absolute; left: 0; right: 0; top: 6px; height: 6px; overflow: hidden; opacity: 0.95; }
+.year-line.starts .year-line-track { border-top-left-radius: 999px; border-bottom-left-radius: 999px; }
+.year-line.ends .year-line-track { border-top-right-radius: 999px; border-bottom-right-radius: 999px; }
+.year-line.with-logo .year-line-track { left: 18px; }
+.year-line-fill { position: absolute; top: 0; bottom: 0; }
+.year-line.picked .year-line-track { box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.85); }
+.year-line-logo { position: absolute; left: 0; top: 1px; display: inline-flex; }
+.year-line-logo .event-icon { --logo-size: 16px; width: 16px; height: 16px; object-fit: contain; filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.85)); }
+@media (max-width: 600px) {
+  .year-line-logo .event-icon { --logo-size: 14px; width: 14px; height: 14px; }
+  .year-line.with-logo .year-line-track { left: 15px; }
+}
+.year-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 20px; padding: 8px 6px 12px; }
+.year-legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700; color: var(--text); }
+.year-legend-item .year-line-logo { position: static; }
+.year-legend-line { width: 34px; height: 6px; border-radius: 999px; }
+/* Year view side panel: the 4 events now or next, and the steps of the picked one. */
+.year-overview h3, .year-steps h3 { margin: 0 0 8px; }
+.year-overview-row { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 6px; border: none; border-radius: 10px; background: none;
+  color: var(--text); font: inherit; text-align: left; cursor: pointer; }
+.year-overview-row:hover { background: rgba(255, 255, 255, 0.05); }
+.year-overview-row.picked { background: rgba(255, 255, 255, 0.09); }
+.year-overview-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.year-overview-text b { font-size: 14.5px; }
+.year-overview-text span { font-size: 12.5px; color: var(--text-muted); }
+.year-step-list { list-style: none; margin: 10px 0 0; padding: 0; }
+.year-step-list li { display: grid; grid-template-columns: 136px 1fr; gap: 8px; padding: 6px 4px; border-top: 1px solid var(--glass-border); font-size: 13.5px; }
+.year-step-when { color: var(--text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.year-step-list li.now { font-weight: 800; }
+.year-step-list li.now em { font-style: normal; font-size: 11px; font-weight: 800; padding: 1px 6px; margin-left: 4px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); }

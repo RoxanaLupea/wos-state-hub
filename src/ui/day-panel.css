@@ -1,0 +1,82 @@
+/* The day's details beside the month, ported from the old app: a heading, the events
+   running all day, and below them every moment of the day in the order it happens. */
+
+.day-panel { display: flex; flex-direction: column; gap: 12px; }
+
+.day-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.day-heading-text { display: flex; flex-direction: column; gap: 2px; }
+.day-heading h2 { margin: 0; font-size: 24px; font-weight: 800; }
+.day-heading-text span { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+
+.day-section { padding: 12px 14px; display: flex; flex-direction: column; }
+.day-section h3 { margin: 0 0 4px; display: flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 800; }
+.day-empty { padding: 14px; font-size: 14px; color: var(--text-muted); }
+
+/* Event icons: no background, as tall as two lines of text. */
+.event-badge { width: 40px; height: 40px; flex: none; display: inline-flex; align-items: center; justify-content: center; }
+.event-badge .event-icon { width: 100%; height: 100%; object-fit: contain; }
+.event-badge.large { width: 44px; height: 44px; }
+.event-badge.small { width: 32px; height: 32px; }
+.event-badge.list { width: 28px; height: 28px; }
+
+.event-title { font-size: 15px; font-weight: 700; }
+.event-note { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+
+/* The events running through the whole day, above the timeline. */
+.all-day-list {
+  display: flex; flex-direction: column; gap: 2px; margin: 2px 0 8px;
+  padding-bottom: 6px; border-bottom: 1px solid var(--glass-border);
+}
+.all-day-label {
+  font-size: 12px; font-weight: 800; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px;
+}
+.all-day-item {
+  display: flex; align-items: center; gap: 10px; padding: 6px 4px;
+  border: none; border-radius: 10px; background: transparent; color: inherit;
+  font: inherit; text-align: left;
+}
+.all-day-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.all-day-text .event-title { font-size: 14px; }
+.cancelled-mark { color: var(--danger); font-weight: 800; }
+
+/* One row per moment: the time, a dot on a rail, and what happens. */
+.moment-list { list-style: none; margin: 4px 0 0; padding: 0; }
+.moment { display: block; }
+.moment-row {
+  width: 100%; display: grid; grid-template-columns: 58px 18px minmax(0, 1fr);
+  column-gap: 8px; padding: 0; border: none; background: transparent;
+  color: inherit; font: inherit; text-align: left; border-radius: 10px;
+}
+.moment-time { display: flex; flex-direction: column; align-items: flex-end; padding: 6px 0 10px; text-align: right; }
+.moment-time .time-main { font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; }
+/* The rail is the line the dots sit on. It stops short at the first and last dot so
+   the timeline does not look cut off. */
+.moment-rail { position: relative; display: flex; justify-content: center; }
+.moment-rail::before { content: ''; position: absolute; top: 0; bottom: 0; width: 2px; background: var(--glass-border); }
+.moment:first-child .moment-rail::before { top: 12px; }
+.moment:last-child .moment-rail::before { bottom: auto; height: 12px; }
+.moment-dot { position: relative; margin-top: 9px; width: 10px; height: 10px; border-radius: 999px; }
+.moment-body { display: flex; flex-direction: column; gap: 2px; padding: 4px 0 10px; min-width: 0; }
+.moment-title { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; }
+.moment-title-text { flex: 1; min-width: 0; }
+
+/* Phone: the day's details slide up over the month. */
+.day-back {
+  align-self: flex-start; min-height: 44px; display: inline-flex; align-items: center; gap: 4px;
+  border: none; background: transparent; color: var(--accent); font: inherit; font-weight: 700;
+  padding: 0 4px; cursor: pointer;
+}
+@media (max-width: 999px) {
+  .day-panel {
+    position: fixed; inset: 0; z-index: 30; overflow-y: auto; padding: 8px 12px 90px;
+    background-color: var(--page-color);
+    background-image: var(--page-background);
+    transform: translateY(100%); visibility: hidden;
+    transition: transform 0.2s ease, visibility 0s linear 0.2s;
+  }
+  .day-panel.open { transform: none; visibility: visible; transition: transform 0.2s ease; }
+}
+@media (min-width: 1000px) {
+  .day-back { display: none !important; }
+}

@@ -1,0 +1,87 @@
+/* The frame every page sits in: the top bar with the state name, the pages, the
+   clock and its UTC / Mine switch, and the toolbar above the calendar. */
+
+/* ---------- Page frame ---------- */
+.app { min-height: 100vh; display: flex; flex-direction: column; }
+.top-bar {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  padding: 14px 16px 10px;
+}
+.top-bar #meButton { min-height: 36px; padding: 0 12px; }
+.brand { display: flex; flex-direction: column; gap: 2px; margin-right: auto; }
+.brand-eyebrow { font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+.brand-title { font-size: 28px; font-weight: 800; line-height: 1.1; }
+.desktop-nav { display: none; gap: 4px; }
+/* The live clock and the UTC | Mine switch: every time on screen uses the clock chosen here. */
+.clock { display: flex; align-items: center; gap: 6px; }
+.clock-time { font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.time-switch { grid-template-columns: repeat(2, auto); padding: 2px; border-radius: 10px; }
+.time-switch button { min-height: 28px; padding: 0 8px; border-radius: 8px; font-size: 13px; }
+@media (min-width: 1000px) {
+  .top-bar { gap: 12px 20px; }
+  .top-bar #meButton { min-height: 42px; padding: 0 16px; }
+  .clock { gap: 8px; }
+  .clock-time { font-size: 15px; }
+  .time-switch button { padding: 0 10px; }
+}
+.ghost-button {
+  min-height: 42px; padding: 0 16px; border-radius: 12px;
+  border: 1px solid var(--glass-border); background: var(--glass); font-weight: 700;
+  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+}
+.nav-tab {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 14px;
+  border-radius: 12px; border: none; background: transparent; color: var(--text-muted); font-weight: 700;
+}
+.nav-tab[aria-current="page"] { background: var(--accent); color: var(--accent-ink); font-weight: 800; }
+
+@media (min-width: 1000px) {
+  .app { padding: 16px 24px 24px; gap: 14px; max-width: 1950px; margin: 0 auto; }
+  .top-bar {
+    padding: 12px 18px; border-radius: var(--radius); background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.14); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 10px 28px rgba(0, 0, 0, 0.25);
+  }
+  .brand { flex-direction: row; align-items: baseline; gap: 10px; margin-right: 0; }
+  .brand-title { font-size: 22px; }
+  .desktop-nav { display: flex; flex: 1 1 auto; }
+}
+
+/* ---------- Toolbar ---------- */
+/* The month, then ‹ Today › joined in one control, the view switch on the right; all 32 px tall, 12 px apart.
+   On phones the view switch takes the full width under them. */
+.toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; padding: 0 12px 12px; }
+.period-title { margin: 0; font-size: 20px; font-weight: 800; line-height: 32px; white-space: nowrap; }
+.period-title .title-long { display: none; }
+.step-nav { display: inline-flex; height: 32px; border-radius: 10px; overflow: hidden;
+  border: 1px solid var(--glass-border); background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); }
+.step-nav button { height: 30px; min-width: 32px; padding: 0 10px; border: none; background: transparent; color: var(--text);
+  display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+.step-nav button + button { border-left: 1px solid var(--glass-border); }
+.step-nav button:hover { background: rgba(255, 255, 255, 0.08); }
+.icon-button {
+  width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center;
+  border: none; background: transparent; color: var(--text-muted); border-radius: 12px;
+}
+.segmented {
+  display: grid; grid-template-columns: repeat(3, auto); gap: 2px; padding: 3px; border-radius: 14px;
+  background: var(--glass); border: 1px solid var(--glass-border); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+}
+.segmented button {
+  min-height: 38px; padding: 0 10px; border: none; border-radius: 10px; background: transparent;
+  color: var(--text-muted); font-size: 13px; font-weight: 600;
+}
+.segmented button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); font-weight: 800; box-shadow: 0 0 16px rgba(175, 200, 245, 0.45); }
+.view-switch { flex: 1 0 100%; order: 3; grid-template-columns: repeat(3, minmax(0, 1fr)); height: 32px; padding: 2px; border-radius: 10px; align-items: stretch; }
+.view-switch button { min-height: 0; border-radius: 8px; }
+@media (min-width: 1000px) {
+  .toolbar { padding: 0 0 12px; }
+  .period-title { font-size: 24px; }
+  .period-title .title-long { display: inline; }
+  .period-title .title-short { display: none; }
+  .view-switch { flex: none; order: 0; margin-left: auto; grid-template-columns: repeat(3, auto); }
+  .view-switch button { padding: 0 14px; }
+  .icon-button { border: 1px solid var(--glass-border); background: var(--glass); color: var(--text); }
+}
+
+/* Filters (and admin tabs): 28 px chips; a tick shows the filters that are on. */

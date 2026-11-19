@@ -1,8 +1,13 @@
 // The catalog is everything the game publishes and we never change: the list of
-// events, their colours, and the words for them. It lives in files rather than the
-// database because it only changes when the game does.
+// events, their colours and phases, and the words for them. It lives in files rather
+// than the database because it only changes when the game does.
 import eventTypeRows from '../../data/catalog/event-types.json';
+import eventPhaseRows from '../../data/catalog/event-phases.json';
+import eventStepRows from '../../data/catalog/event-steps.json';
+import pointSourceRows from '../../data/catalog/point-sources.json';
 import englishText from '../../data/text/en.json';
+import type { EventPhase } from '../calendar/bars.ts';
+import type { EventStep } from '../calendar/day-timeline.ts';
 
 export interface EventType {
   id: string;
@@ -15,21 +20,36 @@ export interface EventType {
   groupCount?: string;
   detailsOnly?: string;
   sortOrder?: number;
+  // A second colour the bar fades from, when the game gives the event one.
+  timelineColor?: string;
+  // The stretches a part is open, counted from the first day of its own event.
+  openWindows?: { fromDay: number; fromTime: string; toDay: number; toTime: string }[];
+  // How an opening is marked on the bar: by its label, or only where it ends.
+  windowMark?: string;
+}
+
+interface PhaseRow {
+  id: string;
+  eventTypeId: string;
+  fromDay: number;
+  toDay: number;
+  startTimeUtc?: string;
+  endTimeUtc?: string;
+  hideBar?: string;
+  sortOrder: number;
 }
 
 const eventTypes = eventTypeRows as EventType[];
 const text = englishText as Record<string, string>;
 
-const eventTypesById = new Map<string, EventType>(
-  eventTypes.map(eventType => [eventType.id, eventType])
-);
+const eventTypesById = new Map(eventTypes.map(eventType => [eventType.id, eventType]));
 
 export function eventTypeById(id: string): EventType | undefined {
   return eventTypesById.get(id);
 }
 
-// Falls back to the id so a missing translation shows up as an obvious oddity on the
-// page rather than an empty space.
+// Falls back to the id, so a missing word shows up as an obvious oddity on the page
+// rather than an empty space.
 export function eventTypeName(id: string): string {
   return text['eventType.' + id + '.name'] ?? id;
 }
@@ -38,12 +58,159 @@ export function eventTypeShortName(id: string): string {
   return text['eventType.' + id + '.shortName'] ?? eventTypeName(id);
 }
 
-export function eventTypeColor(id: string): string {
-  return eventTypesById.get(id)?.color ?? 'var(--accent)';
-}
-
-// Some events run more than once per alliance, for example two bear traps or two
-// foundry legions. This is what each one is called: "Trap", "Legion", "Session".
+// Some events run more than once per alliance: two bear traps, two foundry legions.
+// This is what one of them is called — "Trap", "Legion", "Session".
 export function eventGroupName(id: string): string | null {
   return text['eventType.' + id + '.groupName'] ?? null;
+}
+
+export function phaseName(phaseId: string): string {
+  return text['eventPhase.' + phaseId + '.name'] ?? '';
+}
+
+export function eventTypeColor(id: string): string {
+  return eventTypesById.get(id)?.color ?? '#7E8AA8';
+}
+
+// A bar fades from the event's colour to its second one, left to right. Events with
+// only one colour fade from it to itself, which reads as flat.
+export function eventTypeColorEnd(id: string): string {
+  const eventType = eventTypesById.get(id);
+  return eventType?.colorEnd ?? eventType?.color ?? '#7E8AA8';
+}
+
+export function isDetailsOnly(id: string): boolean {
+  return eventTypesById.get(id)?.detailsOnly === 'yes';
+}
+
+// Which bigger event each one is a part of, so a part follows its parent's moves.
+export const partOfByEventTypeId = new Map<string, string | null>(
+  eventTypes.map(eventType => [eventType.id, eventType.partOf ?? null])
+);
+
+export const phasesByEventType = (() => {
+  const rows = eventPhaseRows as PhaseRow[];
+  const byEventType = new Map<string, EventPhase[]>();
+  for (const row of rows) {
+    const phase: EventPhase = {
+      id: row.id,
+      eventTypeId: row.eventTypeId,
+      fromDay: Number(row.fromDay),
+      toDay: Number(row.toDay),
+      startTimeUtc: row.startTimeUtc ?? null,
+      endTimeUtc: row.endTimeUtc ?? null,
+      hideBar: row.hideBar === 'yes',
+      sortOrder: Number(row.sortOrder)
+    };
+    const forType = byEventType.get(phase.eventTypeId) ?? [];
+    forType.push(phase);
+    byEventType.set(phase.eventTypeId, forType);
+  }
+  for (const phases of byEventType.values()) {
+    phases.sort((left, right) => left.sortOrder - right.sortOrder);
+  }
+  return byEventType;
+})();
+
+// Which filter an event belongs to: state, alliance, personal or deals.
+export function categoryOf(eventTypeId: string): string {
+  return eventTypesById.get(eventTypeId)?.category ?? 'state';
+}
+
+// The words for one step of an event: "Voting", "Match 1", "Rewards sent".
+export function stepLabel(stepId: string): string {
+  return text['eventStep.' + stepId + '.label'] ?? stepId;
+}
+
+// The steps of each event, in the order the game runs them.
+export const eventStepsByEventType = (() => {
+  const rows = eventStepRows as {
+    id: string; eventTypeId: string; dayNumber: number;
+    startTimeUtc?: string; endTimeUtc?: string; sortOrder: number;
+  }[];
+  const byEventType = new Map<string, EventStep[]>();
+  for (const row of rows) {
+    const step: EventStep = {
+      id: row.id,
+      eventTypeId: row.eventTypeId,
+      dayNumber: Number(row.dayNumber),
+      startTimeUtc: row.startTimeUtc ?? null,
+      endTimeUtc: row.endTimeUtc ?? null,
+      sortOrder: Number(row.sortOrder)
+    };
+    const forType = byEventType.get(step.eventTypeId) ?? [];
+    forType.push(step);
+    byEventType.set(step.eventTypeId, forType);
+  }
+  for (const steps of byEventType.values()) {
+    steps.sort((left, right) => left.sortOrder - right.sortOrder);
+  }
+  return byEventType;
+})();
+
+// What to say under an event's name on a given day of it: the phase it is in, then
+// any step of that day that has no time of its own.
+export function phaseNameForDay(eventTypeId: string, dayOfEvent: number): string {
+  const parts: string[] = [];
+  const phase = (phasesByEventType.get(eventTypeId) ?? [])
+    .find(one => dayOfEvent >= one.fromDay && dayOfEvent <= one.toDay);
+  if (phase) parts.push(phaseName(phase.id));
+  for (const step of eventStepsByEventType.get(eventTypeId) ?? []) {
+    if (step.startTimeUtc || step.dayNumber !== dayOfEvent) continue;
+    const label = stepLabel(step.id);
+    if (!parts.includes(label)) parts.push(label);
+  }
+  return parts.filter(Boolean).join(' · ');
+}
+
+// The smaller second line on a bar, where the event has one ("Troop Revival").
+export function eventBarSubtitle(id: string): string {
+  return text['eventType.' + id + '.barSubtitle'] ?? '';
+}
+
+// What kind of event it is, shown under its name in the panels.
+export function eventTypeLabel(id: string): string {
+  return text['eventType.' + id + '.typeLabel'] ?? '';
+}
+
+// Where an event sits in the catalog's own order, used to keep the same week looking
+// the same every time it is drawn.
+export function sortOrderOf(id: string): number {
+  return Number(eventTypesById.get(id)?.sortOrder) || 99;
+}
+
+// The name the game gives a particular day of an event ("Troop Revival", "Hero
+// Recruitment"). It comes from the day's point sources, or from a step of that day
+// that has no time of its own.
+const pointSources = pointSourceRows as { id: string; eventTypeId: string; dayNumber: number }[];
+const pointSourcesByEventType = (() => {
+  const byEventType = new Map<string, typeof pointSources>();
+  for (const source of pointSources) {
+    const forType = byEventType.get(source.eventTypeId) ?? [];
+    forType.push(source);
+    byEventType.set(source.eventTypeId, forType);
+  }
+  return byEventType;
+})();
+
+export function dayNameOf(eventTypeId: string, dayNumber: number): string {
+  for (const source of pointSourcesByEventType.get(eventTypeId) ?? []) {
+    if (Number(source.dayNumber) !== dayNumber) continue;
+    const name = text['pointSource.' + source.id + '.dayName'];
+    if (name) return name;
+  }
+  const step = (eventStepsByEventType.get(eventTypeId) ?? [])
+    .find(one => one.dayNumber === dayNumber && !one.startTimeUtc);
+  return step ? stepLabel(step.id) : '';
+}
+
+// Every event the catalog knows, in its own order.
+export function sortedEventTypes(): EventType[] {
+  return eventTypes.slice().sort((left, right) => sortOrderOf(left.id) - sortOrderOf(right.id));
+}
+
+// What each opening of a part is called ("Round 1", "x16"). The openings are numbered
+// from one, in the order the catalog lists them.
+export function windowLabel(eventTypeId: string, windowNumber: number): string {
+  return text['eventType.' + eventTypeId + '.window.' + windowNumber] ?? '';
 }

@@ -1,0 +1,192 @@
+/* The calendar grid and its bars, ported from the old app.
+   Five weekdays and two slightly wider weekend days, a row of day boxes behind each
+   week, and the event bars on top of them. The exact places of the bars are set in
+   layout-bars.ts once the browser knows how wide a day column is. */
+
+/* Month grid: 5 weekdays and 2 slightly wider weekend days */
+.grid7 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) repeat(2, minmax(0, var(--weekend-width))); column-gap: 2px; }
+.weekday-names { padding-bottom: 6px; }
+.weekday-name { text-align: center; font-size: 12px; font-weight: 800; color: var(--text-faint); }
+.weekday-name.weekend { color: var(--text-muted); }
+.desktop-only-text { display: none; }
+@media (min-width: 1000px) { .desktop-only-text { display: inline; } }
+
+/* Each week: a row of full-height day boxes behind, the event bars on top. */
+.week-row { position: relative; min-height: 58px; padding: 27px 0 6px; border-top: 1px solid var(--glass-border); }
+.weekday-names + .week-row { border-top: none; }
+.day-boxes { position: absolute; inset: 3px 0; }
+.day-box {
+  position: relative; display: flex; justify-content: center; align-items: flex-start; padding: 2px 0 0; border: none; background: transparent;
+  border-radius: var(--radius-small); color: var(--text); font-size: 14px; font-weight: 700;
+}
+.day-box.weekend { background: var(--weekend-tint); }
+.day-box .day-number { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; }
+.day-box.other-month { color: var(--text-faint); font-weight: 500; }
+.day-box:hover { background: rgba(255, 255, 255, 0.06); }
+/* Today: a short line along the top of the day. The selected day: a soft tint, no border. */
+.day-box.today::before { content: ''; position: absolute; top: 0; left: 10px; right: 10px; height: 3px; border-radius: 0 0 3px 3px; background: var(--accent); }
+.day-box.chosen { background: rgba(175, 200, 245, 0.16); }
+
+/* Bars. Line 1 (the head): the logo and the name, from the left. Bars with a second line are taller.
+   Logo sizes, one rule per place (computer / phone):
+   main logo of a two-line bar 32 / 24 px (4 px from the top and bottom edges);
+   main logo of a one-line bar 24 / 18 px (3 px from the edges);
+   logos on the bottom line (Castle Battle, prediction stakes) 16 / 13 px, 2 px from the bar's bottom edge;
+   logo where a part line under the bar ends (Trade Route, Treasure Hunt Drill) 20 / 16 px, centred;
+   year view, left of each line, 16 / 14 px. */
+.bars { position: relative; z-index: 1; grid-auto-rows: 24px; row-gap: 2px; pointer-events: none; }
+.bar {
+  --head-height: 20px; --line-two-height: 14px;
+  position: relative; min-width: 0; align-self: start;
+  display: flex; flex-direction: column; justify-content: center; align-items: stretch;
+  height: 24px; padding: 2px 4px; border-radius: 5px; border: none;
+  color: #FFFFFF; font-size: 11px; font-weight: 800; line-height: 20px; white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  /* Taps go through the bar to the day box under it, so the right day opens. */
+  pointer-events: none;
+  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+}
+.bar-head {
+  position: relative; z-index: 1; display: flex; align-items: center; justify-content: flex-start; gap: 4px;
+  height: var(--head-height); min-width: 0; overflow: hidden;
+}
+.bar.two-lines { height: calc(var(--head-height) + var(--line-two-height) + 4px); justify-content: flex-start; }
+/* Light from the top left: each logo casts a shadow in its own shape to the bottom right. */
+/* The shadow grows and shrinks with the logo (--logo-size = the logo's size): a 32 px logo casts it 2 px right,
+   2.5 px down, 1.5 px soft. */
+.bar .event-icon { flex: none; filter: drop-shadow(calc(var(--logo-size) * 0.0625) calc(var(--logo-size) * 0.078) calc(var(--logo-size) * 0.047) rgba(0, 0, 0, 0.85)); }
+.bar img.event-icon { --logo-size: 18px; width: 18px; height: 18px; object-fit: contain; }
+.bar svg.event-icon { --logo-size: 14px; width: 14px; height: 14px; margin: 0 3px; }
+/* The name is cut with "…" when it does not fit (only the logo when not even 4 letters fit). */
+.bar .bar-label { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.bar .bar-count, .bar .bar-time { flex: none; }
+.bar .bar-time { display: none; opacity: 0.85; margin-left: 4px; }
+.bar .bar-count { margin-left: 3px; opacity: 0.85; }
+.bar.too-narrow .bar-label, .bar.too-narrow .bar-count, .bar.too-narrow .bar-time { display: none; }
+/* Only the logo shows: it sits in the middle of the bar. */
+.bar.too-narrow .bar-head { justify-content: center; }
+/* Narrower than its logo: the logo shrinks to fit. */
+.bar.tiny { padding: 2px 0; }
+.bar.tiny .bar-label, .bar.tiny .bar-count, .bar.tiny .bar-time { display: none; }
+.bar.tiny svg.event-icon { margin: 0; }
+
+/* Line 2: named days, a part on the same hours, or a second name. */
+.bar-segment, .bar-sub, .bar-inside { position: absolute; bottom: 2px; height: var(--line-two-height); z-index: 1; }
+.bar-segment { display: flex; justify-content: center; min-width: 0; pointer-events: none; }
+.bar-segment-name, .bar-sub {
+  min-width: 0; padding: 0 5px; overflow: hidden; text-overflow: ellipsis; text-align: center;
+  font-size: 9.5px; font-weight: 600; line-height: var(--line-two-height); color: rgba(255, 255, 255, 0.92); text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+}
+/* A phase (or a second name) under the name: a smaller line, with a bigger logo beside both lines.
+   Phones: 32 px bars, 24 px logo; computers: 40 px bars, 32 px logo. */
+.bar.phase-lines {
+  --side-icon: 24px; --side-gap: 4px;
+  height: 32px; justify-content: center; padding: 1px 4px 1px calc(4px + var(--side-icon) + var(--side-gap));
+}
+.bar.phase-lines .bar-head { height: 16px; line-height: 16px; }
+.bar.phase-lines .bar-sub {
+  position: static; height: 12px; padding: 0; text-align: left;
+  font-size: 9px; line-height: 12px; font-weight: 600; color: rgba(255, 255, 255, 0.85);
+}
+.bar-side-icon {
+  position: absolute; z-index: 1; left: 4px; top: 50%; transform: translateY(-50%);
+  width: var(--side-icon); height: var(--side-icon); display: flex; align-items: center; justify-content: center; pointer-events: none;
+}
+.bar .bar-side-icon img.event-icon { --logo-size: var(--side-icon); width: var(--side-icon); height: var(--side-icon); }
+.bar .bar-side-icon svg.event-icon { --logo-size: calc(var(--side-icon) * 0.75); width: calc(var(--side-icon) * 0.75); height: calc(var(--side-icon) * 0.75); margin: 0; }
+/* Named days or a part on line 2 (SvS, Alliance Showdown): the name at the top, line 2 at the bottom, in the same height. */
+.bar.phase-lines.day-lines { --line-one-height: 16px; --line-two-height: 12px; justify-content: flex-start; padding-top: 2px; }
+.bar.phase-lines.day-lines .bar-segment, .bar.phase-lines.day-lines .bar-inside { bottom: 2px; }
+.bar.phase-lines.day-lines .bar-segment-name { font-size: 9px; padding: 0 3px; }
+.bar.phase-lines.too-narrow, .bar.phase-lines.tiny { padding-left: 0; padding-right: 0; }
+.bar.phase-lines.too-narrow .bar-sub, .bar.phase-lines.tiny .bar-sub { display: none; }
+.bar.phase-lines.too-narrow .bar-side-icon, .bar.phase-lines.tiny .bar-side-icon { left: 50%; transform: translate(-50%, -50%); }
+.bar-segment.lit .bar-segment-name { font-weight: 800; color: #FFFFFF; }
+.bar-segment.bar-chain { pointer-events: auto; cursor: pointer; z-index: 3; }
+.bar-chain .bar-chain-logo { display: none; }
+.bar-chain.logo-only .bar-segment-name { display: none; }
+.bar-chain.logo-only .bar-chain-logo { display: flex; align-items: center; justify-content: center; height: var(--line-two-height); }
+/* SvS: line 1 holds the name and the parts, so it is not cut by the name. */
+.bar.parts-bar .bar-head { overflow: visible; }
+/* Phones: SvS is a one-line bar, like the others without a second line: the name and the parts in a smaller font,
+   no days, Castle Battle or Troop Revival under them. */
+@media (max-width: 999.98px) {
+  .bar.phase-lines.day-lines.parts-bar { --side-icon: 20px; --line-one-height: 20px; height: 24px; padding-top: 2px; justify-content: center; }
+  .bar.parts-bar .bar-head { height: 20px; line-height: 20px; }
+  .bar.parts-bar .bar-part { font-size: 7.5px; padding: 0; letter-spacing: 0; }
+  .bar.parts-bar .bar-segment, .bar.parts-bar .bar-mark.divider { display: none; }
+}
+.bar .bar-chain-logo img.event-icon, .bar .bar-chain-logo svg.event-icon { --logo-size: 13px; width: 13px; height: 13px; margin: 0; }
+/* SvS: its parts on line 1, in capitals, between white lines that go through both lines. */
+.bar-part { position: absolute; top: 2px; height: var(--line-one-height); line-height: var(--line-one-height); z-index: 3; display: block; text-align: center; min-width: 0;
+  padding: 0 2px; box-sizing: border-box; pointer-events: auto; cursor: pointer; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  font-size: 9.5px; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase; color: #FFFFFF; }
+/* White lines on a two-line bar: each line of text gets its own piece, centred on that line, so the pieces
+   on line 2 (between days, where a part starts) all look the same, and a part's start also has one on line 1. */
+.bar.day-lines .bar-mark.divider { top: auto; bottom: 4px; height: calc(var(--line-two-height) - 4px); }
+.bar.day-lines .bar-mark.part-line { top: 5px; bottom: auto; height: calc(var(--line-one-height) - 6px); }
+.bar-head[hidden] { display: none; }
+/* Above the white lines around it, so a tap between them opens the part. */
+.bar-inside { z-index: 3; display: flex; align-items: center; justify-content: center; pointer-events: auto; cursor: pointer; }
+/* Bottom-line logos sit on the line's bottom, 2 px above the bar's bottom edge. */
+.bar-inside, .bar-chain.logo-only .bar-chain-logo { align-items: flex-end; }
+.bar .bar-inside img.event-icon { --logo-size: 13px; width: 13px; height: 13px; margin: 0; }
+.bar .bar-inside svg.event-icon { --logo-size: 11px; width: 11px; height: 11px; margin: 0; }
+@media (min-width: 1000px) {
+  .bar .bar-inside img.event-icon, .bar .bar-chain-logo img.event-icon, .bar .bar-chain-logo svg.event-icon { --logo-size: 16px; width: 16px; height: 16px; margin-top: -1px; }
+}
+
+/* The lit part (the selected day, phase, part or event): a lighter fill, nothing else. */
+.bar-light { position: absolute; top: 0; bottom: 0; z-index: 0; background: rgba(255, 255, 255, 0.30); pointer-events: none; }
+
+/* White lines: between named days and around a part (line 2), where a part running inside ends (line 1).
+   Pointing at one, or tapping it, shows its time. */
+.bar-mark { position: absolute; z-index: 2; width: 1px; margin-left: -0.5px; background: rgba(255, 255, 255, 0.45); pointer-events: auto; cursor: pointer; }
+.bar-mark.divider { top: calc(var(--head-height) + 4px); bottom: 3px; }
+.bar-mark.end-mark { top: 5px; height: calc(var(--head-height) - 6px); width: 2px; margin-left: -1px; border-radius: 1px; background: #FFFFFF; }
+.bar-mark::before { content: ''; position: absolute; top: -3px; bottom: -3px; left: -5px; right: -5px; }
+.bar-mark::after {
+  content: attr(data-time); display: none; position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+  padding: 2px 6px; border-radius: 6px; background: #0E1424; border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #FFFFFF; font-size: 11px; font-weight: 700; line-height: 16px; white-space: nowrap; text-shadow: none;
+}
+.bar-mark:hover::after, .bar-mark.show-time::after { display: block; }
+.bar:hover, .bar.raised { z-index: 5; }
+
+/* A part running for days inside the bar (Trade Route): a line under the bar in its colour, its logo, and a white line where it ends. */
+.bar-stripe { position: absolute; bottom: -6px; height: 3px; border-radius: 2px; pointer-events: none; }
+.bar-stripe-end { position: absolute; z-index: 1; top: 2px; height: var(--head-height); display: inline-flex; align-items: center; pointer-events: none; }
+.bar-stripe-end .event-icon { --logo-size: 16px; width: 16px; height: 16px; }
+
+/* Every bar opens its event (or, for "Bear ×4", the list of times). */
+.bar.clickable { pointer-events: auto; cursor: pointer; }
+.bar.clickable:hover { filter: brightness(1.12); }
+@media (min-width: 1000px) {
+  .grid7 { column-gap: 4px; }
+  .week-row { min-height: 96px; padding: 32px 0 6px; }
+  .day-box { padding: 4px 0 0; font-size: 15px; }
+  .day-box .day-number { min-width: 26px; height: 26px; }
+  .bars { grid-auto-rows: 30px; row-gap: 3px; }
+  .bar { --head-height: 26px; --line-two-height: 16px; height: 30px; padding: 2px 6px; border-radius: 8px; font-size: 14px; line-height: 26px; }
+  .bar-head { gap: 6px; }
+  .bar img.event-icon { --logo-size: 24px; width: 24px; height: 24px; }
+  .bar svg.event-icon { --logo-size: 18px; width: 18px; height: 18px; margin: 0 4px; }
+  .bar .bar-time { display: inline; }
+  .bar-segment-name { font-size: 11.5px; }
+  .bar.phase-lines { --side-icon: 32px; --side-gap: 6px; height: 40px; padding-left: calc(6px + var(--side-icon) + var(--side-gap)); }
+  .bar.phase-lines .bar-head { height: 20px; line-height: 20px; }
+  .bar.phase-lines .bar-sub { height: 15px; font-size: 11.5px; line-height: 15px; }
+  .bar.phase-lines.day-lines { --line-one-height: 20px; --line-two-height: 15px; padding-top: 2px; }
+  .bar-part { font-size: 11px; }
+  .bar-side-icon { left: 6px; }
+  .bar-stripe-end .event-icon { --logo-size: 20px; width: 20px; height: 20px; }
+}
+
+/* A bar that shows only its marked times, as logos: the player's own slot, or the
+   alliance times they follow. */
+/* Followed times and a picked Frostfire slot: only the logo, at its time in the day. */
+.bar.marker-bar { background: none !important; box-shadow: none !important; backdrop-filter: none; -webkit-backdrop-filter: none; padding: 0; }
+.bar-marker { position: absolute; top: 3px; display: inline-flex; pointer-events: none; }
+.bar-marker img.event-icon { --logo-size: 18px; width: 18px; height: 18px; object-fit: contain; filter: drop-shadow(1px 1.5px 1px rgba(0, 0, 0, 0.85)); }
+.bar-marker svg.event-icon { width: 14px; height: 14px; }
+@media (min-width: 1000px) { .bar-marker img.event-icon { --logo-size: 24px; width: 24px; height: 24px; } }
