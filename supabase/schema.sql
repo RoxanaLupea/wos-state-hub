@@ -43,7 +43,8 @@ create table alliances (
 -- the site verifies, but two accounts cannot hold the same id at once. If someone
 -- has taken yours, you flag it and an admin sorts it out.
 create table accounts (
-  id                      uuid primary key,
+  -- Same id as the Supabase login, so deleting the login removes the row with it.
+  id                      uuid primary key references auth.users (id) on delete cascade,
   in_game_name            text,
   in_game_id              text unique,
   alliance_id             text references alliances (id),
