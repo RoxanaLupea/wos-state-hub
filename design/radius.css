@@ -1,0 +1,57 @@
+/* Corner radius, by rule.
+   One number is chosen per element: how tall it is. The corner follows from it.
+   Change the height and the corner keeps its proportion on its own. */
+
+:root {
+  /* A control's corner is a quarter of its height. The old app already sat between
+     21% and 28% everywhere, so this is what it was doing without saying so. */
+  --corner-share-of-height: 0.25;
+
+  /* Panels grow with whatever is inside them, so a share of their height means
+     nothing. They get one fixed corner instead. */
+  --panel-corner: 18px;
+
+  /* Bigger than half of anything, so the corners meet and the shape is a pill. */
+  --fully-round: 999px;
+}
+
+/* Anything you press or type in. Only its height is set; the corner follows. */
+.control {
+  --control-height: 42px;
+  height: var(--control-height);
+  border-radius: calc(var(--control-height) * var(--corner-share-of-height));
+}
+
+/* The three heights the app actually uses. */
+.control.is-small  { --control-height: 36px; }  /* small-button, check-option */
+.control.is-tiny   { --control-height: 32px; }  /* step-nav, the view switch */
+.control.is-nested { --control-height: 28px; }  /* a button inside another control */
+
+/* A control that is a pill rather than a rectangle: chips, bands, time slots. */
+.control.is-pill { border-radius: var(--fully-round); }
+
+/* A dot is a pill that happens to be square. Written the same way, so there is one
+   idea rather than two (999px and 50% both drew these before). */
+.dot { border-radius: var(--fully-round); }
+
+/* Panels, cards and dialogs. One corner, whatever their size. */
+.panel { border-radius: var(--panel-corner); }
+
+/* A sheet that rises from the bottom of a phone: rounded on top, square where it
+   meets the edge of the screen. The only shape with a reason to differ. */
+.panel.rises-from-below { border-radius: var(--panel-corner) var(--panel-corner) 0 0; }
+
+/* A calendar bar is a control by another name: its corner follows its height, and its
+   height changes between a phone and a computer. */
+.calendar-bar { --control-height: 24px; border-radius: calc(var(--control-height) * var(--corner-share-of-height)); }
+@media (min-width: 1000px) { .calendar-bar { --control-height: 30px; } }
+
+/* A reward tile is sized by one number and everything about it is a share of that,
+   which is why it survives from 34px to 110px. It was already built this way. */
+.reward-square {
+  --tile: 44px;
+  width: var(--tile);
+  height: var(--tile);
+  border-radius: calc(var(--tile) * 0.12);
+  border-width: calc(var(--tile) * 0.035);
+}

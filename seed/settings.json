@@ -29,5 +29,13 @@
   {
     "key": "fortRewardsGeneration",
     "value": "11"
+  },
+  {
+    "key": "castleLeadBuffs",
+    "value": "2"
+  },
+  {
+    "key": "turretLeadBuffs",
+    "value": "1"
   }
 ]

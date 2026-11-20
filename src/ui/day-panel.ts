@@ -42,7 +42,14 @@ function momentMarkup(moment: Moment): string {
   </div></li>`;
 }
 
-export function dayPanel(day: number, contents: DayContents, isOpen: boolean): string {
+export interface DayPanelOptions {
+  isOpen: boolean;
+  // True when the Alliance filter is ticked but the player has not said which
+  // alliance is theirs, so no alliance time can be shown.
+  needsAlliancePick: boolean;
+}
+
+export function dayPanel(day: number, contents: DayContents, options: DayPanelOptions): string {
   const heading = `<button type="button" class="day-back" data-close-day>
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -51,6 +58,9 @@ export function dayPanel(day: number, contents: DayContents, isOpen: boolean): s
       <h2>${escapeForPage(longDayText(day))}</h2>
       <span>${escapeForPage(timeModeText())}</span>
     </div></div>`;
+
+  const alliancePrompt = options.needsAlliancePick
+    ? '<div class="day-empty glass">Pick your alliance to see its times.</div>' : '';
 
   const nothingToShow = !contents.allDayItems.length && !contents.moments.length;
   const body = nothingToShow
@@ -64,7 +74,8 @@ export function dayPanel(day: number, contents: DayContents, isOpen: boolean): s
           ? `<ol class="moment-list">${contents.moments.map(momentMarkup).join('')}</ol>` : ''}
       </section>`;
 
-  return `<aside class="day-panel${isOpen ? ' open' : ''}">${heading}${body}</aside>`;
+  return `<aside class="day-panel${options.isOpen ? ' open' : ''}">` +
+    `${heading}${alliancePrompt}${body}</aside>`;
 }
 
 // The name of an event as the panel says it. Kept here so the panel and the month

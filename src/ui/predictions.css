@@ -1,0 +1,242 @@
+/* The transfer predictions, laid out the way the sheet is: one column per transfer
+   date, side by side, so a group can be followed from one date to the next. Each
+   big group takes it in turn to be shaded, the way the sheet alternates its rows.
+   The colours are the app's own: glass for the surfaces and the accent for whatever
+   belongs to this state, the same as a chosen day in the calendar. */
+
+/* The controls: each one named, so it is clear what it changes. */
+/* The controls are read, not pressed: a quiet label and the choices as words, with
+   the chosen one in the event's colour. */
+.predictions-head {
+  display: flex; align-items: baseline; flex-wrap: wrap; justify-content: flex-end;
+  gap: 22px;
+}
+/* A line before the action, so it does not read as another filter. */
+.predictions-head .prediction-back::before {
+  content: ''; position: absolute; left: -14px; top: 2px; bottom: 2px;
+  width: 1px; background: var(--glass-border);
+}
+.predictions-head .prediction-back { position: relative; }
+.prediction-control { display: flex; align-items: baseline; gap: 7px; }
+/* The label separates one control from the next, so nothing else has to. */
+.prediction-control-label {
+  font-size: 9px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-faint);
+}
+.prediction-control .segmented {
+  display: flex; align-items: baseline; gap: 7px;
+  background: none; border: none; padding: 0; border-radius: 0;
+}
+/* A box you tick: both battles can be on at once, and one of them always is. */
+.filter-check {
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: 0; padding: 0; border: none; background: none;
+  font: inherit; font-size: 12px; font-weight: 700; color: var(--text-muted);
+  white-space: nowrap; cursor: pointer;
+}
+.filter-check + .filter-check { margin-left: 12px; }
+.check-box {
+  display: grid; place-items: center; width: 14px; height: 14px; flex: none;
+  border-radius: 4px; border: 1.5px solid var(--glass-border);
+  background: rgba(0, 0, 0, 0.18); color: transparent;
+  transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+.check-box svg { width: 10px; height: 10px; }
+.check-icon { display: flex; flex: none; }
+.check-icon .event-icon { width: 16px; height: 16px; border-radius: 4px; }
+.filter-check[aria-checked="true"] { color: var(--text); }
+.filter-check[aria-checked="true"] .check-box {
+  background: var(--event-mark); border-color: var(--event-mark); color: var(--event-ink);
+}
+
+/* A switch between two ways of looking at the same list. */
+.filter-switch {
+  display: inline-flex; align-items: center; gap: 7px;
+  min-height: 0; padding: 0; border: none; background: none;
+  font: inherit; font-size: 12px; font-weight: 700; color: var(--text-muted);
+  white-space: nowrap; cursor: pointer;
+}
+.switch-track {
+  position: relative; width: 26px; height: 15px; flex: none; border-radius: 999px;
+  background: rgba(0, 0, 0, 0.26); border: 1px solid var(--glass-border);
+  transition: background 150ms ease, border-color 150ms ease;
+}
+.switch-knob {
+  position: absolute; top: 1.5px; left: 2px; width: 10px; height: 10px;
+  border-radius: 50%; background: var(--text-faint);
+  transition: transform 150ms ease, background 150ms ease;
+}
+.filter-switch[aria-checked="true"] { color: var(--text); }
+.filter-switch[aria-checked="true"] .switch-track {
+  background: var(--event-mark); border-color: var(--event-mark);
+}
+.filter-switch[aria-checked="true"] .switch-knob {
+  transform: translateX(11px); background: var(--event-ink);
+}
+@media (prefers-reduced-motion: reduce) {
+  .check-box, .switch-track, .switch-knob { transition: none; }
+}
+
+/* Back to the transfer that is next, named by its date. */
+.prediction-back {
+  display: inline-flex; align-items: center; gap: 5px;
+  margin-left: 6px;
+  padding: 3px 9px; border-radius: 7px;
+  border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.06);
+  color: var(--event-mark); font: inherit; font-size: 11px; font-weight: 800;
+  letter-spacing: 0.04em; cursor: pointer;
+}
+.prediction-back:hover { background: rgba(255, 255, 255, 0.11); }
+
+/* The typed state sits inside its own choice, so picking it and typing it are one. */
+
+/* The page fills what is left of the window and the dates scroll inside it, both
+   ways, so the controls stay put and a long list does not push them off screen. */
+.predictions-page {
+  display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0;
+  --date-peek: 38px; --date-gap: 9px;
+  --date-sliver: calc(var(--date-peek) - var(--date-gap));
+}
+
+.prediction-dates {
+  display: flex; align-items: flex-start; gap: var(--date-gap); padding-bottom: 10px;
+  overflow-x: auto; overflow-y: hidden; flex: 1 1 auto; min-height: 0;
+  /* Whole columns only: the next date shows as a sliver at the edge, the scroll
+     snaps a peek in from the left, and the fade covers exactly that sliver. */
+  scroll-snap-type: x mandatory; scroll-padding-left: var(--date-peek);
+  scroll-behavior: smooth; scrollbar-width: none;
+  scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--accent) 35%, transparent) transparent;
+}
+.prediction-dates::-webkit-scrollbar { display: none; }
+.prediction-dates.can-left {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--date-sliver));
+  mask-image: linear-gradient(to right, transparent 0, #000 var(--date-sliver));
+}
+.prediction-dates.can-right {
+  -webkit-mask-image: linear-gradient(to left, transparent 0, #000 var(--date-sliver));
+  mask-image: linear-gradient(to left, transparent 0, #000 var(--date-sliver));
+}
+.prediction-dates.can-left.can-right {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--date-sliver),
+    #000 calc(100% - var(--date-sliver)), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 var(--date-sliver),
+    #000 calc(100% - var(--date-sliver)), transparent 100%);
+}
+.prediction-dates.dragging { scroll-snap-type: none; cursor: grabbing; }
+.prediction-dates::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--accent) 35%, transparent); border-radius: 999px; }
+
+.date-block {
+  /* The columns share the row evenly, so the strip fills the page instead of
+     leaving a gap down the right. */
+  /* A column is as tall as its groups, up to the height there is. A short list ends
+     where it ends instead of leaving dead space under it; a long one scrolls. */
+  flex: 0 0 calc((100% - 2 * var(--date-peek) - 5 * var(--date-gap)) / 6);
+  min-width: 190px; max-height: 100%; scroll-snap-align: start;
+  display: flex; flex-direction: column;
+  border-radius: 8px;
+  background: var(--glass); border: 1px solid var(--glass-border);
+}
+.date-block.is-next { border-color: color-mix(in srgb, var(--event-mark) 75%, transparent); }
+/* The date and the column names are one header of two lines, on one surface. The
+   surface is the event's own colour but still a glass panel: translucent, with the
+   light along its top edge and the shadow along its bottom that every other surface
+   in the app has. */
+.date-block-top {
+  flex: none; border-radius: 7px 7px 0 0; overflow: hidden;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--event-mark) 86%, white 14%),
+    color-mix(in srgb, var(--event-mark) 88%, black 12%));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(90, 68, 24, 0.22);
+  color: var(--event-ink);
+}
+
+/* Each column scrolls on its own, because the group this state is in sits at a
+   different depth on every date. */
+.date-block-scroll {
+  flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+}
+/* The rows fade out at whichever edge still has more to scroll towards. */
+.date-block-scroll.can-up {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 16px);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 16px);
+}
+.date-block-scroll.can-down {
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 16px), transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 16px), transparent 100%);
+}
+.date-block-scroll.can-up.can-down {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 16px,
+    #000 calc(100% - 16px), transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 16px,
+    #000 calc(100% - 16px), transparent 100%);
+}
+.date-block-scroll::-webkit-scrollbar { width: 6px; }
+.date-block-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16); border-radius: 999px;
+}
+.date-block-rows { flex: 1 1 auto; }
+.date-block-rows .group-row:last-child { border-bottom: none; border-radius: 0 0 7px 7px; }
+.date-block-head {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 8px 10px 3px; color: var(--event-ink);
+  font-size: 13.5px; font-weight: 800;
+}
+/* The logo of the event this transfer follows, in front of the date. */
+.date-block-follows { display: flex; flex: none; }
+.date-block-follows .event-icon { width: 17px; height: 17px; border-radius: 4px; }
+.date-block-labels {
+  color: color-mix(in srgb, var(--event-ink) 88%, transparent);
+  display: grid; grid-template-columns: 1fr 14px 1fr 42px 56px; gap: 0;
+  padding: 0 10px 7px;
+  font-size: 10.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.date-block-labels .range-head { grid-column: 1 / 4; text-align: center; }
+/* The column names sit over the middle of the columns they name. */
+.date-block-labels .range-fc, .date-block-labels .range-gen {
+  text-align: center; color: color-mix(in srgb, var(--event-ink) 88%, transparent);
+}
+
+/* Five columns, so every dash and every number sits under the one above it: the
+   first state reaching the dash from the right, the dash, the last state running
+   left from it, then the furnace and the generation. */
+.group-row {
+  display: grid; grid-template-columns: 1fr 14px 1fr 42px 56px; gap: 0;
+  padding: 4px 10px; font-size: 13px; font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--glass-border);
+}
+.range-from { text-align: right; }
+.range-dash { text-align: center; color: var(--text-faint); }
+.range-to { text-align: left; }
+.range-fc, .range-gen { text-align: center; color: var(--text-muted); }
+/* Every other big group is shaded, so where one ends and the next starts is plain. */
+.group-row.shaded { background: var(--glass); }
+/* Three weights, lightest to strongest: the rest of the list, the group this state
+   is in, and the one range the state itself sits in. All three are the accent the
+   calendar already uses for the day you picked, just at different strengths, so
+   nothing has to be labelled. */
+/* Our own group is written whiter than the rest, so it does not read the same as
+   every other group. */
+.group-row.ours { background: color-mix(in srgb, var(--accent) 12%, transparent); color: #FFFFFF; }
+.group-row.ours span { color: #FFFFFF; }
+.group-row.ours .range-dash { color: rgba(255, 255, 255, 0.55); }
+
+.group-row.is-us {
+  background: color-mix(in srgb, var(--accent) 28%, transparent);
+  font-size: 14.5px; font-weight: 800; padding-top: 5px; padding-bottom: 5px;
+  /* Inside it, the range we are in is a very light yellow. */
+  color: color-mix(in srgb, var(--event-mark-light) 72%, white);
+}
+.group-row.is-us span { color: color-mix(in srgb, var(--event-mark-light) 72%, white); }
+.group-row.is-us .range-dash {
+  color: color-mix(in srgb, var(--event-mark-light) 55%, transparent);
+}
+/* The first row of a big group gets a line above it. */
+.group-row.starts { border-top: 1px solid var(--glass-border); }
+
+.predictions-empty { padding: 16px; font-size: 14px; color: var(--text-muted); }
+
+/* Which state's group is being followed, typed in rather than picked from a list,
+   because it can be any state in the game. */
+/* What each date follows, under its date. */

@@ -4,7 +4,9 @@
   /* Page */
   --page-color: #0C1220;
   --page-background:
-    radial-gradient(circle at 100% 12%, rgba(150, 120, 235, 0.34), transparent 38%),
+    /* Pushed down and softened: at the top right it sat straight under the page's
+       own head, where there is no glass to mute it. */
+    radial-gradient(circle at 104% 34%, rgba(150, 120, 235, 0.26), transparent 36%),
     radial-gradient(circle at -5% 48%, rgba(90, 140, 230, 0.32), transparent 40%),
     radial-gradient(circle at 90% 78%, rgba(70, 190, 180, 0.22), transparent 36%),
     radial-gradient(circle at 15% 100%, rgba(225, 120, 160, 0.18), transparent 32%);
@@ -21,8 +23,11 @@
   --text-muted: #B9C2D9;
   --text-faint: #8F9AB8;
 
-  /* Accents */
-  --accent: #AFC8F5;
+  /* Accents. --brand-accent is the app's own blue, the one the logo is written in;
+     a section never changes it. --accent is the working accent and a section may
+     set its own. */
+  --brand-accent: #AFC8F5;
+  --accent: var(--brand-accent);
   --accent-ink: #1C2333;
   --danger: #F2A0A0;
 
@@ -58,6 +63,29 @@ body {
   background-image: var(--page-background);
   background-attachment: fixed;
 }
+
+/* An event's own colours, taken from its screens in the game. --event-mark is the
+   one colour the section uses for everything it marks; --event-mark-light is the
+   same colour lightened so it still reads as text on a dark row; --event-ink is for
+   text sitting on the mark itself. Plain accent until a section says otherwise. */
+:root {
+  --event-mark: var(--accent);
+  --event-mark-light: var(--accent);
+  --event-ink: var(--accent-ink);
+}
+/* State Transfer, from the map that marks it in the game: the parchment for the
+   event's own colour, a lighter cut of it for text sitting on a dark row, and the
+   ink for text sitting on the parchment itself. */
+.page[data-section="transfers"] {
+  --accent: #4FA5FC; --accent-ink: #04203D;
+  --event-mark: #D6C18B;
+  --event-mark-light: #F2DFA8;
+  --event-ink: #0E3157;
+}
+
+/* A button takes the colour of the text around it unless it asks for its own.
+   Without this the browser paints its label black. */
+button { color: inherit; }
 
 /* The shared glass panel look, used by every card and bar in the app. */
 .glass {

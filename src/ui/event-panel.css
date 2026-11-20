@@ -1,0 +1,370 @@
+/* An event's own page: its head, the facts about this run, the notes and folds,
+   the whole run as one timeline, and the rewards drawn the way the game draws them. */
+
+/* ---------- Shared event rows (day details) ---------- */
+.event-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 0; }
+.event-row + .event-row { border-top: 1px solid var(--glass-border); }
+/* A part of a bigger event sits under it, pulled in a little. */
+.event-row.part { padding-left: 22px; }
+.event-row.part + .event-row.part { border-top: none; }
+.event-row-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+/* Event icons: no background, as tall as two lines of text (40 px); 32 px in the timeline, 28 px in lists. */
+.event-badge { width: 40px; height: 40px; flex: none; display: inline-flex; align-items: center; justify-content: center; }
+.event-badge img.event-icon { width: 100%; height: 100%; object-fit: contain; }
+.event-badge svg.event-icon { width: 70%; height: 70%; }
+.event-badge.large { width: 44px; height: 44px; }
+.event-badge.small { width: 32px; height: 32px; }
+.event-badge.list { width: 28px; height: 28px; }
+.type-label { align-self: flex-start; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.12);
+  color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.event-title { font-size: 15px; font-weight: 700; }
+.event-note { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+.time-column { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex: none; text-align: right; }
+.small-row { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; }
+.small-row-dot { width: 8px; height: 8px; border-radius: 999px; flex: none; }
+
+/* ---------- Day details ---------- */
+
+.all-day-text .event-title { font-size: 14px; }
+.all-day-arrow { font-size: 22px; font-weight: 800; line-height: 1; }
+
+/* An event's own page. */
+.event-page { gap: 8px; }
+/* Head: icon (44 px, centred), then the name and the dates on 2 lines, the pencils on the right. */
+.event-page-head { display: flex; align-items: center; gap: 12px; }
+.event-page-head .row-buttons { align-self: center; }
+.event-page-title { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.event-page-title h2 { margin: 0; font-size: 20px; font-weight: 800; }
+.event-facts { display: flex; flex-wrap: wrap; gap: 6px; }
+.event-fact { font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.10); }
+/* My slot (Frostfire): the game's times; the picked one is lit. */
+.slot-picker { display: flex; flex-direction: column; gap: 6px; }
+.slot-title { font-size: 13px; font-weight: 800; color: var(--text-muted); }
+.slot-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
+.slot-button {
+  min-width: 58px; padding: 6px 10px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06); color: var(--text); font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; cursor: pointer;
+}
+.slot-button[aria-pressed="true"] { background: rgba(255, 255, 255, 0.30); border-color: rgba(255, 255, 255, 0.55); color: #FFFFFF; }
+.slot-button:disabled { opacity: 0.55; cursor: default; }
+.link-button { border: none; background: none; padding: 0; color: var(--accent); font: inherit; text-decoration: underline; cursor: pointer; }
+.event-info-line { margin: 0 0 6px; font-size: 14px; font-weight: 600; line-height: 1.4; }
+.schedule-row { display: flex; justify-content: space-between; gap: 10px; padding: 8px 4px; border: none; border-top: 1px solid var(--glass-border);
+  background: transparent; color: inherit; font: inherit; font-size: 14px; font-weight: 700; text-align: left; cursor: pointer; }
+.schedule-row.current { color: var(--accent); }
+.schedule-when { flex: none; margin-left: auto; color: var(--text-muted); font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+.event-folds { display: flex; flex-direction: column; }
+/* Notes under the event's name: plain text; another name players use, faint. */
+.event-notes p { margin: 0 0 4px; }
+.event-other-name { color: var(--text-muted); font-size: 13px; font-weight: 700; }
+/* The whole-event button in an event's head (a small timeline). Pressed while the whole event shows. */
+/* A cancelled date stays visible with an X. */
+.cancelled-mark { color: #FF8F8F; font-weight: 900; }
+.bar.cancelled { opacity: 0.6; }
+/* A date that is only estimated is drawn with a broken edge until an admin confirms
+   it, so a guess never looks as settled as a known date. */
+.bar.provisional {
+  outline: 1px dashed rgba(255, 255, 255, 0.55);
+  outline-offset: -2px;
+}
+.bar .cancelled-mark { flex: none; }
+
+/* ---------- The whole event as one timeline ---------- */
+
+/* ---------- The whole event as one timeline ---------- */
+.event-tree { display: flex; flex-direction: column; }
+.event-tree .tree-row { display: grid; grid-template-columns: 84px 24px 26px minmax(0, 1fr) 16px; align-items: center; min-height: 44px; border-radius: 10px; }
+/* With a part beside it (Trade Route): its line in a narrow column just left of the main line. */
+.event-tree.has-side .tree-row { grid-template-columns: 84px 10px 24px 26px minmax(0, 1fr) 16px; }
+.event-tree.has-side .tree-row.main .tree-label, .event-tree.has-side .tree-row.nested .tree-label, .event-tree.has-side .tree-row.side .tree-label { grid-column: 4 / 6; }
+.tree-row.main .tree-label, .tree-row.nested .tree-label, .tree-row.side .tree-label { grid-column: 3 / 5; }
+/* A step inside the event: a smaller circle on the line, smaller words on the same row (no connector lines). */
+.tree-row.nested .tree-label { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+.tree-step-dot { position: relative; z-index: 1; width: 9px; height: 9px; border-radius: 50%; }
+.tree-row.current .tree-step-dot { box-shadow: 0 0 0 4px color-mix(in srgb, var(--current-color) 35%, transparent); }
+.tree-when { text-align: right; padding-right: 8px; line-height: 1.2; }
+.tree-when b { display: block; font-size: 14px; font-weight: 700; white-space: nowrap; }
+.tree-when span { display: block; font-size: 13px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.tree-line { position: relative; align-self: stretch; display: flex; align-items: center; justify-content: center; }
+.tree-line::before, .tree-line::after { content: ''; position: absolute; left: 10.5px; width: 3px; }
+.tree-line::before { top: 0; height: 50%; background: var(--line-above); }
+.tree-line::after { top: 50%; bottom: 0; background: var(--line-below); }
+.tree-line.first::before, .tree-line.last::after { display: none; }
+.tree-dot { position: relative; z-index: 1; width: 13px; height: 13px; border-radius: 50%; }
+/* Where the event's line ends during a day: a short bar across the line. */
+.tree-cap { position: relative; z-index: 1; width: 15px; height: 3px; border-radius: 2px; }
+.tree-label { padding-left: 8px; font-size: 14px; color: var(--text); min-width: 0; }
+.tree-label.main { font-size: 15px; font-weight: 700; }
+.tree-label.side-row { color: var(--text-muted); font-weight: 700; }
+/* Instructions of a phase or step: open from its row (same arrow as points), smaller text. */
+.tree-instructions { margin: 2px 0 6px; font-size: 13px; line-height: 1.4; color: var(--text-muted); }
+/* The button that switches an event card between its timeline and its info. */
+.view-button { width: 34px; height: 34px; border-radius: 999px; border: 1px solid var(--glass-border); background: var(--glass);
+  color: var(--accent); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; flex: none; }
+/* Requirements under the event's name: one line for the alliance, one for the player. */
+.event-requirements p { margin: 0 0 4px; font-size: 13px; line-height: 1.4; color: var(--text-muted); }
+.event-requirements b { color: var(--text); font-weight: 700; }
+/* The titles of the lists under the timeline (Requirements, Rules, Points...): small capitals. */
+.event-folds .points-list > summary { font-size: 12px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-faint); }
+/* What a list holds sits inside its title: indented from the left, and stopping where the arrow is. */
+.event-folds .points-list > :not(summary) { margin-left: 16px; margin-right: 18px; }
+/* The titles inside a list (Winning, Morale...): small bold capitals. */
+.event-folds .points-note .note-title { font-size: 11.5px; letter-spacing: 0.04em; text-transform: uppercase; }
+/* Notes in a points list: a bold title above the text; Disabled / Enabled lines marked differently. */
+.points-note.titled .note-title { display: block; margin-bottom: 2px; color: var(--text); font-size: 13px; font-weight: 800; }
+.points-note .note-title { color: var(--text); font-weight: 800; }
+.points-note .note-line { display: block; }
+.points-note .note-line + .note-line { margin-top: 3px; }
+.note-line.note-disabled, .note-line.note-enabled { display: grid; grid-template-columns: 70px minmax(0, 1fr); align-items: start; }
+.note-line.note-disabled b, .note-line.note-enabled b { margin-top: 1px; padding: 0 6px; border-radius: 4px; font-size: 11px; font-weight: 800; text-align: center; margin-right: 8px; }
+.note-line.note-disabled b { background: rgba(242, 160, 160, 0.18); color: #F2A0A0; }
+.note-line.note-enabled b { background: rgba(140, 214, 160, 0.18); color: #9EE0B0; }
+/* A moment of a part beside the event (Trade Route): smaller words. */
+.tree-row.side .tree-label { font-size: 12px; font-weight: 600; }
+/* The line of a part beside the event: top and bottom half of it in each row (each fades on its own). */
+.tree-side { position: relative; align-self: stretch; }
+.tree-side::before, .tree-side::after { content: ''; position: absolute; left: 8px; width: 2px; display: none; }
+.tree-side::before { top: 0; bottom: 50%; background: var(--side-top); }
+.tree-side::after { top: 50%; bottom: 0; background: var(--side-bottom); }
+.tree-side.middle::before, .tree-side.end::before, .tree-side.start::after, .tree-side.middle::after { display: block; }
+.tree-side.start::after { top: calc(50% + 2px); }
+/* Its logo on top, a circle at each of its moments, a cap where it ends. */
+.tree-side-logo { position: absolute; z-index: 1; left: 9px; bottom: calc(50% - 2px); transform: translateX(-50%); width: 16px; height: 16px; display: flex; }
+.tree-side-logo .event-icon { width: 16px; height: 16px; }
+.tree-side-dot { position: absolute; z-index: 2; left: 9px; top: 50%; width: 9px; height: 9px; transform: translate(-50%, -50%); border-radius: 50%; }
+.tree-side .tree-cap { position: absolute; left: 9px; top: 50%; width: 12px; height: 2px; transform: translate(-50%, -50%); }
+/* Dashed after its first moment. */
+.tree-side.dash-top::before, .tree-side.dash-bottom::after, .tree-points.dash-side::after {
+  -webkit-mask: repeating-linear-gradient(to bottom, #000 0 4px, transparent 4px 7px); mask: repeating-linear-gradient(to bottom, #000 0 4px, transparent 4px 7px);
+}
+.tree-arrow { width: 8px; height: 8px; border-right: 2.5px solid var(--arrow-color); border-bottom: 2.5px solid var(--arrow-color); transform: rotate(-45deg); transition: transform 0.15s ease; justify-self: center; }
+.tree-item[open] > summary .tree-arrow { transform: rotate(45deg); }
+.tree-item > summary { list-style: none; cursor: pointer; }
+.tree-item > summary::-webkit-details-marker { display: none; }
+.tree-item > summary:hover { background: rgba(255, 255, 255, 0.04); }
+/* Where you are: tinted row, bigger dot with a soft halo in its colour, bold text. */
+.tree-row.current { background: rgba(255, 255, 255, 0.07); }
+.tree-row.current .tree-label { font-weight: 800; color: #FFFFFF; }
+.tree-row.current .tree-dot { box-shadow: 0 0 0 4px color-mix(in srgb, var(--current-color) 35%, transparent); }
+/* A day's points open under its row; the main line keeps going on their left. */
+.tree-points { position: relative; padding: 2px 8px 8px 116px; }
+.tree-points::before { content: ''; position: absolute; left: 94.5px; top: 0; bottom: 0; width: 3px; background: var(--line-below); }
+.event-tree.has-side .tree-points { padding-left: 126px; }
+.event-tree.has-side .tree-points::before { left: 104.5px; }
+.tree-points.with-side::after { content: ''; position: absolute; left: 92px; top: 0; bottom: 0; width: 2px; background: var(--side-color); }
+/* Fortress Friday: one row per fortress and stronghold. */
+.fort-battle-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid var(--glass-border); font-size: 14px; font-weight: 700; }
+.fort-battle-name { flex: none; width: 38px; font-weight: 800; }
+.fort-battle-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.fort-banner.fort-battle-holder { flex: none; align-self: center; height: 22px; margin: 0; padding: 0 10px; }
+.admin-only { border-style: dashed; }
+.event-row-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.event-row .event-row-left { align-items: flex-start; flex: 1; }
+.event-row .points-list { margin: 4px 0 0; }
+
+/* Folds (Points, Details, Other forts): a full-width row with an arrow on the right that turns down when open. */
+.points-list { margin: 0; border-top: 1px solid var(--glass-border); }
+.points-list summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 40px; padding: 0 4px; cursor: pointer;
+  font-size: 14px; font-weight: 700; color: var(--text); list-style: none; border-radius: 8px;
+}
+.points-list summary:hover { background: rgba(255, 255, 255, 0.05); }
+.points-list summary::-webkit-details-marker { display: none; }
+/* The arrow: a chevron drawn with two borders, pointing right when closed and down when open. */
+.points-list summary::after {
+  content: ''; flex: none; width: 8px; height: 8px; margin-right: 6px;
+  border-right: 2.5px solid var(--fold-color, var(--accent)); border-bottom: 2.5px solid var(--fold-color, var(--accent));
+  transform: rotate(-45deg); transition: transform 0.15s ease;
+}
+.points-list[open] summary::after { transform: rotate(45deg); margin-top: -4px; }
+.points-list[open] { padding-bottom: 6px; }
+.points-row { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-top: 1px solid var(--glass-border); font-size: 13px; font-weight: 600; }
+.points-value { flex: none; font-weight: 800; color: #B8E6A8; font-variant-numeric: tabular-nums; }
+.points-note { margin: 4px 0 6px; font-size: 12px; font-weight: 600; color: var(--text-muted); line-height: 1.4; }
+.admin-subtitle { margin: 6px 0 0; font-size: 15px; font-weight: 800; color: var(--accent); }
+.admin-link { border: none; background: transparent; color: var(--accent); font-size: 12px; font-weight: 700; padding: 4px 0; text-align: left; }
+
+/* Phone: day details open as a full-screen sheet */
+@media (max-width: 999px) {
+  .day-panel {
+    position: fixed; inset: 0; z-index: 30; overflow-y: auto; padding: 8px 12px 90px;
+    background-color: var(--page-color);
+    background-image: var(--page-background);
+    transform: translateY(100%); visibility: hidden; transition: transform 0.2s ease, visibility 0s linear 0.2s;
+  }
+  .day-panel.open { transform: none; visibility: visible; transition: transform 0.2s ease; }
+}
+@media (min-width: 1000px) {
+  .day-back { display: none !important; }
+}
+.day-back { align-self: flex-start; min-height: 44px; display: inline-flex; align-items: center; gap: 4px; border: none; background: transparent; color: var(--accent); font-weight: 700; padding: 0 4px; }
+
+/* Next up tiles */
+.next-up { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0 12px; flex: none; }
+.next-tile { display: flex; flex-direction: column; gap: 3px; padding: 12px 14px; border-radius: var(--radius); }
+/* Next up: the icon, with "Next up" and the name on 2 lines to its right; the date under them. */
+.next-tile-head { display: flex; align-items: center; gap: 10px; margin-bottom: 2px; }
+.next-tile-names { display: flex; flex-direction: column; min-width: 0; }
+.next-tile-label { font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.next-tile-title { font-size: 16px; font-weight: 800; line-height: 1.2; }
+@media (min-width: 1000px) {
+  .next-up { margin: 0; }
+  .next-tile { padding: 10px 12px; }
+  .next-tile-title { font-size: 15px; }
+}
+
+/* Bottom bar (phones) */
+.bottom-nav {
+  position: sticky; bottom: 0; z-index: 20; margin-top: auto; display: flex; padding: 8px 8px 14px;
+  background: rgba(14, 20, 34, 0.72); border-top: 1px solid var(--glass-border);
+  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+}
+.bottom-nav button {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; min-height: 48px; justify-content: center;
+  border: none; background: transparent; color: var(--text-muted); font-size: 12px; font-weight: 700;
+}
+.bottom-nav button[aria-current="page"] { color: var(--accent); font-weight: 800; }
+@media (min-width: 1000px) { .bottom-nav { display: none; } }
+
+/* ---------- Fortress page ---------- */
+
+/* ---------- Rewards drawn like in the game ---------- */
+/* A reward: its picture on a tile coloured like in the game, the small top text with a darker band behind it,
+   and the quantity in the corner. tile-none: the picture alone. */
+.reward-tile { position: relative; flex: none; display: inline-block; width: 44px; height: 44px; border-radius: 8px; box-sizing: border-box;
+  border: 1.5px solid var(--tile-border); background: linear-gradient(to bottom, var(--tile-top), var(--tile-middle) 55%, var(--tile-low));
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35); overflow: hidden; vertical-align: middle; }
+.reward-tile img { position: absolute; inset: 3px; width: calc(100% - 6px); height: calc(100% - 6px); object-fit: contain; }
+.reward-tile .drawn-picture { position: absolute; inset: 8%; width: 84%; height: 84%; }
+.reward-tile.no-picture::after { content: '?'; position: absolute; inset: 6px; display: flex; align-items: center; justify-content: center;
+  border: 1px dashed rgba(255, 255, 255, 0.7); border-radius: 5px; font-size: 13px; font-weight: 900; color: #fff; }
+.reward-tile .tile-top { position: absolute; top: 0; left: 0; right: 0; padding: 1px 0 2px; text-align: center; font-size: 8.5px; font-weight: 900; line-height: 1;
+  color: #fff; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0)); }
+.reward-tile .tile-top, .reward-tile .tile-qty { text-shadow: -1px -1px 0 #222, 1px -1px 0 #222, -1px 1px 0 #222, 1px 1px 0 #222; }
+.reward-tile .tile-qty { position: absolute; right: 2px; bottom: 1px; font-size: 10.5px; font-weight: 900; line-height: 1; color: #fff; }
+.tile-grey   { --tile-top: #52595D; --tile-middle: #9DA3A6; --tile-low: #D5D8D9; --tile-border: #A6AAAB; }
+.tile-green  { --tile-top: #2E5F21; --tile-middle: #5FA846; --tile-low: #ACE688; --tile-border: #55B24B; }
+.tile-blue   { --tile-top: #35538B; --tile-middle: #6C96CC; --tile-low: #AAD5F2; --tile-border: #73AEEF; }
+.tile-purple { --tile-top: #6E39B0; --tile-middle: #9A6FD6; --tile-low: #CFB7EC; --tile-border: #9B64EF; }
+.tile-orange { --tile-top: #8B562E; --tile-middle: #C98A57; --tile-low: #F0D1AD; --tile-border: #E89F6A; }
+.tile-none { border: none; background: none; box-shadow: none; }
+.reward-tabs { display: grid; gap: 4px; padding: 3px; margin: 2px 0 10px; border-radius: 10px; background: rgba(255, 255, 255, 0.06); }
+.reward-tab { border: none; background: none; padding: 7px 2px; border-radius: 8px; font: inherit; font-size: 12.5px; font-weight: 700; color: var(--text-muted); cursor: pointer; }
+.reward-tab.on { background: rgba(255, 255, 255, 0.14); color: var(--text); }
+.reward-bands { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 10px; }
+.reward-band { position: relative; flex: 1 1 0; min-width: 56px; padding: 5px 6px; border-radius: 999px; border: 1px solid var(--glass-border); background: none;
+  font: inherit; font-size: 12px; font-weight: 700; color: var(--text-muted); cursor: pointer; white-space: nowrap; }
+.reward-band.on { background: #5B8DEF; border-color: #5B8DEF; color: #fff; }
+.reward-yours { position: absolute; top: -8px; right: -2px; padding: 0 5px; border-radius: 999px; font-size: 9px; font-weight: 800; background: #F2C14E; color: #3A2A00; }
+.reward-sub { margin: 10px 0 6px; font-size: 11px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-faint); }
+.reward-sub.with-picture { display: flex; align-items: center; gap: 8px; }
+.reward-sub.with-picture img { width: 28px; height: 28px; object-fit: contain; }
+.reward-row { display: grid; grid-template-columns: 56px 1fr; align-items: center; gap: 6px; padding: 5px 0; border-top: 1px solid var(--glass-border); }
+.reward-label { font-size: 12.5px; font-weight: 800; color: var(--text-muted); overflow-wrap: anywhere; }
+.reward-label small { display: block; font-size: 10px; font-weight: 700; color: var(--text-faint); }
+.reward-items, .reward-flat { display: flex; flex-wrap: wrap; gap: 4px; }
+.reward-source { margin: 8px 0 2px; font-size: 11px; font-style: italic; color: var(--text-faint); }
+.merchant-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 8px; }
+.merchant-offer { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 2px; border-radius: 10px; background: rgba(255, 255, 255, 0.05); }
+.merchant-price { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 800; color: var(--text); }
+.merchant-price img { width: 16px; height: 16px; object-fit: contain; }
+.merchant-limit { font-size: 10.5px; font-weight: 700; color: var(--text-faint); }
+.day-chests { margin-top: 4px; }
+/* In a timeline the space is narrower: smaller tiles, so a chest's items stay on one line. */
+.day-chests .reward-row { grid-template-columns: 50px 1fr; gap: 4px; }
+.day-chests .reward-label { font-size: 11.5px; }
+.day-chests .reward-items { gap: 3px; }
+.day-chests .reward-tile { width: 34px; height: 34px; border-radius: 7px; }
+.day-chests .reward-tile .tile-top { font-size: 7.5px; }
+.day-chests .reward-tile .tile-qty { font-size: 9.5px; }
+/* Phones: 6 rewards of a rank fit on one line. */
+@media (max-width: 480px) {
+  .reward-row { grid-template-columns: 40px 1fr; gap: 4px; }
+  .reward-items, .reward-flat { gap: 3px; }
+  .reward-tile { width: 38px; height: 38px; border-radius: 7px; }
+  .reward-tile .tile-top { font-size: 8px; }
+  .reward-tile .tile-qty { font-size: 10px; }
+}
+/* A note with a picture beside it (Baldur). */
+.points-note.with-picture { position: relative; padding-left: 52px; min-height: 44px; }
+.points-note .note-picture { position: absolute; left: 0; top: 2px; width: 44px; height: 44px; object-fit: contain; }
+.points-note .note-line.note-subtitle { margin-top: 6px; font-size: 11px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-faint); }
+.points-note .note-line b { color: var(--text); font-weight: 700; }
+/* Alliance Showdown's Total score: the gold horn picture. */
+.win-horn { display: inline-block; width: 20px; height: 20px; object-fit: contain; vertical-align: -5px; }
+.horn-fallback { font-size: 13px; color: #F6EA9A; }
+.score-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; padding: 6px 4px 12px; }
+.score-side { display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: var(--text-muted); }
+.score-side.them { text-align: right; }
+.score-side b { font-size: 15px; } .score-side.us b { color: #8EC5FF; } .score-side.them b { color: #F2A0A0; }
+.score-total { display: flex; align-items: center; gap: 6px; font-size: 22px; font-weight: 800; white-space: nowrap; }
+.score-total .us { color: #8EC5FF; } .score-total .them { color: #F2A0A0; } .score-total .dash { color: var(--text-faint); }
+.score-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.score-table th { padding: 6px 4px; text-align: left; font-size: 11px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-faint); }
+.score-table td { padding: 9px 4px; border-top: 1px solid var(--glass-border); }
+.score-table .num { width: 34px; text-align: center; font-weight: 800; }
+.score-table .stage { width: 40px; font-weight: 800; color: var(--text-faint); }
+.score-table tr.today td { background: rgba(255, 255, 255, 0.07); }
+.score-table .win-us { font-weight: 800; color: #8EC5FF; } .score-table .win-them { font-weight: 800; color: #F2A0A0; }
+.score-table .win-tie { font-weight: 800; color: var(--text-muted); } .score-table .win-none { color: var(--text-faint); }
+.score-mvp { display: block; margin-top: 1px; font-size: 9.5px; font-weight: 600; color: var(--text-faint); }
+.score-edit { margin-top: 8px; }
+/* Openings of a part on line 2 of its main event's bar (Tundra Arms League): the part's logo and the opening's label
+   (Champion Prediction "×16"), or the logo alone where an opening ends (Match Prediction). */
+.bar .opening-mark-inside { display: inline-flex; align-items: center; justify-content: center; gap: 3px; }
+.bar .opening-mark.at-end .opening-mark-inside { justify-content: flex-end; padding: 0; overflow: visible; }
+/* The logos are bigger than the line's text; the negative margin keeps the bar's height the same. */
+.bar .opening-mark-inside { align-items: flex-end; }
+.bar .opening-mark .event-icon, .bar .opening-mark svg { --logo-size: 16px; width: 16px !important; height: 16px !important; margin: -1px 0 0; flex: none; }
+@media (max-width: 600px) { .bar .opening-mark .event-icon, .bar .opening-mark svg { --logo-size: 13px; width: 13px !important; height: 13px !important; margin: -1px 0 0; } }
+/* Event timeline: the opening's label under a row's words (Match Prediction, ROUND 1). */
+.tree-sub { display: block; margin-top: 1px; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.85; }
+/* Event timeline with two part lines beside the main line (Tundra Arms League's predictions). */
+.event-tree.has-two-sides .tree-row { grid-template-columns: 84px 12px 12px 24px 26px minmax(0, 1fr) 16px; }
+.event-tree.has-two-sides .tree-row .tree-label { grid-column: 5 / 7; }
+.event-tree.has-two-sides .tree-points { padding-left: 140px; }
+.event-tree.has-two-sides .tree-points::before { left: 118.5px; }
+.event-tree.has-two-sides .tree-side::before, .event-tree.has-two-sides .tree-side::after { left: 5px; }
+.event-tree.has-two-sides .tree-side-logo, .event-tree.has-two-sides .tree-side .tree-cap { left: 6px; }
+/* An event's info in tabs (Info, Predictions, Rewards, Missions). */
+.reward-tabs.info-tabs { margin: 4px 0 8px; }
+/* Missions: each mission with its rewards under it. */
+.mission-row { display: flex; flex-direction: column; gap: 5px; padding: 7px 0; border-top: 1px solid var(--glass-border); }
+.mission-name { font-size: 13px; font-weight: 600; }
+/* Secured items: the shield in the bottom right of the tile. */
+.reward-tile img.tile-secured { inset: auto; right: 1px; bottom: 1px; width: 42%; height: 42%; z-index: 1; }
+.reward-tile .tile-qty { z-index: 2; }
+.reward-note { margin: 4px 0 6px; }
+/* Rows labelled by a range of points (Tundra Arms League's personal rewards): the range on one line. */
+.range-lines .reward-row { grid-template-columns: 94px 1fr; }
+.range-lines .reward-label { white-space: nowrap; font-size: 11.5px; overflow-wrap: normal; }
+.reward-tile .tile-top { white-space: nowrap; letter-spacing: -0.2px; }
+/* Champion's Glory: 2 per row, like in the game. */
+.merchant-grid.glory-grid { grid-template-columns: repeat(2, 1fr); }
+/* Notes under a row's words (Crazy Joe's points, the Star Rating change) may wrap. */
+.range-lines .reward-label small { white-space: normal; }
+/* Lucky Wheel Reward Rates: the chance, then the item and its name. */
+.rate-lines .reward-row { grid-template-columns: 64px 1fr; }
+.rate-lines .reward-items { align-items: center; flex-wrap: nowrap; gap: 8px; }
+.rate-name { font-size: 12.5px; font-weight: 600; color: var(--text); }
+/* Band chips with longer names (King of Icefield's rankings) take the width their name needs. */
+.reward-band { white-space: nowrap; }
+.reward-bands.long-names .reward-band { flex: 1 1 auto; }
+/* Ranks like "501–1000" stay on one line. */
+.wide-labels .reward-row { grid-template-columns: 66px 1fr; }
+.wide-labels .reward-label { white-space: nowrap; font-size: 11.5px; overflow-wrap: normal; }
+/* Rows with a note under their words (Crazy Joe's points, the Star Rating change): a wider column, one line each. */
+.range-lines.with-notes .reward-row { grid-template-columns: 136px 1fr; }
+.range-lines.with-notes .reward-label small { white-space: nowrap; }
+@media (max-width: 480px) {
+  .wide-labels .reward-row { grid-template-columns: 54px 1fr; }
+  .wide-labels .reward-label { font-size: 10.5px; }
+}
+/* "Bear ×4": each alliance time with a tick to follow it and, for admins, a pencil to change its time in place. */
+.time-list { margin-top: 6px; }
+.time-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-top: 1px solid var(--glass-border); }
+.time-follow { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; padding: 4px 2px; border: none; background: none;
+  color: var(--text); font: inherit; font-size: 14.5px; font-weight: 700; text-align: left; cursor: pointer; }
+.time-row:not(.followed) .time-name { color: var(--text-muted); }
+.time-value { font-size: 14.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.time-input { width: 76px; height: 34px; padding: 0 8px; text-align: center; font-variant-numeric: tabular-nums; }

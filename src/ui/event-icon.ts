@@ -1,18 +1,40 @@
 // An event's picture, in the two shapes the app uses it: bare on a calendar bar, and
 // inside a badge in the panels and lists. Both come from here so an event looks the
 // same everywhere it appears.
-import { eventTypeById, eventTypeColor } from '../data/catalog.ts';
+import { eventTypeById, eventTypeColor, partOfByEventTypeId } from '../data/catalog.ts';
 import { escapeForPage } from './escape.ts';
 import { ICON_PATHS } from './icon-paths.ts';
 
-const IMAGE_BASE = 'https://raw.githubusercontent.com/RoxanaLupea/form_assets/main/events/';
+// The folder the pictures live in. It is a setting rather than a fixed address, so
+// the folder can be moved without changing the code.
+let imageBase = '';
+
+export function setImageBase(url: string): void {
+  imageBase = url;
+}
 
 export type BadgeSize = 'large' | 'small' | 'list' | '';
 
-// A picture file can name a folder in front of it, when an event borrows another
-// picture ("items/match-stake" for Match Prediction).
-function imageUrl(imageFile: string): string {
-  return IMAGE_BASE + imageFile.split('/').map(encodeURIComponent).join('/') + '.png';
+// Which file holds an event's picture. Most events have none written down and are
+// named after themselves. A part with no picture of its own borrows its event's.
+export function eventImageFile(eventTypeId: string): string {
+  const eventType = eventTypeById(eventTypeId);
+  if (eventType?.imageFile) return eventType.imageFile;
+  const partOf = partOfByEventTypeId.get(eventTypeId);
+  if (partOf) return eventTypeById(partOf)?.imageFile ?? partOf;
+  return eventTypeId;
+}
+
+// A name with a folder in front of it is counted from the repository's root, so an
+// event can borrow a picture from outside the events folder.
+export function imageUrl(fileName: string): string {
+  if (!imageBase || !fileName) return '';
+  if (fileName.includes('/')) {
+    const root = imageBase.replace(/events\/?$/, '');
+    return root + (root.endsWith('/') ? '' : '/') +
+      fileName.split('/').map(encodeURIComponent).join('/') + '.png';
+  }
+  return imageBase + encodeURIComponent(fileName) + '.png';
 }
 
 // The drawn shape an event falls back on, in whatever colour it is given.
@@ -22,13 +44,20 @@ export function drawnIcon(iconName: string | undefined): string {
     (ICON_PATHS[iconName ?? ''] ?? ICON_PATHS.star) + '</svg>';
 }
 
-// An event with a picture in the repo uses it, and falls back to its drawn shape if
-// the file is missing.
+// Every event asks for its picture. One whose file is not in the folder falls back to
+// its drawn shape, which is how an event looks until someone adds its picture.
 export function eventIcon(eventTypeId: string): string {
   const eventType = eventTypeById(eventTypeId);
-  if (!eventType?.imageFile) return drawnIcon(eventType?.icon);
-  return `<img class="event-icon" src="${escapeForPage(imageUrl(eventType.imageFile))}" alt=""` +
-    ` data-fallback-icon="${escapeForPage(eventType.icon ?? 'star')}">`;
+  const url = imageUrl(eventImageFile(eventTypeId));
+  if (!url) return drawnIcon(eventType?.icon);
+  return `<img class="event-icon" src="${escapeForPage(url)}" alt=""` +
+    ` data-fallback-icon="${escapeForPage(eventType?.icon ?? 'star')}">`;
+}
+
+// The icon in a fixed square, tinted with the event's colour so a drawn shape takes it.
+export function eventBadge(eventTypeId: string, size: BadgeSize = ''): string {
+  return `<span class="event-badge${size ? ' ' + size : ''}" ` +
+    `style="color:${escapeForPage(eventTypeColor(eventTypeId))}">${eventIcon(eventTypeId)}</span>`;
 }
 
 // A picture that does not load is replaced by the event's drawn shape. Listened for
@@ -43,10 +72,4 @@ export function installIconFallback(): void {
     const drawn = holder.firstElementChild;
     if (drawn) image.replaceWith(drawn);
   }, true);
-}
-
-// The icon in a fixed square, tinted with the event's colour so a drawn shape takes it.
-export function eventBadge(eventTypeId: string, size: BadgeSize = ''): string {
-  return `<span class="event-badge${size ? ' ' + size : ''}" ` +
-    `style="color:${escapeForPage(eventTypeColor(eventTypeId))}">${eventIcon(eventTypeId)}</span>`;
 }

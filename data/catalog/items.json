@@ -249,15 +249,18 @@
   },
   {
     "id": "troops-health-up-2",
-    "imageFile": "items/troops-health-up-2.png"
+    "imageFile": "items/troops-health-up-2.png",
+    "kind": "buff"
   },
   {
     "id": "troops-damage-up-2",
-    "imageFile": "items/troops-damage-up-2.png"
+    "imageFile": "items/troops-damage-up-2.png",
+    "kind": "buff"
   },
   {
     "id": "deployment-capacity-boost-2",
-    "imageFile": "items/deployment-capacity-boost-2.png"
+    "imageFile": "items/deployment-capacity-boost-2.png",
+    "kind": "buff"
   },
   {
     "id": "advanced-teleporter",

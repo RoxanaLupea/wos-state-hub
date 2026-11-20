@@ -1,5 +1,5 @@
 /* The frame every page sits in: the top bar with the state name, the pages, the
-   clock and its UTC / Mine switch, and the toolbar above the calendar. */
+   game clock, and the toolbar above the calendar. */
 
 /* ---------- Page frame ---------- */
 .app { min-height: 100vh; display: flex; flex-direction: column; }
@@ -8,24 +8,29 @@
   padding: 14px 16px 10px;
 }
 .top-bar #meButton { min-height: 36px; padding: 0 12px; }
-.brand { display: flex; flex-direction: column; gap: 2px; margin-right: auto; }
-.brand-eyebrow { font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
-.brand-title { font-size: 28px; font-weight: 800; line-height: 1.1; }
+/* "STATE" over the state number, both as tall together as "EVENTS" beside them. */
+.brand { display: flex; align-items: center; margin-right: auto; }
+.brand .logo { width: auto; font-weight: 800; }
 .desktop-nav { display: none; gap: 4px; }
-/* The live clock and the UTC | Mine switch: every time on screen uses the clock chosen here. */
-.clock { display: flex; align-items: center; gap: 6px; }
+/* The live clock: always the game's own, so it means the same on every page. */
+.clock { display: flex; align-items: baseline; gap: 5px; }
 .clock-time { font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.clock-zone { font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--text-muted); }
+
+/* The calendar's own switches, kept together at the end of its toolbar. On a narrow
+   screen they drop onto their own line, as the view switch did on its own. */
+.toolbar-switches { display: flex; align-items: center; gap: 10px; flex: 1 0 100%; order: 3; }
 .time-switch { grid-template-columns: repeat(2, auto); padding: 2px; border-radius: 10px; }
 .time-switch button { min-height: 28px; padding: 0 8px; border-radius: 8px; font-size: 13px; }
 @media (min-width: 1000px) {
   .top-bar { gap: 12px 20px; }
   .top-bar #meButton { min-height: 42px; padding: 0 16px; }
-  .clock { gap: 8px; }
+  .clock { gap: 6px; }
   .clock-time { font-size: 15px; }
   .time-switch button { padding: 0 10px; }
 }
 .ghost-button {
-  min-height: 42px; padding: 0 16px; border-radius: 12px;
+  min-height: 42px; padding: 0 16px; border-radius: 12px; color: var(--text);
   border: 1px solid var(--glass-border); background: var(--glass); font-weight: 700;
   backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
 }
@@ -37,14 +42,26 @@
 
 @media (min-width: 1000px) {
   .app { padding: 16px 24px 24px; gap: 14px; max-width: 1950px; margin: 0 auto; }
+  /* The navigation is the page's frame, not a block of content, so it is a band of
+     its own tone across the whole width rather than a card sitting on the page. It
+     reaches past the page's padding and puts the same padding back, so the logo
+     starts on the same left edge as everything below it. */
   .top-bar {
-    padding: 12px 18px; border-radius: var(--radius); background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.14); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 10px 28px rgba(0, 0, 0, 0.25);
+    margin: -16px -24px 0; padding: 14px 24px;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.10);
   }
-  .brand { flex-direction: row; align-items: baseline; gap: 10px; margin-right: 0; }
-  .brand-title { font-size: 22px; }
-  .desktop-nav { display: flex; flex: 1 1 auto; }
+  .brand { margin-right: 0; }
+
+  /* There are more sections than the old app had, so the row scrolls sideways on a
+     narrow screen instead of wrapping and pushing the clock onto a second line. */
+  .desktop-nav {
+    display: flex; flex: 1 1 auto; min-width: 0; overflow-x: auto;
+    scrollbar-width: none; flex-wrap: nowrap;
+  }
+  .desktop-nav::-webkit-scrollbar { display: none; }
+  .top-bar { flex-wrap: nowrap; }
+  .nav-tab { flex: none; }
 }
 
 /* ---------- Toolbar ---------- */
@@ -71,17 +88,75 @@
   min-height: 38px; padding: 0 10px; border: none; border-radius: 10px; background: transparent;
   color: var(--text-muted); font-size: 13px; font-weight: 600;
 }
-.segmented button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); font-weight: 800; box-shadow: 0 0 16px rgba(175, 200, 245, 0.45); }
-.view-switch { flex: 1 0 100%; order: 3; grid-template-columns: repeat(3, minmax(0, 1fr)); height: 32px; padding: 2px; border-radius: 10px; align-items: stretch; }
+.segmented button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); font-weight: 800; box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 45%, transparent); }
+.view-switch { flex: 1; grid-template-columns: repeat(3, minmax(0, 1fr)); height: 32px; padding: 2px; border-radius: 10px; align-items: stretch; }
 .view-switch button { min-height: 0; border-radius: 8px; }
 @media (min-width: 1000px) {
   .toolbar { padding: 0 0 12px; }
   .period-title { font-size: 24px; }
   .period-title .title-long { display: inline; }
   .period-title .title-short { display: none; }
-  .view-switch { flex: none; order: 0; margin-left: auto; grid-template-columns: repeat(3, auto); }
+  .toolbar-switches { flex: none; order: 0; margin-left: auto; }
+  .view-switch { flex: none; order: 0; grid-template-columns: repeat(3, auto); }
   .view-switch button { padding: 0 14px; }
   .icon-button { border: 1px solid var(--glass-border); background: var(--glass); color: var(--text); }
 }
 
 /* Filters (and admin tabs): 28 px chips; a tick shows the filters that are on. */
+
+/* The row under the top bar: the pages inside the open section. */
+/* The page's head: the event on the left, and on the right its pages above and the
+   page's own controls below. The title stands as tall as those two lines together. */
+.section-nav {
+  display: flex; align-items: stretch; gap: 22px; flex-wrap: wrap;
+  padding: 0 12px; margin-bottom: 12px;
+}
+.section-id { display: inline-flex; align-items: center; gap: 12px; }
+.section-id .event-icon { width: 62px; height: 62px; border-radius: 14px; }
+/* The title carries the section's two colours: the event's own on the name, the
+   accent on the word before it. */
+.section-id strong {
+  font-size: 57px; line-height: 1.14; font-weight: 800; letter-spacing: -0.02em;
+  white-space: nowrap; color: var(--brand-accent);
+}
+.section-id strong b { color: var(--event-mark); font-weight: 800; }
+/* The pages above, the page's own controls below, both pushed to the right so the
+   title has the left. */
+.section-side {
+  margin-left: auto; display: flex; flex-direction: column; justify-content: space-between;
+  align-items: flex-end; gap: 10px; padding: 2px 0; min-width: 0;
+}
+.section-tabs { display: flex; gap: 20px; align-items: center; }
+/* A page is named, not boxed. The one you are on is written in the event's colour. */
+.section-tab {
+  padding: 4px 2px; border: none; background: none;
+  color: var(--brand-accent); font: inherit; font-size: 14px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.07em; cursor: pointer;
+  border-bottom: 2px solid transparent;
+  /* The open page grows rather than being redrawn at a bigger size, so switching
+     slides from one to the next instead of jumping, and nothing around it moves. */
+  transform-origin: center;
+  transition: transform 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .section-tab { transition: none; }
+}
+.section-tab:hover { color: var(--text); }
+.section-tab[aria-current="page"] {
+  color: var(--event-mark); border-bottom-color: var(--event-mark);
+  transform: scale(1.12);
+}
+
+/* The gear that opens the admin pages. */
+.icon-button {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; flex: none; border-radius: 999px;
+  border: 1px solid var(--glass-border); background: var(--glass);
+  color: var(--text-muted); cursor: pointer;
+}
+.icon-button:hover { background: rgba(255, 255, 255, 0.1); color: var(--text); }
+.icon-button[aria-current="page"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+
+@media (min-width: 1000px) {
+  .section-nav { padding: 0 0 12px; }
+}

@@ -24,7 +24,8 @@ function occurrence(bits: {
     allianceIds: [], groupNumber: null,
     startDay, endDay: startDay + lengthDays - 1, lengthDays, originalDay: startDay,
     startTimeUtc: bits.startTime ?? '', endTimeUtc: bits.endTime ?? '',
-    startMinute, endMinute, note: '', wasChanged: false, wasCancelled: false
+    startMinute, endMinute, note: '', wasChanged: false, wasCancelled: false,
+    isProvisional: false
   };
 }
 

@@ -34,3 +34,23 @@ test('every colour and size name used in the styles is defined', () => {
   const missing = used.filter(one => !defined.has(one.name));
   assert.deepEqual(missing, [], 'these names are used but never defined');
 });
+
+test('every stylesheet closes every rule it opens', () => {
+  const files = filesUnder('src').filter((path: string) => path.endsWith('.css'));
+  const unbalanced: { file: string; depth: number }[] = [];
+
+  for (const file of files) {
+    // Comments can hold braces of their own, so they come out first.
+    const text = readFileSync(file, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+    let depth = 0;
+    for (const letter of text) {
+      if (letter === '{') depth += 1;
+      if (letter === '}') depth -= 1;
+    }
+    // A rule left open swallows every rule after it, so the rest of the file stops
+    // working and nothing says so.
+    if (depth !== 0) unbalanced.push({ file, depth });
+  }
+
+  assert.deepEqual(unbalanced, []);
+});

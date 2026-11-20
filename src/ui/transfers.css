@@ -1,0 +1,92 @@
+/* The transfer window: the date and its places at the top, then the people on the
+   list. The colours are the app's own — glass for the surfaces, the accent for what
+   has already happened. */
+
+.transfer-page { display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+
+.transfer-head {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 18px 28px; padding: 14px 16px;
+}
+.transfer-when { display: flex; flex-direction: column; gap: 2px; }
+.transfer-when strong { font-size: 20px; font-weight: 800; }
+.transfer-when small { font-size: 12px; font-weight: 700; color: var(--text-muted); }
+
+.transfer-facts { display: flex; gap: 22px; }
+.transfer-fact { display: flex; flex-direction: column; gap: 2px; }
+.transfer-fact b { font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.transfer-fact small {
+  font-size: 10.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+/* How many of each kind of place are taken. */
+.transfer-meters { display: flex; gap: 20px; margin-left: auto; }
+.place-meter { display: flex; flex-direction: column; gap: 4px; min-width: 96px; }
+.place-meter-label {
+  font-size: 10.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text-faint);
+}
+.place-meter-count { font-size: 14px; font-weight: 600; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.place-meter-count strong { font-size: 17px; font-weight: 800; color: var(--text); }
+.place-meter-bar {
+  display: flex; gap: 3px; height: 5px; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.10); overflow: hidden;
+}
+.place-meter-bar i { display: block; height: 100%; background: var(--accent); border-radius: 999px; }
+/* Special invites are counted one by one, so each gets its own mark. */
+.place-meter-bar b { flex: 1 1 0; background: rgba(255, 255, 255, 0.10); border-radius: 999px; }
+.place-meter-bar b.spent { background: var(--accent); }
+
+.candidate-list { padding: 4px 0; overflow: hidden; }
+.candidate-list.flat { background: none; border: none; box-shadow: none; padding: 0; }
+/* A past window lists only the people who arrived, so there is no status to show. */
+.candidate-list.arrived-list .candidate-row {
+  grid-template-columns: minmax(0, 1fr) 62px 48px 56px 58px 70px;
+}
+
+.candidate-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 62px 48px 56px 58px 70px 92px;
+  align-items: center; gap: 0; padding: 7px 16px;
+  font-size: 13.5px; font-variant-numeric: tabular-nums;
+  border-top: 1px solid var(--glass-border);
+}
+.candidate-row:first-child { border-top: none; }
+.candidate-power, .candidate-fc, .candidate-state { text-align: right; }
+.candidate-alliance, .candidate-stage, .candidate-status { text-align: right; }
+.candidate-power, .candidate-fc, .candidate-state, .candidate-stage { color: var(--text-muted); }
+
+.candidate-head {
+  font-size: 10.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text-faint); padding-top: 9px; padding-bottom: 9px;
+}
+.candidate-head span { color: var(--text-faint); }
+
+.candidate-name { display: flex; align-items: baseline; gap: 7px; min-width: 0; font-weight: 700; }
+.candidate-name small { font-size: 11.5px; font-weight: 600; color: var(--text-faint); }
+
+/* Someone already here reads brighter, someone who will not come reads back. */
+.candidate-row.arrived { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.candidate-row.arrived .candidate-status { color: var(--text); font-weight: 800; }
+.candidate-row.gone { opacity: 0.55; }
+
+.candidate-mark {
+  font-size: 10px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase;
+  padding: 2px 6px; border-radius: 999px; white-space: nowrap;
+}
+.candidate-mark.blocked { background: rgba(242, 160, 160, 0.18); color: var(--danger); }
+.candidate-flag {
+  width: 7px; height: 7px; border-radius: 50%; flex: none;
+  border: 1.5px solid var(--danger);
+}
+/* Above the state's power cap, so it stands out in the column it belongs to. */
+.candidate-power.over-cap { color: var(--danger); font-weight: 700; }
+
+.past-window { padding: 12px 0 4px; }
+.past-window-head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  padding: 0 16px 10px;
+}
+.past-window-head strong { font-size: 17px; font-weight: 800; }
+.past-window-count { font-size: 13px; font-weight: 700; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.past-window .admin-help { padding: 0 16px 10px; }

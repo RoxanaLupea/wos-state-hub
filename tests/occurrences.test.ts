@@ -12,7 +12,7 @@ function schedule(changes: Partial<Schedule> = {}): Schedule {
     repeatEveryDays: 2, lengthDays: 1,
     startTimeUtc: '02:00', endTimeUtc: null,
     allianceIds: null, groupNumber: null, note: null,
-    sinceDate: null, shiftWithMoves: false,
+    sinceDate: null, shiftWithMoves: false, datesAreEstimated: false,
     ...changes
   };
 }
@@ -27,7 +27,7 @@ function options(schedules: Schedule[], changes: DateChange[] = []): ExpandOptio
 
 function change(bits: Partial<DateChange> & { originalDate: string }): DateChange {
   return {
-    scheduleId: 's-test', movedToDate: null, startTimeUtc: null,
+    scheduleId: 's-test', movedToDate: null, startTimeUtc: null, confirmedDate: null,
     endTimeUtc: null, isCancelled: false, note: null, ...bits
   };
 }

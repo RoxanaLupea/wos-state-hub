@@ -1,11 +1,14 @@
 // The catalog is everything the game publishes and we never change: the list of
 // events, their colours and phases, and the words for them. It lives in files rather
 // than the database because it only changes when the game does.
-import eventTypeRows from '../../data/catalog/event-types.json';
-import eventPhaseRows from '../../data/catalog/event-phases.json';
-import eventStepRows from '../../data/catalog/event-steps.json';
-import pointSourceRows from '../../data/catalog/point-sources.json';
-import englishText from '../../data/text/en.json';
+import eventTypeRows from '../../data/catalog/event-types.json' with { type: 'json' };
+import eventPhaseRows from '../../data/catalog/event-phases.json' with { type: 'json' };
+import eventStepRows from '../../data/catalog/event-steps.json' with { type: 'json' };
+import pointSourceRows from '../../data/catalog/point-sources.json' with { type: 'json' };
+import rewardRows from '../../data/catalog/rewards.json' with { type: 'json' };
+import itemRows from '../../data/catalog/items.json' with { type: 'json' };
+import fortRewardRows from '../../data/catalog/fort-rewards.json' with { type: 'json' };
+import englishText from '../../data/text/en.json' with { type: 'json' };
 import type { EventPhase } from '../calendar/bars.ts';
 import type { EventStep } from '../calendar/day-timeline.ts';
 
@@ -182,20 +185,9 @@ export function sortOrderOf(id: string): number {
 // The name the game gives a particular day of an event ("Troop Revival", "Hero
 // Recruitment"). It comes from the day's point sources, or from a step of that day
 // that has no time of its own.
-const pointSources = pointSourceRows as { id: string; eventTypeId: string; dayNumber: number }[];
-const pointSourcesByEventType = (() => {
-  const byEventType = new Map<string, typeof pointSources>();
-  for (const source of pointSources) {
-    const forType = byEventType.get(source.eventTypeId) ?? [];
-    forType.push(source);
-    byEventType.set(source.eventTypeId, forType);
-  }
-  return byEventType;
-})();
-
 export function dayNameOf(eventTypeId: string, dayNumber: number): string {
-  for (const source of pointSourcesByEventType.get(eventTypeId) ?? []) {
-    if (Number(source.dayNumber) !== dayNumber) continue;
+  for (const source of pointSourcesOf(eventTypeId)) {
+    if (source.dayNumber !== dayNumber) continue;
     const name = text['pointSource.' + source.id + '.dayName'];
     if (name) return name;
   }
@@ -213,4 +205,180 @@ export function sortedEventTypes(): EventType[] {
 // from one, in the order the catalog lists them.
 export function windowLabel(eventTypeId: string, windowNumber: number): string {
   return text['eventType.' + eventTypeId + '.window.' + windowNumber] ?? '';
+}
+
+// ---------------------------------------------------------------------------
+// Points, rules, notes and rewards
+// ---------------------------------------------------------------------------
+
+export interface PointSource {
+  id: string;
+  eventTypeId: string;
+  dayNumber: number | null;
+  // Which list it belongs to. Empty means it is a scoring row of the event itself.
+  list: string;
+  points: string;
+  imageFile: string;
+  sortOrder: number;
+}
+
+const allPointSources: PointSource[] = (pointSourceRows as Record<string, unknown>[]).map(row => ({
+  id: String(row.id),
+  eventTypeId: String(row.eventTypeId),
+  dayNumber: row.dayNumber ? Number(row.dayNumber) : null,
+  list: String(row.list ?? ''),
+  points: String(row.points ?? ''),
+  imageFile: String(row.imageFile ?? ''),
+  sortOrder: Number(row.sortOrder ?? 0)
+}));
+
+const pointSourcesByEvent = (() => {
+  const byEventType = new Map<string, PointSource[]>();
+  for (const source of allPointSources) {
+    const forType = byEventType.get(source.eventTypeId) ?? [];
+    forType.push(source);
+    byEventType.set(source.eventTypeId, forType);
+  }
+  for (const sources of byEventType.values()) {
+    sources.sort((left, right) => left.sortOrder - right.sortOrder);
+  }
+  return byEventType;
+})();
+
+export function pointSourceTask(id: string): string {
+  return text['pointSource.' + id + '.task'] ?? '';
+}
+
+export function pointSourceDayName(id: string): string {
+  return text['pointSource.' + id + '.dayName'] ?? '';
+}
+
+// The scoring rows of one day of an event. A row with no day number counts on every
+// day. Rows that belong to a named list (rules, rewards, missions) are not scoring.
+export function pointSourcesOf(eventTypeId: string): PointSource[] {
+  return pointSourcesByEvent.get(eventTypeId) ?? [];
+}
+
+export function pointSourcesForDay(eventTypeId: string, dayOfEvent: number): PointSource[] {
+  return (pointSourcesByEvent.get(eventTypeId) ?? [])
+    .filter(source => !source.list && (!source.dayNumber || source.dayNumber === dayOfEvent));
+}
+
+export function pointSourcesInList(eventTypeId: string, list: string): PointSource[] {
+  return (pointSourcesByEvent.get(eventTypeId) ?? []).filter(source => source.list === list);
+}
+
+export function eventNotes(id: string): string {
+  return text['eventType.' + id + '.notes'] ?? '';
+}
+
+export function eventOtherName(id: string): string {
+  return text['eventType.' + id + '.otherName'] ?? '';
+}
+
+export function allianceRequirement(id: string): string {
+  return text['eventType.' + id + '.allianceRequirement'] ?? '';
+}
+
+export function playerRequirement(id: string): string {
+  return text['eventType.' + id + '.playerRequirement'] ?? '';
+}
+
+export function pointsTitle(id: string): string {
+  return text['eventType.' + id + '.pointsTitle'] ?? '';
+}
+
+export function pointsNote(id: string): string {
+  return text['eventType.' + id + '.pointsNote'] ?? '';
+}
+
+export interface RewardRow {
+  id: string;
+  eventTypeId: string;
+  list: string;
+  band: string;
+  section: string;
+  itemId: string;
+  tile: string;
+  quantity: number;
+  // Rows taken from guides rather than seen in the game are marked, so the page can
+  // say so instead of pretending.
+  source: string;
+  sortOrder: number;
+}
+
+const allRewards: RewardRow[] = (rewardRows as Record<string, unknown>[]).map(row => ({
+  id: String(row.id),
+  eventTypeId: String(row.eventTypeId),
+  list: String(row.list ?? ''),
+  band: String(row.band ?? ''),
+  section: String(row.section ?? ''),
+  itemId: String(row.itemId ?? ''),
+  tile: String(row.tile ?? ''),
+  quantity: Number(row.quantity ?? 0),
+  source: String(row.source ?? ''),
+  sortOrder: Number(row.sortOrder ?? 0)
+}));
+
+const rewardsByEvent = (() => {
+  const byEventType = new Map<string, RewardRow[]>();
+  for (const row of allRewards) {
+    const forType = byEventType.get(row.eventTypeId) ?? [];
+    forType.push(row);
+    byEventType.set(row.eventTypeId, forType);
+  }
+  for (const rows of byEventType.values()) {
+    rows.sort((left, right) => left.sortOrder - right.sortOrder);
+  }
+  return byEventType;
+})();
+
+export function rewardsOf(eventTypeId: string, list?: string, band?: string): RewardRow[] {
+  return (rewardsByEvent.get(eventTypeId) ?? []).filter(row =>
+    (list === undefined || row.list === list) && (band === undefined || row.band === band));
+}
+
+export function itemName(itemId: string): string {
+  return text['item.' + itemId + '.name'] ?? itemId;
+}
+
+// A short word printed across the top of a reward tile, such as a hero generation.
+export function itemLabel(itemId: string): string {
+  return text['item.' + itemId + '.label'] ?? '';
+}
+
+const itemsById = new Map((itemRows as { id: string; imageFile?: string; kind?: string }[])
+  .map(item => [item.id, item]));
+
+export function itemImageFile(itemId: string): string {
+  return itemsById.get(itemId)?.imageFile ?? '';
+}
+
+// The three fort rewards that are buffs. A buff fort is the only kind whose reward
+// can be set aside for rally leads from other alliances.
+export function isBuffItem(itemId: string): boolean {
+  return itemsById.get(itemId)?.kind === 'buff';
+}
+
+// The reward each fortress and stronghold pays in each phase.
+export interface FortReward {
+  id: string;
+  fort: string;
+  phase: number;
+  itemId: string;
+  quantity: number;
+  tile: string;
+}
+
+const fortRewards: FortReward[] = (fortRewardRows as Record<string, unknown>[]).map(row => ({
+  id: String(row.id),
+  fort: String(row.fort),
+  phase: Number(row.phase),
+  itemId: String(row.itemId),
+  quantity: Number(row.quantity ?? 0),
+  tile: String(row.tile ?? '')
+}));
+
+export function fortRewardOf(fort: string, phase: number): FortReward | undefined {
+  return fortRewards.find(row => row.fort === fort && row.phase === phase);
 }

@@ -186,7 +186,8 @@
     "lengthDays": "23",
     "note": "Every 4 months",
     "sinceDate": "2025-08-18",
-    "shiftWithMoves": "yes"
+    "shiftWithMoves": "yes",
+    "datesAreEstimated": "yes"
   },
   {
     "id": "s-merge",
@@ -201,7 +202,7 @@
     "firstDate": "2026-11-10",
     "repeatEveryDays": "28",
     "lengthDays": "3",
-    "note": "Transfer week. Seen in game 10–12 Nov 2026; every 4 weeks is from guides"
+    "note": "Transfer week. Seen in game 10\u201312 Nov 2026; every 4 weeks is from guides"
   },
   {
     "id": "s-brawl",
@@ -297,7 +298,7 @@
     "firstDate": "2026-11-15",
     "repeatEveryDays": "0",
     "lengthDays": "2",
-    "note": "Different rewards from 11–12 Nov"
+    "note": "Different rewards from 11\u201312 Nov"
   },
   {
     "id": "s-mercs",
@@ -305,7 +306,7 @@
     "firstDate": "2026-11-14",
     "repeatEveryDays": "28",
     "lengthDays": "3",
-    "note": "Seen in game 14–16 Nov 2026; every 4 weeks is from guides"
+    "note": "Seen in game 14\u201316 Nov 2026; every 4 weeks is from guides"
   },
   {
     "id": "s-heros-mission",

@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><?= appTitle ?></title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap">
+<style>
+  /* ---------- Colours and sizes (Harmony Dark) ---------- */
+  :root {
+    --page-color: #0C1220;
+    --glass: rgba(255, 255, 255, 0.07);
+    --glass-strong: rgba(255, 255, 255, 0.11);
+    --glass-border: rgba(255, 255, 255, 0.16);
+    --glass-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 14px 34px rgba(0, 0, 0, 0.30);
+    --blur: blur(18px) saturate(140%);
+    --text: #EEF1F8;
+    --text-muted: #B9C2D9;
+    --text-faint: #8F9AB8;
+    --accent: #AFC8F5;
+    --accent-ink: #1C2333;
+    --danger: #F2A0A0;
+    --weekend-tint: rgba(255, 255, 255, 0.035);
+    --radius: 18px;
+    --radius-small: 10px;
+    --font: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --weekend-width: 1.35fr;
+    --page-background:
+      radial-gradient(circle at 100% 12%, rgba(150, 120, 235, 0.34), transparent 38%),
+      radial-gradient(circle at -5% 48%, rgba(90, 140, 230, 0.32), transparent 40%),
+      radial-gradient(circle at 90% 78%, rgba(70, 190, 180, 0.22), transparent 36%),
+      radial-gradient(circle at 15% 100%, rgba(225, 120, 160, 0.18), transparent 32%);
+  }
+  @media (min-width: 1000px) {
+    :root { --weekend-width: 1.15fr; }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    font-family: var(--font);
+    color: var(--text);
+    background-color: var(--page-color);
+    background-image: var(--page-background);
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+  }
+  button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+  button { cursor: pointer; }
+  [hidden] { display: none !important; }
+  .glass {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+  }
+
+  /* ---------- Page frame ---------- */
+  .app { min-height: 100vh; display: flex; flex-direction: column; }
+  .top-bar {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    padding: 14px 16px 10px;
+  }
+  .top-bar #meButton { min-height: 36px; padding: 0 12px; }
+  .brand { display: flex; flex-direction: column; gap: 2px; margin-right: auto; }
+  .brand-eyebrow { font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  .brand-title { font-size: 28px; font-weight: 800; line-height: 1.1; }
+  .desktop-nav { display: none; gap: 4px; }
+  /* The live clock and the UTC | Mine switch: every time on screen uses the clock chosen here. */
+  .clock { display: flex; align-items: center; gap: 6px; }
+  .clock-time { font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .time-switch { grid-template-columns: repeat(2, auto); padding: 2px; border-radius: 10px; }
+  .time-switch button { min-height: 28px; padding: 0 8px; border-radius: 8px; font-size: 13px; }
+  @media (min-width: 1000px) {
+    .top-bar { gap: 12px 20px; }
+    .top-bar #meButton { min-height: 42px; padding: 0 16px; }
+    .clock { gap: 8px; }
+    .clock-time { font-size: 15px; }
+    .time-switch button { padding: 0 10px; }
+  }
+  .ghost-button {
+    min-height: 42px; padding: 0 16px; border-radius: 12px;
+    border: 1px solid var(--glass-border); background: var(--glass); font-weight: 700;
+    backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+  }
+  .nav-tab {
+    display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 14px;
+    border-radius: 12px; border: none; background: transparent; color: var(--text-muted); font-weight: 700;
+  }
+  .nav-tab[aria-current="page"] { background: var(--accent); color: var(--accent-ink); font-weight: 800; }
+
+  @media (min-width: 1000px) {
+    .app { padding: 16px 24px 24px; gap: 14px; max-width: 1950px; margin: 0 auto; }
+    .top-bar {
+      padding: 12px 18px; border-radius: var(--radius); background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 10px 28px rgba(0, 0, 0, 0.25);
+    }
+    .brand { flex-direction: row; align-items: baseline; gap: 10px; margin-right: 0; }
+    .brand-title { font-size: 22px; }
+    .desktop-nav { display: flex; flex: 1 1 auto; }
+  }
+
+  /* ---------- Toolbar ---------- */
+  /* The month, then ‹ Today › joined in one control, the view switch on the right; all 32 px tall, 12 px apart.
+     On phones the view switch takes the full width under them. */
+  .toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; padding: 0 12px 12px; }
+  .period-title { margin: 0; font-size: 20px; font-weight: 800; line-height: 32px; white-space: nowrap; }
+  .period-title .title-long { display: none; }
+  .step-nav { display: inline-flex; height: 32px; border-radius: 10px; overflow: hidden;
+    border: 1px solid var(--glass-border); background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); }
+  .step-nav button { height: 30px; min-width: 32px; padding: 0 10px; border: none; background: transparent; color: var(--text);
+    display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+  .step-nav button + button { border-left: 1px solid var(--glass-border); }
+  .step-nav button:hover { background: rgba(255, 255, 255, 0.08); }
+  .icon-button {
+    width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center;
+    border: none; background: transparent; color: var(--text-muted); border-radius: 12px;
+  }
+  .segmented {
+    display: grid; grid-template-columns: repeat(3, auto); gap: 2px; padding: 3px; border-radius: 14px;
+    background: var(--glass); border: 1px solid var(--glass-border); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+  }
+  .segmented button {
+    min-height: 38px; padding: 0 10px; border: none; border-radius: 10px; background: transparent;
+    color: var(--text-muted); font-size: 13px; font-weight: 600;
+  }
+  .segmented button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); font-weight: 800; box-shadow: 0 0 16px rgba(175, 200, 245, 0.45); }
+  .view-switch { flex: 1 0 100%; order: 3; grid-template-columns: repeat(3, minmax(0, 1fr)); height: 32px; padding: 2px; border-radius: 10px; align-items: stretch; }
+  .view-switch button { min-height: 0; border-radius: 8px; }
+  @media (min-width: 1000px) {
+    .toolbar { padding: 0 0 12px; }
+    .period-title { font-size: 24px; }
+    .period-title .title-long { display: inline; }
+    .period-title .title-short { display: none; }
+    .view-switch { flex: none; order: 0; margin-left: auto; grid-template-columns: repeat(3, auto); }
+    .view-switch button { padding: 0 14px; }
+    .icon-button { border: 1px solid var(--glass-border); background: var(--glass); color: var(--text); }
+  }
+
+  /* Filters (and admin tabs): 28 px chips; a tick shows the filters that are on. */
+  .chips { display: flex; gap: 8px; padding: 0 12px 12px; overflow-x: auto; white-space: nowrap; flex: none; scrollbar-width: none; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 5px; flex: none; height: 28px; padding: 0 12px; border-radius: 999px;
+    border: 1px solid var(--glass-border); background: var(--glass); color: var(--text-muted); font-size: 14px; font-weight: 600;
+    backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+  }
+  .chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 800; }
+  .chip-check { font-size: 13px; font-weight: 800; }
+  /* Filters: the chip switches its category; its arrow opens the list of its events, each with a tick. */
+  .filter-group { position: relative; display: inline-flex; }
+  .filter-chip { padding: 0; gap: 0; }
+  .filter-chip .filter-name, .filter-chip .filter-arrow { border: none; background: none; color: inherit; font: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+  .filter-chip .filter-name { padding: 6px 4px 6px 12px; }
+  .filter-chip .filter-arrow { padding: 6px 12px 6px 6px; font-size: 11px; opacity: 0.85; }
+  .filter-count { font-size: 11px; font-weight: 700; opacity: 0.75; }
+  .filter-list { position: absolute; top: calc(100% + 6px); left: 0; z-index: 60; width: 290px; max-height: min(520px, 70vh); overflow: auto; padding: 10px;
+    border-radius: 14px; background: rgba(28, 34, 66, 0.97); border: 1px solid var(--glass-border); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5); white-space: normal; }
+  .filter-list-head { display: flex; justify-content: space-between; align-items: center; margin: 2px 4px 8px;
+    font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); }
+  .filter-all { border: none; background: none; color: #8FB3FF; font: inherit; font-size: 12px; font-weight: 700; letter-spacing: 0; text-transform: none; cursor: pointer; }
+  .filter-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 6px; border: none; border-radius: 8px; background: none;
+    color: var(--text); font: inherit; font-size: 13.5px; font-weight: 600; text-align: left; cursor: pointer; }
+  .filter-item:hover { background: rgba(255, 255, 255, 0.06); }
+  .filter-item.off { opacity: 0.55; }
+  .filter-item img.event-icon, .filter-item svg.event-icon { width: 22px; height: 22px; object-fit: contain; flex: none; }
+  .filter-box { width: 18px; height: 18px; flex: none; border-radius: 5px; border: 2px solid #7E9BE8; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #FFFFFF; }
+  .filter-box.on { background: #5B8DEF; border-color: #5B8DEF; }
+  /* On phones the open list spans the screen's width under the chips. */
+  #categoryChips { position: relative; overflow: visible; flex-wrap: wrap; }
+  @media (max-width: 600px) { .filter-group { position: static; } .filter-list { left: 12px; right: 12px; width: auto; top: calc(100% - 6px); } }
+  .chip-dot { width: 10px; height: 10px; border-radius: 999px; flex: none; }
+  @media (min-width: 1000px) {
+    .chips { flex-wrap: wrap; overflow: visible; padding: 0 0 12px; }
+  }
+
+  /* ---------- Calendar layout ---------- */
+  .calendar-layout { display: flex; flex-direction: column; gap: 16px; }
+  .calendar-panel { margin: 0 8px; padding: 10px 4px 4px; flex: none; }
+  .side-column { display: flex; flex-direction: column; gap: 12px; }
+  @media (min-width: 1000px) {
+    .calendar-layout { flex-direction: row; align-items: flex-start; }
+    .calendar-panel { flex: 1 1 auto; min-width: 0; margin: 0; padding: 10px 12px 6px; }
+    /* The month fills the screen height, so day boxes are about as tall as they are wide. */
+    .calendar-panel.month-mode { display: flex; flex-direction: column; min-height: calc(100vh - 230px); }
+    /* Every week gets the same height; a week grows only when its bars do not fit. */
+    .calendar-panel.month-mode .week-row { flex: 1 1 0; min-height: min-content; }
+    .side-column { flex: 0 0 440px; max-width: 440px; }
+  }
+  @media (min-width: 1800px) {
+    .side-column { flex-basis: 500px; max-width: 500px; }
+  }
+  /* Computers: the app fills the screen and the window never scrolls (its scrollbar would narrow the calendar
+     and make it jump). The calendar and the right panel each scroll in their own box; other pages scroll on their own. */
+  @media (min-width: 1000px) {
+    .app { height: 100vh; height: 100dvh; min-height: 0; overflow: hidden; }
+    .app > .page { flex: 1 1 auto; min-height: 0; padding-bottom: 0; }
+    #calendarPage { overflow: hidden; }
+    .calendar-layout { flex: 1 1 auto; min-height: 0; align-items: stretch; }
+    .calendar-panel { overflow-y: auto; }
+    .calendar-panel.month-mode { min-height: 0; }
+    .side-column { min-height: 0; }
+    .next-up { flex: none; }
+    /* Its scrollbar sits in the page's margin, so the panel lines up with the tiles above it. */
+    .day-panel { flex: 1 1 auto; min-height: 0; overflow-y: auto; margin-right: -14px; padding: 0 6px 4px 0; }
+    .admin-page { overflow-y: auto; padding-bottom: 20px; margin-right: -8px; }
+    /* The space for the scrollbar is kept even when nothing scrolls, so nothing shifts when it appears. */
+    .calendar-panel, .day-panel, .admin-page { scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: rgba(175, 200, 245, 0.35) transparent; }
+    .calendar-panel::-webkit-scrollbar, .day-panel::-webkit-scrollbar, .admin-page::-webkit-scrollbar { width: 8px; }
+    .calendar-panel::-webkit-scrollbar-thumb, .day-panel::-webkit-scrollbar-thumb, .admin-page::-webkit-scrollbar-thumb { background: rgba(175, 200, 245, 0.35); border-radius: 999px; }
+    .calendar-panel::-webkit-scrollbar-track, .day-panel::-webkit-scrollbar-track, .admin-page::-webkit-scrollbar-track { background: transparent; }
+    .filter-list { max-height: min(520px, calc(100vh - 220px)); }
+  }
+
+  /* Month grid: 5 weekdays and 2 slightly wider weekend days */
+  .grid7 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) repeat(2, minmax(0, var(--weekend-width))); column-gap: 2px; }
+  .weekday-names { padding-bottom: 6px; }
+  .weekday-name { text-align: center; font-size: 12px; font-weight: 800; color: var(--text-faint); }
+  .weekday-name.weekend { color: var(--text-muted); }
+  .desktop-only-text { display: none; }
+  @media (min-width: 1000px) { .desktop-only-text { display: inline; } }
+
+  /* Each week: a row of full-height day boxes behind, the event bars on top. */
+  .week-row { position: relative; min-height: 58px; padding: 27px 0 6px; border-top: 1px solid var(--glass-border); }
+  .weekday-names + .week-row { border-top: none; }
+  .day-boxes { position: absolute; inset: 3px 0; }
+  .day-box {
+    position: relative; display: flex; justify-content: center; align-items: flex-start; padding: 2px 0 0; border: none; background: transparent;
+    border-radius: var(--radius-small); color: var(--text); font-size: 14px; font-weight: 700;
+  }
+  .day-box.weekend { background: var(--weekend-tint); }
+  .day-box .day-number { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; }
+  .day-box.other-month { color: var(--text-faint); font-weight: 500; }
+  .day-box:hover { background: rgba(255, 255, 255, 0.06); }
+  /* Today: a short line along the top of the day. The selected day: a soft tint, no border. */
+  .day-box.today::before { content: ''; position: absolute; top: 0; left: 10px; right: 10px; height: 3px; border-radius: 0 0 3px 3px; background: var(--accent); }
+  .day-box.selected { background: rgba(175, 200, 245, 0.16); }
+
+  /* Bars. Line 1 (the head): the logo and the name, from the left. Bars with a second line are taller.
+     Logo sizes, one rule per place (computer / phone):
+     main logo of a two-line bar 32 / 24 px (4 px from the top and bottom edges);
+     main logo of a one-line bar 24 / 18 px (3 px from the edges);
+     logos on the bottom line (Castle Battle, prediction stakes) 16 / 13 px, 2 px from the bar's bottom edge;
+     logo where a part line under the bar ends (Trade Route, Treasure Hunt Drill) 20 / 16 px, centred;
+     year view, left of each line, 16 / 14 px. */
+  .bars { position: relative; z-index: 1; grid-auto-rows: 24px; row-gap: 2px; pointer-events: none; }
+  .bar {
+    --head-height: 20px; --line-two-height: 14px;
+    position: relative; min-width: 0; align-self: start;
+    display: flex; flex-direction: column; justify-content: center; align-items: stretch;
+    height: 24px; padding: 2px 4px; border-radius: 5px; border: none;
+    color: #FFFFFF; font-size: 11px; font-weight: 800; line-height: 20px; white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    /* Taps go through the bar to the day box under it, so the right day opens. */
+    pointer-events: none;
+    backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+  }
+  .bar-head {
+    position: relative; z-index: 1; display: flex; align-items: center; justify-content: flex-start; gap: 4px;
+    height: var(--head-height); min-width: 0; overflow: hidden;
+  }
+  .bar.two-lines { height: calc(var(--head-height) + var(--line-two-height) + 4px); justify-content: flex-start; }
+  /* Light from the top left: each logo casts a shadow in its own shape to the bottom right. */
+  /* The shadow grows and shrinks with the logo (--logo-size = the logo's size): a 32 px logo casts it 2 px right,
+     2.5 px down, 1.5 px soft. */
+  .bar .event-icon { flex: none; filter: drop-shadow(calc(var(--logo-size) * 0.0625) calc(var(--logo-size) * 0.078) calc(var(--logo-size) * 0.047) rgba(0, 0, 0, 0.85)); }
+  .bar img.event-icon { --logo-size: 18px; width: 18px; height: 18px; object-fit: contain; }
+  .bar svg.event-icon { --logo-size: 14px; width: 14px; height: 14px; margin: 0 3px; }
+  /* The name is cut with "…" when it does not fit (only the logo when not even 4 letters fit). */
+  .bar .bar-label { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .bar .bar-count, .bar .bar-time { flex: none; }
+  .bar .bar-time { display: none; opacity: 0.85; margin-left: 4px; }
+  .bar .bar-count { margin-left: 3px; opacity: 0.85; }
+  .bar.too-narrow .bar-label, .bar.too-narrow .bar-count, .bar.too-narrow .bar-time { display: none; }
+  /* Only the logo shows: it sits in the middle of the bar. */
+  .bar.too-narrow .bar-head { justify-content: center; }
+  /* Narrower than its logo: the logo shrinks to fit. */
+  .bar.tiny { padding: 2px 0; }
+  .bar.tiny .bar-label, .bar.tiny .bar-count, .bar.tiny .bar-time { display: none; }
+  .bar.tiny svg.event-icon { margin: 0; }
+
+  /* Line 2: named days, a part on the same hours, or a second name. */
+  .bar-segment, .bar-sub, .bar-inside { position: absolute; bottom: 2px; height: var(--line-two-height); z-index: 1; }
+  .bar-segment { display: flex; justify-content: center; min-width: 0; pointer-events: none; }
+  .bar-segment-name, .bar-sub {
+    min-width: 0; padding: 0 5px; overflow: hidden; text-overflow: ellipsis; text-align: center;
+    font-size: 9.5px; font-weight: 600; line-height: var(--line-two-height); color: rgba(255, 255, 255, 0.92); text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+  }
+  /* A phase (or a second name) under the name: a smaller line, with a bigger logo beside both lines.
+     Phones: 32 px bars, 24 px logo; computers: 40 px bars, 32 px logo. */
+  .bar.phase-lines {
+    --side-icon: 24px; --side-gap: 4px;
+    height: 32px; justify-content: center; padding: 1px 4px 1px calc(4px + var(--side-icon) + var(--side-gap));
+  }
+  .bar.phase-lines .bar-head { height: 16px; line-height: 16px; }
+  .bar.phase-lines .bar-sub {
+    position: static; height: 12px; padding: 0; text-align: left;
+    font-size: 9px; line-height: 12px; font-weight: 600; color: rgba(255, 255, 255, 0.85);
+  }
+  .bar-side-icon {
+    position: absolute; z-index: 1; left: 4px; top: 50%; transform: translateY(-50%);
+    width: var(--side-icon); height: var(--side-icon); display: flex; align-items: center; justify-content: center; pointer-events: none;
+  }
+  .bar .bar-side-icon img.event-icon { --logo-size: var(--side-icon); width: var(--side-icon); height: var(--side-icon); }
+  .bar .bar-side-icon svg.event-icon { --logo-size: calc(var(--side-icon) * 0.75); width: calc(var(--side-icon) * 0.75); height: calc(var(--side-icon) * 0.75); margin: 0; }
+  /* Named days or a part on line 2 (SvS, Alliance Showdown): the name at the top, line 2 at the bottom, in the same height. */
+  .bar.phase-lines.day-lines { --line-one-height: 16px; --line-two-height: 12px; justify-content: flex-start; padding-top: 2px; }
+  .bar.phase-lines.day-lines .bar-segment, .bar.phase-lines.day-lines .bar-inside { bottom: 2px; }
+  .bar.phase-lines.day-lines .bar-segment-name { font-size: 9px; padding: 0 3px; }
+  .bar.phase-lines.too-narrow, .bar.phase-lines.tiny { padding-left: 0; padding-right: 0; }
+  .bar.phase-lines.too-narrow .bar-sub, .bar.phase-lines.tiny .bar-sub { display: none; }
+  .bar.phase-lines.too-narrow .bar-side-icon, .bar.phase-lines.tiny .bar-side-icon { left: 50%; transform: translate(-50%, -50%); }
+  .bar-segment.lit .bar-segment-name { font-weight: 800; color: #FFFFFF; }
+  .bar-segment.bar-chain { pointer-events: auto; cursor: pointer; z-index: 3; }
+  .bar-chain .bar-chain-logo { display: none; }
+  .bar-chain.logo-only .bar-segment-name { display: none; }
+  .bar-chain.logo-only .bar-chain-logo { display: flex; align-items: center; justify-content: center; height: var(--line-two-height); }
+  /* SvS: line 1 holds the name and the parts, so it is not cut by the name. */
+  .bar.parts-bar .bar-head { overflow: visible; }
+  /* Phones: SvS is a one-line bar, like the others without a second line: the name and the parts in a smaller font,
+     no days, Castle Battle or Troop Revival under them. */
+  @media (max-width: 999.98px) {
+    .bar.phase-lines.day-lines.parts-bar { --side-icon: 20px; --line-one-height: 20px; height: 24px; padding-top: 2px; justify-content: center; }
+    .bar.parts-bar .bar-head { height: 20px; line-height: 20px; }
+    .bar.parts-bar .bar-part { font-size: 7.5px; padding: 0; letter-spacing: 0; }
+    .bar.parts-bar .bar-segment, .bar.parts-bar .bar-mark.divider { display: none; }
+  }
+  .bar .bar-chain-logo img.event-icon, .bar .bar-chain-logo svg.event-icon { --logo-size: 13px; width: 13px; height: 13px; margin: 0; }
+  /* SvS: its parts on line 1, in capitals, between white lines that go through both lines. */
+  .bar-part { position: absolute; top: 2px; height: var(--line-one-height); line-height: var(--line-one-height); z-index: 3; display: block; text-align: center; min-width: 0;
+    padding: 0 2px; box-sizing: border-box; pointer-events: auto; cursor: pointer; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+    font-size: 9.5px; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase; color: #FFFFFF; }
+  /* White lines on a two-line bar: each line of text gets its own piece, centred on that line, so the pieces
+     on line 2 (between days, where a part starts) all look the same, and a part's start also has one on line 1. */
+  .bar.day-lines .bar-mark.divider { top: auto; bottom: 4px; height: calc(var(--line-two-height) - 4px); }
+  .bar.day-lines .bar-mark.part-line { top: 5px; bottom: auto; height: calc(var(--line-one-height) - 6px); }
+  .bar-head[hidden] { display: none; }
+  /* Above the white lines around it, so a tap between them opens the part. */
+  .bar-inside { z-index: 3; display: flex; align-items: center; justify-content: center; pointer-events: auto; cursor: pointer; }
+  /* Bottom-line logos sit on the line's bottom, 2 px above the bar's bottom edge. */
+  .bar-inside, .bar-chain.logo-only .bar-chain-logo { align-items: flex-end; }
+  .bar .bar-inside img.event-icon { --logo-size: 13px; width: 13px; height: 13px; margin: 0; }
+  .bar .bar-inside svg.event-icon { --logo-size: 11px; width: 11px; height: 11px; margin: 0; }
+  @media (min-width: 1000px) {
+    .bar .bar-inside img.event-icon, .bar .bar-chain-logo img.event-icon, .bar .bar-chain-logo svg.event-icon { --logo-size: 16px; width: 16px; height: 16px; margin-top: -1px; }
+  }
+
+  /* The lit part (the selected day, phase, part or event): a lighter fill, nothing else. */
+  .bar-light { position: absolute; top: 0; bottom: 0; z-index: 0; background: rgba(255, 255, 255, 0.30); pointer-events: none; }
+
+  /* White lines: between named days and around a part (line 2), where a part running inside ends (line 1).
+     Pointing at one, or tapping it, shows its time. */
+  .bar-mark { position: absolute; z-index: 2; width: 1px; margin-left: -0.5px; background: rgba(255, 255, 255, 0.45); pointer-events: auto; cursor: pointer; }
+  .bar-mark.divider { top: calc(var(--head-height) + 4px); bottom: 3px; }
+  .bar-mark.end-mark { top: 5px; height: calc(var(--head-height) - 6px); width: 2px; margin-left: -1px; border-radius: 1px; background: #FFFFFF; }
+  .bar-mark::before { content: ''; position: absolute; top: -3px; bottom: -3px; left: -5px; right: -5px; }
+  .bar-mark::after {
+    content: attr(data-time); display: none; position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+    padding: 2px 6px; border-radius: 6px; background: #0E1424; border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #FFFFFF; font-size: 11px; font-weight: 700; line-height: 16px; white-space: nowrap; text-shadow: none;
+  }
+  .bar-mark:hover::after, .bar-mark.show-time::after { display: block; }
+  .bar:hover, .bar.raised { z-index: 5; }
+
+  /* A part running for days inside the bar (Trade Route): a line under the bar in its colour, its logo, and a white line where it ends. */
+  .bar-stripe { position: absolute; bottom: -6px; height: 3px; border-radius: 2px; pointer-events: none; }
+  .bar-stripe-end { position: absolute; z-index: 1; top: 2px; height: var(--head-height); display: inline-flex; align-items: center; pointer-events: none; }
+  .bar-stripe-end .event-icon { --logo-size: 16px; width: 16px; height: 16px; }
+
+  /* Every bar opens its event (or, for "Bear ×4", the list of times). */
+  .bar.clickable { pointer-events: auto; cursor: pointer; }
+  .bar.clickable:hover { filter: brightness(1.12); }
+  @media (min-width: 1000px) {
+    .grid7 { column-gap: 4px; }
+    .week-row { min-height: 96px; padding: 32px 0 6px; }
+    .day-box { padding: 4px 0 0; font-size: 15px; }
+    .day-box .day-number { min-width: 26px; height: 26px; }
+    .bars { grid-auto-rows: 30px; row-gap: 3px; }
+    .bar { --head-height: 26px; --line-two-height: 16px; height: 30px; padding: 2px 6px; border-radius: 8px; font-size: 14px; line-height: 26px; }
+    .bar-head { gap: 6px; }
+    .bar img.event-icon { --logo-size: 24px; width: 24px; height: 24px; }
+    .bar svg.event-icon { --logo-size: 18px; width: 18px; height: 18px; margin: 0 4px; }
+    .bar .bar-time { display: inline; }
+    .bar-segment-name { font-size: 11.5px; }
+    .bar.phase-lines { --side-icon: 32px; --side-gap: 6px; height: 40px; padding-left: calc(6px + var(--side-icon) + var(--side-gap)); }
+    .bar.phase-lines .bar-head { height: 20px; line-height: 20px; }
+    .bar.phase-lines .bar-sub { height: 15px; font-size: 11.5px; line-height: 15px; }
+    .bar.phase-lines.day-lines { --line-one-height: 20px; --line-two-height: 15px; padding-top: 2px; }
+    .bar-part { font-size: 11px; }
+    .bar-side-icon { left: 6px; }
+    .bar-stripe-end .event-icon { --logo-size: 20px; width: 20px; height: 20px; }
+  }
+
+  /* Year view */
+  .year-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 10px; padding: 4px 6px 10px; }
+  @media (min-width: 700px) { .year-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (min-width: 1000px) { .year-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; } }
+  .mini-month-title { border: none; background: transparent; padding: 0 0 4px; font-size: 14px; font-weight: 800; text-align: left; }
+  .mini-month .grid7 { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  .mini-day {
+    display: flex; align-items: center; justify-content: center; padding: 3px 0; min-height: 22px;
+    border: none; background: transparent; border-radius: 6px; font-size: 11px; font-weight: 700; color: var(--text);
+  }
+  .mini-day.weekend { background: var(--weekend-tint); }
+  .mini-day.today { background: var(--accent); color: var(--accent-ink); }
+  .mini-weekday { text-align: center; font-size: 10px; font-weight: 800; color: var(--text-faint); }
+  /* Year view lines: one lane per event in a week, its logo left of the line where a run starts; the colours run
+     along the whole event (each week's piece shows its own stretch). */
+  .mini-week { padding-bottom: 2px; }
+  .year-lane { position: relative; height: 18px; margin-top: 2px; }
+  .year-line { position: absolute; top: 0; height: 18px; padding: 0; border: none; background: none; cursor: pointer; }
+  .year-line-track { position: absolute; left: 0; right: 0; top: 6px; height: 6px; overflow: hidden; opacity: 0.95; }
+  .year-line.starts .year-line-track { border-top-left-radius: 999px; border-bottom-left-radius: 999px; }
+  .year-line.ends .year-line-track { border-top-right-radius: 999px; border-bottom-right-radius: 999px; }
+  .year-line.with-logo .year-line-track { left: 18px; }
+  .year-line-fill { position: absolute; top: 0; bottom: 0; }
+  .year-line.picked .year-line-track { box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.85); }
+  .year-line-logo { position: absolute; left: 0; top: 1px; display: inline-flex; }
+  .year-line-logo .event-icon { --logo-size: 16px; width: 16px; height: 16px; object-fit: contain; filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.85)); }
+  @media (max-width: 600px) {
+    .year-line-logo .event-icon { --logo-size: 14px; width: 14px; height: 14px; }
+    .year-line.with-logo .year-line-track { left: 15px; }
+  }
+  .year-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 20px; padding: 8px 6px 12px; }
+  .year-legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700; color: var(--text); }
+  .year-legend-item .year-line-logo { position: static; }
+  .year-legend-line { width: 34px; height: 6px; border-radius: 999px; }
+  /* Year view side panel: the 4 events now or next, and the steps of the picked one. */
+  .year-overview h3, .year-steps h3 { margin: 0 0 8px; }
+  .year-overview-row { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 6px; border: none; border-radius: 10px; background: none;
+    color: var(--text); font: inherit; text-align: left; cursor: pointer; }
+  .year-overview-row:hover { background: rgba(255, 255, 255, 0.05); }
+  .year-overview-row.picked { background: rgba(255, 255, 255, 0.09); }
+  .year-overview-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .year-overview-text b { font-size: 14.5px; }
+  .year-overview-text span { font-size: 12.5px; color: var(--text-muted); }
+  .year-step-list { list-style: none; margin: 10px 0 0; padding: 0; }
+  .year-step-list li { display: grid; grid-template-columns: 136px 1fr; gap: 8px; padding: 6px 4px; border-top: 1px solid var(--glass-border); font-size: 13.5px; }
+  .year-step-when { color: var(--text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .year-step-list li.now { font-weight: 800; }
+  .year-step-list li.now em { font-style: normal; font-size: 11px; font-weight: 800; padding: 1px 6px; margin-left: 4px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); }
+
+  /* ---------- Shared event rows (day details) ---------- */
+  .event-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 0; }
+  .event-row + .event-row { border-top: 1px solid var(--glass-border); }
+  /* A part of a bigger event sits under it, pulled in a little. */
+  .event-row.part { padding-left: 22px; }
+  .event-row.part + .event-row.part { border-top: none; }
+  .event-row-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  /* Event icons: no background, as tall as two lines of text (40 px); 32 px in the timeline, 28 px in lists. */
+  .event-badge { width: 40px; height: 40px; flex: none; display: inline-flex; align-items: center; justify-content: center; }
+  .event-badge img.event-icon { width: 100%; height: 100%; object-fit: contain; }
+  .event-badge svg.event-icon { width: 70%; height: 70%; }
+  .event-badge.large { width: 44px; height: 44px; }
+  .event-badge.small { width: 32px; height: 32px; }
+  .event-badge.list { width: 28px; height: 28px; }
+  .type-label { align-self: flex-start; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.12);
+    color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .event-title { font-size: 15px; font-weight: 700; }
+  .event-note { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+  .time-column { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex: none; text-align: right; }
+  .small-row { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; }
+  .small-row-dot { width: 8px; height: 8px; border-radius: 999px; flex: none; }
+
+  /* ---------- Day details ---------- */
+  .day-panel { display: flex; flex-direction: column; gap: 12px; }
+  .day-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .day-heading-text { display: flex; flex-direction: column; gap: 2px; }
+  .day-heading h2 { margin: 0; font-size: 24px; font-weight: 800; }
+  .day-heading-text span { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+
+  /* Pencil: the sign that something can be edited or added. */
+  .pencil-button { flex: none; display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-width: 30px; height: 30px; padding: 0 7px;
+    border-radius: 999px; border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.08); color: var(--accent); font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
+  .pencil-button:hover { background: rgba(175, 200, 245, 0.18); }
+  .pencil-button.with-text { padding: 0 10px; }
+  .row-buttons { display: flex; gap: 6px; align-self: flex-start; }
+  .moment-title-text { flex: 1; min-width: 0; }
+  .small-row-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .day-section { padding: 12px 14px; display: flex; flex-direction: column; }
+  .day-section h3 { margin: 0 0 4px; display: flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 800; }
+  .section-dot { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+  .section-meta { margin-left: auto; font-size: 12px; font-weight: 700; color: var(--text-muted); }
+  .day-empty { padding: 14px; font-size: 14px; color: var(--text-muted); }
+  .alliance-logo {
+    width: 36px; height: 36px; flex: none; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 800; color: #1C2333; overflow: hidden; border: 2px solid rgba(255, 255, 255, 0.30);
+  }
+  .alliance-logo img { width: 100%; height: 100%; object-fit: cover; }
+  .alliance-block + .alliance-block { border-top: 1px solid var(--glass-border); }
+  .alliance-block { padding: 8px 0; display: flex; flex-direction: column; gap: 6px; }
+  .alliance-block.academy { padding-left: 22px; }
+  .alliance-name { font-size: 15px; font-weight: 700; }
+  .tag-pill { padding: 6px 10px; border-radius: 10px; font-size: 13px; font-weight: 800; color: #1C2333; align-self: flex-start; }
+  /* Day timeline: one row per moment (an event or step starting or ending) */
+  .moment-list { list-style: none; margin: 4px 0 0; padding: 0; }
+  .moment { display: block; }
+  /* The whole moment is one button that opens the event. */
+  .moment-button, .moment-row { width: 100%; display: grid; grid-template-columns: 58px 18px minmax(0, 1fr); column-gap: 8px; padding: 0; border: none; background: transparent;
+    color: inherit; font: inherit; text-align: left; cursor: pointer; border-radius: 10px; }
+  .moment-row { cursor: default; }
+  .moment-button:hover { background: rgba(255, 255, 255, 0.05); }
+  .moment-time { display: flex; flex-direction: column; align-items: flex-end; padding: 6px 0 10px; text-align: right; }
+  .moment-time .time-main { font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .moment-time sup { font-size: 9px; margin-left: 1px; color: var(--text-muted); }
+  .moment-rail { position: relative; display: flex; justify-content: center; }
+  .moment-rail::before { content: ''; position: absolute; top: 0; bottom: 0; width: 2px; background: var(--glass-border); }
+  .moment:first-child .moment-rail::before { top: 12px; }
+  .moment:last-child .moment-rail::before { bottom: auto; height: 12px; }
+  .moment-dot { position: relative; margin-top: 9px; width: 10px; height: 10px; border-radius: 999px; }
+  .moment-button .moment-dot { margin-top: 14px; }
+  .moment-body { display: flex; flex-direction: column; gap: 2px; padding: 4px 0 10px; min-width: 0; }
+  .moment-title { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; }
+  .moment-body .points-list { margin: 4px 0 0; }
+
+  /* All-day items at the top of the timeline. */
+  .all-day-list { display: flex; flex-direction: column; gap: 2px; margin: 2px 0 8px; padding-bottom: 6px; border-bottom: 1px solid var(--glass-border); }
+  .all-day-label { font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px; }
+  .all-day-item { display: flex; align-items: center; gap: 10px; padding: 6px 4px; border: none; border-radius: 10px; background: transparent; color: inherit;
+    font: inherit; text-align: left; }
+  button.all-day-item { cursor: pointer; }
+  button.all-day-item:hover { background: rgba(255, 255, 255, 0.05); }
+  .all-day-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+  .all-day-text .event-title { font-size: 14px; }
+  .all-day-arrow { font-size: 22px; font-weight: 800; line-height: 1; }
+
+  /* An event's own page. */
+  .event-page { gap: 8px; }
+  /* Head: icon (44 px, centred), then the name and the dates on 2 lines, the pencils on the right. */
+  .event-page-head { display: flex; align-items: center; gap: 12px; }
+  .event-page-head .row-buttons { align-self: center; }
+  .event-page-title { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .event-page-title h2 { margin: 0; font-size: 20px; font-weight: 800; }
+  .event-facts { display: flex; flex-wrap: wrap; gap: 6px; }
+  .event-fact { font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.10); }
+  /* My slot (Frostfire): the game's times; the picked one is lit. */
+  .slot-picker { display: flex; flex-direction: column; gap: 6px; }
+  .slot-title { font-size: 13px; font-weight: 800; color: var(--text-muted); }
+  .slot-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
+  .slot-button {
+    min-width: 58px; padding: 6px 10px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.06); color: var(--text); font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; cursor: pointer;
+  }
+  .slot-button[aria-pressed="true"] { background: rgba(255, 255, 255, 0.30); border-color: rgba(255, 255, 255, 0.55); color: #FFFFFF; }
+  .slot-button:disabled { opacity: 0.55; cursor: default; }
+  .link-button { border: none; background: none; padding: 0; color: var(--accent); font: inherit; text-decoration: underline; cursor: pointer; }
+  .event-info-line { margin: 0 0 6px; font-size: 14px; font-weight: 600; line-height: 1.4; }
+  .schedule-row { display: flex; justify-content: space-between; gap: 10px; padding: 8px 4px; border: none; border-top: 1px solid var(--glass-border);
+    background: transparent; color: inherit; font: inherit; font-size: 14px; font-weight: 700; text-align: left; cursor: pointer; }
+  .schedule-row.current { color: var(--accent); }
+  .schedule-when { flex: none; margin-left: auto; color: var(--text-muted); font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+  .event-folds { display: flex; flex-direction: column; }
+  /* Notes under the event's name: plain text; another name players use, faint. */
+  .event-notes p { margin: 0 0 4px; }
+  .event-other-name { color: var(--text-muted); font-size: 13px; font-weight: 700; }
+  /* The whole-event button in an event's head (a small timeline). Pressed while the whole event shows. */
+  /* A cancelled date stays visible with an X. */
+  .cancelled-mark { color: #FF8F8F; font-weight: 900; }
+  .bar.cancelled { opacity: 0.6; }
+  .bar .cancelled-mark { flex: none; }
+
+  /* ---------- The whole event as one timeline ---------- */
+  .event-tree { display: flex; flex-direction: column; }
+  .event-tree .tree-row { display: grid; grid-template-columns: 84px 24px 26px minmax(0, 1fr) 16px; align-items: center; min-height: 44px; border-radius: 10px; }
+  /* With a part beside it (Trade Route): its line in a narrow column just left of the main line. */
+  .event-tree.has-side .tree-row { grid-template-columns: 84px 10px 24px 26px minmax(0, 1fr) 16px; }
+  .event-tree.has-side .tree-row.main .tree-label, .event-tree.has-side .tree-row.nested .tree-label, .event-tree.has-side .tree-row.side .tree-label { grid-column: 4 / 6; }
+  .tree-row.main .tree-label, .tree-row.nested .tree-label, .tree-row.side .tree-label { grid-column: 3 / 5; }
+  /* A step inside the event: a smaller circle on the line, smaller words on the same row (no connector lines). */
+  .tree-row.nested .tree-label { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+  .tree-step-dot { position: relative; z-index: 1; width: 9px; height: 9px; border-radius: 50%; }
+  .tree-row.current .tree-step-dot { box-shadow: 0 0 0 4px color-mix(in srgb, var(--current-color) 35%, transparent); }
+  .tree-when { text-align: right; padding-right: 8px; line-height: 1.2; }
+  .tree-when b { display: block; font-size: 14px; font-weight: 700; white-space: nowrap; }
+  .tree-when span { display: block; font-size: 13px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+  .tree-line { position: relative; align-self: stretch; display: flex; align-items: center; justify-content: center; }
+  .tree-line::before, .tree-line::after { content: ''; position: absolute; left: 10.5px; width: 3px; }
+  .tree-line::before { top: 0; height: 50%; background: var(--line-above); }
+  .tree-line::after { top: 50%; bottom: 0; background: var(--line-below); }
+  .tree-line.first::before, .tree-line.last::after { display: none; }
+  .tree-dot { position: relative; z-index: 1; width: 13px; height: 13px; border-radius: 50%; }
+  /* Where the event's line ends during a day: a short bar across the line. */
+  .tree-cap { position: relative; z-index: 1; width: 15px; height: 3px; border-radius: 2px; }
+  .tree-label { padding-left: 8px; font-size: 14px; color: var(--text); min-width: 0; }
+  .tree-label.main { font-size: 15px; font-weight: 700; }
+  .tree-label.side-row { color: var(--text-muted); font-weight: 700; }
+  /* Instructions of a phase or step: open from its row (same arrow as points), smaller text. */
+  .tree-instructions { margin: 2px 0 6px; font-size: 13px; line-height: 1.4; color: var(--text-muted); }
+  /* The button that switches an event card between its timeline and its info. */
+  .view-button { width: 34px; height: 34px; border-radius: 999px; border: 1px solid var(--glass-border); background: var(--glass);
+    color: var(--accent); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; flex: none; }
+  /* Requirements under the event's name: one line for the alliance, one for the player. */
+  .event-requirements p { margin: 0 0 4px; font-size: 13px; line-height: 1.4; color: var(--text-muted); }
+  .event-requirements b { color: var(--text); font-weight: 700; }
+  /* The titles of the lists under the timeline (Requirements, Rules, Points...): small capitals. */
+  .event-folds .points-list > summary { font-size: 12px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-faint); }
+  /* What a list holds sits inside its title: indented from the left, and stopping where the arrow is. */
+  .event-folds .points-list > :not(summary) { margin-left: 16px; margin-right: 18px; }
+  /* The titles inside a list (Winning, Morale...): small bold capitals. */
+  .event-folds .points-note .note-title { font-size: 11.5px; letter-spacing: 0.04em; text-transform: uppercase; }
+  /* Notes in a points list: a bold title above the text; Disabled / Enabled lines marked differently. */
+  .points-note.titled .note-title { display: block; margin-bottom: 2px; color: var(--text); font-size: 13px; font-weight: 800; }
+  .points-note .note-title { color: var(--text); font-weight: 800; }
+  .points-note .note-line { display: block; }
+  .points-note .note-line + .note-line { margin-top: 3px; }
+  .note-line.note-disabled, .note-line.note-enabled { display: grid; grid-template-columns: 70px minmax(0, 1fr); align-items: start; }
+  .note-line.note-disabled b, .note-line.note-enabled b { margin-top: 1px; padding: 0 6px; border-radius: 4px; font-size: 11px; font-weight: 800; text-align: center; margin-right: 8px; }
+  .note-line.note-disabled b { background: rgba(242, 160, 160, 0.18); color: #F2A0A0; }
+  .note-line.note-enabled b { background: rgba(140, 214, 160, 0.18); color: #9EE0B0; }
+  /* A moment of a part beside the event (Trade Route): smaller words. */
+  .tree-row.side .tree-label { font-size: 12px; font-weight: 600; }
+  /* The line of a part beside the event: top and bottom half of it in each row (each fades on its own). */
+  .tree-side { position: relative; align-self: stretch; }
+  .tree-side::before, .tree-side::after { content: ''; position: absolute; left: 8px; width: 2px; display: none; }
+  .tree-side::before { top: 0; bottom: 50%; background: var(--side-top); }
+  .tree-side::after { top: 50%; bottom: 0; background: var(--side-bottom); }
+  .tree-side.middle::before, .tree-side.end::before, .tree-side.start::after, .tree-side.middle::after { display: block; }
+  .tree-side.start::after { top: calc(50% + 2px); }
+  /* Its logo on top, a circle at each of its moments, a cap where it ends. */
+  .tree-side-logo { position: absolute; z-index: 1; left: 9px; bottom: calc(50% - 2px); transform: translateX(-50%); width: 16px; height: 16px; display: flex; }
+  .tree-side-logo .event-icon { width: 16px; height: 16px; }
+  .tree-side-dot { position: absolute; z-index: 2; left: 9px; top: 50%; width: 9px; height: 9px; transform: translate(-50%, -50%); border-radius: 50%; }
+  .tree-side .tree-cap { position: absolute; left: 9px; top: 50%; width: 12px; height: 2px; transform: translate(-50%, -50%); }
+  /* Dashed after its first moment. */
+  .tree-side.dash-top::before, .tree-side.dash-bottom::after, .tree-points.dash-side::after {
+    -webkit-mask: repeating-linear-gradient(to bottom, #000 0 4px, transparent 4px 7px); mask: repeating-linear-gradient(to bottom, #000 0 4px, transparent 4px 7px);
+  }
+  .tree-arrow { width: 8px; height: 8px; border-right: 2.5px solid var(--arrow-color); border-bottom: 2.5px solid var(--arrow-color); transform: rotate(-45deg); transition: transform 0.15s ease; justify-self: center; }
+  .tree-item[open] > summary .tree-arrow { transform: rotate(45deg); }
+  .tree-item > summary { list-style: none; cursor: pointer; }
+  .tree-item > summary::-webkit-details-marker { display: none; }
+  .tree-item > summary:hover { background: rgba(255, 255, 255, 0.04); }
+  /* Where you are: tinted row, bigger dot with a soft halo in its colour, bold text. */
+  .tree-row.current { background: rgba(255, 255, 255, 0.07); }
+  .tree-row.current .tree-label { font-weight: 800; color: #FFFFFF; }
+  .tree-row.current .tree-dot { box-shadow: 0 0 0 4px color-mix(in srgb, var(--current-color) 35%, transparent); }
+  /* A day's points open under its row; the main line keeps going on their left. */
+  .tree-points { position: relative; padding: 2px 8px 8px 116px; }
+  .tree-points::before { content: ''; position: absolute; left: 94.5px; top: 0; bottom: 0; width: 3px; background: var(--line-below); }
+  .event-tree.has-side .tree-points { padding-left: 126px; }
+  .event-tree.has-side .tree-points::before { left: 104.5px; }
+  .tree-points.with-side::after { content: ''; position: absolute; left: 92px; top: 0; bottom: 0; width: 2px; background: var(--side-color); }
+  /* Fortress Friday: one row per fortress and stronghold. */
+  .fort-battle-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid var(--glass-border); font-size: 14px; font-weight: 700; }
+  .fort-battle-name { flex: none; width: 38px; font-weight: 800; }
+  .fort-battle-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+  .fort-banner.fort-battle-holder { flex: none; align-self: center; height: 22px; margin: 0; padding: 0 10px; }
+  .admin-only { border-style: dashed; }
+  .event-row-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .event-row .event-row-left { align-items: flex-start; flex: 1; }
+  .event-row .points-list { margin: 4px 0 0; }
+
+  /* Folds (Points, Details, Other forts): a full-width row with an arrow on the right that turns down when open. */
+  .points-list { margin: 0; border-top: 1px solid var(--glass-border); }
+  .points-list summary {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 40px; padding: 0 4px; cursor: pointer;
+    font-size: 14px; font-weight: 700; color: var(--text); list-style: none; border-radius: 8px;
+  }
+  .points-list summary:hover { background: rgba(255, 255, 255, 0.05); }
+  .points-list summary::-webkit-details-marker { display: none; }
+  /* The arrow: a chevron drawn with two borders, pointing right when closed and down when open. */
+  .points-list summary::after {
+    content: ''; flex: none; width: 8px; height: 8px; margin-right: 6px;
+    border-right: 2.5px solid var(--fold-color, var(--accent)); border-bottom: 2.5px solid var(--fold-color, var(--accent));
+    transform: rotate(-45deg); transition: transform 0.15s ease;
+  }
+  .points-list[open] summary::after { transform: rotate(45deg); margin-top: -4px; }
+  .points-list[open] { padding-bottom: 6px; }
+  .points-row { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-top: 1px solid var(--glass-border); font-size: 13px; font-weight: 600; }
+  .points-value { flex: none; font-weight: 800; color: #B8E6A8; font-variant-numeric: tabular-nums; }
+  .points-note { margin: 4px 0 6px; font-size: 12px; font-weight: 600; color: var(--text-muted); line-height: 1.4; }
+  .admin-subtitle { margin: 6px 0 0; font-size: 15px; font-weight: 800; color: var(--accent); }
+  .admin-link { border: none; background: transparent; color: var(--accent); font-size: 12px; font-weight: 700; padding: 4px 0; text-align: left; }
+
+  /* Phone: day details open as a full-screen sheet */
+  @media (max-width: 999px) {
+    .day-panel {
+      position: fixed; inset: 0; z-index: 30; overflow-y: auto; padding: 8px 12px 90px;
+      background-color: var(--page-color);
+      background-image: var(--page-background);
+      transform: translateY(100%); visibility: hidden; transition: transform 0.2s ease, visibility 0s linear 0.2s;
+    }
+    .day-panel.open { transform: none; visibility: visible; transition: transform 0.2s ease; }
+  }
+  @media (min-width: 1000px) {
+    .day-back { display: none !important; }
+  }
+  .day-back { align-self: flex-start; min-height: 44px; display: inline-flex; align-items: center; gap: 4px; border: none; background: transparent; color: var(--accent); font-weight: 700; padding: 0 4px; }
+
+  /* Next up tiles */
+  .next-up { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0 12px; flex: none; }
+  .next-tile { display: flex; flex-direction: column; gap: 3px; padding: 12px 14px; border-radius: var(--radius); }
+  /* Next up: the icon, with "Next up" and the name on 2 lines to its right; the date under them. */
+  .next-tile-head { display: flex; align-items: center; gap: 10px; margin-bottom: 2px; }
+  .next-tile-names { display: flex; flex-direction: column; min-width: 0; }
+  .next-tile-label { font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .next-tile-title { font-size: 16px; font-weight: 800; line-height: 1.2; }
+  @media (min-width: 1000px) {
+    .next-up { margin: 0; }
+    .next-tile { padding: 10px 12px; }
+    .next-tile-title { font-size: 15px; }
+  }
+
+  /* Bottom bar (phones) */
+  .bottom-nav {
+    position: sticky; bottom: 0; z-index: 20; margin-top: auto; display: flex; padding: 8px 8px 14px;
+    background: rgba(14, 20, 34, 0.72); border-top: 1px solid var(--glass-border);
+    backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+  }
+  .bottom-nav button {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; min-height: 48px; justify-content: center;
+    border: none; background: transparent; color: var(--text-muted); font-size: 12px; font-weight: 700;
+  }
+  .bottom-nav button[aria-current="page"] { color: var(--accent); font-weight: 800; }
+  @media (min-width: 1000px) { .bottom-nav { display: none; } }
+  .page { display: flex; flex-direction: column; flex: 1 0 auto; padding-bottom: 14px; }
+
+  /* ---------- Fortress page ---------- */
+  .totals-card { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-top: 1px solid var(--glass-border); }
+
+  .section-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .period-nav { display: flex; align-items: center; }
+  .fortress-nav { gap: 6px; }
+  .fortress-title { font-size: 16px; font-weight: 800; flex: 1; text-align: center; }
+  .fortress-title small { display: block; font-size: 11.5px; font-weight: 600; color: var(--text-faint); }
+  .fortress-head-buttons { display: flex; align-items: center; gap: 8px; }
+  .fortress-totals-button { display: inline-flex; align-items: center; gap: 5px; min-height: 34px; padding: 0 12px; font-size: 13px; }
+  .fortress-done-button { min-height: 34px; padding: 0 14px; }
+  /* Fortress cards: the fort's name, the reward, its name (2 lines at most) and the banner of who holds it.
+     A held card takes a soft tint and border of the alliance's colour. */
+  /* 4 per line on phones and computers; on wide screens the cards stop growing and stay centred. */
+  .fort-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 12px auto 0; width: 100%; max-width: 760px; box-sizing: border-box; }
+  @media (min-width: 700px) { .fort-cards { gap: 10px; } .fort-card-name { font-size: 14px; } .fort-card-reward { font-size: 12px; } }
+  .fort-card { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 0; padding: 6px 4px 6px; border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); }
+  .fort-card.stronghold { background: rgba(255, 255, 255, 0.08); }
+  .fort-card.held { border-color: color-mix(in srgb, var(--banner-base) 70%, transparent);
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.04), color-mix(in srgb, var(--banner-base) 22%, transparent)); }
+  .fort-card-name { align-self: stretch; text-align: center; font-size: 12px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* Reward tiles drawn like the game's Battle Rewards (measured on a 131 px tile): corners 12 %, a light border 3.5 %,
+     the picture about 90 % of the tile, a soft shadow straight down (offset 4.5 %, blur 3 %), the quantity 20 % high
+     with a dark outline, the top text with no band behind it. --tile is the tile's size. */
+  .fort-card { container-type: inline-size; }
+  .fort-card-picture { position: relative; display: block; line-height: 0; }
+  .fort-card-picture .pencil-button { position: absolute; top: -6px; right: -8px; min-width: 26px; height: 26px; padding: 0; z-index: 3;
+    background: rgba(30, 34, 60, 0.85); }
+  .fort-card .reward-tile { --tile: min(80cqw, 110px); width: var(--tile); height: var(--tile); border-radius: calc(var(--tile) * 0.12);
+    border-width: calc(var(--tile) * 0.035); box-shadow: 0 calc(var(--tile) * 0.045) calc(var(--tile) * 0.03) rgba(0, 0, 0, 0.35); }
+  .fort-card .reward-tile img { inset: 5%; width: 90%; height: 90%; }
+  .fort-card .reward-tile.tile-none { box-shadow: none; }
+  .fort-card .reward-tile .tile-top { top: 3%; padding: 0; background: none; font-size: calc(var(--tile) * 0.17); }
+  .fort-card .reward-tile .tile-qty { right: 6%; bottom: 3%; font-size: calc(var(--tile) * 0.19); }
+  .fort-card .reward-tile .tile-top, .fort-card .reward-tile .tile-qty {
+    text-shadow: -1.5px -1.5px 0 #222, 1.5px -1.5px 0 #222, -1.5px 1.5px 0 #222, 1.5px 1.5px 0 #222, 0 1.5px 0 #222, 0 -1.5px 0 #222, 1.5px 0 0 #222, -1.5px 0 0 #222; }
+  .fort-card .reward-tile.no-picture::after { inset: 20%; font-size: calc(var(--tile) * 0.28); }
+  .fort-card-reward { align-self: stretch; min-height: 2.5em; font-size: 10.5px; font-weight: 600; line-height: 1.25; text-align: center; color: var(--text-muted);
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  /* The alliance label: like the calendar's event bars (see-through colour fade, thin edge, glass blur). */
+  .fort-banner { align-self: stretch; display: flex; align-items: center; justify-content: center; height: 24px; margin-top: 2px; border-radius: 6px;
+    background: var(--banner-fill); box-shadow: inset 0 0 0 1px var(--banner-edge); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); }
+  .fort-banner span { font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25); }
+  .fort-banner.empty { background: rgba(255, 255, 255, 0.04); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06); }
+  .fort-banner.empty span { color: var(--text-faint); font-weight: 700; }
+  @media (max-width: 480px) { .fort-card { padding: 6px 2px 6px; } .fort-card-name { font-size: 10.5px; letter-spacing: -0.3px; text-overflow: clip; } .stronghold .fort-card-name { font-size: 9.5px; } .fort-card-reward { font-size: 10px; letter-spacing: -0.15px; } }
+  .fort-card-select { align-self: stretch; min-width: 0; box-sizing: border-box; height: 28px; padding: 0 4px; border-radius: 7px; border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.08); color: #fff; font: inherit; font-size: 12.5px; font-weight: 900; letter-spacing: 0.06em; text-align: center; color-scheme: dark; }
+  .fort-card-select.fort-banner { height: 28px; border: none; background: var(--banner-fill); box-shadow: inset 0 0 0 1px var(--banner-edge); }
+  .totals-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .totals-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(74px, 1fr)); gap: 6px; margin-top: 6px; }
+  .totals-tile { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 10.5px; font-weight: 600; line-height: 1.25; text-align: center; color: var(--text-muted); }
+  .totals-tile > span:last-child { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+  /* ---------- State and alliance pages ---------- */
+  .back-link { align-self: flex-start; min-height: 44px; display: inline-flex; align-items: center; gap: 4px; border: none; background: transparent; color: var(--accent); font: inherit; font-weight: 700; padding: 0 4px; cursor: pointer; }
+  .profile-capture { display: flex; flex-direction: column; gap: 12px; }
+  a.primary-button { text-decoration: none; display: inline-flex; align-items: center; }
+  .profile-head { display: flex; align-items: center; gap: 16px; }
+  .profile-head h2 { margin: 0; font-size: 26px; font-weight: 800; }
+  .profile-logo { width: 96px; height: 96px; border-radius: 22px; border: 2px solid var(--glass-border); display: flex; align-items: center; justify-content: center;
+    font-size: 26px; font-weight: 800; overflow: hidden; flex: none; }
+  .profile-logo img { width: 100%; height: 100%; object-fit: contain; }
+  .colour-pair { display: flex; gap: 6px; }
+  .colour-pair span { width: 22px; height: 22px; border-radius: 6px; border: 1px solid var(--glass-border); }
+  .profile-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+  .profile-card { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 16px; border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.06); color: var(--text); font: inherit; text-align: left; cursor: pointer; }
+  .profile-card strong { font-size: 16px; }
+  .info-row { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-top: 1px solid var(--glass-border); font-size: 14px; font-weight: 600; }
+  .info-row span:last-child { text-align: right; color: var(--text-muted); }
+  .image-preview { max-width: 100%; border-radius: 12px; border: 1px solid var(--glass-border); }
+
+  /* ---------- Admin page ---------- */
+  .admin-page { padding: 0 12px 20px; gap: 12px; }
+  .admin-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+  .admin-section { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .admin-section h2 { margin: 0; font-size: 18px; font-weight: 800; }
+  .admin-help { margin: 0; font-size: 13px; color: var(--text-muted); line-height: 1.45; }
+  .admin-list { display: flex; flex-direction: column; }
+  .admin-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--glass-border); }
+  .admin-item:first-child { border-top: none; }
+  .admin-item-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .admin-item-title { font-weight: 700; font-size: 15px; }
+  .admin-item-meta { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+  .admin-item.academy { padding-left: 22px; }
+  .primary-button {
+    min-height: 42px; padding: 0 16px; border-radius: 12px; border: none;
+    background: var(--accent); color: var(--accent-ink); font-weight: 800;
+  }
+  .danger-button { min-height: 42px; padding: 0 16px; border-radius: 12px; border: 1px solid rgba(242, 160, 160, 0.5); background: transparent; color: var(--danger); font-weight: 700; }
+  .small-button { min-height: 36px; padding: 0 12px; border-radius: 10px; font-size: 13px; }
+
+  /* ---------- Dialog and forms ---------- */
+  .dialog-backdrop { position: fixed; inset: 0; z-index: 50; background: rgba(5, 8, 15, 0.6); display: flex; align-items: flex-end; justify-content: center; }
+  @media (min-width: 700px) { .dialog-backdrop { align-items: center; } }
+  .dialog-box {
+    width: 100%; max-width: 480px; max-height: 92vh; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 12px;
+    background: rgba(22, 30, 50, 0.92); border: 1px solid var(--glass-border); border-radius: 22px 22px 0 0;
+    backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  }
+  @media (min-width: 700px) { .dialog-box { border-radius: 22px; } }
+  .dialog-box h2 { margin: 0; font-size: 20px; font-weight: 800; }
+  .form-field { display: flex; flex-direction: column; gap: 5px; }
+  .form-field > span { font-size: 13px; font-weight: 700; color: var(--text-muted); }
+  .form-field small { font-size: 12px; color: var(--text-faint); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .text-input {
+    min-height: 44px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.06); color: var(--text); width: 100%;
+  }
+  .text-input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  select.text-input option { color: #1C2333; }
+  input[type="color"].text-input { padding: 4px; height: 44px; }
+  .check-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .check-option { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 10px; border: 1px solid var(--glass-border); font-size: 13px; font-weight: 600; }
+  .dialog-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; padding-top: 4px; }
+  .dialog-actions .danger-button { margin-right: auto; }
+  .form-message { font-size: 13px; color: var(--danger); min-height: 1em; }
+  .icon-picker { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 6px; }
+  .icon-picker button { height: 40px; border-radius: 10px; border: 1px solid var(--glass-border); background: transparent; display: flex; align-items: center; justify-content: center; }
+  .icon-picker button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+  .icon-picker .event-icon { width: 18px; height: 18px; }
+
+  /* ---------- Messages ---------- */
+  .toast {
+    position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%); z-index: 60; max-width: 90vw;
+    padding: 12px 16px; border-radius: 12px; background: rgba(22, 30, 50, 0.95); border: 1px solid var(--glass-border);
+    font-size: 14px; font-weight: 600;
+  }
+  .toast.error { border-color: rgba(242, 160, 160, 0.6); color: #FFD8D8; }
+  .loading { padding: 40px 16px; text-align: center; color: var(--text-muted); font-weight: 600; }
+
+  /* ---------- Rewards drawn like in the game ---------- */
+  /* A reward: its picture on a tile coloured like in the game, the small top text with a darker band behind it,
+     and the quantity in the corner. tile-none: the picture alone. */
+  .reward-tile { position: relative; flex: none; display: inline-block; width: 44px; height: 44px; border-radius: 8px; box-sizing: border-box;
+    border: 1.5px solid var(--tile-border); background: linear-gradient(to bottom, var(--tile-top), var(--tile-middle) 55%, var(--tile-low));
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35); overflow: hidden; vertical-align: middle; }
+  .reward-tile img { position: absolute; inset: 3px; width: calc(100% - 6px); height: calc(100% - 6px); object-fit: contain; }
+  .reward-tile .drawn-picture { position: absolute; inset: 8%; width: 84%; height: 84%; }
+  .reward-tile.no-picture::after { content: '?'; position: absolute; inset: 6px; display: flex; align-items: center; justify-content: center;
+    border: 1px dashed rgba(255, 255, 255, 0.7); border-radius: 5px; font-size: 13px; font-weight: 900; color: #fff; }
+  .reward-tile .tile-top { position: absolute; top: 0; left: 0; right: 0; padding: 1px 0 2px; text-align: center; font-size: 8.5px; font-weight: 900; line-height: 1;
+    color: #fff; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0)); }
+  .reward-tile .tile-top, .reward-tile .tile-qty { text-shadow: -1px -1px 0 #222, 1px -1px 0 #222, -1px 1px 0 #222, 1px 1px 0 #222; }
+  .reward-tile .tile-qty { position: absolute; right: 2px; bottom: 1px; font-size: 10.5px; font-weight: 900; line-height: 1; color: #fff; }
+  .tile-grey   { --tile-top: #52595D; --tile-middle: #9DA3A6; --tile-low: #D5D8D9; --tile-border: #A6AAAB; }
+  .tile-green  { --tile-top: #2E5F21; --tile-middle: #5FA846; --tile-low: #ACE688; --tile-border: #55B24B; }
+  .tile-blue   { --tile-top: #35538B; --tile-middle: #6C96CC; --tile-low: #AAD5F2; --tile-border: #73AEEF; }
+  .tile-purple { --tile-top: #6E39B0; --tile-middle: #9A6FD6; --tile-low: #CFB7EC; --tile-border: #9B64EF; }
+  .tile-orange { --tile-top: #8B562E; --tile-middle: #C98A57; --tile-low: #F0D1AD; --tile-border: #E89F6A; }
+  .tile-none { border: none; background: none; box-shadow: none; }
+  .reward-tabs { display: grid; gap: 4px; padding: 3px; margin: 2px 0 10px; border-radius: 10px; background: rgba(255, 255, 255, 0.06); }
+  .reward-tab { border: none; background: none; padding: 7px 2px; border-radius: 8px; font: inherit; font-size: 12.5px; font-weight: 700; color: var(--text-muted); cursor: pointer; }
+  .reward-tab.on { background: rgba(255, 255, 255, 0.14); color: var(--text); }
+  .reward-bands { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 10px; }
+  .reward-band { position: relative; flex: 1 1 0; min-width: 56px; padding: 5px 6px; border-radius: 999px; border: 1px solid var(--glass-border); background: none;
+    font: inherit; font-size: 12px; font-weight: 700; color: var(--text-muted); cursor: pointer; white-space: nowrap; }
+  .reward-band.on { background: #5B8DEF; border-color: #5B8DEF; color: #fff; }
+  .reward-yours { position: absolute; top: -8px; right: -2px; padding: 0 5px; border-radius: 999px; font-size: 9px; font-weight: 800; background: #F2C14E; color: #3A2A00; }
+  .reward-sub { margin: 10px 0 6px; font-size: 11px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-faint); }
+  .reward-sub.with-picture { display: flex; align-items: center; gap: 8px; }
+  .reward-sub.with-picture img { width: 28px; height: 28px; object-fit: contain; }
+  .reward-row { display: grid; grid-template-columns: 56px 1fr; align-items: center; gap: 6px; padding: 5px 0; border-top: 1px solid var(--glass-border); }
+  .reward-label { font-size: 12.5px; font-weight: 800; color: var(--text-muted); overflow-wrap: anywhere; }
+  .reward-label small { display: block; font-size: 10px; font-weight: 700; color: var(--text-faint); }
+  .reward-items, .reward-flat { display: flex; flex-wrap: wrap; gap: 4px; }
+  .reward-source { margin: 8px 0 2px; font-size: 11px; font-style: italic; color: var(--text-faint); }
+  .merchant-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 8px; }
+  .merchant-offer { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 2px; border-radius: 10px; background: rgba(255, 255, 255, 0.05); }
+  .merchant-price { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 800; color: var(--text); }
+  .merchant-price img { width: 16px; height: 16px; object-fit: contain; }
+  .merchant-limit { font-size: 10.5px; font-weight: 700; color: var(--text-faint); }
+  .day-chests { margin-top: 4px; }
+  /* In a timeline the space is narrower: smaller tiles, so a chest's items stay on one line. */
+  .day-chests .reward-row { grid-template-columns: 50px 1fr; gap: 4px; }
+  .day-chests .reward-label { font-size: 11.5px; }
+  .day-chests .reward-items { gap: 3px; }
+  .day-chests .reward-tile { width: 34px; height: 34px; border-radius: 7px; }
+  .day-chests .reward-tile .tile-top { font-size: 7.5px; }
+  .day-chests .reward-tile .tile-qty { font-size: 9.5px; }
+  /* Phones: 6 rewards of a rank fit on one line. */
+  @media (max-width: 480px) {
+    .reward-row { grid-template-columns: 40px 1fr; gap: 4px; }
+    .reward-items, .reward-flat { gap: 3px; }
+    .reward-tile { width: 38px; height: 38px; border-radius: 7px; }
+    .reward-tile .tile-top { font-size: 8px; }
+    .reward-tile .tile-qty { font-size: 10px; }
+  }
+  /* A note with a picture beside it (Baldur). */
+  .points-note.with-picture { position: relative; padding-left: 52px; min-height: 44px; }
+  .points-note .note-picture { position: absolute; left: 0; top: 2px; width: 44px; height: 44px; object-fit: contain; }
+  .points-note .note-line.note-subtitle { margin-top: 6px; font-size: 11px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-faint); }
+  .points-note .note-line b { color: var(--text); font-weight: 700; }
+  /* Alliance Showdown's Total score: the gold horn picture. */
+  .win-horn { display: inline-block; width: 20px; height: 20px; object-fit: contain; vertical-align: -5px; }
+  .horn-fallback { font-size: 13px; color: #F6EA9A; }
+  .score-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; padding: 6px 4px 12px; }
+  .score-side { display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: var(--text-muted); }
+  .score-side.them { text-align: right; }
+  .score-side b { font-size: 15px; } .score-side.us b { color: #8EC5FF; } .score-side.them b { color: #F2A0A0; }
+  .score-total { display: flex; align-items: center; gap: 6px; font-size: 22px; font-weight: 800; white-space: nowrap; }
+  .score-total .us { color: #8EC5FF; } .score-total .them { color: #F2A0A0; } .score-total .dash { color: var(--text-faint); }
+  .score-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .score-table th { padding: 6px 4px; text-align: left; font-size: 11px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-faint); }
+  .score-table td { padding: 9px 4px; border-top: 1px solid var(--glass-border); }
+  .score-table .num { width: 34px; text-align: center; font-weight: 800; }
+  .score-table .stage { width: 40px; font-weight: 800; color: var(--text-faint); }
+  .score-table tr.today td { background: rgba(255, 255, 255, 0.07); }
+  .score-table .win-us { font-weight: 800; color: #8EC5FF; } .score-table .win-them { font-weight: 800; color: #F2A0A0; }
+  .score-table .win-tie { font-weight: 800; color: var(--text-muted); } .score-table .win-none { color: var(--text-faint); }
+  .score-mvp { display: block; margin-top: 1px; font-size: 9.5px; font-weight: 600; color: var(--text-faint); }
+  .score-edit { margin-top: 8px; }
+  /* Openings of a part on line 2 of its main event's bar (Tundra Arms League): the part's logo and the opening's label
+     (Champion Prediction "×16"), or the logo alone where an opening ends (Match Prediction). */
+  .bar .opening-mark-inside { display: inline-flex; align-items: center; justify-content: center; gap: 3px; }
+  .bar .opening-mark.at-end .opening-mark-inside { justify-content: flex-end; padding: 0; overflow: visible; }
+  /* The logos are bigger than the line's text; the negative margin keeps the bar's height the same. */
+  .bar .opening-mark-inside { align-items: flex-end; }
+  .bar .opening-mark .event-icon, .bar .opening-mark svg { --logo-size: 16px; width: 16px !important; height: 16px !important; margin: -1px 0 0; flex: none; }
+  @media (max-width: 600px) { .bar .opening-mark .event-icon, .bar .opening-mark svg { --logo-size: 13px; width: 13px !important; height: 13px !important; margin: -1px 0 0; } }
+  /* Event timeline: the opening's label under a row's words (Match Prediction, ROUND 1). */
+  .tree-sub { display: block; margin-top: 1px; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.85; }
+  /* Event timeline with two part lines beside the main line (Tundra Arms League's predictions). */
+  .event-tree.has-two-sides .tree-row { grid-template-columns: 84px 12px 12px 24px 26px minmax(0, 1fr) 16px; }
+  .event-tree.has-two-sides .tree-row .tree-label { grid-column: 5 / 7; }
+  .event-tree.has-two-sides .tree-points { padding-left: 140px; }
+  .event-tree.has-two-sides .tree-points::before { left: 118.5px; }
+  .event-tree.has-two-sides .tree-side::before, .event-tree.has-two-sides .tree-side::after { left: 5px; }
+  .event-tree.has-two-sides .tree-side-logo, .event-tree.has-two-sides .tree-side .tree-cap { left: 6px; }
+  /* An event's info in tabs (Info, Predictions, Rewards, Missions). */
+  .reward-tabs.info-tabs { margin: 4px 0 8px; }
+  /* Missions: each mission with its rewards under it. */
+  .mission-row { display: flex; flex-direction: column; gap: 5px; padding: 7px 0; border-top: 1px solid var(--glass-border); }
+  .mission-name { font-size: 13px; font-weight: 600; }
+  /* Secured items: the shield in the bottom right of the tile. */
+  .reward-tile img.tile-secured { inset: auto; right: 1px; bottom: 1px; width: 42%; height: 42%; z-index: 1; }
+  .reward-tile .tile-qty { z-index: 2; }
+  .reward-note { margin: 4px 0 6px; }
+  /* Rows labelled by a range of points (Tundra Arms League's personal rewards): the range on one line. */
+  .range-lines .reward-row { grid-template-columns: 94px 1fr; }
+  .range-lines .reward-label { white-space: nowrap; font-size: 11.5px; overflow-wrap: normal; }
+  .reward-tile .tile-top { white-space: nowrap; letter-spacing: -0.2px; }
+  /* Champion's Glory: 2 per row, like in the game. */
+  .merchant-grid.glory-grid { grid-template-columns: repeat(2, 1fr); }
+  /* Notes under a row's words (Crazy Joe's points, the Star Rating change) may wrap. */
+  .range-lines .reward-label small { white-space: normal; }
+  /* Lucky Wheel Reward Rates: the chance, then the item and its name. */
+  .rate-lines .reward-row { grid-template-columns: 64px 1fr; }
+  .rate-lines .reward-items { align-items: center; flex-wrap: nowrap; gap: 8px; }
+  .rate-name { font-size: 12.5px; font-weight: 600; color: var(--text); }
+  /* Band chips with longer names (King of Icefield's rankings) take the width their name needs. */
+  .reward-band { white-space: nowrap; }
+  .reward-bands.long-names .reward-band { flex: 1 1 auto; }
+  /* Ranks like "501–1000" stay on one line. */
+  .wide-labels .reward-row { grid-template-columns: 66px 1fr; }
+  .wide-labels .reward-label { white-space: nowrap; font-size: 11.5px; overflow-wrap: normal; }
+  /* Rows with a note under their words (Crazy Joe's points, the Star Rating change): a wider column, one line each. */
+  .range-lines.with-notes .reward-row { grid-template-columns: 136px 1fr; }
+  .range-lines.with-notes .reward-label small { white-space: nowrap; }
+  @media (max-width: 480px) {
+    .wide-labels .reward-row { grid-template-columns: 54px 1fr; }
+    .wide-labels .reward-label { font-size: 10.5px; }
+  }
+  /* "Bear ×4": each alliance time with a tick to follow it and, for admins, a pencil to change its time in place. */
+  .time-list { margin-top: 6px; }
+  .time-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-top: 1px solid var(--glass-border); }
+  .time-follow { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; padding: 4px 2px; border: none; background: none;
+    color: var(--text); font: inherit; font-size: 14.5px; font-weight: 700; text-align: left; cursor: pointer; }
+  .time-row:not(.followed) .time-name { color: var(--text-muted); }
+  .time-value { font-size: 14.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .time-input { width: 76px; height: 34px; padding: 0 8px; text-align: center; font-variant-numeric: tabular-nums; }
+  /* Followed times and a picked Frostfire slot: only the logo, at its time in the day. */
+  .bar.marker-bar { background: none !important; box-shadow: none !important; backdrop-filter: none; -webkit-backdrop-filter: none; padding: 0; }
+  .bar-marker { position: absolute; top: 3px; display: inline-flex; pointer-events: none; }
+  .bar-marker img.event-icon { --logo-size: 18px; width: 18px; height: 18px; object-fit: contain; filter: drop-shadow(1px 1.5px 1px rgba(0, 0, 0, 0.85)); }
+  .bar-marker svg.event-icon { width: 14px; height: 14px; }
+  @media (min-width: 1000px) { .bar-marker img.event-icon { --logo-size: 24px; width: 24px; height: 24px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top-bar">
+    <div class="brand">
+      <span class="brand-eyebrow">State <?= stateNumber ?></span>
+      <span class="brand-title">Events</span>
+    </div>
+    <nav class="desktop-nav" aria-label="Main">
+      <button type="button" class="nav-tab" data-page="calendar" aria-current="page">Calendar</button>
+      <button type="button" class="nav-tab" data-page="fortress">Fortress</button>
+      <button type="button" class="nav-tab" data-page="alliances">State &amp; alliances</button>
+      <button type="button" class="nav-tab" data-page="admin" hidden>Admin</button>
+    </nav>
+    <div class="clock">
+      <span class="clock-time" id="clockTime" aria-live="off"></span>
+      <div class="segmented time-switch" role="group" aria-label="Times shown in">
+        <button type="button" data-time-mode="utc" aria-pressed="true" title="Game time (UTC)">UTC</button>
+        <button type="button" data-time-mode="local" aria-pressed="false" id="localModeButton">Mine</button>
+      </div>
+    </div>
+    <button type="button" class="ghost-button" id="meButton">Sign in</button>
+  </header>
+
+  <main class="page" id="calendarPage">
+    <div class="toolbar">
+      <h1 class="period-title" id="periodTitle"></h1>
+      <div class="step-nav" role="group" aria-label="Move through the calendar">
+        <button type="button" id="previousButton" aria-label="Previous">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
+        </button>
+        <button type="button" id="todayButton">Today</button>
+        <button type="button" id="nextButton" aria-label="Next">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg>
+        </button>
+      </div>
+      <div class="segmented view-switch" role="group" aria-label="Calendar view">
+        <button type="button" data-view="year" aria-pressed="false">Year</button>
+        <button type="button" data-view="month" aria-pressed="true">Month</button>
+        <button type="button" data-view="week" aria-pressed="false">Week</button>
+      </div>
+    </div>
+    <div class="chips" id="categoryChips" role="group" aria-label="Show categories"></div>
+
+    <div class="calendar-layout">
+      <section class="calendar-panel glass" id="calendarPanel" aria-live="polite">
+        <div class="loading">Loading…</div>
+      </section>
+      <div class="side-column">
+        <div class="next-up" id="nextUp"></div>
+        <aside class="day-panel" id="dayPanel" aria-label="Day details"></aside>
+      </div>
+    </div>
+  </main>
+
+  <main class="page admin-page" id="fortressPage" hidden></main>
+  <main class="page admin-page" id="alliancesPage" hidden></main>
+  <main class="page admin-page" id="adminPage" hidden></main>
+
+  <nav class="bottom-nav" aria-label="Main">
+    <button type="button" data-page="calendar" aria-current="page">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M16 3v4M8 3v4M3 10h18"></path></svg>
+      Calendar</button>
+    <button type="button" data-page="fortress">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V8l2 1V5l3 1V3h6v3l3-1v4l2-1v13zM10 21v-4h4v4"></path></svg>
+      Fortress</button>
+    <button type="button" data-page="alliances">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"></path></svg>
+      Alliances</button>
+    <button type="button" data-page="admin" hidden>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"></path><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></svg>
+      Admin</button>
+    <button type="button" data-action="me">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg>
+      Me</button>
+  </nav>
+</div>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<?!= include('IndexJS'); ?>
+</body>
+</html>

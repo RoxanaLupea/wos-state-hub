@@ -25,6 +25,9 @@ export interface Schedule {
   note: string | null;
   sinceDate: string | null;
   shiftWithMoves: boolean;
+  // On for an event whose date is only roughly known, such as Tundra Arms League.
+  // Its runs show as provisional until an admin confirms the day.
+  datesAreEstimated: boolean;
 }
 
 // A run that was changed by hand: moved to another day, given different times, or
@@ -36,6 +39,8 @@ export interface DateChange {
   startTimeUtc: string | null;
   endTimeUtc: string | null;
   isCancelled: boolean;
+  // The day an admin confirmed for a run whose date was only estimated.
+  confirmedDate: string | null;
   note: string | null;
 }
 
@@ -56,6 +61,9 @@ export interface Occurrence {
   note: string;
   wasChanged: boolean;
   wasCancelled: boolean;
+  // The day is still a guess: the schedule's dates are estimated and nobody has
+  // confirmed this run yet.
+  isProvisional: boolean;
 }
 
 export type ChangesBySchedule = Map<string, Map<string, DateChange>>;
@@ -245,7 +253,8 @@ export function expandSchedule(
       note: [schedule.note, change?.note].filter(Boolean).join(' · '),
       // Only a moved day or changed times count as changed. A note alone does not.
       wasChanged: Boolean(change && (change.movedToDate || change.startTimeUtc || change.endTimeUtc)),
-      wasCancelled: Boolean(change?.isCancelled)
+      wasCancelled: Boolean(change?.isCancelled),
+      isProvisional: schedule.datesAreEstimated && !change?.confirmedDate
     };
     setMinutes(occurrence);
     runs.push(occurrence);
@@ -297,7 +306,9 @@ export function buildTransfers(
         endMinute: 0,
         note: change?.note || '',
         wasChanged: Boolean(change && (change.movedToDate || change.startTimeUtc || change.endTimeUtc)),
-        wasCancelled: false
+        wasCancelled: false,
+        // A transfer follows a battle, so its day is as certain as that battle's.
+        isProvisional: false
       };
       setMinutes(occurrence);
       runs.push(occurrence);

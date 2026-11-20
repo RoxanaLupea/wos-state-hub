@@ -25,3 +25,15 @@ export function shortDayText(day: number): string {
   const { month, dayOfMonth } = yearAndMonthOf(day);
   return WEEKDAY_SHORT[weekdayOf(day)] + ' ' + dayOfMonth + ' ' + MONTH_SHORT[month];
 }
+
+// "19 Nov 2026" — a date whose weekday is already known from where it is shown.
+export function dayMonthYearText(day: number): string {
+  const { year, month, dayOfMonth } = yearAndMonthOf(day);
+  return dayOfMonth + ' ' + MONTH_SHORT[month] + ' ' + year;
+}
+
+// "Thu 19 Nov 2026" — a date that has to stand on its own, away from the calendar.
+export function shortDayYearText(day: number): string {
+  const { year, month, dayOfMonth } = yearAndMonthOf(day);
+  return WEEKDAY_SHORT[weekdayOf(day)] + ' ' + dayOfMonth + ' ' + MONTH_SHORT[month] + ' ' + year;
+}

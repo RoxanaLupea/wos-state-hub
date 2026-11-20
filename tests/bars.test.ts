@@ -7,6 +7,7 @@ import {
 } from '../src/calendar/bars.ts';
 import { weekPieces } from '../src/calendar/week-bars.ts';
 import { daySegments } from '../src/calendar/day-segments.ts';
+import { renderBar } from '../src/ui/bar.ts';
 import type { Occurrence } from '../src/calendar/occurrences.ts';
 
 function occurrence(bits: {
@@ -27,7 +28,8 @@ function occurrence(bits: {
     allianceIds: bits.allianceIds ?? [], groupNumber: null,
     startDay, endDay: startDay + lengthDays - 1, lengthDays, originalDay: startDay,
     startTimeUtc: bits.startTime ?? '', endTimeUtc: bits.endTime ?? '',
-    startMinute, endMinute, note: '', wasChanged: false, wasCancelled: false
+    startMinute, endMinute, note: '', wasChanged: false, wasCancelled: false,
+    isProvisional: false
   };
 }
 
@@ -174,4 +176,29 @@ test('a month shows every week it touches', () => {
   const weeks = weeksOfMonth(dayFromText('2026-11-01'), 30);
   assert.equal(weeks.length, 6);
   assert.equal(weeks[0], dayFromText('2026-10-26'));
+});
+
+test('a bar hands over the same kind of day a day box does', () => {
+  const run = occurrence({ startDate: '2026-11-18', days: 2, eventTypeId: 'one', key: 'one' });
+  const bars = buildBarsForRange([run], dayFromText('2026-11-16'), dayFromText('2026-11-22'), options);
+  const pieces = weekPieces(bars, dayFromText('2026-11-16'), pieceOptions);
+  const markup = renderBar(pieces[0], { partOfByEventTypeId: noParts, weekStart: dayFromText('2026-11-16') });
+  const day = markup.match(/data-day="([^"]*)"/)?.[1] ?? '';
+  // Clicking a bar must give a day the page can read back. A plain number would come
+  // back as NaN and empty the whole calendar.
+  assert.match(day, /^\d{4}-\d{2}-\d{2}$/);
+  assert.equal(dayFromText(day), dayFromText('2026-11-18'));
+});
+
+test('a phase bar keeps its run inside its key', () => {
+  const phases: EventPhase[] = [
+    { id: 'p1', eventTypeId: 'fort', fromDay: 1, toDay: 2, startTimeUtc: null, endTimeUtc: null, hideBar: false, sortOrder: 1 }
+  ];
+  const run = occurrence({ startDate: '2026-11-16', days: 4, eventTypeId: 'fort', key: 's-fort|2026-11-16' });
+  const bars = buildBarsForRange([run], dayFromText('2026-11-16'), dayFromText('2026-11-22'),
+    { ...options, phasesByEventType: new Map([['fort', phases]]) });
+  // The page finds the run again by matching the whole run key against the bar key.
+  // Splitting on the separator would give only the schedule and lose the date.
+  assert.equal(bars[0].key, 's-fort|2026-11-16|p1');
+  assert.ok(bars[0].key.startsWith(run.key + '|'));
 });

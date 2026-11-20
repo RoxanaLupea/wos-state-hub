@@ -11,7 +11,7 @@ import {
   eventBarSubtitle, eventTypeById, eventTypeColor, eventTypeName, eventTypeShortName,
   phaseName, windowLabel
 } from '../data/catalog.ts';
-import { MINUTES_PER_DAY } from '../calendar/days.ts';
+import { MINUTES_PER_DAY, textFromDay } from '../calendar/days.ts';
 import { clockText } from '../calendar/time-mode.ts';
 import { spanText } from '../calendar/spans.ts';
 import { colorWithAlpha, hexToHsl, hslToHex } from './colors.ts';
@@ -279,18 +279,20 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
   if (partsMode) classes.push('parts-bar');
   if (bar.stripes.length) classes.push('has-trail');
   if (bar.wasCancelled) classes.push('cancelled');
+  if (bar.isProvisional) classes.push('provisional');
 
   const logo = eventIcon(mainOfParts ?? bar.eventTypeId);
   const headName = mainOfParts ? plainName(mainOfParts) : plainName(bar.eventTypeId);
   const shortName = eventTypeShortName(mainOfParts ?? bar.eventTypeId);
 
   return `<div class="${classes.join(' ')}" style="${style}"` +
-    ` title="${escapeForPage(fullName + (bar.wasCancelled ? ' (cancelled)' : ''))}"` +
+    ` title="${escapeForPage(fullName + (bar.wasCancelled ? ' (cancelled)' : '') +
+      (bar.isProvisional ? ' (date not confirmed)' : ''))}"` +
     ` data-trail-count="${bar.stripes.length}" data-lane="${piece.lane}"` +
     ` data-first-column="${piece.firstColumn}" data-last-column="${piece.lastColumn}"` +
     ` data-left-fraction="${piece.leftFraction.toFixed(5)}" data-right-fraction="${piece.rightFraction.toFixed(5)}"` +
     ` data-event-type="${escapeForPage(bar.eventTypeId)}" data-short-name="${escapeForPage(shortName)}"` +
-    ` data-open-event="${escapeForPage(bar.key)}" data-day="${options.weekStart + piece.firstColumn}"` +
+    ` data-open-event="${escapeForPage(bar.key)}" data-day="${textFromDay(options.weekStart + piece.firstColumn)}"` +
     ' role="button" tabindex="0">' +
     light +
     (sideLogo ? `<span class="bar-side-icon">${logo}</span>` : '') +
@@ -322,7 +324,7 @@ export function renderMarkerBar(piece: WeekPiece, options: BarRenderOptions): st
     ` data-trail-count="0" data-lane="${piece.lane}"` +
     ` data-first-column="${piece.firstColumn}" data-last-column="${piece.lastColumn}"` +
     ` data-left-fraction="${piece.leftFraction.toFixed(5)}" data-right-fraction="${piece.rightFraction.toFixed(5)}"` +
-    ` data-open-event="${escapeForPage(bar.key)}" data-day="${options.weekStart + piece.firstColumn}"` +
+    ` data-open-event="${escapeForPage(bar.key)}" data-day="${textFromDay(options.weekStart + piece.firstColumn)}"` +
     ` role="button" tabindex="0" aria-label="${escapeForPage(eventTypeName(bar.eventTypeId))}">` +
     `${marks}</div>`;
 }

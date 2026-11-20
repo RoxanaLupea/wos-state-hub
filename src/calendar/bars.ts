@@ -52,6 +52,8 @@ export interface Bar {
   endTimeUtc: string;
   phaseId: string | null;
   wasCancelled: boolean;
+  // The day is still a guess until an admin confirms it.
+  isProvisional: boolean;
   // Only the marked times show, as logos, instead of a block across the day.
   markers: Marker[] | null;
   // Parts running for days inside this event, drawn as lines under the bar.
@@ -184,6 +186,7 @@ function barFromOccurrence(occurrence: Occurrence, changes: Partial<Bar> = {}): 
     endTimeUtc: occurrence.endTimeUtc,
     phaseId: null,
     wasCancelled: occurrence.wasCancelled,
+    isProvisional: occurrence.isProvisional,
     markers: null,
     stripes: [],
     ...changes

@@ -1,0 +1,44 @@
+/* The blocks the built pages share: a section with a heading and help text, a row
+   per thing, and an alliance's own badge. */
+
+.admin-page { padding: 0 12px 20px; gap: 12px; }
+.admin-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+.admin-section { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.admin-section h2 { margin: 0; font-size: 18px; font-weight: 800; }
+.admin-help { margin: 0; font-size: 13px; color: var(--text-muted); line-height: 1.45; }
+.admin-list { display: flex; flex-direction: column; }
+.admin-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--glass-border); }
+.admin-item:first-child { border-top: none; }
+.admin-item-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.admin-item-title { font-weight: 700; font-size: 15px; }
+.admin-item-meta { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+.admin-item.academy { padding-left: 22px; }
+.primary-button {
+  min-height: 42px; padding: 0 16px; border-radius: 12px; border: none;
+  background: var(--accent); color: var(--accent-ink); font-weight: 800;
+}
+.danger-button { min-height: 42px; padding: 0 16px; border-radius: 12px; border: 1px solid rgba(242, 160, 160, 0.5); background: transparent; color: var(--danger); font-weight: 700; }
+.small-button { min-height: 36px; padding: 0 12px; border-radius: 10px; font-size: 13px; }
+
+
+.back-link { align-self: flex-start; min-height: 44px; display: inline-flex; align-items: center; gap: 4px; border: none; background: transparent; color: var(--accent); font: inherit; font-weight: 700; padding: 0 4px; cursor: pointer; }
+.profile-capture { display: flex; flex-direction: column; gap: 12px; }
+a.primary-button { text-decoration: none; display: inline-flex; align-items: center; }
+.profile-head { display: flex; align-items: center; gap: 16px; }
+.profile-head h2 { margin: 0; font-size: 26px; font-weight: 800; }
+.profile-logo { width: 96px; height: 96px; border-radius: 22px; border: 2px solid var(--glass-border); display: flex; align-items: center; justify-content: center;
+  font-size: 26px; font-weight: 800; overflow: hidden; flex: none; }
+.profile-logo img { width: 100%; height: 100%; object-fit: contain; }
+.colour-pair { display: flex; gap: 6px; }
+.colour-pair span { width: 22px; height: 22px; border-radius: 6px; border: 1px solid var(--glass-border); }
+.profile-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+.profile-card { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 16px; border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.06); color: var(--text); font: inherit; text-align: left; cursor: pointer; }
+.profile-card strong { font-size: 16px; }
+.info-row { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-top: 1px solid var(--glass-border); font-size: 14px; font-weight: 600; }
+.info-row span:last-child { text-align: right; color: var(--text-muted); }
+.image-preview { max-width: 100%; border-radius: 12px; border: 1px solid var(--glass-border); }
+
+/* A short list of what a page will still hold. */
+.plan-list { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+.plan-list li { font-size: 14px; font-weight: 600; color: var(--text-muted); line-height: 1.45; }

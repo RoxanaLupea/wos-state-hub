@@ -61,6 +61,15 @@ export function timeModeText(): string {
   return showsLocalTime() ? 'Your time (' + localOffsetLabel() + ')' : 'Game time (UTC)';
 }
 
+// A moment as hours and minutes on the game's clock, whatever the page is set to
+// show. The clock in the navigation bar always reads game time, because it is there
+// to answer "what time is it in the game", not to follow one page's setting.
+export function gameClockText(minute: number): string {
+  const inDay = ((minute % MINUTES_PER_DAY) + MINUTES_PER_DAY) % MINUTES_PER_DAY;
+  return String(Math.floor(inDay / 60)).padStart(2, '0') + ':' +
+    String(inDay % 60).padStart(2, '0');
+}
+
 // A moment as hours and minutes on the shown clock.
 export function clockText(minute: number): string {
   const shown = shownMinute(minute);

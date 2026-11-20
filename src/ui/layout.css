@@ -1,3 +1,7 @@
+/* Every page is a column: the section tabs at the top, then the page itself filling
+   what is left. */
+.page { display: flex; flex-direction: column; flex: 1 0 auto; padding-bottom: 14px; }
+
 /* How the calendar and the day's details sit beside each other. On a phone they
    stack and the details slide up over the calendar; from 1000px they sit side by
    side, each scrolling in its own box so the window itself never scrolls. */
@@ -32,9 +36,9 @@
   .day-panel { flex: 1 1 auto; min-height: 0; overflow-y: auto; margin-right: -14px; padding: 0 6px 4px 0; }
   .admin-page { overflow-y: auto; padding-bottom: 20px; margin-right: -8px; }
   /* The space for the scrollbar is kept even when nothing scrolls, so nothing shifts when it appears. */
-  .calendar-panel, .day-panel, .admin-page { scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: rgba(175, 200, 245, 0.35) transparent; }
+  .calendar-panel, .day-panel, .admin-page { scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--accent) 35%, transparent) transparent; }
   .calendar-panel::-webkit-scrollbar, .day-panel::-webkit-scrollbar, .admin-page::-webkit-scrollbar { width: 8px; }
-  .calendar-panel::-webkit-scrollbar-thumb, .day-panel::-webkit-scrollbar-thumb, .admin-page::-webkit-scrollbar-thumb { background: rgba(175, 200, 245, 0.35); border-radius: 999px; }
+  .calendar-panel::-webkit-scrollbar-thumb, .day-panel::-webkit-scrollbar-thumb, .admin-page::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--accent) 35%, transparent); border-radius: 999px; }
   .calendar-panel::-webkit-scrollbar-track, .day-panel::-webkit-scrollbar-track, .admin-page::-webkit-scrollbar-track { background: transparent; }
   .filter-list { max-height: min(520px, calc(100vh - 220px)); }
 }

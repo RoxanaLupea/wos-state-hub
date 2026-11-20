@@ -4,9 +4,9 @@ import type { DateChange, Schedule } from '../calendar/occurrences.ts';
 export async function loadSchedules(): Promise<Schedule[]> {
   const { data, error } = await database()
     .from('schedules')
-    .select('id, event_type_id, first_date, repeat_every_days, length_days, ' +
-            'start_time_utc, end_time_utc, alliance_ids, group_number, note, ' +
-            'since_date, shift_with_moves');
+    .select(`id, event_type_id, first_date, repeat_every_days, length_days,
+             start_time_utc, end_time_utc, alliance_ids, group_number, note,
+             since_date, shift_with_moves, dates_are_estimated`);
 
   if (error) throw new Error('Could not read the schedules: ' + error.message);
 
@@ -24,7 +24,8 @@ export async function loadSchedules(): Promise<Schedule[]> {
     groupNumber: row.group_number,
     note: row.note,
     sinceDate: row.since_date,
-    shiftWithMoves: Boolean(row.shift_with_moves)
+    shiftWithMoves: Boolean(row.shift_with_moves),
+    datesAreEstimated: Boolean(row.dates_are_estimated)
   }));
 }
 
@@ -32,7 +33,8 @@ export async function loadSchedules(): Promise<Schedule[]> {
 export async function loadDateChanges(): Promise<DateChange[]> {
   const { data, error } = await database()
     .from('event_occurrences')
-    .select('schedule_id, original_date, moved_to_date, start_time_utc, end_time_utc, note');
+    .select(`schedule_id, original_date, moved_to_date, start_time_utc, end_time_utc,
+             confirmed_date, note`);
 
   if (error) throw new Error('Could not read the changed dates: ' + error.message);
 
@@ -45,6 +47,7 @@ export async function loadDateChanges(): Promise<DateChange[]> {
     // Only Brothers in Arms can be called off, and that is recorded on the plan
     // rather than here, so nothing sets this yet.
     isCancelled: false,
+    confirmedDate: row.confirmed_date ?? null,
     note: row.note
   }));
 }
