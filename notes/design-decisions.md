@@ -3,8 +3,25 @@
 What has been settled, and what is still open. Only things confirmed out loud go in
 the settled part. Anything else belongs under "Open", however likely it looks.
 
-Read this at the start of a session. If something here is wrong, it gets corrected
-here first and in the code second.
+Read this at the start of a session, with what-this-is.md (purpose, scale, who may
+do what), visual-language.md (how things are drawn) and rules-and-open-items.md (the
+game's own rules). If something in them is wrong, it gets corrected there first and
+in the code second.
+
+old-app/ holds the calendar as it ran on Google Apps Script. A lot was settled and
+tested there that has not been carried across. When something is missing here, look
+there before discussing it again.
+
+## How we work on this
+
+- Design is discussed first and built after, one thing at a time. Nothing counts as
+  settled until it is said so out loud, and then it is written here.
+- No throwaway mockups. The change goes into the draft branch, the real page is
+  rendered from it with the real data, dates and logo, and that is what gets shown.
+- The approved files are left alone until the answer is yes.
+- The files are handed over when they are asked for, not every time something
+  changes. They get run when there is time to run them.
+- Unconfirmed experiments are never saved into the kept files.
 
 ## Settled
 
