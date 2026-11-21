@@ -6,7 +6,7 @@
 
 import './event-panel.css';
 import {
-  allianceRequirement, eventNotes, eventOtherName, eventTypeColor, eventTypeName,
+  allianceRequirement, eventNotes, eventOtherName, eventTypeColor, eventTypeName, openingLineColors,
   eventTypeLabel, itemImageFile, itemLabel, itemName, phaseName, playerRequirement,
   pointSourceDayName, pointSourceTask, pointSourcesForDay, pointSourcesInList, pointsNote,
   pointsTitle, rewardsOf, type PointSource, type RewardRow
@@ -21,7 +21,7 @@ import {
   EXPERT_CHEST_HOSTS, NUMBERED_REWARD_LISTS, rewardBandName, rewardListName,
   rewardListsOf, rewardSectionName
 } from './reward-names.ts';
-import { colorWithAlpha, hexToRgb } from './colors.ts';
+import { colorWithAlpha, hexToRgb, mixColors } from './colors.ts';
 import { tintedPanelStyle } from './next-up.ts';
 import type { EventTree } from '../calendar/event-tree.ts';
 import type { Occurrence } from '../calendar/occurrences.ts';
@@ -316,12 +316,22 @@ export function renderEventTree(tree: EventTree): string {
     if (!column0) return '<span class="tree-side"></span>';
     const span = column0.spans.find(one => index >= one.from && index <= one.to);
     const state = !span ? '' : index === span.from ? 'start' : index === span.to ? 'end' : 'middle';
-    const color = fadeColorAt(column0.part.occurrence.eventTypeId, 0.8);
-    return `<span class="tree-side ${state}" style="--side-top:${color};--side-bottom:${color}">` +
+    if (!span) return '<span class="tree-side"></span>';
+    // The line fades from the ticket's bright colour where it opens, marked by a small
+    // circle, to its dark colour where it closes.
+    const partTypeId = column0.part.occurrence.eventTypeId;
+    const { bright, dark } = openingLineColors(partTypeId);
+    const length = Math.max(1, span.to - span.from);
+    const colorAt = (rowPlace: number) =>
+      mixColors(bright, dark, Math.min(1, Math.max(0, (rowPlace - span.from) / length)));
+    const topHalf = `linear-gradient(${colorAt(index - 0.5)},${colorAt(index)})`;
+    const bottomHalf = `linear-gradient(${colorAt(index)},${colorAt(index + 0.5)})`;
+    return `<span class="tree-side ${state}" style="--side-top:${topHalf};--side-bottom:${bottomHalf}">` +
       (state === 'start'
-        ? `<span class="tree-side-logo" title="${escapeForPage(eventTypeName(column0.part.occurrence.eventTypeId))}">` +
-          `${eventIcon(column0.part.occurrence.eventTypeId)}</span>` : '') +
-      (state === 'end' ? `<span class="tree-cap" style="background:${color}"></span>` : '') +
+        ? `<span class="tree-side-logo" title="${escapeForPage(eventTypeName(partTypeId))}">` +
+          `${eventIcon(partTypeId)}</span>` +
+          `<span class="tree-side-start" style="background:${bright}"></span>` : '') +
+      (state === 'end' ? `<span class="tree-cap" style="background:${dark}"></span>` : '') +
       '</span>';
   }).join('');
 
@@ -388,7 +398,10 @@ export function renderEventTree(tree: EventTree): string {
       sideCell + (openingColumns.length ? openingCells(index) : '') + mainLine +
       `<span class="tree-label${row.level === 0 && !row.isEndRow ? ' main' : ''}` +
       `${row.isSideRow || row.isEndRow ? ' side-row' : ''}"` +
-      (row.isSideRow ? ` style="color:${barFadeColors(row.eventTypeId).light}"` : '') + '>' +
+      // A ticket's rows are written in the ticket's own colour, like its line; other
+      // rows beside the event use the light end of their bar.
+      (row.openingPartKey ? ` style="color:${openingLineColors(row.eventTypeId).bright}"`
+        : row.isSideRow ? ` style="color:${barFadeColors(row.eventTypeId).light}"` : '') + '>' +
       (row.isCancelled ? '<span class="cancelled-mark" aria-label="Cancelled">&times;</span> ' : '') +
       escapeForPage(row.label) +
       (row.subLabel ? `<span class="tree-sub">${escapeForPage(row.subLabel)}</span>` : '') +

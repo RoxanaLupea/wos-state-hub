@@ -460,7 +460,8 @@
   {
     "id": "tal-match-prediction",
     "category": "state",
-    "color": "#B596F0",
+    "color": "#A07EFF",
+    "openingLineColors": ["#D1C2FF", "#A686FF"],
     "icon": "star",
     "imageFile": "items/match-stake",
     "partOf": "hellfire",
@@ -513,7 +514,8 @@
   {
     "id": "tal-champion-prediction",
     "category": "state",
-    "color": "#F4CF4E",
+    "color": "#FEC335",
+    "openingLineColors": ["#FFE299", "#FDB725"],
     "icon": "trophy",
     "imageFile": "items/champion-stake",
     "partOf": "hellfire",

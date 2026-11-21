@@ -9,7 +9,7 @@
 
 import {
   eventBarSubtitle, eventTypeById, eventTypeColor, eventTypeName, eventTypeShortName,
-  phaseName, windowLabel
+  openingLineColors, phaseName, windowLabel
 } from '../data/catalog.ts';
 import { MINUTES_PER_DAY, textFromDay } from '../calendar/days.ts';
 import { clockText } from '../calendar/time-mode.ts';
@@ -254,8 +254,13 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
     const color = escapeForPage(eventTypeColor(part.eventTypeId));
     const bottom = -6 - 5 * index;
     if (openings) {
+      // While a part is open its line fades from its light colour to its dark one, the
+      // same as in the event's timeline. A line split over two weeks fades fully in each
+      // week, so a short piece at the start of a week is never only the dark end.
+      const { bright, dark } = openingLineColors(part.eventTypeId);
+      const fade = `linear-gradient(to right,${bright},${dark})`;
       return openings.map(opening =>
-        `<span class="bar-stripe" style="background:${color};bottom:${bottom}px"` +
+        `<span class="bar-stripe" style="background:${fade};bottom:${bottom}px"` +
         ` data-start-minute="${opening.start}" data-end-minute="${opening.end}"></span>`).join('');
     }
     return `<span class="bar-stripe" style="background:${color};bottom:${bottom}px"` +

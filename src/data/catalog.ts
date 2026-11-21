@@ -25,6 +25,10 @@ export interface EventType {
   sortOrder?: number;
   // A second colour the bar fades from, when the game gives the event one.
   timelineColor?: string;
+  // For a part that opens and closes (the prediction tickets): the line drawn while it
+  // is open fades from the first colour, where it opens, to the second, where it closes.
+  // Both are taken from the part's own picture.
+  openingLineColors?: [string, string];
   // The stretches a part is open, counted from the first day of its own event.
   openWindows?: { fromDay: number; fromTime: string; toDay: number; toTime: string }[];
   // How an opening is marked on the bar: by its label, or only where it ends.
@@ -73,6 +77,14 @@ export function phaseName(phaseId: string): string {
 
 export function eventTypeColor(id: string): string {
   return eventTypesById.get(id)?.color ?? '#7E8AA8';
+}
+
+// The bright and the dark colour of a part's open line. Without its own pair, the line
+// is the part's colour all the way down.
+export function openingLineColors(id: string): { bright: string; dark: string } {
+  const pair = eventTypesById.get(id)?.openingLineColors;
+  const color = eventTypeColor(id);
+  return { bright: pair?.[0] ?? color, dark: pair?.[1] ?? color };
 }
 
 // A bar fades from the event's colour to its second one, left to right. Events with

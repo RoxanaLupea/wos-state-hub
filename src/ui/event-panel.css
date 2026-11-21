@@ -127,9 +127,10 @@
 .tree-side::before { top: 0; bottom: 50%; background: var(--side-top); }
 .tree-side::after { top: 50%; bottom: 0; background: var(--side-bottom); }
 .tree-side.middle::before, .tree-side.end::before, .tree-side.start::after, .tree-side.middle::after { display: block; }
-.tree-side.start::after { top: calc(50% + 2px); }
-/* Its logo on top, a circle at each of its moments, a cap where it ends. */
-.tree-side-logo { position: absolute; z-index: 1; left: 9px; bottom: calc(50% - 2px); transform: translateX(-50%); width: 16px; height: 16px; display: flex; }
+.tree-side.start::after { top: 50%; }
+/* Its logo on top, a small circle where it opens, a circle at each of its moments, a cap where it ends. */
+.tree-side-logo { position: absolute; z-index: 1; left: 9px; bottom: calc(50% + 5px); transform: translateX(-50%); width: 16px; height: 16px; display: flex; }
+.tree-side-start { position: absolute; z-index: 2; left: 9px; top: 50%; width: 6px; height: 6px; transform: translate(-50%, -50%); border-radius: 50%; }
 .tree-side-logo .event-icon { width: 16px; height: 16px; }
 .tree-side-dot { position: absolute; z-index: 2; left: 9px; top: 50%; width: 9px; height: 9px; transform: translate(-50%, -50%); border-radius: 50%; }
 .tree-side .tree-cap { position: absolute; left: 9px; top: 50%; width: 12px; height: 2px; transform: translate(-50%, -50%); }
@@ -325,7 +326,8 @@
 .event-tree.has-two-sides .tree-points { padding-left: 140px; }
 .event-tree.has-two-sides .tree-points::before { left: 118.5px; }
 .event-tree.has-two-sides .tree-side::before, .event-tree.has-two-sides .tree-side::after { left: 5px; }
-.event-tree.has-two-sides .tree-side-logo, .event-tree.has-two-sides .tree-side .tree-cap { left: 6px; }
+.event-tree.has-two-sides .tree-side-logo, .event-tree.has-two-sides .tree-side .tree-cap,
+.event-tree.has-two-sides .tree-side-start { left: 6px; }
 /* An event's info in tabs (Info, Predictions, Rewards, Missions). */
 .reward-tabs.info-tabs { margin: 4px 0 8px; }
 /* Missions: each mission with its rewards under it. */
