@@ -170,6 +170,8 @@ there before discussing it again.
 
 ## Open
 
+- Roles. For now an alliance's R4 and R5 can do exactly the same things; what each may
+  do is decided when roles are designed.
 - Alliance colours. None is approved. The site uses the colours from the old sheet's
   Alliances tab for now.
 - The shape of each of the three page controls.
