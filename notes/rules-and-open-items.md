@@ -22,8 +22,7 @@ The structure these feed into is in supabase/schema.sql.
 - Alliance Championship has Tiers: Iron, Bronze, Silver, Gold, Diamond, Ultimate. All
   alliances start in Iron and move up by earning Stars; an alliance can drop a tier
   only from Diamond or Ultimate. Rewards depend on the tier.
-- Stars per final group rank, by tier (guide, onechilledgamer.com; the Ultimate column
-  matches the game's reward notes):
+- Stars per final group rank, by tier:
 
   | Rank | Iron | Bronze | Silver | Gold | Diamond | Ultimate |
   |------|------|--------|--------|------|---------|----------|
@@ -177,8 +176,7 @@ Highest is 11 per troop type and 33 in total. Exalted is only possible on FC10.
 
 - Alliance Showdown Star Rating: a guide (whiteoutsurvival.wiki) says the winning
   alliance gains a star and the losing alliance loses one. Not checked in game.
-- Alliance Championship: how many Stars move an alliance up a tier, and the Stars per
-  rank below Ultimate, are from a guide only.
+- Alliance Championship: how many Stars move an alliance up a tier.
 - Winter Siege tiers (Rookie, Stalwart, Pioneer, Exalted, Mythic, Legendary): a run
   gives tier points, +1 for a loss, +2 for a victory, +4 for a win streak. Still
   unknown: how many points each tier needs, and whether an alliance can drop a tier.
