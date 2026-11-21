@@ -1,0 +1,210 @@
+[
+  {
+    "date": "2024-10-12",
+    "result": "draw",
+    "opponentState": 1505,
+    "preparation": "loss",
+    "castleBattle": "win",
+    "castleAllianceId": "dvl"
+  },
+  {
+    "date": "2024-11-09",
+    "result": "win",
+    "opponentState": 1447,
+    "preparation": "win",
+    "castleBattle": "win",
+    "castleAllianceId": "dvl"
+  },
+  {
+    "date": "2024-12-07",
+    "result": "win",
+    "opponentState": 1517,
+    "preparation": "win",
+    "castleBattle": "win",
+    "castleAllianceId": "dvl"
+  },
+  {
+    "date": "2025-01-04",
+    "result": "loss",
+    "opponentState": 1383,
+    "preparation": "loss",
+    "castleBattle": "loss"
+  },
+  {
+    "date": "2025-02-01",
+    "result": "win",
+    "opponentState": 1489,
+    "preparation": "win",
+    "castleBattle": "win",
+    "castleAllianceId": "top"
+  },
+  {
+    "date": "2025-03-01",
+    "result": "win",
+    "opponentState": 1466,
+    "preparation": "win",
+    "castleBattle": "win",
+    "castleAllianceId": "dvl"
+  },
+  {
+    "date": "2025-03-29",
+    "result": "loss",
+    "opponentState": 1534,
+    "preparation": "loss",
+    "castleBattle": "loss"
+  },
+  {
+    "date": "2025-04-26",
+    "result": "win",
+    "opponentState": 1480,
+    "preparation": "win",
+    "castleBattle": "win",
+    "castleAllianceId": "dvl"
+  },
+  {
+    "date": "2025-05-24",
+    "result": "loss",
+    "opponentState": 1461,
+    "preparation": "loss",
+    "castleBattle": "loss"
+  },
+  {
+    "date": "2025-06-21",
+    "result": "loss",
+    "opponentState": 1378,
+    "preparation": "loss",
+    "castleBattle": "loss"
+  },
+  {
+    "date": "2025-07-19",
+    "result": "win",
+    "opponentState": 1453,
+    "preparation": "win",
+    "castleBattle": "win",
+    "castleAllianceId": "top"
+  },
+  {
+    "date": "2025-08-16",
+    "result": "loss",
+    "opponentState": 1496,
+    "preparation": "loss",
+    "castleBattle": "loss"
+  },
+  {
+    "date": "2025-09-13",
+    "result": "loss",
+    "opponentState": 1461,
+    "preparation": "loss",
+    "castleBattle": "loss"
+  },
+  {
+    "date": "2025-10-11",
+    "result": "draw",
+    "opponentState": 1438,
+    "preparation": "loss",
+    "castleBattle": "win",
+    "castleAllianceId": "top"
+  },
+  {
+    "date": "2025-11-08",
+    "result": "draw",
+    "opponentState": 1468,
+    "preparation": "loss",
+    "castleBattle": "win",
+    "castleAllianceId": "top"
+  },
+  {
+    "date": "2025-12-06",
+    "result": "loss",
+    "opponentState": 1421,
+    "preparation": "loss",
+    "castleBattle": "loss"
+  },
+  {
+    "date": "2026-01-03",
+    "result": "draw",
+    "opponentState": 1431,
+    "preparation": "loss",
+    "castleBattle": "win",
+    "castleAllianceId": "top"
+  },
+  {
+    "date": "2026-01-31",
+    "result": "draw",
+    "preparation": "win",
+    "castleBattle": "loss"
+  },
+  {
+    "date": "2026-02-28",
+    "result": "win",
+    "opponentState": 1417,
+    "preparation": "win",
+    "castleBattle": "win",
+    "castleAllianceId": "sky"
+  },
+  {
+    "date": "2026-03-28",
+    "result": "loss",
+    "opponentState": 1491,
+    "preparation": "loss",
+    "castleBattle": "loss"
+  },
+  {
+    "date": "2026-04-25",
+    "result": "draw",
+    "preparation": "win",
+    "castleBattle": "loss"
+  },
+  {
+    "date": "2026-05-23",
+    "result": "win",
+    "opponentState": 1397,
+    "preparation": "win",
+    "castleBattle": "win",
+    "castleAllianceId": "dvl"
+  },
+  {
+    "date": "2026-06-20",
+    "result": "loss",
+    "opponentState": 1489,
+    "preparation": "loss",
+    "castleBattle": "loss"
+  },
+  {
+    "date": "2026-07-18",
+    "result": "win",
+    "opponentState": 1474,
+    "preparation": "win",
+    "castleBattle": "win",
+    "castleAllianceId": "dvl"
+  },
+  {
+    "date": "2026-08-15",
+    "result": "draw",
+    "opponentState": 1407,
+    "preparation": "loss",
+    "castleBattle": "win",
+    "castleAllianceId": "dvl"
+  },
+  {
+    "date": "2026-09-12",
+    "result": "loss",
+    "opponentState": 1438,
+    "preparation": "loss",
+    "castleBattle": "loss"
+  },
+  {
+    "date": "2026-10-10",
+    "result": "win",
+    "opponentState": 1527,
+    "preparation": "win",
+    "castleBattle": "win",
+    "castleAllianceId": "dvl"
+  },
+  {
+    "date": "2026-11-07",
+    "result": "draw",
+    "preparation": "win",
+    "castleBattle": "loss"
+  }
+]
