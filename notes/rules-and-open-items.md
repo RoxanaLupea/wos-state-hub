@@ -16,11 +16,21 @@ The structure these feed into is in supabase/schema.sql.
 - You must stay in the alliance until the tally, which is immediately after the hunt.
 
 ### Star Ratings
-- Alliance Showdown and Alliance Championship each have their own Star Rating; one
-  does not change the other.
-- The Alliance Championship group rank changes the Championship's Star Rating: 1st +2,
-  2nd–3rd +1, 4th–5th −1, 6th −2.
+- Alliance Showdown and Alliance Championship each have their own rating; one does not
+  change the other.
 - Showdown's rewards differ by Star Rating band (1–2, 3–5, 6–9, 10+).
+- Alliance Championship has Tiers: Iron, Bronze, Silver, Gold, Diamond, Ultimate. All
+  alliances start in Iron and move up by earning Stars; an alliance can drop a tier
+  only from Diamond or Ultimate. Rewards depend on the tier.
+- Stars per final group rank, by tier (guide, onechilledgamer.com; the Ultimate column
+  matches the game's reward notes):
+
+  | Rank | Iron | Bronze | Silver | Gold | Diamond | Ultimate |
+  |------|------|--------|--------|------|---------|----------|
+  | 1    | +4   | +4     | +3     | +3   | +3      | +2       |
+  | 2–3  | +3   | +3     | +2     | +2   | +2      | +1       |
+  | 4–5  | +2   | +2     | +1     | +1   | +1      | −1       |
+  | 6    | +1   | +1     | +1     | +1   | −1      | −2       |
 
 ### Tundra Arms League match mail
 - Every TAL match sends a mail laid out like the Foundry battle mail: victory or
@@ -165,8 +175,10 @@ Highest is 11 per troop type and 33 in total. Exalted is only possible on FC10.
 
 ## Facts still needed from the game
 
-- Alliance Showdown Star Rating: how a Showdown result changes it is unknown.
-- Alliance Championship: the game's name for its rating (Star Rating or tier).
+- Alliance Showdown Star Rating: a guide (whiteoutsurvival.wiki) says the winning
+  alliance gains a star and the losing alliance loses one. Not checked in game.
+- Alliance Championship: how many Stars move an alliance up a tier, and the Stars per
+  rank below Ultimate, are from a guide only.
 - Winter Siege tiers (Rookie, Stalwart, Pioneer, Exalted, Mythic, Legendary): a run
   gives tier points, +1 for a loss, +2 for a victory, +4 for a win streak. Still
   unknown: how many points each tier needs, and whether an alliance can drop a tier.
