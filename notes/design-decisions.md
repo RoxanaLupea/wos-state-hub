@@ -25,6 +25,12 @@ there before discussing it again.
 
 ## Settled
 
+### Name
+- The site is called State Hub, not State Events. The logo and the browser tab
+  change with the header redesign.
+- The logo reads "1458 STATE HUB": the state number largest, with STATE over HUB
+  stacked to its right.
+
 ### Navigation
 - The top row is navigation, not a panel. It is a band of its own tone across the
   full width with a line under it, and the logo starts on the same left margin as
