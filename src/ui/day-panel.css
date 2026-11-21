@@ -34,8 +34,9 @@
 .all-day-item {
   display: flex; align-items: center; gap: 10px; padding: 6px 4px;
   border: none; border-radius: 10px; background: transparent; color: inherit;
-  font: inherit; text-align: left;
+  font: inherit; text-align: left; cursor: pointer;
 }
+.all-day-item:hover { background: rgba(255, 255, 255, 0.05); }
 .all-day-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
 .all-day-text .event-title { font-size: 14px; }
 .cancelled-mark { color: var(--danger); font-weight: 800; }
@@ -43,11 +44,13 @@
 /* One row per moment: the time, a dot on a rail, and what happens. */
 .moment-list { list-style: none; margin: 4px 0 0; padding: 0; }
 .moment { display: block; }
-.moment-row {
+/* The whole moment is one button that opens its event. */
+.moment-button {
   width: 100%; display: grid; grid-template-columns: 58px 18px minmax(0, 1fr);
   column-gap: 8px; padding: 0; border: none; background: transparent;
-  color: inherit; font: inherit; text-align: left; border-radius: 10px;
+  color: inherit; font: inherit; text-align: left; border-radius: 10px; cursor: pointer;
 }
+.moment-button:hover { background: rgba(255, 255, 255, 0.05); }
 .moment-time { display: flex; flex-direction: column; align-items: flex-end; padding: 6px 0 10px; text-align: right; }
 .moment-time .time-main { font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; }
 /* The rail is the line the dots sit on. It stops short at the first and last dot so
@@ -57,6 +60,7 @@
 .moment:first-child .moment-rail::before { top: 12px; }
 .moment:last-child .moment-rail::before { bottom: auto; height: 12px; }
 .moment-dot { position: relative; margin-top: 9px; width: 10px; height: 10px; border-radius: 999px; }
+.moment-button .moment-dot { margin-top: 14px; }
 .moment-body { display: flex; flex-direction: column; gap: 2px; padding: 4px 0 10px; min-width: 0; }
 .moment-title { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; }
 .moment-title-text { flex: 1; min-width: 0; }

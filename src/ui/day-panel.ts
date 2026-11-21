@@ -17,21 +17,27 @@ function colorWithOpacity(color: string, opacity: number): string {
   return `rgba(${red}, ${green}, ${blue}, ${opacity})`;
 }
 
+// An event running all day. The whole row is a button that opens the event, with an
+// arrow in the event's colour, as in the old app.
 function allDayItemMarkup(item: AllDayItem): string {
+  const color = eventTypeColor(item.occurrence.eventTypeId);
   const mark = item.occurrence.wasCancelled
     ? '<span class="cancelled-mark" aria-label="Cancelled">&times;</span> ' : '';
-  return `<div class="all-day-item">
+  return `<button type="button" class="all-day-item" data-open-event="${escapeForPage(item.occurrence.key)}">
     ${eventBadge(item.occurrence.eventTypeId)}
     <span class="all-day-text">
       <span class="event-title">${mark}${escapeForPage(item.name)}</span>
       ${item.shortLine ? `<span class="event-note">${escapeForPage(item.shortLine)}</span>` : ''}
     </span>
-  </div>`;
+    <span class="all-day-arrow" aria-hidden="true" style="color:${color}">&rsaquo;</span>
+  </button>`;
 }
 
+// One moment of the day. The whole row is a button that opens the event it belongs to.
 function momentMarkup(moment: Moment): string {
   const color = eventTypeColor(moment.eventTypeId);
-  return `<li class="moment"><div class="moment-row">
+  return `<li class="moment"><button type="button" class="moment-button"
+    data-open-event="${escapeForPage(moment.occurrenceKey)}">
     <span class="moment-time"><span class="time-main">${clockText(moment.minute)}</span></span>
     <span class="moment-rail"><span class="moment-dot"
       style="background:${color};box-shadow:0 0 0 3px ${colorWithOpacity(color, 0.25)}"></span></span>
@@ -39,7 +45,7 @@ function momentMarkup(moment: Moment): string {
       ${eventBadge(moment.eventTypeId, 'small')}
       <span class="moment-title-text">${escapeForPage(moment.title)}</span>
     </span></span>
-  </div></li>`;
+  </button></li>`;
 }
 
 export interface DayPanelOptions {
