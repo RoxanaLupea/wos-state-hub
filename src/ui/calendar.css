@@ -111,16 +111,21 @@
 /* Phones: SvS is a one-line bar, like the others without a second line: the name and the parts in a smaller font,
    no days, Castle Battle or Troop Revival under them. */
 @media (max-width: 999.98px) {
-  .bar.phase-lines.day-lines.parts-bar { --side-icon: 20px; --line-one-height: 20px; height: 24px; padding-top: 2px; justify-content: center; }
+  .bar.phase-lines.day-lines.parts-bar { --side-icon: 20px; --line-one-height: 20px; height: 24px; padding-top: 2px; justify-content: flex-start; }
   .bar.parts-bar .bar-head { height: 20px; line-height: 20px; }
-  .bar.parts-bar .bar-part { font-size: 7.5px; padding: 0; letter-spacing: 0; }
+  .bar.parts-bar .bar-part { padding: 0; letter-spacing: 0; }
+  .bar.parts-bar .bar-part-text { font-size: 7.5px; }
   .bar.parts-bar .bar-segment, .bar.parts-bar .bar-mark.divider { display: none; }
 }
 .bar .bar-chain-logo img.event-icon, .bar .bar-chain-logo svg.event-icon { --logo-size: 13px; width: 13px; height: 13px; margin: 0; }
 /* SvS: its parts on line 1, in capitals, between white lines that go through both lines. */
 .bar-part { position: absolute; top: 2px; height: var(--line-one-height); line-height: var(--line-one-height); z-index: 3; display: block; text-align: center; min-width: 0;
   padding: 0 2px; box-sizing: border-box; pointer-events: auto; cursor: pointer; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
-  font-size: 9.5px; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase; color: #FFFFFF; }
+  font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase; color: #FFFFFF; }
+/* The part keeps the bar's own text size, so its line sits exactly like the name's, and
+   only its words are smaller. Smaller words on the same line then stand on the same
+   baseline as the name instead of floating above it. */
+.bar-part-text { font-size: 9.5px; }
 /* White lines on a two-line bar: each line of text gets its own piece, centred on that line, so the pieces
    on line 2 (between days, where a part starts) all look the same, and a part's start also has one on line 1. */
 .bar.day-lines .bar-mark.divider { top: auto; bottom: 4px; height: calc(var(--line-two-height) - 4px); }
@@ -177,7 +182,7 @@
   .bar.phase-lines .bar-head { height: 20px; line-height: 20px; }
   .bar.phase-lines .bar-sub { height: 15px; font-size: 11.5px; line-height: 15px; }
   .bar.phase-lines.day-lines { --line-one-height: 20px; --line-two-height: 15px; padding-top: 2px; }
-  .bar-part { font-size: 11px; }
+  .bar-part-text { font-size: 11px; }
   .bar-side-icon { left: 6px; }
   .bar-stripe-end .event-icon { --logo-size: 20px; width: 20px; height: 20px; }
 }

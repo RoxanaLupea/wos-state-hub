@@ -196,7 +196,7 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
         ` data-open-event="${escapeForPage(part.bar.key)}"` +
         ` data-start-minute="${part.start}" data-end-minute="${part.end}"` +
         ` title="${escapeForPage(what + ' · ' + spanText(part.bar.startMinute, part.bar.endMinute))}">` +
-        `${escapeForPage(ownPartName(part.bar.eventTypeId, mainOfParts))}</span>`;
+        `<span class="bar-part-text">${escapeForPage(ownPartName(part.bar.eventTypeId, mainOfParts))}</span></span>`;
       // The first part's second line is its named days, handled above.
       if (index === 0) return;
       const inside = part.insideParts ?? [];
@@ -233,7 +233,7 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
   const phaseOnLineOne = piece.phaseParts.length === 1 && openingMarks.length > 0;
   if (phaseOnLineOne) {
     lineOne += `<span class="bar-part first-part phase-line-one" data-start-minute="${piece.start}" data-end-minute="${piece.end}">` +
-      `${escapeForPage(piece.phaseParts[0].name)}</span>`;
+      `<span class="bar-part-text">${escapeForPage(piece.phaseParts[0].name)}</span></span>`;
     for (const mark of openingMarks) {
       const opening = mark.opening;
       const what = eventTypeName(mark.part.eventTypeId) + (opening.label ? ' ' + opening.label : '');
