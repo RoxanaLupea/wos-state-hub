@@ -480,9 +480,52 @@ function pageControls(openPage: string, subPage: string): string {
   return '';
 }
 
+// Every drawing replaces the whole page, so the scrolled boxes would start again at
+// the top after any tap. Where each one was is noted before and put back after, unless
+// the tap asked for that box to start at the top, as the old app did when a day, an
+// event or another month opened.
+const startAtTop = { calendar: false, panel: false, wholePage: false };
+
+interface ScrollPlaces {
+  window: number;
+  calendar: number;
+  panel: number;
+}
+
+function scrollPlaces(app: HTMLElement): ScrollPlaces {
+  return {
+    window: window.scrollY,
+    calendar: app.querySelector<HTMLElement>('.calendar-panel')?.scrollTop ?? 0,
+    panel: app.querySelector<HTMLElement>('.day-panel')?.scrollTop ?? 0
+  };
+}
+
+function putBackScrollPlaces(app: HTMLElement, places: ScrollPlaces): void {
+  const calendar = app.querySelector<HTMLElement>('.calendar-panel');
+  const panel = app.querySelector<HTMLElement>('.day-panel');
+  if (startAtTop.wholePage) {
+    window.scrollTo(0, 0);
+    if (calendar) calendar.scrollTop = 0;
+    if (panel) panel.scrollTop = 0;
+  } else {
+    window.scrollTo(0, places.window);
+    if (calendar) calendar.scrollTop = startAtTop.calendar ? 0 : places.calendar;
+    if (panel) panel.scrollTop = startAtTop.panel ? 0 : places.panel;
+  }
+  startAtTop.calendar = false;
+  startAtTop.panel = false;
+  startAtTop.wholePage = false;
+}
+
 function draw(): void {
   const app = document.getElementById('app');
   if (!app) return;
+  const places = scrollPlaces(app);
+  drawPage(app);
+  putBackScrollPlaces(app, places);
+}
+
+function drawPage(app: HTMLElement): void {
   const range = viewRange();
 
   const bar = topBar({
@@ -606,6 +649,7 @@ function handleClicks(event: MouseEvent): void {
   if (pageButton) {
     view.openPage = pageButton.dataset.page as string;
     view.openSubPage = '';
+    startAtTop.wholePage = true;
     draw();
     return;
   }
@@ -651,16 +695,23 @@ function handleClicks(event: MouseEvent): void {
   const subPageButton = target.closest<HTMLElement>('[data-sub-page]');
   if (subPageButton) {
     view.openSubPage = subPageButton.dataset.subPage as string;
+    startAtTop.wholePage = true;
     draw();
     return;
   }
 
   const stepButton = target.closest<HTMLElement>('[data-step]');
-  if (stepButton) { step(Number(stepButton.dataset.step)); draw(); return; }
+  if (stepButton) {
+    step(Number(stepButton.dataset.step));
+    startAtTop.calendar = true;
+    draw();
+    return;
+  }
 
   const viewButton = target.closest<HTMLElement>('[data-view]');
   if (viewButton) {
     view.calendarView = viewButton.dataset.view as CalendarView;
+    startAtTop.calendar = true;
     draw();
     return;
   }
@@ -723,6 +774,7 @@ function handleClicks(event: MouseEvent): void {
   if (runButton) {
     const name = runButton.dataset.yearRun as string;
     view.pickedYearRun = view.pickedYearRun === name ? null : name;
+    startAtTop.panel = true;
     draw();
     return;
   }
@@ -736,6 +788,7 @@ function handleClicks(event: MouseEvent): void {
 
   if (target.closest('[data-toggle-view]')) {
     view.openEventView = view.openEventView === 'timeline' ? 'info' : 'timeline';
+    startAtTop.panel = true;
     draw();
     return;
   }
@@ -780,6 +833,7 @@ function handleClicks(event: MouseEvent): void {
     view.openEventKey = openEventButton.dataset.openEvent as string;
     view.pickedRowKey = null;
     view.isPanelOpen = true;
+    startAtTop.panel = true;
     draw();
     return;
   }
@@ -792,6 +846,7 @@ function handleClicks(event: MouseEvent): void {
     view.focusDay = view.chosenDay;
     view.isPanelOpen = true;
     if (view.calendarView === 'year') view.calendarView = 'month';
+    startAtTop.panel = true;
     draw();
   }
 }
