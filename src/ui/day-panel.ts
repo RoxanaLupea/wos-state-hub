@@ -43,7 +43,6 @@ function momentMarkup(moment: Moment): string {
 }
 
 export interface DayPanelOptions {
-  isOpen: boolean;
   // True when the Alliance filter is ticked but the player has not said which
   // alliance is theirs, so no alliance time can be shown.
   needsAlliancePick: boolean;
@@ -74,8 +73,9 @@ export function dayPanel(day: number, contents: DayContents, options: DayPanelOp
           ? `<ol class="moment-list">${contents.moments.map(momentMarkup).join('')}</ol>` : ''}
       </section>`;
 
-  return `<aside class="day-panel${options.isOpen ? ' open' : ''}">` +
-    `${heading}${alliancePrompt}${body}</aside>`;
+  // The box around it (the day panel) is drawn by the page, because an open event
+  // or a gathered bar uses the same box.
+  return heading + alliancePrompt + body;
 }
 
 // The name of an event as the panel says it. Kept here so the panel and the month

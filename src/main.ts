@@ -184,13 +184,29 @@ function calendarBody(range: { from: number; to: number }): string {
   return monthView(year, month, bars, weekRowOptions());
 }
 
+// The column beside the calendar: the next two events, then one panel box. The box
+// holds the year's overview, an open event, a gathered bar's times, or the chosen
+// day. It is always the same box, so it scrolls on its own on a computer and slides
+// up over the calendar on a phone, whatever is in it.
 function sideColumn(): string {
+  const today = todayNumber();
+  const nextUp = `<div class="next-up">${nextUpTiles(runsBetween(today, today + 60))}</div>`;
+  return nextUp +
+    `<aside class="day-panel${view.isPanelOpen ? ' open' : ''}" aria-label="Day details">` +
+    panelContents() + '</aside>';
+}
+
+const BACK_ARROW_SVG = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
+  ' stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>';
+
+function panelContents(): string {
   if (view.calendarView === 'year') {
     const runs = yearRunsForView();
-    return '<div class="day-panel">' + yearOverview(runs, {
-      pickedRun: view.pickedYearRun,
-      stepsOf: run => yearRunSteps(run, phasesByEventType, minutesFromTime, phaseName, eventTypeName)
-    }) + '</div>';
+    return `<button type="button" class="day-back" data-close-day>${BACK_ARROW_SVG}Back</button>` +
+      yearOverview(runs, {
+        pickedRun: view.pickedYearRun,
+        stepsOf: run => yearRunSteps(run, phasesByEventType, minutesFromTime, phaseName, eventTypeName)
+      });
   }
 
   const day = view.chosenDay;
@@ -217,13 +233,9 @@ function sideColumn(): string {
       lengthOf: one => one.endMinute - one.startMinute
     });
 
-  const today = todayNumber();
-  const next = runsBetween(today, today + 60);
-  return `<div class="next-up">${nextUpTiles(next)}</div>` +
-    dayPanel(day, contents, {
-      isOpen: view.isPanelOpen,
-      needsAlliancePick: view.shownCategories.has('alliance') && !myAllianceIds.length
-    });
+  return dayPanel(day, contents, {
+    needsAlliancePick: view.shownCategories.has('alliance') && !myAllianceIds.length
+  });
 }
 
 // What a gathered bar's key looks like: "group|<event type>|<day>".
