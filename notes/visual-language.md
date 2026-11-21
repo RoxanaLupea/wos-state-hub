@@ -14,6 +14,14 @@ would disagree, the later one won and the earlier is gone.
 ## Colour
 
 - Every event carries the colours of its own in-game logo.
+- An event's colours are taken from the background of its logo, not from the drawing
+  on it: a light tone and a darker one. The light tone can be made lighter until it
+  reads well. The prediction tickets were set this way first, and every event gets
+  its own colours set the same way.
+- Those colours are used everywhere the event appears, not only on its bar: its lines
+  and dots in the timelines, and its text.
+- A ticket's line, while it is open, fades from its light tone to its darker one. Its
+  text is in the light tone. Its line under the calendar bar fades the same way.
 - A bar is one natural fade across its whole width, dark behind the logo to light at
   the end, keeping its transparency.
 - Week-long events are more see-through.
