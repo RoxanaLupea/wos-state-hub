@@ -102,9 +102,12 @@ there before discussing it again.
   group rank is entered at the end.
 - Showdown records, per alliance and run, the opponent's state and alliance, the
   winner of each of the 6 days (us, them or tie) and each day's MVP.
-- Each alliance keeps its Alliance Showdown Star Rating, set by its R4 or R5, so its
-  members see their own Star Rating band of the Showdown rewards first. The old app
-  had it; the move to the new site dropped it.
+- Each alliance keeps its Alliance Showdown Star Rating, so its members see their own
+  Star Rating band of the Showdown rewards first. The old app had it; the move to the
+  new site dropped it. It works like the Winter Siege tier: the alliance's R4 or R5
+  sets it, the last one stays saved for the following events, and they can change it
+  at any time. Once we know how the game changes it, the site works it out (see
+  rules-and-open-items.md).
 - Winter Siege records, per alliance and run, the opponent's state and alliance and
   win, loss or no opponent. The alliance's tier is entered once; after that the site
   works it out from the results (see rules-and-open-items.md for the missing rule).
