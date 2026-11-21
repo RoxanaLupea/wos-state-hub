@@ -166,6 +166,7 @@ Highest is 11 per troop type and 33 in total. Exalted is only possible on FC10.
 ## Facts still needed from the game
 
 - Alliance Showdown Star Rating: how a Showdown result changes it is unknown.
+- Alliance Championship: the game's name for its rating (Star Rating or tier).
 - Winter Siege tiers (Rookie, Stalwart, Pioneer, Exalted, Mythic, Legendary): a run
   gives tier points, +1 for a loss, +2 for a victory, +4 for a win streak. Still
   unknown: how many points each tier needs, and whether an alliance can drop a tier.

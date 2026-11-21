@@ -108,6 +108,10 @@ there before discussing it again.
   sets it, the last one stays saved for the following events, and they can change it
   at any time. Once we know how the game changes it, the site works it out (see
   rules-and-open-items.md).
+- Each alliance keeps its Alliance Championship rating too. Its R4 or R5 sets the
+  starting value; after that the site updates it from each recorded group rank
+  (1st +2, 2nd–3rd +1, 4th–5th −1, 6th −2), and they can correct it at any time.
+  Its name in the game is being checked (Star Rating or tier).
 - Winter Siege records, per alliance and run, the opponent's state and alliance and
   win, loss or no opponent. The alliance's tier is entered once; after that the site
   works it out from the results (see rules-and-open-items.md for the missing rule).
