@@ -111,6 +111,9 @@
 /* Phones: SvS is a one-line bar, like the others without a second line: the name and the parts in a smaller font,
    no days, Castle Battle or Troop Revival under them. */
 @media (max-width: 999.98px) {
+  /* Two lines of their own (Tundra Arms League with its tickets): 2px more between
+     them, so the name never touches the logos on line 2. */
+  .bar.phase-lines.day-lines:not(.parts-bar) { height: 34px; }
   .bar.phase-lines.day-lines.parts-bar { --side-icon: 20px; --line-one-height: 20px; height: 24px; padding-top: 2px; justify-content: flex-start; }
   .bar.parts-bar .bar-head { height: 20px; line-height: 20px; }
   .bar.parts-bar .bar-part { padding: 0; letter-spacing: 0; }
