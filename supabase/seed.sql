@@ -6,13 +6,13 @@
 -- kept, marked as left, because it held forts in season 16.
 insert into alliances (id, name, tag, main_alliance_id, in_nap, status, base_color, second_color, sort_order, left_on) values
   ('dvl', 'DEVILEMPIRE', 'DVL', null, true, 'approved', '#E3B04B', '#9A5B2E', 1, null),
-  ('top', 'TOP', 'TOP', null, true, 'approved', '#3D63C9', '#F2C94C', 2, null),
-  ('sky', 'LoveAndPeace', 'SKY', null, true, 'approved', '#D9483B', '#9C7A6B', 3, null),
-  ('fun', '休閒動物園ღ', 'FUN', null, true, 'approved', '#E0552F', '#F5A35C', 4, '2026-11-09'),
-  ('ruu', 'なちゅらるぅELT島', 'RUU', null, true, 'approved', '#E8603A', '#F4F4F4', 5, null),
-  ('dvl-academy', 'littledvl', 'dvl', 'dvl', true, 'approved', '#E0552F', '#F4F4F4', 1, null),
-  ('top-academy', 'TOPacademy', 'top', 'top', true, 'approved', '#9B4FD6', '#F4F4F4', 1, null),
-  ('sky-academy', 'SlientAndPeace', 'abc', 'sky', true, 'approved', '#9B4FD6', '#F4F4F4', 1, null)
+  ('top', 'TOP', 'TOP', null, true, 'approved', '#3d63c9', '#fbf3da', 2, null),
+  ('sky', 'LoveAndPeace', 'SKY', null, true, 'approved', '#db3324', '#fde0d3', 3, null),
+  ('fun', '休閒動物園ღ', 'FUN', null, true, 'approved', '#fe9090', '#fbeada', 4, '2026-11-09'),
+  ('ruu', 'なちゅらるぅELT島', 'RUU', null, true, 'approved', '#ff9752', '#f4f4f4', 5, null),
+  ('dvl-academy', 'littledvl', 'dvl', 'dvl', true, 'approved', '#e09f2e', '#f5ddbc', 1, null),
+  ('top-academy', 'TOPacademy', 'top', 'top', true, 'approved', '#6ea2f7', '#f4f4f4', 1, null),
+  ('sky-academy', 'SlientAndPeace', 'abc', 'sky', true, 'approved', '#e82c2c', '#f4f4f4', 1, null)
 on conflict (id) do update set
   name = excluded.name, tag = excluded.tag, main_alliance_id = excluded.main_alliance_id,
   in_nap = excluded.in_nap, status = excluded.status,

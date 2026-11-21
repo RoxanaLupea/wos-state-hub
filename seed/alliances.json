@@ -11,24 +11,24 @@
     "id": "top",
     "name": "TOP",
     "tag": "TOP",
-    "baseColor": "#3D63C9",
-    "secondColor": "#F2C94C",
+    "baseColor": "#3d63c9",
+    "secondColor": "#fbf3da",
     "sortOrder": "2"
   },
   {
     "id": "sky",
     "name": "LoveAndPeace",
     "tag": "SKY",
-    "baseColor": "#D9483B",
-    "secondColor": "#9C7A6B",
+    "baseColor": "#db3324",
+    "secondColor": "#fde0d3",
     "sortOrder": "3"
   },
   {
     "id": "fun",
     "name": "休閒動物園ღ",
     "tag": "FUN",
-    "baseColor": "#E0552F",
-    "secondColor": "#F5A35C",
+    "baseColor": "#fe9090",
+    "secondColor": "#fbeada",
     "sortOrder": "4",
     "leftOn": "2026-11-09"
   },
@@ -36,8 +36,8 @@
     "id": "ruu",
     "name": "なちゅらるぅELT島",
     "tag": "RUU",
-    "baseColor": "#E8603A",
-    "secondColor": "#F4F4F4",
+    "baseColor": "#ff9752",
+    "secondColor": "#f4f4f4",
     "sortOrder": "5"
   },
   {
@@ -45,8 +45,8 @@
     "name": "littledvl",
     "tag": "dvl",
     "mainAllianceId": "dvl",
-    "baseColor": "#E0552F",
-    "secondColor": "#F4F4F4",
+    "baseColor": "#e09f2e",
+    "secondColor": "#f5ddbc",
     "sortOrder": "1"
   },
   {
@@ -54,8 +54,8 @@
     "name": "TOPacademy",
     "tag": "top",
     "mainAllianceId": "top",
-    "baseColor": "#9B4FD6",
-    "secondColor": "#F4F4F4",
+    "baseColor": "#6ea2f7",
+    "secondColor": "#f4f4f4",
     "sortOrder": "1"
   },
   {
@@ -63,8 +63,8 @@
     "name": "SlientAndPeace",
     "tag": "abc",
     "mainAllianceId": "sky",
-    "baseColor": "#9B4FD6",
-    "secondColor": "#F4F4F4",
+    "baseColor": "#e82c2c",
+    "secondColor": "#f4f4f4",
     "sortOrder": "1"
   }
 ]

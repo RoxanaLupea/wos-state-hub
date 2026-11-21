@@ -155,6 +155,8 @@ there before discussing it again.
 
 ## Open
 
+- Alliance colours. None is approved. The site uses the colours from the old sheet's
+  Alliances tab for now.
 - The shape of each of the three page controls.
 - The names of the Timeline's controls, and how they are arranged.
 - Where the UTC / Mine choice lives, now that it is out of the navigation. Pages
