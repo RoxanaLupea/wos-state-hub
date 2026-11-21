@@ -31,6 +31,9 @@ create table alliances (
   second_color            text,
   logo_file               text,
   sort_order              integer not null default 0,
+  -- The day an alliance left the state. It then disappears from the calendar, the
+  -- filters and the forms, but its past records (forts, results) keep its name.
+  left_on                 date,
   updated_by              uuid,
   updated_at              timestamptz not null default now()
 );

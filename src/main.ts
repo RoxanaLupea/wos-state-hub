@@ -1,7 +1,7 @@
 import './ui/tokens.css';
 import './ui/layout.css';
 import { isDatabaseConfigured } from './data/database.ts';
-import { allianceById, allianceFamilyOf, allianceTag, loadAlliances, rememberAlliances, type Alliance } from './data/alliances.ts';
+import { allianceById, allianceFamilyOf, allianceTag, alliancesStillHere, loadAlliances, rememberAlliances, type Alliance } from './data/alliances.ts';
 import {
   loadFortAssignments, loadRallyLeads, loadBuffAllocations,
   type FortAssignment, type RallyLead, type BuffAllocation
@@ -485,7 +485,7 @@ function draw(): void {
 
   if (view.openPage === 'player') {
     app.innerHTML = bar +
-      `<main class="page">${playerPage({ alliances, myAllianceId: view.myAllianceId })}</main>`;
+      `<main class="page">${playerPage({ alliances: alliancesStillHere(alliances), myAllianceId: view.myAllianceId })}</main>`;
     return;
   }
 
@@ -496,7 +496,7 @@ function draw(): void {
       view.openPage === 'fortress' && subPage === 'board' ? fortressBoardMarkup() :
       view.openPage === 'fortress' && subPage === 'planning' ? fortressPlanningMarkup() :
       view.openPage === 'fortress' && subPage === 'rewards' ? fortressRewardsMarkup() :
-      view.openPage === 'state' ? statePage({ stateNumber: STATE_NUMBER, alliances, schedules }) :
+      view.openPage === 'state' ? statePage({ stateNumber: STATE_NUMBER, alliances: alliancesStillHere(alliances), schedules }) :
       view.openPage === 'alliance' && subPage === 'times'
         ? allianceTimesPage(view.myAllianceId ? allianceById(view.myAllianceId) : undefined, schedules) :
       view.openPage === 'transfers' && subPage === 'timeline' ? predictionsMarkup() :

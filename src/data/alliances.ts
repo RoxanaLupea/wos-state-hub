@@ -8,12 +8,14 @@ export interface Alliance {
   baseColor: string | null;
   secondColor: string | null;
   sortOrder: number;
+  // The day the alliance left the state, or null while it is still here.
+  leftOn: string | null;
 }
 
 export async function loadAlliances(): Promise<Alliance[]> {
   const { data, error } = await database()
     .from('alliances')
-    .select('id, name, tag, main_alliance_id, base_color, second_color, sort_order')
+    .select('id, name, tag, main_alliance_id, base_color, second_color, sort_order, left_on')
     .eq('status', 'approved')
     .order('sort_order');
 
@@ -26,8 +28,15 @@ export async function loadAlliances(): Promise<Alliance[]> {
     mainAllianceId: row.main_alliance_id,
     baseColor: row.base_color,
     secondColor: row.second_color,
-    sortOrder: row.sort_order
+    sortOrder: row.sort_order,
+    leftOn: row.left_on
   }));
+}
+
+// The alliances still in the state. An alliance that left keeps its name on past
+// records, such as the forts it held, but is no longer offered anywhere else.
+export function alliancesStillHere(alliances: Alliance[]): Alliance[] {
+  return alliances.filter(alliance => !alliance.leftOn);
 }
 
 // The alliances loaded for this page, so a tag can be looked up wherever a time is

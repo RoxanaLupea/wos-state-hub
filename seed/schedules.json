@@ -202,7 +202,7 @@
     "firstDate": "2026-11-10",
     "repeatEveryDays": "28",
     "lengthDays": "3",
-    "note": "Transfer week. Seen in game 10\u201312 Nov 2026; every 4 weeks is from guides"
+    "note": "Transfer week. Seen in game 10–12 Nov 2026; every 4 weeks is from guides"
   },
   {
     "id": "s-brawl",
@@ -298,7 +298,7 @@
     "firstDate": "2026-11-15",
     "repeatEveryDays": "0",
     "lengthDays": "2",
-    "note": "Different rewards from 11\u201312 Nov"
+    "note": "Different rewards from 11–12 Nov"
   },
   {
     "id": "s-mercs",
@@ -306,7 +306,7 @@
     "firstDate": "2026-11-14",
     "repeatEveryDays": "28",
     "lengthDays": "3",
-    "note": "Seen in game 14\u201316 Nov 2026; every 4 weeks is from guides"
+    "note": "Seen in game 14–16 Nov 2026; every 4 weeks is from guides"
   },
   {
     "id": "s-heros-mission",
@@ -612,95 +612,6 @@
     "id": "d-sky-mercs",
     "eventTypeId": "mercenaries",
     "allianceIds": "sky",
-    "firstDate": "2026-11-16",
-    "repeatEveryDays": "28",
-    "lengthDays": "1",
-    "startTimeUtc": "00:00"
-  },
-  {
-    "id": "d-fun-bear-1",
-    "eventTypeId": "bear",
-    "allianceIds": "fun",
-    "firstDate": "2026-11-02",
-    "repeatEveryDays": "2",
-    "lengthDays": "1",
-    "startTimeUtc": "00:00",
-    "groupNumber": "1"
-  },
-  {
-    "id": "d-fun-bear-2",
-    "eventTypeId": "bear",
-    "allianceIds": "fun",
-    "firstDate": "2026-11-02",
-    "repeatEveryDays": "2",
-    "lengthDays": "1",
-    "startTimeUtc": "00:00",
-    "groupNumber": "2"
-  },
-  {
-    "id": "d-fun-joe-1",
-    "eventTypeId": "crazy-joe",
-    "allianceIds": "fun",
-    "firstDate": "2026-11-03",
-    "repeatEveryDays": "14",
-    "lengthDays": "1",
-    "startTimeUtc": "00:00",
-    "groupNumber": "1"
-  },
-  {
-    "id": "d-fun-joe-2",
-    "eventTypeId": "crazy-joe",
-    "allianceIds": "fun",
-    "firstDate": "2026-11-05",
-    "repeatEveryDays": "14",
-    "lengthDays": "1",
-    "startTimeUtc": "00:00",
-    "groupNumber": "2"
-  },
-  {
-    "id": "d-fun-foundry-1",
-    "eventTypeId": "foundry",
-    "allianceIds": "fun",
-    "firstDate": "2026-11-01",
-    "repeatEveryDays": "14",
-    "lengthDays": "1",
-    "startTimeUtc": "00:00",
-    "groupNumber": "1"
-  },
-  {
-    "id": "d-fun-foundry-2",
-    "eventTypeId": "foundry",
-    "allianceIds": "fun",
-    "firstDate": "2026-11-01",
-    "repeatEveryDays": "14",
-    "lengthDays": "1",
-    "startTimeUtc": "00:00",
-    "groupNumber": "2"
-  },
-  {
-    "id": "d-fun-canyon-1",
-    "eventTypeId": "canyon",
-    "allianceIds": "fun",
-    "firstDate": "2026-10-31",
-    "repeatEveryDays": "28",
-    "lengthDays": "1",
-    "startTimeUtc": "00:00",
-    "groupNumber": "1"
-  },
-  {
-    "id": "d-fun-canyon-2",
-    "eventTypeId": "canyon",
-    "allianceIds": "fun",
-    "firstDate": "2026-10-31",
-    "repeatEveryDays": "28",
-    "lengthDays": "1",
-    "startTimeUtc": "00:00",
-    "groupNumber": "2"
-  },
-  {
-    "id": "d-fun-mercs",
-    "eventTypeId": "mercenaries",
-    "allianceIds": "fun",
     "firstDate": "2026-11-16",
     "repeatEveryDays": "28",
     "lengthDays": "1",

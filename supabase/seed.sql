@@ -2,21 +2,22 @@
 -- Run this after schema.sql and policies-while-solo.sql.
 -- Safe to run more than once: every insert replaces the row if it is already there.
 
--- The five NAP alliances and their academies.
-insert into alliances (id, name, tag, main_alliance_id, in_nap, status, base_color, second_color, sort_order) values
-  ('dvl', 'DEVILEMPIRE', 'DVL', null, true, 'approved', '#E3B04B', '#9A5B2E', 1),
-  ('top', 'TOP', 'TOP', null, true, 'approved', '#3D63C9', '#F2C94C', 2),
-  ('sky', 'LoveAndPeace', 'SKY', null, true, 'approved', '#D9483B', '#9C7A6B', 3),
-  ('fun', '休閒動物園ღ', 'FUN', null, true, 'approved', '#E0552F', '#F5A35C', 4),
-  ('ruu', 'なちゅらるぅELT島', 'RUU', null, true, 'approved', '#E8603A', '#F4F4F4', 5),
-  ('dvl-academy', 'littledvl', 'dvl', 'dvl', true, 'approved', '#E0552F', '#F4F4F4', 1),
-  ('top-academy', 'TOPacademy', 'top', 'top', true, 'approved', '#9B4FD6', '#F4F4F4', 1),
-  ('sky-academy', 'SlientAndPeace', 'abc', 'sky', true, 'approved', '#9B4FD6', '#F4F4F4', 1)
+-- The NAP alliances and their academies. FUN left in the 9 Nov 2026 transfer; it is
+-- kept, marked as left, because it held forts in season 16.
+insert into alliances (id, name, tag, main_alliance_id, in_nap, status, base_color, second_color, sort_order, left_on) values
+  ('dvl', 'DEVILEMPIRE', 'DVL', null, true, 'approved', '#E3B04B', '#9A5B2E', 1, null),
+  ('top', 'TOP', 'TOP', null, true, 'approved', '#3D63C9', '#F2C94C', 2, null),
+  ('sky', 'LoveAndPeace', 'SKY', null, true, 'approved', '#D9483B', '#9C7A6B', 3, null),
+  ('fun', '休閒動物園ღ', 'FUN', null, true, 'approved', '#E0552F', '#F5A35C', 4, '2026-11-09'),
+  ('ruu', 'なちゅらるぅELT島', 'RUU', null, true, 'approved', '#E8603A', '#F4F4F4', 5, null),
+  ('dvl-academy', 'littledvl', 'dvl', 'dvl', true, 'approved', '#E0552F', '#F4F4F4', 1, null),
+  ('top-academy', 'TOPacademy', 'top', 'top', true, 'approved', '#9B4FD6', '#F4F4F4', 1, null),
+  ('sky-academy', 'SlientAndPeace', 'abc', 'sky', true, 'approved', '#9B4FD6', '#F4F4F4', 1, null)
 on conflict (id) do update set
   name = excluded.name, tag = excluded.tag, main_alliance_id = excluded.main_alliance_id,
   in_nap = excluded.in_nap, status = excluded.status,
   base_color = excluded.base_color, second_color = excluded.second_color,
-  sort_order = excluded.sort_order;
+  sort_order = excluded.sort_order, left_on = excluded.left_on;
 
 -- Every repeating event slot, including the alliance-run ones.
 insert into schedules (id, event_type_id, first_date, repeat_every_days, length_days,
@@ -95,15 +96,6 @@ insert into schedules (id, event_type_id, first_date, repeat_every_days, length_
   ('d-sky-canyon-1', 'canyon', '2026-10-31', 28, 1, '00:00', null, 'sky', 1, null, null, false, false),
   ('d-sky-canyon-2', 'canyon', '2026-10-31', 28, 1, '00:00', null, 'sky', 2, null, null, false, false),
   ('d-sky-mercs', 'mercenaries', '2026-11-16', 28, 1, '00:00', null, 'sky', null, null, null, false, false),
-  ('d-fun-bear-1', 'bear', '2026-11-02', 2, 1, '00:00', null, 'fun', 1, null, null, false, false),
-  ('d-fun-bear-2', 'bear', '2026-11-02', 2, 1, '00:00', null, 'fun', 2, null, null, false, false),
-  ('d-fun-joe-1', 'crazy-joe', '2026-11-03', 14, 1, '00:00', null, 'fun', 1, null, null, false, false),
-  ('d-fun-joe-2', 'crazy-joe', '2026-11-05', 14, 1, '00:00', null, 'fun', 2, null, null, false, false),
-  ('d-fun-foundry-1', 'foundry', '2026-11-01', 14, 1, '00:00', null, 'fun', 1, null, null, false, false),
-  ('d-fun-foundry-2', 'foundry', '2026-11-01', 14, 1, '00:00', null, 'fun', 2, null, null, false, false),
-  ('d-fun-canyon-1', 'canyon', '2026-10-31', 28, 1, '00:00', null, 'fun', 1, null, null, false, false),
-  ('d-fun-canyon-2', 'canyon', '2026-10-31', 28, 1, '00:00', null, 'fun', 2, null, null, false, false),
-  ('d-fun-mercs', 'mercenaries', '2026-11-16', 28, 1, '00:00', null, 'fun', null, null, null, false, false),
   ('d-ruu-bear-1', 'bear', '2026-11-02', 2, 1, '00:00', null, 'ruu', 1, null, null, false, false),
   ('d-ruu-bear-2', 'bear', '2026-11-02', 2, 1, '00:00', null, 'ruu', 2, null, null, false, false),
   ('d-ruu-joe-1', 'crazy-joe', '2026-11-03', 14, 1, '00:00', null, 'ruu', 1, null, null, false, false),
