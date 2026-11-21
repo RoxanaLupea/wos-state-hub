@@ -18,10 +18,6 @@ const publicKey: string = import.meta.env.VITE_SUPABASE_ANON_KEY || STATE_HUB_PU
 
 let openConnection: SupabaseClient | null = null;
 
-export function isDatabaseConfigured(): boolean {
-  return Boolean(projectUrl) && Boolean(publicKey);
-}
-
 export function database(): SupabaseClient {
   if (!openConnection) {
     openConnection = createClient(projectUrl, publicKey);

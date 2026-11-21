@@ -1,6 +1,5 @@
 import './ui/tokens.css';
 import './ui/layout.css';
-import { isDatabaseConfigured } from './data/database.ts';
 import { allianceById, allianceFamilyOf, allianceTag, alliancesStillHere, loadAlliances, rememberAlliances, type Alliance } from './data/alliances.ts';
 import {
   loadFortAssignments, loadRallyLeads, loadBuffAllocations,
@@ -824,13 +823,6 @@ async function start(): Promise<void> {
   if (!app) throw new Error('The page is missing its #app element.');
   app.className = 'app';
   installIconFallback();
-
-  if (!isDatabaseConfigured()) {
-    app.innerHTML = problemBar() + '<main class="page">' + problemPanel(
-      'The database address or key is missing. Copy .env.example to .env, fill in both ' +
-      'values from the Supabase project, then restart the dev server.') + '</main>';
-    return;
-  }
 
   try {
     const [loadedSchedules, changes, settings] = await Promise.all([
