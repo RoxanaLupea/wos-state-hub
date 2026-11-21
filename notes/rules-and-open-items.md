@@ -15,6 +15,13 @@ The structure these feed into is in supabase/schema.sql.
 - Achievements count across both traps.
 - You must stay in the alliance until the tally, which is immediately after the hunt.
 
+### Star Ratings
+- Alliance Showdown and Alliance Championship each have their own Star Rating; one
+  does not change the other.
+- The Alliance Championship group rank changes the Championship's Star Rating: 1st +2,
+  2nd–3rd +1, 4th–5th −1, 6th −2.
+- Showdown's rewards differ by Star Rating band (1–2, 3–5, 6–9, 10+).
+
 ### Tundra Arms League match mail
 - Every TAL match sends a mail laid out like the Foundry battle mail: victory or
   defeat, both sides' state, alliance and Arsenal Points, the rewards, the Legion
