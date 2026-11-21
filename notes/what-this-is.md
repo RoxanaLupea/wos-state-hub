@@ -14,7 +14,8 @@ decisions made over the design sessions, so none of it has to be said twice.
 
 ## Scale
 
-- One state, 1458. Five alliances, each with an academy.
+- One state, 1458. Five alliances, each with an academy, until FUN left the state in
+  the transfer that started on 9 Nov 2026.
 - Under 500 people in total, at most about 50 at the same time.
 
 ## Where it runs

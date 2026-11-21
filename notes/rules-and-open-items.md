@@ -15,6 +15,37 @@ The structure these feed into is in supabase/schema.sql.
 - Achievements count across both traps.
 - You must stay in the alliance until the tally, which is immediately after the hunt.
 
+### Tundra Arms League match mail
+- Every TAL match sends a mail laid out like the Foundry battle mail: victory or
+  defeat, both sides' state, alliance and Arsenal Points, the rewards, the Legion
+  Tally (Imperial Foundry Control Duration; Control, Gathering, Loot and KO Rewards
+  with their MVPs; Sieges by Mercenaries) and Personal Arsenal Points.
+- Personal Arsenal Points lists every registered member of the legion, 0 included.
+
+### Sunfire Castle and Castle Battle
+- SvS Battle is won through Castle Battle.
+- Invaders, alliances from another state marked "(Invader)", only take part in the SvS
+  Castle Battle. Sunfire is fought inside the state.
+- In Sunfire the president is agreed in advance; the state plays it for the points.
+- A state starts with a Sunfire battle every 2 weeks. After 2 to 3 months SvS starts,
+  and from then every other castle record is an SvS Castle Battle. A drawn SvS shows
+  a numbered President, so the first SvS can come before the first Supreme President.
+  In 1458 the first SvS was 12 Oct 2024 (DVL's Glory Path), four weeks before the
+  first Supreme President.
+- Each alliance's Glory Path (Alliance Info) lists every Cross-State Castle Battle in
+  which it took final control of the castle, with the enemy state and the date.
+  Holding our own castle counts, so a drawn SvS missing from every alliance's Glory
+  Path means we won Preparation and lost the Castle Battle at the opponent's castle.
+- An SvS record in the Hall of Fame tells the result. A Supreme President from our
+  state: we won both Preparation and Battle. A Supreme President marked Invader: we
+  lost both. A numbered President: we lost one of them. If we lost Preparation, we
+  won the fight for our own castle; if we won Preparation, we lost the battle for the
+  opponent's castle.
+- The castle keeps an Occupation Ranking (rank, alliance, leader, total occupation)
+  and a Hall of Fame (President No. N or Supreme President, name, alliance, state
+  for an invader, date in office). After a state merger, Previous Presidents keeps
+  each old state's list.
+
 ### Fortress Battles
 - Season 16 was running on 19 Nov 2026, phase 4 of 8.
 - 12 fortresses and 4 strongholds, 8 phases.
@@ -126,6 +157,11 @@ Highest is 11 per troop type and 33 in total. Exalted is only possible on FC10.
 - The hero planner, which is its own project.
 
 ## Facts still needed from the game
+
+- Winter Siege tiers (Rookie, Stalwart, Pioneer, Exalted, Mythic, Legendary): a run
+  gives tier points, +1 for a loss, +2 for a victory, +4 for a win streak. Still
+  unknown: how many points each tier needs, and whether an alliance can drop a tier.
+  Guides do not give it (searched 20 Nov 2026).
 
 - How long before bear and foundry someone must be in the alliance, and when they can
   leave, as catalog values.
