@@ -11,6 +11,7 @@
 import {
   MINUTES_PER_DAY, dayFromText, textFromDay, minutesFromTime
 } from './days.ts';
+import { nowMinute } from './time-mode.ts';
 
 export interface Schedule {
   id: string;
@@ -257,6 +258,9 @@ export function expandSchedule(
       isProvisional: schedule.datesAreEstimated && !change?.confirmedDate
     };
     setMinutes(occurrence);
+    // A run that has already started is happening or has happened, so its date is no
+    // longer a guess.
+    if (occurrence.startMinute <= nowMinute()) occurrence.isProvisional = false;
     runs.push(occurrence);
   }
   return runs;

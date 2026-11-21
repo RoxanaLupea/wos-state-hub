@@ -136,3 +136,14 @@ test('a time of day reads as minutes', () => {
   assert.equal(minutesFromTime('23:59'), 1439);
   assert.equal(minutesFromTime(''), 0);
 });
+
+test('an estimated date stops being marked as a guess once its run has started', () => {
+  const today = Math.floor(Date.now() / 60000 / MINUTES_PER_DAY);
+  const one = schedule({ datesAreEstimated: true, firstDate: textFromDay(today - 10), repeatEveryDays: 5 });
+  const runs = expandSchedule(one, today - 10, today + 10, options([one]));
+  const started = runs.filter(run => run.startMinute <= Date.now() / 60000);
+  const coming = runs.filter(run => run.startMinute > Date.now() / 60000);
+  assert.ok(started.length > 0 && coming.length > 0, 'the range holds runs on both sides of now');
+  assert.ok(started.every(run => !run.isProvisional), 'a run that has started is not a guess');
+  assert.ok(coming.every(run => run.isProvisional), 'a run still to come is a guess until confirmed');
+});
