@@ -73,6 +73,11 @@ there before discussing it again.
   or loss. Castle Battle records a win or loss, the president and the president's
   alliance. SvS Battle has no result of its own, because it is won through Castle
   Battle.
+- Castle Battle (SvS) records the win or loss, the Supreme President (name, alliance,
+  date in office) and, for each alliance in the Occupation Ranking, the alliance,
+  whether it is marked "(Invader)" and how long it held the castle. The rank follows
+  from the times. The invaders' state is the SvS opponent, recorded once per SvS.
+- Sunfire records only the president: number, name, alliance and date in office.
 - Each SvS also has one overall result: win (Preparation and Battle), loss (both lost)
   or draw (one of each). 1458's results so far, read from the Hall of Fame and the
   alliances' Glory Path, are in seed/svs-results.json: 28 SvS from 12 Oct 2024 to
