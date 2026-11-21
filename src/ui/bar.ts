@@ -9,12 +9,12 @@
 
 import {
   eventBarSubtitle, eventTypeById, eventTypeColor, eventTypeName, eventTypeShortName,
-  openingLineColors, phaseName, windowLabel
+  hasLogoColors, logoColors, phaseName, windowLabel
 } from '../data/catalog.ts';
 import { MINUTES_PER_DAY, textFromDay } from '../calendar/days.ts';
 import { clockText } from '../calendar/time-mode.ts';
 import { spanText } from '../calendar/spans.ts';
-import { colorWithAlpha, hexToHsl, hslToHex } from './colors.ts';
+import { colorWithAlpha, hexToHsl, hslToHex, mixColors } from './colors.ts';
 import { escapeForPage } from './escape.ts';
 import { eventIcon } from './event-icon.ts';
 import type { Bar } from '../calendar/bars.ts';
@@ -30,6 +30,11 @@ export function barFadeColors(eventTypeId: string): {
   hint: string; dark: string; middle: string; light: string;
 } {
   const eventType = eventTypeById(eventTypeId);
+  // An event with its logo's colours uses them as they are.
+  if (hasLogoColors(eventTypeId)) {
+    const { light, dark } = logoColors(eventTypeId);
+    return { hint: '', dark, middle: mixColors(dark, light, 0.4), light };
+  }
   const first = hexToHsl(eventType?.color ?? '#AFC8F5');
   const second = hexToHsl(eventType?.colorEnd ?? eventType?.color ?? '#AFC8F5');
   const top = Math.max(first.lightness, second.lightness);
@@ -96,13 +101,19 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
   if (bar.markers) return renderMarkerBar(piece, options);
 
   const fade = barFadeColors(bar.eventTypeId);
+  // An event with its logo's colours fades from its light tone to its dark one, the
+  // same way as its tickets' lines. Other bars still fade from dark to light.
+  const isLightFirst = hasLogoColors(bar.eventTypeId);
+  const firstColor = isLightFirst ? fade.light : fade.dark;
+  const middleColor = isLightFirst ? mixColors(fade.light, fade.dark, 0.4) : fade.middle;
+  const lastColor = isLightFirst ? fade.dark : fade.light;
   const style =
     `grid-column:${piece.firstColumn + 1} / ${piece.lastColumn + 2};grid-row:${piece.lane + 1};` +
     'background:linear-gradient(90deg,' +
       (fade.hint
-        ? `${colorWithAlpha(fade.hint, 0.8)} 0%,${colorWithAlpha(fade.dark, 0.8)} ${HINT_SHARE}%,`
-        : `${colorWithAlpha(fade.dark, 0.8)} 0%,`) +
-      `${colorWithAlpha(fade.middle, 0.68)} 40%,${colorWithAlpha(fade.light, 0.58)} 100%);` +
+        ? `${colorWithAlpha(fade.hint, 0.8)} 0%,${colorWithAlpha(firstColor, 0.8)} ${HINT_SHARE}%,`
+        : `${colorWithAlpha(firstColor, 0.8)} 0%,`) +
+      `${colorWithAlpha(middleColor, 0.68)} 40%,${colorWithAlpha(lastColor, 0.58)} 100%);` +
     `box-shadow:inset 0 0 0 1px ${colorWithAlpha(fade.middle, 0.55)};` +
     `--logo-shade:${fade.dark};`;
 
@@ -257,8 +268,8 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
       // While a part is open its line fades from its light colour to its dark one, the
       // same as in the event's timeline. A line split over two weeks fades fully in each
       // week, so a short piece at the start of a week is never only the dark end.
-      const { bright, dark } = openingLineColors(part.eventTypeId);
-      const fade = `linear-gradient(to right,${bright},${dark})`;
+      const { light, dark } = logoColors(part.eventTypeId);
+      const fade = `linear-gradient(to right,${light},${dark})`;
       return openings.map(opening =>
         `<span class="bar-stripe" style="background:${fade};bottom:${bottom}px"` +
         ` data-start-minute="${opening.start}" data-end-minute="${opening.end}"></span>`).join('');

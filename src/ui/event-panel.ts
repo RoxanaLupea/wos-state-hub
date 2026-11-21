@@ -6,7 +6,7 @@
 
 import './event-panel.css';
 import {
-  allianceRequirement, eventNotes, eventOtherName, eventTypeColor, eventTypeName, openingLineColors,
+  allianceRequirement, eventNotes, eventOtherName, eventTypeColor, eventTypeName, logoColors,
   eventTypeLabel, itemImageFile, itemLabel, itemName, phaseName, playerRequirement,
   pointSourceDayName, pointSourceTask, pointSourcesForDay, pointSourcesInList, pointsNote,
   pointsTitle, rewardsOf, type PointSource, type RewardRow
@@ -317,20 +317,20 @@ export function renderEventTree(tree: EventTree): string {
     const span = column0.spans.find(one => index >= one.from && index <= one.to);
     const state = !span ? '' : index === span.from ? 'start' : index === span.to ? 'end' : 'middle';
     if (!span) return '<span class="tree-side"></span>';
-    // The line fades from the ticket's bright colour where it opens, marked by a small
+    // The line fades from the ticket's light colour where it opens, marked by a small
     // circle, to its dark colour where it closes.
     const partTypeId = column0.part.occurrence.eventTypeId;
-    const { bright, dark } = openingLineColors(partTypeId);
+    const { light, dark } = logoColors(partTypeId);
     const length = Math.max(1, span.to - span.from);
     const colorAt = (rowPlace: number) =>
-      mixColors(bright, dark, Math.min(1, Math.max(0, (rowPlace - span.from) / length)));
+      mixColors(light, dark, Math.min(1, Math.max(0, (rowPlace - span.from) / length)));
     const topHalf = `linear-gradient(${colorAt(index - 0.5)},${colorAt(index)})`;
     const bottomHalf = `linear-gradient(${colorAt(index)},${colorAt(index + 0.5)})`;
     return `<span class="tree-side ${state}" style="--side-top:${topHalf};--side-bottom:${bottomHalf}">` +
       (state === 'start'
         ? `<span class="tree-side-logo" title="${escapeForPage(eventTypeName(partTypeId))}">` +
           `${eventIcon(partTypeId)}</span>` +
-          `<span class="tree-side-start" style="background:${bright}"></span>` : '') +
+          `<span class="tree-side-start" style="background:${light}"></span>` : '') +
       (state === 'end' ? `<span class="tree-cap" style="background:${dark}"></span>` : '') +
       '</span>';
   }).join('');
@@ -400,7 +400,7 @@ export function renderEventTree(tree: EventTree): string {
       `${row.isSideRow || row.isEndRow ? ' side-row' : ''}"` +
       // A ticket's rows are written in the ticket's own colour, like its line; other
       // rows beside the event use the light end of their bar.
-      (row.openingPartKey ? ` style="color:${openingLineColors(row.eventTypeId).bright}"`
+      (row.openingPartKey ? ` style="color:${logoColors(row.eventTypeId).light}"`
         : row.isSideRow ? ` style="color:${barFadeColors(row.eventTypeId).light}"` : '') + '>' +
       (row.isCancelled ? '<span class="cancelled-mark" aria-label="Cancelled">&times;</span> ' : '') +
       escapeForPage(row.label) +

@@ -41,6 +41,7 @@ export function hslToHex(hue: number, saturation: number, lightness: number): st
 // A colour part way from one to another: 0 is the first, 1 the second.
 export function mixColors(first: string, second: string, share: number): string {
   const start = hexToRgb(first), end = hexToRgb(second);
-  const mix = (one: number, other: number) => Math.round(one + (other - one) * share);
-  return `rgb(${mix(start.red, end.red)},${mix(start.green, end.green)},${mix(start.blue, end.blue)})`;
+  const mix = (one: number, other: number) =>
+    Math.round(one + (other - one) * share).toString(16).padStart(2, '0');
+  return '#' + mix(start.red, end.red) + mix(start.green, end.green) + mix(start.blue, end.blue);
 }
