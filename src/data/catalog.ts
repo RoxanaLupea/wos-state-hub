@@ -320,6 +320,11 @@ export interface RewardRow {
   // say so instead of pretending.
   source: string;
   sortOrder: number;
+  // The words on the left of the row the reward sits in: a rank, a points target, a
+  // stronghold. Rewards with the same words share a row.
+  rowLabel: string;
+  // A small line under those words (Crazy Joe: "Personal 3,000 · Alliance 300,000").
+  note: string;
 }
 
 const allRewards: RewardRow[] = (rewardRows as Record<string, unknown>[]).map(row => ({
@@ -332,7 +337,9 @@ const allRewards: RewardRow[] = (rewardRows as Record<string, unknown>[]).map(ro
   tile: String(row.tile ?? ''),
   quantity: Number(row.quantity ?? 0),
   source: String(row.source ?? ''),
-  sortOrder: Number(row.sortOrder ?? 0)
+  sortOrder: Number(row.sortOrder ?? 0),
+  rowLabel: text['reward.' + String(row.id) + '.rowLabel'] ?? '',
+  note: text['reward.' + String(row.id) + '.note'] ?? ''
 }));
 
 const rewardsByEvent = (() => {

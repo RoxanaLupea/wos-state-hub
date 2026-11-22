@@ -216,6 +216,137 @@ export interface RewardViewState {
   openBand: Map<string, string>;
 }
 
+// Rewards that share their left words (a rank, a points target, a stronghold) make one
+// row of tiles, with those words on the left and the first reward's note small under
+// them, each part of the note on its own line.
+function rewardLines(rows: RewardRow[]): string {
+  const order: string[] = [];
+  const byLabel = new Map<string, RewardRow[]>();
+  for (const row of rows) {
+    if (!byLabel.has(row.rowLabel)) { byLabel.set(row.rowLabel, []); order.push(row.rowLabel); }
+    byLabel.get(row.rowLabel)?.push(row);
+  }
+  return order.map(label => {
+    const inRow = byLabel.get(label) ?? [];
+    const note = inRow[0]?.note ?? '';
+    const noteHtml = note
+      ? note.split(' · ').map(part => `<small>${escapeForPage(part)}</small>`).join('') : '';
+    return `<div class="reward-row"><span class="reward-label">${escapeForPage(label)}${noteHtml}</span>` +
+      `<span class="reward-items">${inRow.map(rewardTile).join('')}</span></div>`;
+  }).join('');
+}
+
+// Rewards shown with their names under them: alliance decoration and prestige items,
+// which have no quantity to tell them apart.
+function namedTiles(rows: RewardRow[]): string {
+  return '<div class="merchant-grid glory-grid">' + rows.map(row =>
+    `<div class="merchant-offer">${rewardTile(row)}` +
+    `<span class="merchant-limit">${escapeForPage(itemName(row.itemId))}</span></div>`).join('') +
+    '</div>';
+}
+
+function sectionsOf(rows: RewardRow[]): string[] {
+  const sections: string[] = [];
+  for (const row of rows) if (!sections.includes(row.section)) sections.push(row.section);
+  return sections;
+}
+
+function sectionHeading(list: string, section: string): string {
+  const heading = rewardSectionName(list, section);
+  return heading ? `<div class="reward-sub">${escapeForPage(heading)}</div>` : '';
+}
+
+// What an event's shop is paid with.
+const SHOP_CURRENCIES: Record<string, string> = {
+  'winter-siege': 'winter-badge', 'flame-and-fang': 'crystallite-core',
+  'emporium-of-enigma': 'thorn-of-enigma'
+};
+
+// The list itself, laid out the way the game lays out that kind of list, as the old
+// app did.
+function rewardListHtml(list: string, band: string, bandCount: number, shown: RewardRow[],
+    eventTypeId: string): string {
+  if (list === 'glory') {
+    return sectionsOf(shown).map(section =>
+      sectionHeading(list, section) + namedTiles(shown.filter(row => row.section === section))).join('');
+  }
+  if (list === 'combatant') {
+    return ['win', 'lose', 'personal-win', 'personal-lose'].map(section => {
+      const inSection = shown.filter(row => row.section === section);
+      if (!inSection.length) return '';
+      return sectionHeading(list, section) + (section.startsWith('personal')
+        ? `<div class="range-lines">${rewardLines(inSection)}</div>`
+        : `<div class="reward-flat">${inSection.map(rewardTile).join('')}</div>`);
+    }).join('');
+  }
+  if (list === 'targets' || list === 'medals' || list === 'ko') {
+    // A row per points target, medal count, chapter, level or KO round.
+    const hasNotes = shown.some(row => row.note);
+    return (list === 'targets' && band && bandCount === 1
+      ? `<div class="reward-sub">${escapeForPage(band)}</div>` : '') +
+      `<div class="range-lines${hasNotes ? ' with-notes' : ''}">${rewardLines(shown)}</div>`;
+  }
+  if (list === 'group') {
+    // Alliance Championship: the tier, its Prestige Rewards with their names, then a row
+    // per group rank.
+    const prestige = shown.filter(row => row.section === 'prestige');
+    return (band && bandCount === 1 ? `<div class="reward-sub">${escapeForPage(band)}</div>` : '') +
+      (prestige.length ? '<div class="reward-sub">Prestige Rewards</div>' + namedTiles(prestige) : '') +
+      '<div class="reward-sub">Group Ranking</div><div class="range-lines with-notes">' +
+      rewardLines(shown.filter(row => row.section !== 'prestige')) + '</div>';
+  }
+  if (list === 'rates') {
+    // Lucky Wheel: a row per reward, its chance, then the item with its name.
+    return '<div class="rate-lines">' + shown.map(row =>
+      `<div class="reward-row"><span class="reward-label">${escapeForPage(row.rowLabel)}</span>` +
+      `<span class="reward-items">${rewardTile(row)}<span class="rate-name">` +
+      `${escapeForPage(itemName(row.itemId) + (row.quantity ? ' ×' + row.quantity : ''))}</span></span></div>`)
+      .join('') + '</div>';
+  }
+  if (list === 'ranking' || list === 'conquest') {
+    // Ranks of three digits ("101–150") get a wider column, so they stay on one line.
+    const hasWideLabels = shown.some(row => /\d{3}/.test(row.rowLabel));
+    const body = sectionsOf(shown).map(section =>
+      sectionHeading(list, section) + rewardLines(shown.filter(row => row.section === section))).join('');
+    return hasWideLabels ? `<div class="wide-labels">${body}</div>` : body;
+  }
+  if (list === 'star' || list === 'daily') {
+    return ['win', 'lose'].map(section => {
+      const inSection = shown.filter(row => row.section === section);
+      return inSection.length
+        ? sectionHeading(list, section) + `<div class="reward-flat">${inSection.map(rewardTile).join('')}</div>` : '';
+    }).join('');
+  }
+  if (list === 'tier') {
+    // Win Streak, Victory and Loss, each with how the tier changes.
+    return ['streak', 'win', 'lose'].map(section => {
+      const inSection = shown.filter(row => row.section === section);
+      if (!inSection.length) return '';
+      return `<div class="reward-row"><span class="reward-label">${escapeForPage(rewardSectionName(list, section))}` +
+        `<small>Tier ${escapeForPage(inSection[0].rowLabel.replace('-', '−'))}</small></span>` +
+        `<span class="reward-items">${inSection.map(rewardTile).join('')}</span></div>`;
+    }).join('');
+  }
+  if (list === 'merchant' || list === 'shop') {
+    // Each offer: the item, its price in the shop's currency and how many can be bought.
+    const currency = list === 'merchant' ? 'winter-badge' : SHOP_CURRENCIES[eventTypeId] ?? '';
+    const currencyFile = currency ? itemImageFile(currency) : '';
+    const currencyUrl = currencyFile ? imageUrl(currencyFile.replace(/\.png$/, '')) : '';
+    return '<div class="merchant-grid">' + shown.map(row =>
+      `<div class="merchant-offer">${rewardTile(row)}<span class="merchant-price">` +
+      (currencyUrl ? `<img src="${escapeForPage(currencyUrl)}" alt="${escapeForPage(itemName(currency))}">` : '') +
+      `${escapeForPage(row.rowLabel)}</span>` +
+      (row.note ? `<span class="merchant-limit">${escapeForPage(row.note)}</span>` : '') + '</div>').join('') +
+      '</div>';
+  }
+  // Any other list: a row per left words where the rewards have them, else one grid.
+  return sectionsOf(shown).map(section => {
+    const inSection = shown.filter(row => row.section === section);
+    return sectionHeading(list, section) + (inSection.some(row => row.rowLabel)
+      ? rewardLines(inSection) : `<div class="reward-flat">${inSection.map(rewardTile).join('')}</div>`);
+  }).join('');
+}
+
 function rewardsFold(eventTypeId: string, state: RewardViewState): string {
   const all = rewardsOf(eventTypeId);
   if (!all.length) return '';
@@ -234,9 +365,10 @@ function rewardsFold(eventTypeId: string, state: RewardViewState): string {
   const chosenBand = state.openBand.get(eventTypeId + '|' + list);
   const band = chosenBand && bands.includes(chosenBand) ? chosenBand : bands[0] ?? '';
   let shown = band ? rows.filter(row => row.band === band) : rows;
+  // A ladder (points targets, medal counts) runs from the smallest number in its left
+  // words, as in the game.
   if (NUMBERED_REWARD_LISTS.includes(list)) {
-    shown = shown.slice().sort((left, right) =>
-      firstNumberIn(itemName(left.itemId)) - firstNumberIn(itemName(right.itemId)));
+    shown = shown.slice().sort((left, right) => firstNumberIn(left.rowLabel) - firstNumberIn(right.rowLabel));
   }
 
   let html = '<details class="points-list rewards-fold" open><summary>Rewards</summary>';
@@ -266,24 +398,7 @@ function rewardsFold(eventTypeId: string, state: RewardViewState): string {
     html += `<p class="points-note reward-note">${escapeForPage(pointSourceTask(listNote.id))}</p>`;
   }
 
-  const sections: string[] = [];
-  for (const row of shown) if (!sections.includes(row.section)) sections.push(row.section);
-
-  html += sections.map(section => {
-    const inSection = shown.filter(row => row.section === section);
-    const heading = rewardSectionName(list, section);
-    const headingHtml = heading ? `<div class="reward-sub">${escapeForPage(heading)}</div>` : '';
-    // Champion's Glory is alliance decoration: each piece is shown with its name,
-    // because there is no quantity to tell them apart.
-    if (list === 'glory') {
-      return headingHtml + '<div class="merchant-grid glory-grid">' +
-        inSection.map(row =>
-          `<div class="merchant-offer">${rewardTile(row)}` +
-          `<span class="merchant-limit">${escapeForPage(itemName(row.itemId))}</span></div>`).join('') +
-        '</div>';
-    }
-    return headingHtml + `<div class="reward-flat">${inSection.map(rewardTile).join('')}</div>`;
-  }).join('');
+  html += rewardListHtml(list, band, bands.length, shown, eventTypeId);
 
   if (shown.some(row => row.source === 'guides')) {
     html += '<p class="reward-source">From guides, not checked in game yet.</p>';
