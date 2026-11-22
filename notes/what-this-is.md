@@ -66,6 +66,11 @@ decisions made over the design sessions, so none of it has to be said twice.
 - TypeScript.
 - The work is done bit by bit, fixing what needs fixing as it goes, rather than in
   one jump.
+- The build on GitHub uses TypeScript 5 with the "ES2022" and "DOM" libraries. Newer
+  TypeScript (the one in Claude's workspace) accepts code that TypeScript 5 rejects,
+  such as a for-of loop over a NodeList, so a clean check in the workspace does not
+  prove the build passes. Loop over Array.from(...) instead of a NodeList, and check
+  the GitHub build after every push.
 
 ## Still ahead
 
