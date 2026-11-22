@@ -207,7 +207,10 @@ there before discussing it again.
   tapping a bar, or anything on it such as a ticket, lights the whole event and
   opens its timeline, marked and scrolled to the current phase if it is running,
   otherwise to the phase tapped. Nothing closes the selection; it changes only when
-  another bar or a day is tapped. Still open: what Back does.
+  another bar or a day is tapped. A day and an event are separate: the panel shows the
+  day's timeline or the event's timeline, never one from the other. On a computer the
+  panel has no Back button. On a phone, Back closes the panel and shows the calendar,
+  whether a day or an event was open.
 - Everything in "Still to design" in rules-and-open-items.md.
 
 ## Data to check at the source
