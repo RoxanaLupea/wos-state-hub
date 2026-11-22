@@ -71,10 +71,15 @@ export function eventTypeInitials(id: string): string {
   return text['eventType.' + id + '.initials'] ?? '';
 }
 
-// A second name written quietly after the full one on a bar (State of Power SvS,
-// Brothers in Arms KE). Most events have none.
+// A second name written quietly after the full one on a bar. An event can have its own
+// (State of Power: SvS, Brothers in Arms: KE). Otherwise, for now, an event whose name
+// has two words or more uses its initials: King of Icefield KOI, Crazy Joe CJ.
 export function eventTypeTag(id: string): string {
-  return text['eventType.' + id + '.tag'] ?? '';
+  const own = text['eventType.' + id + '.tag'];
+  if (own) return own;
+  const words = eventTypeName(id).split(/\s+/).filter(word => /^[A-Za-z]/.test(word));
+  if (words.length < 2) return '';
+  return words.map(word => word[0].toUpperCase()).join('');
 }
 
 // Some events run more than once per alliance: two bear traps, two foundry legions.
