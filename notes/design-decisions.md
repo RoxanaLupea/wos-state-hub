@@ -233,9 +233,8 @@ there before discussing it again.
 - An open event's way back, its head and (later) its tabs stay at the top of the panel;
   only what is under them scrolls. Where there is more to scroll, the edge fades out
   instead of cutting the rows off.
-- The event open in the panel is lit on every one of its bars with a white outline and
-  a lighter fill; the text on a lit bar gets a darker, sharp shadow to the bottom right
-  (lit from the top left, like the logos) so it stays readable.
+- The event open in the panel is marked on every one of its bars. Its bars are not
+  lightened (that made their text hard to read). How it is marked is still open.
 - Everything in "Still to design" in rules-and-open-items.md.
 
 ## Data to check at the source
