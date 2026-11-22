@@ -6,5 +6,45 @@
     "allianceName": "Yeesh",
     "legion": 1,
     "rank": 2
+  },
+  {
+    "season": 6,
+    "zone": 22,
+    "allianceTag": "TOP",
+    "allianceName": "TOP",
+    "legion": 1,
+    "rank": 5
+  },
+  {
+    "season": 6,
+    "zone": 22,
+    "allianceTag": "DVL",
+    "allianceName": "DEVILEMPIRE",
+    "legion": 1,
+    "rank": 38
+  },
+  {
+    "season": 6,
+    "zone": 22,
+    "allianceTag": "SKY",
+    "allianceName": "LoveAndPeace",
+    "legion": 1,
+    "rank": 45
+  },
+  {
+    "season": 6,
+    "zone": 22,
+    "allianceTag": "TOP",
+    "allianceName": "TOP",
+    "legion": 2,
+    "rank": 48
+  },
+  {
+    "season": 6,
+    "zone": 22,
+    "allianceTag": "FUN",
+    "allianceName": "休閒動物園ღ",
+    "legion": 1,
+    "rank": 51
   }
 ]

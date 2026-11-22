@@ -112,6 +112,10 @@ there before discussing it again.
   admins. Otherwise each alliance records its own if it wants, through its R4 or R5.
 - TAL records, per match, everything in the match mail, as Foundry does, and per
   season the season, zone and final rank of each legion.
+- The season 6 League Leaderboard (zone 22) gave the ranks of the 1458 legions that
+  played: TOP Legion 1 5th, DVL 38th, SKY 45th, TOP Legion 2 48th and FUN 51st. They
+  are in seed/tal-results.json. A legion's TAL rank shows in its alliance's info and in
+  the state's info.
 - Tyrant records the alliance's rank with its points, and every player from 1458 who
   ranked in the top 100, with how long they held the capital.
 - Each alliance records its own result for alliance events: Foundry, Canyon, Showdown,
