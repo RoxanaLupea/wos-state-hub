@@ -212,3 +212,24 @@ Highest is 11 per troop type and 33 in total. Exalted is only possible on FC10.
 - The tyrant qualification bar, recorded after the next run.
 - Whether foundry alliance rewards survive leaving before Legion 1 ends.
 - What coordinates the game gives when you tap something on the map.
+
+## Pictures to add
+
+Item pictures the owner still has to get, for public/images/items/ (lowercase names).
+
+- speedup-healing.png: Healing Speedup (SvS Grants, Tyrant Commendation chests).
+- commendation-gold.png, commendation-blue.png, commendation-brown.png: the three
+  Commendation chests. SvS calls them General's, Officer's and Soldier's; Tyrant calls
+  them Marshal's, General's and Warrior's. Same pictures.
+- The grey chief gear chest with a "?" (Recall Road, Tyrant Exclusive Pack). Name not
+  confirmed.
+- The plain purple puzzle piece (Alliance Mobilization). Name not confirmed.
+- ninja-meow.png: Ninja Meow march skin (Recall Road level 25).
+- The Recall Road level 15 nameplate. Name not known.
+- frost-dragon.png: Frost Dragon march skin (Tyrant).
+- dragonis-dominion.png: Dragonis Dominion chief profile skin (Tyrant).
+- dragon-pagoda.png: Dragon Pagoda Lv. 1 (Tyrant).
+- serpent-sanctuary.png: Serpent Sanctuary Lv. 1 (Tyrant).
+- triumph-of-tyrant.png: Triumph of Tyrant, the gold trophy (Tyrant rank 1).
+- The silver trophy (Tyrant ranks 2 and 3) and the bronze trophy (ranks 4 to 10). Names
+  not known.
