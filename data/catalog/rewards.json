@@ -6265,124 +6265,1124 @@
     "sortOrder": 587
   },
   {
-    "id": "rw-koi-targets-stage-1-3-900-meat-10k",
+    "id": "rw-koi-targets-stage-1-6-700-meat-10k",
     "eventTypeId": "koi",
     "list": "targets",
     "band": "Stage 1",
     "itemId": "meat-10k",
     "tile": "blue",
-    "quantity": 35,
-    "sortOrder": 588
+    "quantity": 47,
+    "sortOrder": 1489
   },
   {
-    "id": "rw-koi-targets-stage-1-3-900-wood-10k",
+    "id": "rw-koi-targets-stage-1-6-700-wood-10k",
     "eventTypeId": "koi",
     "list": "targets",
     "band": "Stage 1",
     "itemId": "wood-10k",
     "tile": "blue",
-    "quantity": 35,
-    "sortOrder": 589
+    "quantity": 47,
+    "sortOrder": 1490
   },
   {
-    "id": "rw-koi-targets-stage-1-3-900-coal-10k",
+    "id": "rw-koi-targets-stage-1-6-700-coal-10k",
     "eventTypeId": "koi",
     "list": "targets",
     "band": "Stage 1",
     "itemId": "coal-10k",
     "tile": "blue",
-    "quantity": 7,
-    "sortOrder": 590
+    "quantity": 9,
+    "sortOrder": 1491
   },
   {
-    "id": "rw-koi-targets-stage-1-3-900-iron-10k",
+    "id": "rw-koi-targets-stage-1-6-700-iron-10k",
     "eventTypeId": "koi",
     "list": "targets",
     "band": "Stage 1",
     "itemId": "iron-10k",
     "tile": "blue",
-    "quantity": 1,
-    "sortOrder": 591
+    "quantity": 2,
+    "sortOrder": 1492
   },
   {
-    "id": "rw-koi-targets-stage-1-40-000-hero-xp-1k",
+    "id": "rw-koi-targets-stage-1-80-000-hero-xp-1k",
     "eventTypeId": "koi",
     "list": "targets",
     "band": "Stage 1",
     "itemId": "hero-xp-1k",
     "tile": "green",
-    "quantity": 50,
-    "sortOrder": 592
+    "quantity": 65,
+    "sortOrder": 1493
   },
   {
-    "id": "rw-koi-targets-stage-1-40-000-speedup-construction-5m",
+    "id": "rw-koi-targets-stage-1-80-000-speedup-construction-5m",
     "eventTypeId": "koi",
     "list": "targets",
     "band": "Stage 1",
     "itemId": "speedup-construction-5m",
     "tile": "green",
-    "quantity": 20,
-    "sortOrder": 593
+    "quantity": 25,
+    "sortOrder": 1494
   },
   {
-    "id": "rw-koi-targets-stage-1-40-000-speedup-research-5m",
+    "id": "rw-koi-targets-stage-1-80-000-speedup-research-5m",
     "eventTypeId": "koi",
     "list": "targets",
     "band": "Stage 1",
     "itemId": "speedup-research-5m",
     "tile": "green",
-    "quantity": 20,
-    "sortOrder": 594
+    "quantity": 25,
+    "sortOrder": 1495
   },
   {
-    "id": "rw-koi-targets-stage-1-40-000-speedup-training-5m",
+    "id": "rw-koi-targets-stage-1-80-000-speedup-training-5m",
     "eventTypeId": "koi",
     "list": "targets",
     "band": "Stage 1",
     "itemId": "speedup-training-5m",
     "tile": "green",
-    "quantity": 20,
-    "sortOrder": 595
+    "quantity": 25,
+    "sortOrder": 1496
   },
   {
-    "id": "rw-koi-targets-stage-1-110-000-gems",
+    "id": "rw-koi-targets-stage-1-186-000-gems",
     "eventTypeId": "koi",
     "list": "targets",
     "band": "Stage 1",
     "itemId": "gems",
     "tile": "orange",
-    "quantity": 3000,
-    "sortOrder": 596
+    "quantity": 4000,
+    "sortOrder": 1497
   },
   {
-    "id": "rw-koi-targets-stage-1-110-000-medal-of-honor",
+    "id": "rw-koi-targets-stage-1-186-000-medal-of-honor",
     "eventTypeId": "koi",
     "list": "targets",
     "band": "Stage 1",
     "itemId": "medal-of-honor",
     "tile": "purple",
     "quantity": 1,
-    "sortOrder": 597
+    "sortOrder": 1498
   },
   {
-    "id": "rw-koi-targets-stage-1-110-000-strength-in-unity",
+    "id": "rw-koi-targets-stage-1-186-000-strength-in-unity",
     "eventTypeId": "koi",
     "list": "targets",
     "band": "Stage 1",
     "itemId": "strength-in-unity",
     "tile": "purple",
     "quantity": 1,
-    "sortOrder": 598
+    "sortOrder": 1499
   },
   {
-    "id": "rw-koi-targets-stage-1-110-000-custom-secured-resource-chest-1",
+    "id": "rw-koi-targets-stage-1-186-000-custom-secured-resource-chest-1",
     "eventTypeId": "koi",
     "list": "targets",
     "band": "Stage 1",
     "itemId": "custom-secured-resource-chest-1",
     "tile": "green",
+    "quantity": 450,
+    "sortOrder": 1500
+  },
+  {
+    "id": "rw-koi-targets-stage-1-333-000-fire-crystal",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 1",
+    "itemId": "fire-crystal",
+    "tile": "orange",
+    "quantity": 18,
+    "sortOrder": 1501
+  },
+  {
+    "id": "rw-koi-targets-stage-1-333-000-medal-of-honor",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 1",
+    "itemId": "medal-of-honor",
+    "tile": "purple",
+    "quantity": 1,
+    "sortOrder": 1502
+  },
+  {
+    "id": "rw-koi-targets-stage-1-333-000-shot-token",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 1",
+    "itemId": "shot-token",
+    "tile": "orange",
+    "quantity": 1,
+    "sortOrder": 1503
+  },
+  {
+    "id": "rw-koi-targets-stage-1-333-000-custom-secured-resource-chest-1",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 1",
+    "itemId": "custom-secured-resource-chest-1",
+    "tile": "green",
+    "quantity": 450,
+    "sortOrder": 1504
+  },
+  {
+    "id": "rw-koi-targets-stage-2-5-800-meat-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 2",
+    "itemId": "meat-10k",
+    "tile": "blue",
+    "quantity": 45,
+    "sortOrder": 1505
+  },
+  {
+    "id": "rw-koi-targets-stage-2-5-800-wood-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 2",
+    "itemId": "wood-10k",
+    "tile": "blue",
+    "quantity": 45,
+    "sortOrder": 1506
+  },
+  {
+    "id": "rw-koi-targets-stage-2-5-800-coal-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 2",
+    "itemId": "coal-10k",
+    "tile": "blue",
+    "quantity": 9,
+    "sortOrder": 1507
+  },
+  {
+    "id": "rw-koi-targets-stage-2-5-800-iron-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 2",
+    "itemId": "iron-10k",
+    "tile": "blue",
+    "quantity": 2,
+    "sortOrder": 1508
+  },
+  {
+    "id": "rw-koi-targets-stage-2-70-000-hero-xp-1k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 2",
+    "itemId": "hero-xp-1k",
+    "tile": "green",
+    "quantity": 65,
+    "sortOrder": 1509
+  },
+  {
+    "id": "rw-koi-targets-stage-2-70-000-speedup-construction-5m",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 2",
+    "itemId": "speedup-construction-5m",
+    "tile": "green",
+    "quantity": 25,
+    "sortOrder": 1510
+  },
+  {
+    "id": "rw-koi-targets-stage-2-70-000-speedup-research-5m",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 2",
+    "itemId": "speedup-research-5m",
+    "tile": "green",
+    "quantity": 25,
+    "sortOrder": 1511
+  },
+  {
+    "id": "rw-koi-targets-stage-2-70-000-speedup-training-5m",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 2",
+    "itemId": "speedup-training-5m",
+    "tile": "green",
+    "quantity": 25,
+    "sortOrder": 1512
+  },
+  {
+    "id": "rw-koi-targets-stage-2-161-000-gems",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 2",
+    "itemId": "gems",
+    "tile": "orange",
+    "quantity": 4000,
+    "sortOrder": 1513
+  },
+  {
+    "id": "rw-koi-targets-stage-2-161-000-medal-of-honor",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 2",
+    "itemId": "medal-of-honor",
+    "tile": "purple",
+    "quantity": 1,
+    "sortOrder": 1514
+  },
+  {
+    "id": "rw-koi-targets-stage-2-161-000-strength-in-unity",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 2",
+    "itemId": "strength-in-unity",
+    "tile": "purple",
+    "quantity": 1,
+    "sortOrder": 1515
+  },
+  {
+    "id": "rw-koi-targets-stage-2-161-000-custom-secured-resource-chest-1",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 2",
+    "itemId": "custom-secured-resource-chest-1",
+    "tile": "green",
+    "quantity": 450,
+    "sortOrder": 1516
+  },
+  {
+    "id": "rw-koi-targets-stage-2-312-000-essence-stones",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 2",
+    "itemId": "essence-stones",
+    "tile": "orange",
+    "quantity": 10,
+    "sortOrder": 1517
+  },
+  {
+    "id": "rw-koi-targets-stage-2-312-000-medal-of-honor",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 2",
+    "itemId": "medal-of-honor",
+    "tile": "purple",
+    "quantity": 1,
+    "sortOrder": 1518
+  },
+  {
+    "id": "rw-koi-targets-stage-2-312-000-shot-token",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 2",
+    "itemId": "shot-token",
+    "tile": "orange",
+    "quantity": 1,
+    "sortOrder": 1519
+  },
+  {
+    "id": "rw-koi-targets-stage-2-312-000-custom-secured-resource-chest-1",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 2",
+    "itemId": "custom-secured-resource-chest-1",
+    "tile": "green",
+    "quantity": 450,
+    "sortOrder": 1520
+  },
+  {
+    "id": "rw-koi-targets-stage-3-14-000-meat-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 3",
+    "itemId": "meat-10k",
+    "tile": "blue",
+    "quantity": 35,
+    "sortOrder": 1521
+  },
+  {
+    "id": "rw-koi-targets-stage-3-14-000-wood-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 3",
+    "itemId": "wood-10k",
+    "tile": "blue",
+    "quantity": 35,
+    "sortOrder": 1522
+  },
+  {
+    "id": "rw-koi-targets-stage-3-14-000-coal-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 3",
+    "itemId": "coal-10k",
+    "tile": "blue",
+    "quantity": 5,
+    "sortOrder": 1523
+  },
+  {
+    "id": "rw-koi-targets-stage-3-14-000-iron-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 3",
+    "itemId": "iron-10k",
+    "tile": "blue",
+    "quantity": 1,
+    "sortOrder": 1524
+  },
+  {
+    "id": "rw-koi-targets-stage-3-105-000-hero-xp-1k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 3",
+    "itemId": "hero-xp-1k",
+    "tile": "green",
+    "quantity": 65,
+    "sortOrder": 1525
+  },
+  {
+    "id": "rw-koi-targets-stage-3-105-000-speedup-construction-5m",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 3",
+    "itemId": "speedup-construction-5m",
+    "tile": "green",
+    "quantity": 26,
+    "sortOrder": 1526
+  },
+  {
+    "id": "rw-koi-targets-stage-3-105-000-speedup-research-5m",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 3",
+    "itemId": "speedup-research-5m",
+    "tile": "green",
+    "quantity": 26,
+    "sortOrder": 1527
+  },
+  {
+    "id": "rw-koi-targets-stage-3-105-000-speedup-training-5m",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 3",
+    "itemId": "speedup-training-5m",
+    "tile": "green",
+    "quantity": 26,
+    "sortOrder": 1528
+  },
+  {
+    "id": "rw-koi-targets-stage-3-210-000-gems",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 3",
+    "itemId": "gems",
+    "tile": "orange",
+    "quantity": 3900,
+    "sortOrder": 1529
+  },
+  {
+    "id": "rw-koi-targets-stage-3-210-000-medal-of-honor",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 3",
+    "itemId": "medal-of-honor",
+    "tile": "purple",
+    "quantity": 1,
+    "sortOrder": 1530
+  },
+  {
+    "id": "rw-koi-targets-stage-3-210-000-strength-in-unity",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 3",
+    "itemId": "strength-in-unity",
+    "tile": "purple",
+    "quantity": 1,
+    "sortOrder": 1531
+  },
+  {
+    "id": "rw-koi-targets-stage-3-210-000-custom-secured-resource-chest-1",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 3",
+    "itemId": "custom-secured-resource-chest-1",
+    "tile": "green",
     "quantity": 350,
-    "sortOrder": 599
+    "sortOrder": 1532
+  },
+  {
+    "id": "rw-koi-targets-stage-3-362-000-charm-design",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 3",
+    "itemId": "charm-design",
+    "tile": "orange",
+    "quantity": 13,
+    "sortOrder": 1533
+  },
+  {
+    "id": "rw-koi-targets-stage-3-362-000-medal-of-honor",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 3",
+    "itemId": "medal-of-honor",
+    "tile": "purple",
+    "quantity": 1,
+    "sortOrder": 1534
+  },
+  {
+    "id": "rw-koi-targets-stage-3-362-000-shot-token",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 3",
+    "itemId": "shot-token",
+    "tile": "orange",
+    "quantity": 1,
+    "sortOrder": 1535
+  },
+  {
+    "id": "rw-koi-targets-stage-3-362-000-custom-secured-resource-chest-1",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 3",
+    "itemId": "custom-secured-resource-chest-1",
+    "tile": "green",
+    "quantity": 350,
+    "sortOrder": 1536
+  },
+  {
+    "id": "rw-koi-targets-stage-4-12-000-meat-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 4",
+    "itemId": "meat-10k",
+    "tile": "blue",
+    "quantity": 50,
+    "sortOrder": 1537
+  },
+  {
+    "id": "rw-koi-targets-stage-4-12-000-wood-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 4",
+    "itemId": "wood-10k",
+    "tile": "blue",
+    "quantity": 50,
+    "sortOrder": 1538
+  },
+  {
+    "id": "rw-koi-targets-stage-4-12-000-coal-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 4",
+    "itemId": "coal-10k",
+    "tile": "blue",
+    "quantity": 10,
+    "sortOrder": 1539
+  },
+  {
+    "id": "rw-koi-targets-stage-4-12-000-iron-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 4",
+    "itemId": "iron-10k",
+    "tile": "blue",
+    "quantity": 2,
+    "sortOrder": 1540
+  },
+  {
+    "id": "rw-koi-targets-stage-4-90-000-hero-xp-1k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 4",
+    "itemId": "hero-xp-1k",
+    "tile": "green",
+    "quantity": 75,
+    "sortOrder": 1541
+  },
+  {
+    "id": "rw-koi-targets-stage-4-90-000-speedup-construction-5m",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 4",
+    "itemId": "speedup-construction-5m",
+    "tile": "green",
+    "quantity": 30,
+    "sortOrder": 1542
+  },
+  {
+    "id": "rw-koi-targets-stage-4-90-000-speedup-research-5m",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 4",
+    "itemId": "speedup-research-5m",
+    "tile": "green",
+    "quantity": 30,
+    "sortOrder": 1543
+  },
+  {
+    "id": "rw-koi-targets-stage-4-90-000-speedup-training-5m",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 4",
+    "itemId": "speedup-training-5m",
+    "tile": "green",
+    "quantity": 30,
+    "sortOrder": 1544
+  },
+  {
+    "id": "rw-koi-targets-stage-4-140-000-gems",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 4",
+    "itemId": "gems",
+    "tile": "orange",
+    "quantity": 3900,
+    "sortOrder": 1545
+  },
+  {
+    "id": "rw-koi-targets-stage-4-140-000-medal-of-honor",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 4",
+    "itemId": "medal-of-honor",
+    "tile": "purple",
+    "quantity": 1,
+    "sortOrder": 1546
+  },
+  {
+    "id": "rw-koi-targets-stage-4-140-000-strength-in-unity",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 4",
+    "itemId": "strength-in-unity",
+    "tile": "purple",
+    "quantity": 1,
+    "sortOrder": 1547
+  },
+  {
+    "id": "rw-koi-targets-stage-4-140-000-custom-secured-resource-chest-1",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 4",
+    "itemId": "custom-secured-resource-chest-1",
+    "tile": "green",
+    "quantity": 500,
+    "sortOrder": 1548
+  },
+  {
+    "id": "rw-koi-targets-stage-4-250-000-charm-guide",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 4",
+    "itemId": "charm-guide",
+    "tile": "orange",
+    "quantity": 15,
+    "sortOrder": 1549
+  },
+  {
+    "id": "rw-koi-targets-stage-4-250-000-medal-of-honor",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 4",
+    "itemId": "medal-of-honor",
+    "tile": "purple",
+    "quantity": 1,
+    "sortOrder": 1550
+  },
+  {
+    "id": "rw-koi-targets-stage-4-250-000-shot-token",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 4",
+    "itemId": "shot-token",
+    "tile": "orange",
+    "quantity": 1,
+    "sortOrder": 1551
+  },
+  {
+    "id": "rw-koi-targets-stage-4-250-000-custom-secured-resource-chest-1",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 4",
+    "itemId": "custom-secured-resource-chest-1",
+    "tile": "green",
+    "quantity": 500,
+    "sortOrder": 1552
+  },
+  {
+    "id": "rw-koi-targets-stage-5-5-800-meat-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 5",
+    "itemId": "meat-10k",
+    "tile": "blue",
+    "quantity": 45,
+    "sortOrder": 1553
+  },
+  {
+    "id": "rw-koi-targets-stage-5-5-800-wood-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 5",
+    "itemId": "wood-10k",
+    "tile": "blue",
+    "quantity": 45,
+    "sortOrder": 1554
+  },
+  {
+    "id": "rw-koi-targets-stage-5-5-800-coal-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 5",
+    "itemId": "coal-10k",
+    "tile": "blue",
+    "quantity": 9,
+    "sortOrder": 1555
+  },
+  {
+    "id": "rw-koi-targets-stage-5-5-800-iron-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 5",
+    "itemId": "iron-10k",
+    "tile": "blue",
+    "quantity": 2,
+    "sortOrder": 1556
+  },
+  {
+    "id": "rw-koi-targets-stage-5-69-000-hero-xp-1k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 5",
+    "itemId": "hero-xp-1k",
+    "tile": "green",
+    "quantity": 70,
+    "sortOrder": 1557
+  },
+  {
+    "id": "rw-koi-targets-stage-5-69-000-speedup-construction-5m",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 5",
+    "itemId": "speedup-construction-5m",
+    "tile": "green",
+    "quantity": 30,
+    "sortOrder": 1558
+  },
+  {
+    "id": "rw-koi-targets-stage-5-69-000-speedup-research-5m",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 5",
+    "itemId": "speedup-research-5m",
+    "tile": "green",
+    "quantity": 30,
+    "sortOrder": 1559
+  },
+  {
+    "id": "rw-koi-targets-stage-5-69-000-speedup-training-5m",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 5",
+    "itemId": "speedup-training-5m",
+    "tile": "green",
+    "quantity": 30,
+    "sortOrder": 1560
+  },
+  {
+    "id": "rw-koi-targets-stage-5-161-000-gems",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 5",
+    "itemId": "gems",
+    "tile": "orange",
+    "quantity": 4000,
+    "sortOrder": 1561
+  },
+  {
+    "id": "rw-koi-targets-stage-5-161-000-medal-of-honor",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 5",
+    "itemId": "medal-of-honor",
+    "tile": "purple",
+    "quantity": 1,
+    "sortOrder": 1562
+  },
+  {
+    "id": "rw-koi-targets-stage-5-161-000-strength-in-unity",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 5",
+    "itemId": "strength-in-unity",
+    "tile": "purple",
+    "quantity": 1,
+    "sortOrder": 1563
+  },
+  {
+    "id": "rw-koi-targets-stage-5-161-000-custom-secured-resource-chest-1",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 5",
+    "itemId": "custom-secured-resource-chest-1",
+    "tile": "green",
+    "quantity": 450,
+    "sortOrder": 1564
+  },
+  {
+    "id": "rw-koi-targets-stage-5-289-000-fire-crystal",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 5",
+    "itemId": "fire-crystal",
+    "tile": "orange",
+    "quantity": 18,
+    "sortOrder": 1565
+  },
+  {
+    "id": "rw-koi-targets-stage-5-289-000-medal-of-honor",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 5",
+    "itemId": "medal-of-honor",
+    "tile": "purple",
+    "quantity": 1,
+    "sortOrder": 1566
+  },
+  {
+    "id": "rw-koi-targets-stage-5-289-000-shot-token",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 5",
+    "itemId": "shot-token",
+    "tile": "orange",
+    "quantity": 1,
+    "sortOrder": 1567
+  },
+  {
+    "id": "rw-koi-targets-stage-5-289-000-custom-secured-resource-chest-1",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 5",
+    "itemId": "custom-secured-resource-chest-1",
+    "tile": "green",
+    "quantity": 450,
+    "sortOrder": 1568
+  },
+  {
+    "id": "rw-koi-targets-stage-6-12-000-meat-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 6",
+    "itemId": "meat-10k",
+    "tile": "blue",
+    "quantity": 35,
+    "sortOrder": 1569
+  },
+  {
+    "id": "rw-koi-targets-stage-6-12-000-wood-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 6",
+    "itemId": "wood-10k",
+    "tile": "blue",
+    "quantity": 35,
+    "sortOrder": 1570
+  },
+  {
+    "id": "rw-koi-targets-stage-6-12-000-coal-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 6",
+    "itemId": "coal-10k",
+    "tile": "blue",
+    "quantity": 5,
+    "sortOrder": 1571
+  },
+  {
+    "id": "rw-koi-targets-stage-6-12-000-iron-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 6",
+    "itemId": "iron-10k",
+    "tile": "blue",
+    "quantity": 1,
+    "sortOrder": 1572
+  },
+  {
+    "id": "rw-koi-targets-stage-6-106-000-hero-xp-1k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 6",
+    "itemId": "hero-xp-1k",
+    "tile": "green",
+    "quantity": 50,
+    "sortOrder": 1573
+  },
+  {
+    "id": "rw-koi-targets-stage-6-106-000-speedup-construction-5m",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 6",
+    "itemId": "speedup-construction-5m",
+    "tile": "green",
+    "quantity": 30,
+    "sortOrder": 1574
+  },
+  {
+    "id": "rw-koi-targets-stage-6-106-000-speedup-research-5m",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 6",
+    "itemId": "speedup-research-5m",
+    "tile": "green",
+    "quantity": 30,
+    "sortOrder": 1575
+  },
+  {
+    "id": "rw-koi-targets-stage-6-106-000-speedup-training-5m",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 6",
+    "itemId": "speedup-training-5m",
+    "tile": "green",
+    "quantity": 30,
+    "sortOrder": 1576
+  },
+  {
+    "id": "rw-koi-targets-stage-6-212-000-gems",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 6",
+    "itemId": "gems",
+    "tile": "orange",
+    "quantity": 3400,
+    "sortOrder": 1577
+  },
+  {
+    "id": "rw-koi-targets-stage-6-212-000-medal-of-honor",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 6",
+    "itemId": "medal-of-honor",
+    "tile": "purple",
+    "quantity": 1,
+    "sortOrder": 1578
+  },
+  {
+    "id": "rw-koi-targets-stage-6-212-000-strength-in-unity",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 6",
+    "itemId": "strength-in-unity",
+    "tile": "purple",
+    "quantity": 1,
+    "sortOrder": 1579
+  },
+  {
+    "id": "rw-koi-targets-stage-6-212-000-custom-secured-resource-chest-1",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 6",
+    "itemId": "custom-secured-resource-chest-1",
+    "tile": "green",
+    "quantity": 350,
+    "sortOrder": 1580
+  },
+  {
+    "id": "rw-koi-targets-stage-6-380-000-design-plans",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 6",
+    "itemId": "design-plans",
+    "tile": "orange",
+    "quantity": 20,
+    "sortOrder": 1581
+  },
+  {
+    "id": "rw-koi-targets-stage-6-380-000-medal-of-honor",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 6",
+    "itemId": "medal-of-honor",
+    "tile": "purple",
+    "quantity": 1,
+    "sortOrder": 1582
+  },
+  {
+    "id": "rw-koi-targets-stage-6-380-000-shot-token",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 6",
+    "itemId": "shot-token",
+    "tile": "orange",
+    "quantity": 1,
+    "sortOrder": 1583
+  },
+  {
+    "id": "rw-koi-targets-stage-6-380-000-custom-secured-resource-chest-1",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 6",
+    "itemId": "custom-secured-resource-chest-1",
+    "tile": "green",
+    "quantity": 350,
+    "sortOrder": 1584
+  },
+  {
+    "id": "rw-koi-targets-stage-7-9-400-meat-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 7",
+    "itemId": "meat-10k",
+    "tile": "blue",
+    "quantity": 40,
+    "sortOrder": 1585
+  },
+  {
+    "id": "rw-koi-targets-stage-7-9-400-wood-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 7",
+    "itemId": "wood-10k",
+    "tile": "blue",
+    "quantity": 40,
+    "sortOrder": 1586
+  },
+  {
+    "id": "rw-koi-targets-stage-7-9-400-coal-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 7",
+    "itemId": "coal-10k",
+    "tile": "blue",
+    "quantity": 7,
+    "sortOrder": 1587
+  },
+  {
+    "id": "rw-koi-targets-stage-7-9-400-iron-10k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 7",
+    "itemId": "iron-10k",
+    "tile": "blue",
+    "quantity": 1,
+    "sortOrder": 1588
+  },
+  {
+    "id": "rw-koi-targets-stage-7-84-000-hero-xp-1k",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 7",
+    "itemId": "hero-xp-1k",
+    "tile": "green",
+    "quantity": 60,
+    "sortOrder": 1589
+  },
+  {
+    "id": "rw-koi-targets-stage-7-84-000-speedup-construction-5m",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 7",
+    "itemId": "speedup-construction-5m",
+    "tile": "green",
+    "quantity": 25,
+    "sortOrder": 1590
+  },
+  {
+    "id": "rw-koi-targets-stage-7-84-000-speedup-research-5m",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 7",
+    "itemId": "speedup-research-5m",
+    "tile": "green",
+    "quantity": 25,
+    "sortOrder": 1591
+  },
+  {
+    "id": "rw-koi-targets-stage-7-84-000-speedup-training-5m",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 7",
+    "itemId": "speedup-training-5m",
+    "tile": "green",
+    "quantity": 25,
+    "sortOrder": 1592
+  },
+  {
+    "id": "rw-koi-targets-stage-7-180-000-gems",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 7",
+    "itemId": "gems",
+    "tile": "orange",
+    "quantity": 3200,
+    "sortOrder": 1593
+  },
+  {
+    "id": "rw-koi-targets-stage-7-180-000-medal-of-honor",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 7",
+    "itemId": "medal-of-honor",
+    "tile": "purple",
+    "quantity": 1,
+    "sortOrder": 1594
+  },
+  {
+    "id": "rw-koi-targets-stage-7-180-000-strength-in-unity",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 7",
+    "itemId": "strength-in-unity",
+    "tile": "purple",
+    "quantity": 1,
+    "sortOrder": 1595
+  },
+  {
+    "id": "rw-koi-targets-stage-7-180-000-custom-secured-resource-chest-1",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 7",
+    "itemId": "custom-secured-resource-chest-1",
+    "tile": "green",
+    "quantity": 400,
+    "sortOrder": 1596
+  },
+  {
+    "id": "rw-koi-targets-stage-7-345-000-mythic-general-hero-shard",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 7",
+    "itemId": "mythic-general-hero-shard",
+    "tile": "orange",
+    "quantity": 3,
+    "sortOrder": 1597
+  },
+  {
+    "id": "rw-koi-targets-stage-7-345-000-medal-of-honor",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 7",
+    "itemId": "medal-of-honor",
+    "tile": "purple",
+    "quantity": 1,
+    "sortOrder": 1598
+  },
+  {
+    "id": "rw-koi-targets-stage-7-345-000-shot-token",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 7",
+    "itemId": "shot-token",
+    "tile": "orange",
+    "quantity": 1,
+    "sortOrder": 1599
+  },
+  {
+    "id": "rw-koi-targets-stage-7-345-000-custom-secured-resource-chest-1",
+    "eventTypeId": "koi",
+    "list": "targets",
+    "band": "Stage 7",
+    "itemId": "custom-secured-resource-chest-1",
+    "tile": "green",
+    "quantity": 400,
+    "sortOrder": 1600
   },
   {
     "id": "rw-koi-medals-own-10-general-accessory-construction-contract",
@@ -9058,166 +10058,6 @@
     "tile": "green",
     "quantity": 10,
     "sortOrder": 857
-  },
-  {
-    "id": "rw-koi-targets-stage-2-5-800-meat-10k",
-    "eventTypeId": "koi",
-    "list": "targets",
-    "band": "Stage 2",
-    "itemId": "meat-10k",
-    "tile": "blue",
-    "quantity": 45,
-    "sortOrder": 858
-  },
-  {
-    "id": "rw-koi-targets-stage-2-5-800-wood-10k",
-    "eventTypeId": "koi",
-    "list": "targets",
-    "band": "Stage 2",
-    "itemId": "wood-10k",
-    "tile": "blue",
-    "quantity": 45,
-    "sortOrder": 859
-  },
-  {
-    "id": "rw-koi-targets-stage-2-5-800-coal-10k",
-    "eventTypeId": "koi",
-    "list": "targets",
-    "band": "Stage 2",
-    "itemId": "coal-10k",
-    "tile": "blue",
-    "quantity": 9,
-    "sortOrder": 860
-  },
-  {
-    "id": "rw-koi-targets-stage-2-5-800-iron-10k",
-    "eventTypeId": "koi",
-    "list": "targets",
-    "band": "Stage 2",
-    "itemId": "iron-10k",
-    "tile": "blue",
-    "quantity": 2,
-    "sortOrder": 861
-  },
-  {
-    "id": "rw-koi-targets-stage-2-70-000-hero-xp-1k",
-    "eventTypeId": "koi",
-    "list": "targets",
-    "band": "Stage 2",
-    "itemId": "hero-xp-1k",
-    "tile": "green",
-    "quantity": 65,
-    "sortOrder": 862
-  },
-  {
-    "id": "rw-koi-targets-stage-2-70-000-speedup-construction-5m",
-    "eventTypeId": "koi",
-    "list": "targets",
-    "band": "Stage 2",
-    "itemId": "speedup-construction-5m",
-    "tile": "green",
-    "quantity": 25,
-    "sortOrder": 863
-  },
-  {
-    "id": "rw-koi-targets-stage-2-70-000-speedup-research-5m",
-    "eventTypeId": "koi",
-    "list": "targets",
-    "band": "Stage 2",
-    "itemId": "speedup-research-5m",
-    "tile": "green",
-    "quantity": 25,
-    "sortOrder": 864
-  },
-  {
-    "id": "rw-koi-targets-stage-2-70-000-speedup-training-5m",
-    "eventTypeId": "koi",
-    "list": "targets",
-    "band": "Stage 2",
-    "itemId": "speedup-training-5m",
-    "tile": "green",
-    "quantity": 25,
-    "sortOrder": 865
-  },
-  {
-    "id": "rw-koi-targets-stage-2-161-000-gems",
-    "eventTypeId": "koi",
-    "list": "targets",
-    "band": "Stage 2",
-    "itemId": "gems",
-    "tile": "orange",
-    "quantity": 4000,
-    "sortOrder": 866
-  },
-  {
-    "id": "rw-koi-targets-stage-2-161-000-medal-of-honor",
-    "eventTypeId": "koi",
-    "list": "targets",
-    "band": "Stage 2",
-    "itemId": "medal-of-honor",
-    "tile": "purple",
-    "quantity": 1,
-    "sortOrder": 867
-  },
-  {
-    "id": "rw-koi-targets-stage-2-161-000-strength-in-unity",
-    "eventTypeId": "koi",
-    "list": "targets",
-    "band": "Stage 2",
-    "itemId": "strength-in-unity",
-    "tile": "purple",
-    "quantity": 1,
-    "sortOrder": 868
-  },
-  {
-    "id": "rw-koi-targets-stage-2-161-000-custom-secured-resource-chest-1",
-    "eventTypeId": "koi",
-    "list": "targets",
-    "band": "Stage 2",
-    "itemId": "custom-secured-resource-chest-1",
-    "tile": "green",
-    "quantity": 450,
-    "sortOrder": 869
-  },
-  {
-    "id": "rw-koi-targets-stage-2-312-000-essence-stones",
-    "eventTypeId": "koi",
-    "list": "targets",
-    "band": "Stage 2",
-    "itemId": "essence-stones",
-    "tile": "orange",
-    "quantity": 15,
-    "sortOrder": 870
-  },
-  {
-    "id": "rw-koi-targets-stage-2-312-000-medal-of-honor",
-    "eventTypeId": "koi",
-    "list": "targets",
-    "band": "Stage 2",
-    "itemId": "medal-of-honor",
-    "tile": "purple",
-    "quantity": 1,
-    "sortOrder": 871
-  },
-  {
-    "id": "rw-koi-targets-stage-2-312-000-shot-token",
-    "eventTypeId": "koi",
-    "list": "targets",
-    "band": "Stage 2",
-    "itemId": "shot-token",
-    "tile": "orange",
-    "quantity": 1,
-    "sortOrder": 872
-  },
-  {
-    "id": "rw-koi-targets-stage-2-312-000-custom-secured-resource-chest-1",
-    "eventTypeId": "koi",
-    "list": "targets",
-    "band": "Stage 2",
-    "itemId": "custom-secured-resource-chest-1",
-    "tile": "green",
-    "quantity": 450,
-    "sortOrder": 873
   },
   {
     "id": "rw-koi-medals-own-2-lloyd-shards",
