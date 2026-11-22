@@ -1578,10 +1578,13 @@ async function saveWorkingForm(
       }
     }
     await deleteRow('result_details', 'result_id', saved.id);
-    for (const [name, value] of Array.from(values.entries())) {
-      if (name.startsWith('detail_') && String(value).trim()) {
-        await saveRow('result_details', { result_id: saved.id, detail_key: name.slice(7), detail_value: String(value).trim() });
-      }
+    // The site's build knows FormData's forEach, not its entries.
+    const details: [string, string][] = [];
+    values.forEach((value, name) => {
+      if (name.startsWith('detail_') && String(value).trim()) details.push([name.slice(7), String(value).trim()]);
+    });
+    for (const [detailKey, detailValue] of details) {
+      await saveRow('result_details', { result_id: saved.id, detail_key: detailKey, detail_value: detailValue });
     }
     await deleteRow('result_opponents', 'result_id', saved.id);
     for (const [slot, suffix] of [[1, ''], [2, '_2'], [3, '_3'], [4, '_4'], [5, '_5']] as [number, string][]) {
