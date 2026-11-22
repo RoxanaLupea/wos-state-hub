@@ -182,6 +182,10 @@ Highest is 11 per troop type and 33 in total. Exalted is only possible on FC10.
   unknown: how many points each tier needs, and whether an alliance can drop a tier.
   Guides do not give it (searched 20 Nov 2026).
 
+- King of Icefield point targets for Stages 3 to 7. The sheet and the catalog only
+  have Stage 1 (3,900, 40,000 and 110,000 points) and Stage 2 (5,800, 70,000,
+  161,000 and 312,000 points).
+
 - How long before bear and foundry someone must be in the alliance, and when they can
   leave, as catalog values.
 - The tyrant qualification bar, recorded after the next run.

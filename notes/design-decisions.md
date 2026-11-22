@@ -68,6 +68,15 @@ there before discussing it again.
 - Where there is not enough to fill the height, the space is not left empty to
   scroll through.
 
+### King of Icefield
+- Its bar shows its seven named days on line 2 on a computer, like SvS preparation
+  and Alliance Showdown. Its days repeat names (Basic Skills Up, Combat Training,
+  Hero Development), so the rule that drops repeated day names (meant for Wild Brawl,
+  where every day carries the same note) must not apply to it.
+- On a phone its days show the same way as SvS preparation's and Alliance Showdown's.
+  How those show on a phone is still open (short day names where the full ones do
+  not fit).
+
 ### Controls
 - Page controls and card controls are two different languages. What a card shows
   belongs to the card's design and is settled with it.
