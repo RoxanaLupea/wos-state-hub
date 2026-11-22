@@ -210,7 +210,8 @@ there before discussing it again.
   another bar or a day is tapped. A day and an event are separate: the panel shows the
   day's timeline or the event's timeline, never one from the other. On a computer the
   panel has no Back button. On a phone, Back closes the panel and shows the calendar,
-  whether a day or an event was open.
+  whether a day or an event was open. The one exception: an event opened from a day's
+  timeline gets a discreet back, to that day, on a computer and on a phone.
 - Everything in "Still to design" in rules-and-open-items.md.
 
 ## Data to check at the source
