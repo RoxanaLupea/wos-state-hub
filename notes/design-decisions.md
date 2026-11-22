@@ -238,7 +238,8 @@ there before discussing it again.
 - On the SvS bar, Castle Battle showing as its logo instead of its name is fine on a
   computer too: it sits under BATTLE, so the logo says as much as the word.
 - An event's short name after its name (SvS, TAL) is in Montserrat, smaller, in spaced
-  capitals. Deals have no short name, and neither do Foundry Battle and Fortress
+  capitals. Deals have no short name (Frosty Fortune, with Treasure Hunt Drill and
+  Emporium of Enigma, is a Deal), and neither do Foundry Battle and Fortress
   Battles. Flame and Fangs is F&F, Frostfire Mine is FF.
 - Everything in "Still to design" in rules-and-open-items.md.
 

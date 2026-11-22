@@ -315,7 +315,7 @@
   },
   {
     "id": "frosty-fortune",
-    "category": "personal",
+    "category": "deals",
     "color": "#5A7EC0",
     "colorEnd": "#3E5A98",
     "icon": "gift",
@@ -324,7 +324,7 @@
   },
   {
     "id": "treasure-hunt-drill",
-    "category": "personal",
+    "category": "deals",
     "color": "#E6C25A",
     "icon": "star",
     "imageFile": "items/trsure-hunt-points",
@@ -333,7 +333,7 @@
   },
   {
     "id": "emporium-of-enigma",
-    "category": "personal",
+    "category": "deals",
     "color": "#E07AB0",
     "icon": "gift",
     "imageFile": "items/thorn-of-enigma",
