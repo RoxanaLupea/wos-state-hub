@@ -26,10 +26,10 @@ there before discussing it again.
 ## Settled
 
 ### Name
-- The site is called State Hub, not State Events. The logo and the browser tab
-  change with the header redesign.
-- The logo reads "1458 STATE HUB": the state number largest, with STATE over HUB
-  stacked to its right.
+- The site is called State Hub, not State Events. The browser tab reads "1458 State Hub".
+- The logo reads "1458 STATE HUB": the state number largest, in white, with STATE over
+  HUB stacked to its right in the accent colour, the two words the same width and
+  together as tall as the number.
 
 ### Navigation
 - The top row is navigation, not a panel. It is a band of its own tone across the
