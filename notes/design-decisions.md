@@ -199,6 +199,15 @@ there before discussing it again.
 - Where the UTC / Mine choice lives, now that it is out of the navigation. Pages
   other than the calendar also show times.
 - How Availability is sorted.
+- The header and calendar toolbar redesign (asked 22 Nov): the clock as "UTC" over
+  the time, centred together in the top bar; no left and right arrows on a phone,
+  where the calendar is swiped instead; Today as one clear button that reads as
+  going back to today.
+- Selecting in the calendar (22 Nov, being designed): tapping a day picks the day;
+  tapping a bar, or anything on it such as a ticket, lights the whole event and
+  opens its timeline, marked and scrolled to the current phase if it is running,
+  otherwise to the phase tapped. Nothing closes the selection; it changes only when
+  another bar or a day is tapped. Still open: what Back does.
 - Everything in "Still to design" in rules-and-open-items.md.
 
 ## Data to check at the source
