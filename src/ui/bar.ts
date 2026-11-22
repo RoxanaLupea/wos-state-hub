@@ -93,7 +93,19 @@ export interface BarRenderOptions {
   partOfByEventTypeId: Map<string, string | null>;
   // The stretch the player has tapped, lit on the bar it belongs to.
   lit?: { key: string; start: number; end: number } | null;
+  // The runs of the event that is open in the panel. Every bar of them is lit, in every
+  // week it crosses.
+  litKeys?: Set<string>;
   weekStart: number;
+}
+
+// Whether a bar belongs to the open event: its own run, or a phase of it (whose key is
+// the run's key with the phase added).
+function isLitBar(barKey: string, litKeys: Set<string> | undefined): boolean {
+  if (!litKeys || !litKeys.size) return false;
+  if (litKeys.has(barKey)) return true;
+  for (const key of litKeys) if (barKey.startsWith(key + '|')) return true;
+  return false;
 }
 
 export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
@@ -303,6 +315,7 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
   if (bar.stripes.length) classes.push('has-trail');
   if (bar.wasCancelled) classes.push('cancelled');
   if (bar.isProvisional) classes.push('provisional');
+  if (isLitBar(bar.key, options.litKeys)) classes.push('lit-event');
 
   const logo = eventIcon(mainOfParts ?? bar.eventTypeId);
   const headName = mainOfParts ? plainName(mainOfParts) : plainName(bar.eventTypeId);
@@ -321,6 +334,7 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
     (eventTypeInitials(bar.eventTypeId)
       ? ` data-initials="${escapeForPage(eventTypeInitials(bar.eventTypeId))}"` : '') +
     ` data-open-event="${escapeForPage(bar.key)}" data-day="${textFromDay(options.weekStart + piece.firstColumn)}"` +
+    ` data-tap-minute="${Math.max(bar.startMinute, piece.start)}"` +
     ' role="button" tabindex="0">' +
     light +
     (sideLogo ? `<span class="bar-side-icon">${logo}</span>` : '') +
@@ -347,12 +361,13 @@ export function renderMarkerBar(piece: WeekPiece, options: BarRenderOptions): st
         `${eventIcon(bar.eventTypeId)}</span>`;
     }).join('');
 
-  return `<div class="bar clickable marker-bar"` +
+  return `<div class="bar clickable marker-bar${isLitBar(bar.key, options.litKeys) ? ' lit-event' : ''}"` +
     ` style="grid-column:${piece.firstColumn + 1} / ${piece.lastColumn + 2};grid-row:${piece.lane + 1}"` +
     ` data-trail-count="0" data-lane="${piece.lane}"` +
     ` data-first-column="${piece.firstColumn}" data-last-column="${piece.lastColumn}"` +
     ` data-left-fraction="${piece.leftFraction.toFixed(5)}" data-right-fraction="${piece.rightFraction.toFixed(5)}"` +
     ` data-open-event="${escapeForPage(bar.key)}" data-day="${textFromDay(options.weekStart + piece.firstColumn)}"` +
+    ` data-tap-minute="${Math.max(bar.startMinute, piece.start)}"` +
     ` role="button" tabindex="0" aria-label="${escapeForPage(eventTypeName(bar.eventTypeId))}">` +
     `${marks}</div>`;
 }

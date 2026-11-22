@@ -75,6 +75,10 @@ export interface TreeOptions {
   marksOpeningsByLabel: (eventTypeId: string) => boolean;
   // The row the player tapped, which stays marked.
   pickedRowKey?: string | null;
+  // What was tapped to open the event (a bar, a day of it, a part on it) and the minute
+  // it starts. When the event is not running, the row it points to is marked.
+  tappedKey?: string | null;
+  tappedMinute?: number;
 }
 
 function byMinute(left: { minute: number }, right: { minute: number }): number {
@@ -296,10 +300,12 @@ export function buildEventTree(
   const now = nowMinute();
   const picked = options.pickedRowKey
     ? ordered.find(row => row.key === options.pickedRowKey) : undefined;
-  const started = now >= runStart && now < runEnd
+  const isRunning = now >= runStart && now < runEnd;
+  const started = isRunning
     ? ordered.filter(row => row.minute <= now && !row.isSideRow && !row.isEndRow && !row.openingPartKey)
     : [];
-  const current = picked ?? started[started.length - 1];
+  // While the event runs, the row that is on now; otherwise the row that was tapped.
+  const current = picked ?? (isRunning ? started[started.length - 1] : tappedRow(ordered, options));
   if (current) current.isCurrent = true;
 
   return {
@@ -309,6 +315,22 @@ export function buildEventTree(
     hasPoints: ordered.some(row => row.pointSourceIds.length > 0),
     currentRowKey: current?.key ?? ''
   };
+}
+
+// The row for what was tapped: the last row of the tapped run that has started by the
+// tapped minute, or that run's first row. Without a run of its own, the last row of the
+// event started by then.
+function tappedRow(rows: TreeRow[], options: TreeOptions): TreeRow | undefined {
+  const usable = rows.filter(row => !row.isSideRow && !row.isEndRow && !row.openingPartKey);
+  if (!usable.length) return undefined;
+  const tappedKey = options.tappedKey ?? '';
+  const minute = options.tappedMinute ?? NaN;
+  const ofTapped = usable.filter(row =>
+    tappedKey === row.occurrence.key || tappedKey.startsWith(row.occurrence.key + '|'));
+  const pool = ofTapped.length ? ofTapped : usable;
+  if (Number.isNaN(minute)) return pool[0];
+  const started = pool.filter(row => row.minute <= minute);
+  return started[started.length - 1] ?? pool[0];
 }
 
 // Main-line order is kept, and the rows under a main row stay under it. Side rows slot

@@ -375,3 +375,18 @@
 .time-row:not(.followed) .time-name { color: var(--text-muted); }
 .time-value { font-size: 14.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .time-input { width: 76px; height: 34px; padding: 0 8px; text-align: center; font-variant-numeric: tabular-nums; }
+
+/* The way out of an event's page: Back on a phone, and a quiet link back to the day
+   when the event was opened from a day's timeline. */
+.panel-backs { display: flex; align-items: center; gap: 8px; }
+.panel-backs:empty { display: none; }
+.back-to-day {
+  margin-left: auto; display: inline-flex; align-items: center; gap: 2px; min-height: 32px;
+  border: none; background: transparent; padding: 0 2px; cursor: pointer;
+  color: var(--text-faint); font: inherit; font-size: 12px; font-weight: 600;
+}
+.back-to-day svg { width: 14px; height: 14px; }
+.back-to-day:hover { color: var(--text-muted); }
+@media (min-width: 1000px) {
+  .back-to-day { margin-left: 0; }
+}

@@ -30,8 +30,15 @@ const BACK_ARROW = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" 
   ' stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
   '<path d="M15 18l-6-6 6-6"/></svg>';
 
-export function backLink(): string {
-  return `<button type="button" class="back-link" data-back-to-day>${BACK_ARROW}Back</button>`;
+// The way out of an event's page. On a phone, Back closes the panel (a computer has no
+// Back: the panel is always there). When the event was opened from a day's timeline, a
+// quiet link goes back to that day, on both.
+export function backLinks(backToDay: number | null): string {
+  const close = `<button type="button" class="day-back" data-close-day>${BACK_ARROW}Back</button>`;
+  const toDay = backToDay === null ? '' :
+    `<button type="button" class="back-to-day" data-back-to-day>${BACK_ARROW}` +
+    `${escapeForPage(shortDayText(backToDay))}</button>`;
+  return `<div class="panel-backs">${close}${toDay}</div>`;
 }
 
 // A colour taken from somewhere along a bar's fade, used to paint the timeline so it
@@ -568,6 +575,8 @@ export interface EventPanelOptions {
   shownView: string;
   rewardView: RewardViewState;
   changeNote: string;
+  // The day the event was opened from, when it was opened from a day's timeline.
+  backToDay: number | null;
 }
 
 const INFO_ICON = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
@@ -632,7 +641,7 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
     ` title="${view === 'timeline' ? 'Info' : 'Timeline'}">` +
     (view === 'timeline' ? INFO_ICON : TIMELINE_ICON) + '</button>';
 
-  let html = backLink() +
+  let html = backLinks(options.backToDay) +
     `<section class="day-section glass event-page" style="${tintedPanelStyle(color)}">` +
     `<div class="event-page-head">${eventBadge(eventTypeId, 'large')}` +
     '<div class="event-page-title"><h2>' +
@@ -669,6 +678,7 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
 export interface GroupPanelOptions {
   eventTypeId: string;
   day: number;
+  backToDay: number | null;
   times: Occurrence[];
   nameOfTime: (occurrence: Occurrence) => string;
   followedScheduleIds: Set<string>;
@@ -676,7 +686,7 @@ export interface GroupPanelOptions {
 
 export function groupPanel(options: GroupPanelOptions): string {
   const color = eventTypeColor(options.eventTypeId);
-  return backLink() +
+  return backLinks(options.backToDay) +
     `<section class="day-section glass event-page" style="${tintedPanelStyle(color)}">` +
     `<div class="event-page-head">${eventBadge(options.eventTypeId, 'large')}` +
     `<div class="event-page-title"><h2>${escapeForPage(eventTypeName(options.eventTypeId))}</h2>` +

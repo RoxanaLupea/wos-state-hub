@@ -30,13 +30,13 @@ import {
   pointSourcesForDay, sortOrderOf, stepLabel
 } from './data/catalog.ts';
 import {
-  minutesFromTime, startOfMonth, startOfWeek, textFromDay, todayNumber, yearAndMonthOf, dayFromText
+  minutesFromTime, startOfMonth, startOfWeek, textFromDay, todayNumber, yearAndMonthOf, dayFromText, MINUTES_PER_DAY
 } from './calendar/days.ts';
 import { buildOccurrences, groupChanges, type ExpandOptions, type Occurrence, type Schedule } from './calendar/occurrences.ts';
 import { buildBarsForRange, type Bar } from './calendar/bars.ts';
 import { daySegments } from './calendar/day-segments.ts';
 import { contentsOfDay } from './calendar/day-timeline.ts';
-import { buildEventTree } from './calendar/event-tree.ts';
+import { buildEventTree, familyOccurrences } from './calendar/event-tree.ts';
 import { gameClockText, nowMinute, setTimeMode, type TimeMode } from './calendar/time-mode.ts';
 import { yearRunSteps, yearViewRuns, type YearRun } from './calendar/year-runs.ts';
 import { PAGES, calendarToolbar, pageById, sectionNav, topBar, type CalendarView } from './ui/shell.ts';
@@ -91,6 +91,16 @@ const view = {
   // The run whose own page is open, and which half of it is shown.
   openEventKey: null as string | null,
   openEventView: 'timeline',
+  // The day the open event was tapped on, used to find it among the runs nearby.
+  openEventDay: todayNumber(),
+  // The day it was opened from, when it was opened from a day's timeline.
+  openedFromDay: null as number | null,
+  // What was tapped to open it and the minute that starts, which picks the row to mark
+  // when the event is not running.
+  tappedKey: null as string | null,
+  tappedMinute: NaN,
+  // Set when an event has just been opened, so the panel scrolls to its marked row.
+  scrollsToMarkedRow: false,
   pickedRowKey: null as string | null,
   // Which alliance times the player follows, by schedule.
   followedScheduleIds: new Set<string>(),
@@ -144,9 +154,23 @@ function weekRowOptions() {
       partOfByEventTypeId, categoryOf, categoryOrder: CATEGORY_ORDER, sortOrderOf,
       phaseNameOf: phaseName, phaseShortNameOf: phaseShortName
     },
-    barOptions: { partOfByEventTypeId, lit: null },
-    chosenDay: view.chosenDay
+    barOptions: { partOfByEventTypeId, lit: null, litKeys: litEventKeys() },
+    // While an event is open, it is lit and no day is picked.
+    chosenDay: view.openEventKey ? NaN : view.chosenDay
   };
+}
+
+// The runs of the event open in the panel: the run itself, its parts, and the whole it
+// is a part of. A gathered bar of alliance times is lit by its own key.
+function litEventKeys(): Set<string> {
+  const key = view.openEventKey;
+  if (!key || view.calendarView === 'year') return new Set();
+  if (key.startsWith('group|')) return new Set([key]);
+  const nearby = runsBetween(view.openEventDay - 40, view.openEventDay + 40);
+  const occurrence = nearby.find(one => one.key === key) ??
+    nearby.find(one => key.startsWith(one.key + '|'));
+  if (!occurrence) return new Set();
+  return new Set(familyOccurrences(occurrence, nearby, partOfByEventTypeId).map(one => one.key));
 }
 
 // The stretch of days the view on screen needs, and the title above it.
@@ -213,7 +237,7 @@ function panelContents(): string {
   const myAllianceIds = allianceFamilyOf(view.myAllianceId);
 
   if (view.openEventKey) {
-    const opened = openEventMarkup(view.openEventKey, day, myAllianceIds);
+    const opened = openEventMarkup(view.openEventKey, view.openEventDay, myAllianceIds);
     if (opened) return opened;
     view.openEventKey = null;
   }
@@ -254,7 +278,7 @@ function groupPanelMarkup(key: string, myAllianceIds: string[]): string | null {
       left.startMinute - right.startMinute);
 
   return groupPanel({
-    eventTypeId, day, times,
+    eventTypeId, day, times, backToDay: view.openedFromDay,
     nameOfTime: nameOfAllianceTime,
     followedScheduleIds: view.followedScheduleIds
   });
@@ -287,7 +311,9 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
       pointSourcesForDay(eventTypeId, dayNumber).some(source => source.dayNumber === dayNumber),
     openingsOf: partOpenings,
     marksOpeningsByLabel: eventTypeId => eventTypeById(eventTypeId)?.windowMark === 'label',
-    pickedRowKey: view.pickedRowKey
+    pickedRowKey: view.pickedRowKey,
+    tappedKey: view.tappedKey,
+    tappedMinute: view.tappedMinute
   });
 
   // Each alliance's own times for this event over these days.
@@ -311,7 +337,8 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
       .map(allianceTag).join(', '),
     shownView: view.openEventView,
     rewardView: view.rewardView,
-    changeNote: occurrence.note
+    changeNote: occurrence.note,
+    backToDay: view.openedFromDay
   });
 }
 
@@ -523,6 +550,26 @@ function draw(): void {
   const places = scrollPlaces(app);
   drawPage(app);
   putBackScrollPlaces(app, places);
+  if (view.scrollsToMarkedRow) {
+    view.scrollsToMarkedRow = false;
+    scrollToMarkedRow(app);
+  }
+}
+
+// An event that has just opened shows its marked row: if the row is out of sight, the
+// panel scrolls so it sits a third of the way down.
+function scrollToMarkedRow(app: HTMLElement): void {
+  const panel = app.querySelector<HTMLElement>('.day-panel');
+  const marked = panel?.querySelector<HTMLElement>('.tree-row.current');
+  if (!panel || !marked) return;
+  const panelBox = panel.getBoundingClientRect();
+  const rowBox = marked.getBoundingClientRect();
+  const visibleTop = Math.max(panelBox.top, 0);
+  const visibleBottom = Math.min(panelBox.bottom, window.innerHeight);
+  if (rowBox.top >= visibleTop && rowBox.bottom <= visibleBottom) return;
+  const target = panel.scrollTop + (rowBox.top - panelBox.top) - panel.clientHeight / 3;
+  if (panel.scrollHeight > panel.clientHeight) panel.scrollTop = Math.max(0, target);
+  else window.scrollBy(0, rowBox.top - window.innerHeight / 3);
 }
 
 function drawPage(app: HTMLElement): void {
@@ -782,7 +829,19 @@ function handleClicks(event: MouseEvent): void {
   if (target.closest('[data-back-to-day]')) {
     view.openEventKey = null;
     view.pickedRowKey = null;
+    view.openedFromDay = null;
+    startAtTop.panel = true;
     draw();
+    return;
+  }
+
+  // A white line on a bar shows its time, as on hover, and opens nothing.
+  const lineMark = target.closest<HTMLElement>('.bar-mark');
+  if (lineMark) {
+    document.querySelectorAll('.bar-mark.show-time').forEach(other => {
+      if (other !== lineMark) other.classList.remove('show-time');
+    });
+    lineMark.classList.toggle('show-time');
     return;
   }
 
@@ -828,12 +887,7 @@ function handleClicks(event: MouseEvent): void {
 
   const openEventButton = target.closest<HTMLElement>('[data-open-event]');
   if (openEventButton) {
-    const dayAttribute = openEventButton.dataset.day;
-    if (dayAttribute) view.chosenDay = dayFromText(dayAttribute);
-    view.openEventKey = openEventButton.dataset.openEvent as string;
-    view.pickedRowKey = null;
-    view.isPanelOpen = true;
-    startAtTop.panel = true;
+    openEventFrom(openEventButton, target);
     draw();
     return;
   }
@@ -842,6 +896,9 @@ function handleClicks(event: MouseEvent): void {
 
   const dayButton = target.closest<HTMLElement>('[data-day]');
   if (dayButton) {
+    view.openEventKey = null;
+    view.pickedRowKey = null;
+    view.openedFromDay = null;
     view.chosenDay = dayFromText(dayButton.dataset.day as string);
     view.focusDay = view.chosenDay;
     view.isPanelOpen = true;
@@ -849,6 +906,41 @@ function handleClicks(event: MouseEvent): void {
     startAtTop.panel = true;
     draw();
   }
+}
+
+// Opening an event: from a bar (or anything on it), from the day's timeline, or from
+// another event's page. Tapping a bar never picks a day; the whole event is lit
+// instead, and its timeline marks the row on now, or the row of what was tapped.
+function openEventFrom(button: HTMLElement, target: HTMLElement): void {
+  const bar = button.closest<HTMLElement>('.bar');
+  const isFromDay = Boolean(button.closest('.day-panel')) && !button.closest('.event-page') &&
+    !button.closest('.panel-backs');
+
+  view.openEventKey = button.dataset.openEvent as string;
+  view.pickedRowKey = null;
+  view.tappedKey = view.openEventKey;
+  view.tappedMinute = NaN;
+
+  if (bar) {
+    const dayAttribute = bar.dataset.day;
+    if (dayAttribute) view.openEventDay = dayFromText(dayAttribute);
+    // The day, phase or part under the finger gives the minute; a ticket or a line
+    // under the bar counts as the bar itself.
+    const inner = target.closest<HTMLElement>('[data-start-minute]');
+    const isTicket = Boolean(target.closest('.bar-stripe, .bar-stripe-end, .opening-mark'));
+    view.tappedMinute = inner && bar.contains(inner) && !isTicket
+      ? Number(inner.dataset.startMinute) : Number(bar.dataset.tapMinute);
+    view.openedFromDay = null;
+  } else if (isFromDay) {
+    view.openEventDay = view.chosenDay;
+    view.openedFromDay = view.chosenDay;
+    view.tappedMinute = button.dataset.tapMinute
+      ? Number(button.dataset.tapMinute) : view.chosenDay * MINUTES_PER_DAY;
+  }
+
+  view.isPanelOpen = true;
+  startAtTop.panel = true;
+  view.scrollsToMarkedRow = true;
 }
 
 function eventKeysOf(category: string): string[] {

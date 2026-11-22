@@ -37,7 +37,7 @@ function allDayItemMarkup(item: AllDayItem): string {
 function momentMarkup(moment: Moment): string {
   const color = eventTypeColor(moment.eventTypeId);
   return `<li class="moment"><button type="button" class="moment-button"
-    data-open-event="${escapeForPage(moment.occurrenceKey)}">
+    data-open-event="${escapeForPage(moment.occurrenceKey)}" data-tap-minute="${moment.minute}">
     <span class="moment-time"><span class="time-main">${clockText(moment.minute)}</span></span>
     <span class="moment-rail"><span class="moment-dot"
       style="background:${color};box-shadow:0 0 0 3px ${colorWithOpacity(color, 0.25)}"></span></span>
