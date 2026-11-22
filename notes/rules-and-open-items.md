@@ -192,6 +192,10 @@ Highest is 11 per troop type and 33 in total. Exalted is only possible on FC10.
   (3,900, 40,000 and 110,000 points, its fourth target missing) and Stage 2 from the
   higher one (5,800, 70,000, 161,000 and 312,000 points).
 
+- Strength in Unity: a new item, added around the start of Nov 2026, given by
+  whichever weekly event is running (seen in King of Icefield, Alliance Showdown and
+  SvS preparation; Alliance Mobilization possibly next).
+
 - How long before bear and foundry someone must be in the alliance, and when they can
   leave, as catalog values.
 - The tyrant qualification bar, recorded after the next run.
