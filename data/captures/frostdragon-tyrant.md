@@ -1,6 +1,6 @@
 # Frostdragon Tyrant: Reward Details
 
-Sent 22 Nov 2026. The Point Rewards tab has not been sent yet.
+Sent 22 Nov 2026 (Point Rewards sent later the same day).
 
 ## Frostdragon Tyrant Rewards
 For the chief who holds the Capital longest (30 days).
@@ -75,3 +75,65 @@ Occupation Ranking can claim State Rewards.
 | 2 | 4,000 | 40 | 4 | 8 |
 | 3 | 3,000 | 30 | 3 | 7 |
 | 4–10 | 2,000 | 20 | 2 | 5 |
+
+## Point Rewards
+Sent 22 Nov 2026. Items matched to our pictures: the purple crystal is Mithril, the grey
+"?" chest with a ring is the Lucky Hero Gear Chest, the blue-tile chest with the white
+badge is the Custom Resource Chest (Lv. 1-2), the blue-tile "?" chest is the Resource
+Chest (Lv. 1-2), and the purple-tile red chest is the Custom Resource Chest (Lv. 3).
+
+### Personal Point Tiers
+An immediate reward for certain Personal Point milestones on the battlefield.
+
+| Points | Rewards |
+|---|---|
+| 150,000 | 1h Healing Speedup ×30, 10K Meat ×500 |
+| 350,000 | 1h Construction Speedup ×10, 10K Wood ×500 |
+| 500,000 | 1h Training Speedup ×10, 10K Coal ×100 |
+| 700,000 | 1h Research Speedup ×10, 10K Iron ×25 |
+| 900,000 | Charm Design ×50, Charm Guide ×50, Custom Resource Chest (Lv. 1-2) ×100 |
+| 3,800,000 | Charm Design ×50, Charm Guide ×50, Custom Resource Chest (Lv. 1-2) ×100 |
+| 6,700,000 | Charm Design ×50, Charm Guide ×50, Custom Resource Chest (Lv. 1-2) ×100 |
+| 10,000,000 | Mithril ×1, Lucky Hero Gear Chest ×15, Custom Resource Chest (Lv. 1-2) ×150 |
+| 20,000,000 | Mithril ×1, Lucky Hero Gear Chest ×30, Custom Resource Chest (Lv. 1-2) ×150 |
+
+### Personal Point Ranking
+Decided by the Personal Points battlefield ranking, mailed after the Frostdragon Capital
+battle. Each rank gives Gems, Charm Design, Charm Guide and Custom Resource Chest (Lv. 3).
+
+| Rank | Gems | Charm Design | Charm Guide | Custom Resource Chest (Lv. 3) |
+|---|---|---|---|---|
+| 1 | 30,000 | 700 | 700 | 300 |
+| 2 | 25,000 | 650 | 650 | 280 |
+| 3 | 22,000 | 600 | 600 | 260 |
+| 4 | 20,000 | 580 | 580 | 250 |
+| 5 | 18,000 | 570 | 570 | 240 |
+| 6 | 16,000 | 550 | 550 | 230 |
+| 7 | 15,000 | 530 | 530 | 220 |
+| 8 | 14,000 | 500 | 500 | 210 |
+| 9 | 13,000 | 480 | 480 | 200 |
+| 10 | 12,000 | 450 | 450 | 190 |
+| 11–20 | 11,000 | 400 | 400 | 180 |
+| 21–50 | 10,000 | 360 | 360 | 170 |
+| 51–100 | 9,000 | 320 | 320 | 160 |
+| 101–150 | 8,000 | 280 | 280 | 150 |
+| 151–200 | 7,000 | 240 | 240 | 140 |
+| 201–400 | 6,000 | 200 | 200 | 130 |
+| 401–600 | 5,000 | 150 | 150 | 120 |
+| 601–800 | 4,000 | 100 | 100 | 110 |
+| 801–1,000 | 3,000 | 80 | 80 | 100 |
+| 1,001+ | 2,000 | 60 | 60 | 90 |
+
+### Alliance Point Ranking
+Decided by the Alliance Total Points battlefield ranking, given to the alliance's
+combatants and mailed after the Frostdragon Capital battle.
+
+| Rank | Gems | Lucky Hero Gear Chest | 1h Healing Speedup | Resource Chest (Lv. 1-2) |
+|---|---|---|---|---|
+| 1 | 2,000 | 20 | 50 | 200 |
+| 2 | 1,500 | 15 | 40 | 180 |
+| 3 | 1,200 | 12 | 30 | 160 |
+| 4–10 | 1,000 | 10 | 20 | 140 |
+| 11–20 | 800 | 8 | 15 | 120 |
+| 21–50 | 600 | 6 | 10 | 100 |
+| 51+ | 400 | 4 | 5 | 50 |
