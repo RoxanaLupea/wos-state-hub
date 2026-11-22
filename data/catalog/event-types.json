@@ -225,6 +225,7 @@
   {
     "id": "wild-brawl",
     "category": "personal",
+    "timesInLine": "yes",
     "color": "#E07A48",
     "colorEnd": "#C2453E",
     "icon": "swords",

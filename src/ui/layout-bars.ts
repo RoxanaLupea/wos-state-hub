@@ -74,7 +74,7 @@ export function layoutBars(panel: HTMLElement): void {
         ? left + parseFloat(window.getComputedStyle(bar).paddingLeft) - 4
         : left;
 
-      bar.querySelectorAll<HTMLElement>('.bar-segment, .bar-inside, .bar-light, .bar-stripe, .bar-part')
+      bar.querySelectorAll<HTMLElement>('.bar-segment, .bar-inside, .bar-light, .bar-stripe, .bar-part, .bar-window')
         .forEach(element => {
           const isLineTwo = element.classList.contains('bar-segment') ||
             element.classList.contains('bar-inside') || element.classList.contains('bar-part');

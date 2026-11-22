@@ -11,6 +11,8 @@ import fortRewardRows from '../../data/catalog/fort-rewards.json' with { type: '
 import englishText from '../../data/text/en.json' with { type: 'json' };
 import type { EventPhase } from '../calendar/bars.ts';
 import type { EventStep } from '../calendar/day-timeline.ts';
+import { todayNumber } from '../calendar/days.ts';
+import { fillGeneration, fillHeroNames } from './heroes.ts';
 
 export interface EventType {
   id: string;
@@ -22,6 +24,9 @@ export interface EventType {
   partOf?: string;
   groupCount?: string;
   detailsOnly?: string;
+  // 'yes' when the event's times of each day are shown as one line of times
+  // (Wild Brawl: the four times a day it can be played), not as separate moments.
+  timesInLine?: string;
   sortOrder?: number;
   // A second colour the bar fades from, when the game gives the event one.
   timelineColor?: string;
@@ -32,6 +37,8 @@ export interface EventType {
   openWindows?: { fromDay: number; fromTime: string; toDay: number; toTime: string }[];
   // How an opening is marked on the bar: by its label, or only where it ends.
   windowMark?: string;
+  // The times a player can pick from ("02:00,05:00,..."), such as Frostfire's slots.
+  slotTimes?: string;
 }
 
 interface PhaseRow {
@@ -124,6 +131,10 @@ export function eventTypeColorEnd(id: string): string {
   return eventType?.colorEnd ?? eventType?.color ?? '#7E8AA8';
 }
 
+export function showsTimesInLine(id: string): boolean {
+  return eventTypesById.get(id)?.timesInLine === 'yes';
+}
+
 export function isDetailsOnly(id: string): boolean {
   return eventTypesById.get(id)?.detailsOnly === 'yes';
 }
@@ -165,6 +176,15 @@ export function categoryOf(eventTypeId: string): string {
 // The words for one step of an event: "Voting", "Match 1", "Rewards sent".
 export function stepLabel(stepId: string): string {
   return text['eventStep.' + stepId + '.label'] ?? stepId;
+}
+
+// A phase's or a step's instructions, shown under it, smaller, as in the old app.
+export function phaseNote(phaseId: string): string {
+  return text['eventPhase.' + phaseId + '.note'] ?? '';
+}
+
+export function stepNote(stepId: string): string {
+  return text['eventStep.' + stepId + '.note'] ?? '';
 }
 
 // The steps of each event, in the order the game runs them.
@@ -287,8 +307,10 @@ const pointSourcesByEvent = (() => {
   return byEventType;
 })();
 
-export function pointSourceTask(id: string): string {
-  return text['pointSource.' + id + '.task'] ?? '';
+// Texts that can name a hero of the state's generation get it filled in for the day
+// they are shown for: the first day of the event, as in the old app.
+export function pointSourceTask(id: string, day = todayNumber()): string {
+  return fillHeroNames(text['pointSource.' + id + '.task'] ?? '', day);
 }
 
 export function pointSourceDayName(id: string): string {
@@ -310,8 +332,8 @@ export function pointSourcesInList(eventTypeId: string, list: string): PointSour
   return (pointSourcesByEvent.get(eventTypeId) ?? []).filter(source => source.list === list);
 }
 
-export function eventNotes(id: string): string {
-  return text['eventType.' + id + '.notes'] ?? '';
+export function eventNotes(id: string, day = todayNumber()): string {
+  return fillHeroNames(text['eventType.' + id + '.notes'] ?? '', day);
 }
 
 export function eventOtherName(id: string): string {
@@ -330,8 +352,8 @@ export function pointsTitle(id: string): string {
   return text['eventType.' + id + '.pointsTitle'] ?? '';
 }
 
-export function pointsNote(id: string): string {
-  return text['eventType.' + id + '.pointsNote'] ?? '';
+export function pointsNote(id: string, day = todayNumber()): string {
+  return fillHeroNames(text['eventType.' + id + '.pointsNote'] ?? '', day);
 }
 
 export interface RewardRow {
@@ -387,13 +409,14 @@ export function rewardsOf(eventTypeId: string, list?: string, band?: string): Re
     (list === undefined || row.list === list) && (band === undefined || row.band === band));
 }
 
+// An item named after the generation carries today's generation, as in the old app.
 export function itemName(itemId: string): string {
-  return text['item.' + itemId + '.name'] ?? itemId;
+  return fillGeneration(text['item.' + itemId + '.name'] ?? itemId, todayNumber());
 }
 
 // A short word printed across the top of a reward tile, such as a hero generation.
 export function itemLabel(itemId: string): string {
-  return text['item.' + itemId + '.label'] ?? '';
+  return fillGeneration(text['item.' + itemId + '.label'] ?? '', todayNumber());
 }
 
 const itemsById = new Map((itemRows as { id: string; imageFile?: string; kind?: string }[])

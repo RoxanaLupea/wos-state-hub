@@ -22,6 +22,10 @@ there before discussing it again.
 - The files are handed over when they are asked for, not every time something
   changes. They get run when there is time to run them.
 - Unconfirmed experiments are never saved into the kept files.
+- Everything in these notes gets built without waiting for its design (asked 22 Nov).
+  A page that is not designed yet is built as a working page: the information we have
+  in glass sections and tables, with the forms that fill them, so there is something
+  real to design from. Pushing and writing to the database still wait for a yes.
 
 ## Settled
 
@@ -39,6 +43,12 @@ there before discussing it again.
 - Sections: Calendar, Fortress, Transfers, the running event, State, My alliance,
   Map, and Admin behind the gear.
 - Six sections have pages of their own. Calendar and State have none.
+- On a phone the sections are in the top band too, as its second row: one line that
+  scrolls sideways, fading at an edge while there are more past it, with the open one
+  kept in view. There is no bar at the bottom of the screen.
+- The phone's own back does what the site's Back does and nothing more (see "Calendar
+  selection" below). It never moves from one section to another: sections are opened
+  by tapping them.
 
 ### Page names inside a section
 - Uppercase, a little bold.
@@ -235,14 +245,29 @@ there before discussing it again.
   capitals. Deals have no short name (Frosty Fortune, with Treasure Hunt Drill and
   Emporium of Enigma, is a Deal), and neither do Foundry Battle and Fortress
   Battles. Flame and Fangs is F&F, Frostfire Mine is FF.
+- An event played at set times each day (Wild Brawl: four windows a day, open daily):
+  on its calendar bar each window is a short white line inside the bar along its
+  bottom edge, like the white lines between days, and pointing at one or tapping it
+  shows its times. In the day's panel the event stays under All day, and under its
+  name a thin, quiet line for the day carries the windows marked in the event's light
+  colour, each window written under its mark in the site's text colour as "02–04". A
+  time on the hour is written as the hour alone; minutes only when there are some.
+  Every window already over is dimmed, on any day; on today the open window, or else
+  the next one, stands out with its label in white. No mark for now. On the event's own
+  timeline each window is a row where it opens (named as the game names it) and a row
+  where it closes; the line between the two is lit in the event's light colour and a
+  little thicker, and the rest of the line is quiet. Nothing is dimmed there: dimming
+  is only for the line in the day's panel. The open or next window stands out.
 - A Missions tab goes on the events whose missions the owner has found in game: TAL,
   Treasure Hunt Drill, Dreamscape Memory (daily missions, list not sent yet) and Wild
   Brawl. More are added as the owner sends them.
 
 ## Open
 
-- Roles. For now an alliance's R4 and R5 can do exactly the same things; what each may
-  do is decided when roles are designed.
+- Roles. Decided: owner; admins, who can edit anything; alliance manager, one role per
+  alliance, held the same by its R4s and R5s; state managers, for the state's planning
+  except battles; battle managers, for the battles. Open: exactly which pages and
+  actions each one gets, decided as each page is built.
 - Alliance colours. None is approved. The site uses the colours from the old sheet's
   Alliances tab for now.
 - The shape of each of the three page controls.
@@ -266,15 +291,15 @@ there before discussing it again.
   Icefield's days on its bar.
 - Colours from their logos for every event that still lacks them.
 - The Fortress rewards view needs work and a redesign.
-- How results are shown (SvS, Sunfire presidents, TAL ranks and MVPs). The data is
-  already in seed/ and data/captures/, waiting for this.
+- How results are shown (SvS, Sunfire presidents, TAL ranks and MVPs). A working
+  version is built: a Results tab on the event, and My alliance · Results.
 - The maps (state, alliance, castle and event maps), described in
   rules-and-open-items.md; the owner will show examples first.
 - Everything in "Still to design" in rules-and-open-items.md.
 
-## Still to build, in this order (agreed 22 Nov)
+## Built from the list agreed 22 Nov
 
-Go through them one at a time and wait for the owner's "next" after each.
+All nine are built.
 
 1. A day's points arrow opens the points without redrawing the panel.
 2. An event's info in tabs (see above).

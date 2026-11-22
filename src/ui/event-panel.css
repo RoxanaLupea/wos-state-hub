@@ -214,19 +214,6 @@
   .next-tile-title { font-size: 15px; }
 }
 
-/* Bottom bar (phones) */
-.bottom-nav {
-  position: sticky; bottom: 0; z-index: 20; margin-top: auto; display: flex; padding: 8px 8px 14px;
-  background: rgba(14, 20, 34, 0.72); border-top: 1px solid var(--glass-border);
-  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
-}
-.bottom-nav button {
-  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; min-height: 48px; justify-content: center;
-  border: none; background: transparent; color: var(--text-muted); font-size: 12px; font-weight: 700;
-}
-.bottom-nav button[aria-current="page"] { color: var(--accent); font-weight: 800; }
-@media (min-width: 1000px) { .bottom-nav { display: none; } }
-
 /* ---------- Fortress page ---------- */
 
 /* ---------- Rewards drawn like in the game ---------- */
@@ -407,10 +394,68 @@
   .day-panel.holds-event { padding-bottom: 12px; }
 }
 
-/* When there is more to scroll, the edge fades out instead of cutting the rows off. */
-.event-page-body.more-below { -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 48px), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 48px), transparent); }
-.event-page-body.more-above { -webkit-mask-image: linear-gradient(to bottom, transparent, #000 28px); mask-image: linear-gradient(to bottom, transparent, #000 28px); }
-.event-page-body.more-above.more-below {
+/* When there is more to scroll, the edge fades out instead of cutting the rows off.
+   Every box that scrolls on its own does this (main.ts marks them). */
+.more-below { -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 48px), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 48px), transparent); }
+.more-above { -webkit-mask-image: linear-gradient(to bottom, transparent, #000 28px); mask-image: linear-gradient(to bottom, transparent, #000 28px); }
+.more-above.more-below {
   -webkit-mask-image: linear-gradient(to bottom, transparent, #000 28px, #000 calc(100% - 48px), transparent);
   mask-image: linear-gradient(to bottom, transparent, #000 28px, #000 calc(100% - 48px), transparent);
 }
+/* On a phone the sheet is see-through, over the same fixed background as the page, so
+   its faded edges fade into the background rather than into the calendar under it. */
+@media (max-width: 999px) {
+  .app.sheet-open .day-panel { background: none; }
+  .app.sheet-open > .top-bar,
+  .app.sheet-open .page > :not(.calendar-layout),
+  .app.sheet-open .calendar-panel,
+  .app.sheet-open .next-up { visibility: hidden; }
+}
+
+/* The Fortress Battles event's battles: one row per fort, its time and when its rewards
+   run out, and the holder's banner. */
+.fort-battles h3 { margin: 4px 0 6px; font-size: 15px; font-weight: 800; }
+.fort-battle-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid var(--glass-border); font-size: 14px; font-weight: 700; }
+.fort-battle-name { flex: none; width: 118px; font-weight: 800; }
+.fort-battle-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.fort-battle-holder {
+  flex: none; display: inline-flex; align-items: center; height: 22px; padding: 0 10px; border-radius: 6px;
+  background: var(--banner-fill); box-shadow: inset 0 0 0 1px var(--banner-edge);
+}
+.fort-battle-holder span { font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #FFFFFF; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25); }
+
+/* An event's info, one tab per piece. The names sit in one row that scrolls sideways
+   when they do not fit; the open one is underlined in the event's own colour. The row
+   stays at the top with the head, and only the page under it scrolls. */
+.info-tabs {
+  display: flex; gap: 18px; overflow-x: auto; scrollbar-width: none; flex: none;
+  margin: 2px 0 0; padding: 0 2px; border-bottom: 1px solid var(--glass-border);
+}
+.info-tabs::-webkit-scrollbar { display: none; }
+.info-tab {
+  flex: none; padding: 8px 0 7px; border: none; background: none; cursor: pointer;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  color: var(--text-muted); font: inherit; font-size: 12px; font-weight: 800;
+  letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap;
+}
+.info-tab:hover { color: var(--text); }
+.info-tab[aria-selected="true"] { color: var(--text); border-bottom-color: var(--tab-color); }
+/* A tab's page: what the fold held, without the fold around it. */
+.event-folds .tab-page > * { margin-left: 0; margin-right: 0; }
+.tab-page { padding-top: 4px; }
+/* The tab row already draws the line under it, so the page under it does not draw another. */
+.event-folds .points-list.tab-page { border-top: none; }
+.tab-page-title { margin: 2px 0 6px; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); }
+.info-tabs.more-right { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent); }
+.info-tabs.more-left { -webkit-mask-image: linear-gradient(to right, transparent, #000 36px); mask-image: linear-gradient(to right, transparent, #000 36px); }
+.info-tabs.more-left.more-right {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 36px, #000 calc(100% - 36px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 36px, #000 calc(100% - 36px), transparent);
+}
+
+/* An event played at set times each day (Wild Brawl): the stretch of line from where a
+   window opens to where it closes is lit and a little thicker; the rest of the line is
+   quiet. Nothing is dimmed here; the open or next window stands out. */
+.tree-line.lit-above::before, .tree-line.lit-below::after { left: 9.5px; width: 5px; }
+.tree-line.play-now.lit-above::before, .tree-line.play-now.lit-below::after { box-shadow: 0 0 6px var(--play-glow, rgba(255, 255, 255, 0.4)); }
+.tree-row.play-now .tree-label { color: #FFFFFF; }

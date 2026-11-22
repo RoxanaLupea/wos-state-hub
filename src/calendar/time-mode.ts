@@ -71,6 +71,18 @@ export function gameClockText(minute: number): string {
 }
 
 // A moment as hours and minutes on the shown clock.
+// A window's ends as short as they can be: the hour alone when the time is on the
+// hour ("02"), with its minutes only when there are some ("02:30").
+export function shortClockText(minute: number): string {
+  const full = clockText(minute);
+  return full.endsWith(':00') ? full.slice(0, 2) : full;
+}
+
+// A window from one time to another: "02–04".
+export function windowText(start: number, end: number): string {
+  return shortClockText(start) + '–' + shortClockText(end);
+}
+
 export function clockText(minute: number): string {
   const shown = shownMinute(minute);
   const inDay = ((shown % MINUTES_PER_DAY) + MINUTES_PER_DAY) % MINUTES_PER_DAY;

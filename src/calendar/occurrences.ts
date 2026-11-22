@@ -251,7 +251,9 @@ export function expandSchedule(
       endTimeUtc: change?.endTimeUtc || schedule.endTimeUtc || '',
       startMinute: 0,
       endMinute: 0,
-      note: [schedule.note, change?.note].filter(Boolean).join(' · '),
+      // Only this date's own note is shown, as in the old app. A schedule's note is the
+      // owner's planning note ("every 4 weeks is not confirmed yet") and never shows.
+      note: change?.note || '',
       // Only a moved day or changed times count as changed. A note alone does not.
       wasChanged: Boolean(change && (change.movedToDate || change.startTimeUtc || change.endTimeUtc)),
       wasCancelled: Boolean(change?.isCancelled),

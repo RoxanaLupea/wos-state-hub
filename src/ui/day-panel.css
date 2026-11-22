@@ -84,3 +84,18 @@
 @media (min-width: 1000px) {
   .day-back { display: none !important; }
 }
+
+/* An event played at set times each day (Wild Brawl): under its name, a thin line for
+   the day with each play window marked on it, and the window ("02–04") under it. The
+   line is quiet and the labels use the site's text colours; the windows carry the
+   event's light colour. Windows already over are dimmed; on today the open or next
+   window stands out. */
+.play-line { position: relative; display: block; height: 22px; margin: 6px 0 2px; }
+.play-line::before { content: ''; position: absolute; left: 0; right: 0; top: 3px; height: 2px; border-radius: 1px; background: rgba(255, 255, 255, 0.14); }
+.play-mark { position: absolute; top: 2px; height: 4px; border-radius: 2px; background: var(--play-light); }
+/* Each window's label is centred under its mark. */
+.play-mark-time { position: absolute; top: 7px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 11px; font-weight: 700; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.play-mark.past { opacity: 0.35; }
+.play-mark.now { box-shadow: 0 0 6px var(--play-light); }
+.play-mark.now .play-mark-time { color: var(--text); }
+.alliance-pick { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }

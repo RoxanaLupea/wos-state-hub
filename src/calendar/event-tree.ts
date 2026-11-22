@@ -10,6 +10,7 @@ import { MINUTES_PER_DAY } from './days.ts';
 import { phaseMinutes, type EventPhase } from './bars.ts';
 import { nowMinute } from './time-mode.ts';
 import type { Occurrence } from './occurrences.ts';
+import { playWindowsIn } from './day-timeline.ts';
 import type { EventStep } from './day-timeline.ts';
 
 export interface TreeRow {
@@ -19,6 +20,11 @@ export interface TreeRow {
   label: string;
   // A smaller line under the label, used for an opening's own name.
   subLabel?: string;
+  // An event played at set times each day (Wild Brawl): each window is a row where it
+  // opens, carrying when it closes, and a row where it closes. The line between the two
+  // is lit.
+  playOpensUntil?: number;
+  isPlayClose?: boolean;
   note?: string;
   eventTypeId: string;
   occurrence: Occurrence;
@@ -66,6 +72,11 @@ export interface TreeOptions {
   shortNameOf: (eventTypeId: string) => string;
   phaseNameOf: (phaseId: string) => string;
   stepLabel: (stepId: string) => string;
+  // Events whose times of a day are one line on the day's row (Wild Brawl).
+  timesInLine: (eventTypeId: string) => boolean;
+  // A phase's or a step's instructions, opened from its row like points.
+  phaseNoteOf: (phaseId: string) => string;
+  stepNoteOf: (stepId: string) => string;
   dayNameOf: (eventTypeId: string, dayNumber: number) => string;
   // The scoring rows of one day, by their ids.
   pointSourceIdsForDay: (eventTypeId: string, dayNumber: number) => string[];
@@ -93,6 +104,12 @@ export function familyOccurrences(
   partOfByEventTypeId: Map<string, string | null>
 ): Occurrence[] {
   const familyId = partOfByEventTypeId.get(occurrence.eventTypeId) ?? occurrence.eventTypeId;
+  // An event with no parts that is not a part itself is its own whole family, as in the
+  // old app. Without this, a weekly event (Alliance Championship) pulled in last
+  // week's run as if it were part of this one.
+  const isPart = Boolean(partOfByEventTypeId.get(occurrence.eventTypeId));
+  const hasParts = Array.from(partOfByEventTypeId.values()).includes(familyId);
+  if (!isPart && !hasParts) return [occurrence];
   const reach = Math.max(10, occurrence.lengthDays || 0);
   return allNearby.filter(other => {
     const otherFamily = partOfByEventTypeId.get(other.eventTypeId) ?? other.eventTypeId;
@@ -108,29 +125,50 @@ function memberContent(member: Occurrence, options: TreeOptions): TreeRow[] {
 
   for (let dayNumber = 1; dayNumber <= member.lengthDays; dayNumber++) {
     const labels: string[] = [];
+    // The instructions of the day's steps without a time, which the day's row stands for.
+    const notes: string[] = [];
     const dayName = options.dayNameOf(member.eventTypeId, dayNumber);
     if (dayName) labels.push(dayName);
     for (const step of options.stepsByEventType.get(member.eventTypeId) ?? []) {
       if (step.startTimeUtc || step.dayNumber !== dayNumber) continue;
       const label = options.stepLabel(step.id);
       if (!labels.includes(label)) labels.push(label);
+      const note = options.stepNoteOf(step.id);
+      if (note && !notes.includes(note)) notes.push(note);
     }
     const hasOwnPoints = options.hasOwnPoints(member.eventTypeId, dayNumber);
     if (!labels.length && !hasOwnPoints) continue;
     rows.push({
       minute: dayNumber === 1 ? member.startMinute : (member.startDay + dayNumber - 1) * MINUTES_PER_DAY,
-      label: labels.join(' · ') || 'Day ' + dayNumber,
+      label: labels.join(' · ') || 'Day ' + dayNumber, note: notes.join(' '),
       eventTypeId: member.eventTypeId, occurrence: member, dayNumber, level: 1,
       pointSourceIds: hasOwnPoints ? options.pointSourceIdsForDay(member.eventTypeId, dayNumber) : []
     });
   }
 
-  for (const step of options.stepsByEventType.get(member.eventTypeId) ?? []) {
+  // An event played at set times each day: a row where each window opens, named as the
+  // game names it, and a row where it closes.
+  if (options.timesInLine(member.eventTypeId)) {
+    const whole = { start: member.startMinute, end: member.endMinute };
+    for (const window of playWindowsIn(member, options.stepsByEventType.get(member.eventTypeId) ?? [], whole)) {
+      rows.push({
+        minute: window.start, label: options.stepLabel(window.stepId), playOpensUntil: window.end,
+        eventTypeId: member.eventTypeId, occurrence: member, level: 0, pointSourceIds: []
+      });
+      rows.push({
+        minute: window.end, label: '', isPlayClose: true,
+        eventTypeId: member.eventTypeId, occurrence: member, level: 1, pointSourceIds: []
+      });
+    }
+  }
+  const timedSteps = options.timesInLine(member.eventTypeId)
+    ? [] : options.stepsByEventType.get(member.eventTypeId) ?? [];
+  for (const step of timedSteps) {
     if (!step.startTimeUtc || step.dayNumber > member.lengthDays) continue;
     rows.push({
       minute: (member.startDay + step.dayNumber - 1) * MINUTES_PER_DAY +
         options.minutesFromTime(step.startTimeUtc),
-      label: options.stepLabel(step.id),
+      label: options.stepLabel(step.id), note: options.stepNoteOf(step.id),
       eventTypeId: member.eventTypeId, occurrence: member, level: 1, pointSourceIds: []
     });
   }
@@ -184,6 +222,7 @@ export function buildEventTree(
         if (!span) return null;
         return {
           minute: span.start, endMinute: span.end, label: options.phaseNameOf(phase.id),
+          note: options.phaseNoteOf(phase.id),
           eventTypeId: member.eventTypeId, occurrence: member, level: 0, pointSourceIds: []
         } as TreeRow;
       })
@@ -271,7 +310,7 @@ export function buildEventTree(
         options.minutesFromTime(step.startTimeUtc);
       if (minute <= part.startMinute || minute >= part.endMinute) continue;
       rows.push({
-        minute, label: options.stepLabel(step.id),
+        minute, label: options.stepLabel(step.id), note: options.stepNoteOf(step.id),
         eventTypeId: part.eventTypeId, occurrence: part, level: 1,
         isSideRow: true, isSideStep: true, pointSourceIds: []
       });

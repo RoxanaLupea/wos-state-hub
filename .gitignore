@@ -17,3 +17,4 @@ Thumbs.db
 
 # Copy of the database for rendering in Claude's workspace, never committed
 tools/render/data/
+__pycache__/

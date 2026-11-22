@@ -3,19 +3,47 @@
 
 /* ---------- Page frame ---------- */
 .app { min-height: 100vh; display: flex; flex-direction: column; }
+/* The navigation is the page's frame, not a block of content: a band of its own tone
+   across the whole width with a line under it, on a phone as on a computer. */
 .top-bar {
   display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-  padding: 14px 16px 10px;
+  padding: 14px 16px 6px; margin-bottom: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
 }
 .top-bar #meButton { min-height: 36px; padding: 0 12px; }
+/* Signed in, a phone shows the player's initial in a circle, so the logo, the clock,
+   the gear and the player all fit on the first row; a computer shows the name. */
+.me-initial { display: none; }
+@media (max-width: 999px) {
+  .me-button { width: 42px; min-height: 42px; padding: 0; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; }
+  .me-button .me-initial { display: inline; font-size: 17px; font-weight: 800; }
+  .me-button .me-name { display: none; }
+}
 /* "STATE" over the state number, both as tall together as "EVENTS" beside them. */
 .brand { display: flex; align-items: center; margin-right: auto; }
 .brand .logo { width: auto; font-weight: 800; }
-.desktop-nav { display: none; gap: 4px; }
-/* The live clock: always the game's own, so it means the same on every page. */
-.clock { display: flex; align-items: baseline; gap: 5px; }
-.clock-time { font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; }
-.clock-zone { font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--text-muted); }
+/* The sections. On a phone they are the band's second row, in one line that scrolls
+   sideways; the open one is kept in view and the row fades at an edge while there are
+   more sections past it. */
+.main-nav {
+  display: flex; gap: 4px; order: 5; flex: 1 0 100%; min-width: 0;
+  overflow-x: auto; scrollbar-width: none; flex-wrap: nowrap; margin: 0 -8px;
+}
+.main-nav::-webkit-scrollbar { display: none; }
+.main-nav .nav-tab { flex: none; }
+.main-nav.more-right { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent); }
+.main-nav.more-left { -webkit-mask-image: linear-gradient(to right, transparent, #000 36px); mask-image: linear-gradient(to right, transparent, #000 36px); }
+.main-nav.more-left.more-right {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 36px, #000 calc(100% - 36px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 36px, #000 calc(100% - 36px), transparent);
+}
+/* The live clock: always the game's own, so it means the same on every page. "UTC"
+   sits over the time, the two centred on each other. On a phone the clock takes the
+   room between the logo and Sign in and sits in the middle of it. */
+.clock { display: flex; flex-direction: column; align-items: center; line-height: 1.1; flex: 1 1 auto; }
+.clock-time { font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.clock-zone { font-size: 11px; font-weight: 700; letter-spacing: .08em; color: var(--text-muted); }
 
 /* The calendar's own switches, kept together at the end of its toolbar. On a narrow
    screen they drop onto their own line, as the view switch did on its own. */
@@ -25,8 +53,8 @@
 @media (min-width: 1000px) {
   .top-bar { gap: 12px 20px; }
   .top-bar #meButton { min-height: 42px; padding: 0 16px; }
-  .clock { gap: 6px; }
-  .clock-time { font-size: 15px; }
+  .clock { flex: none; }
+  .clock-time { font-size: 16px; }
   .time-switch button { padding: 0 10px; }
 }
 .ghost-button {
@@ -46,20 +74,12 @@
      its own tone across the whole width rather than a card sitting on the page. It
      reaches past the page's padding and puts the same padding back, so the logo
      starts on the same left edge as everything below it. */
-  .top-bar {
-    margin: -16px -24px 0; padding: 14px 24px;
-    background: rgba(255, 255, 255, 0.05);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.10);
-  }
+  .top-bar { margin: -16px -24px 0; padding: 14px 24px; }
   .brand { margin-right: 0; }
 
   /* There are more sections than the old app had, so the row scrolls sideways on a
      narrow screen instead of wrapping and pushing the clock onto a second line. */
-  .desktop-nav {
-    display: flex; flex: 1 1 auto; min-width: 0; overflow-x: auto;
-    scrollbar-width: none; flex-wrap: nowrap;
-  }
-  .desktop-nav::-webkit-scrollbar { display: none; }
+  .main-nav { order: 0; flex: 1 1 auto; margin: 0; }
   .top-bar { flex-wrap: nowrap; }
   .nav-tab { flex: none; }
 }
@@ -76,6 +96,19 @@
   display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
 .step-nav button + button { border-left: 1px solid var(--glass-border); }
 .step-nav button:hover { background: rgba(255, 255, 255, 0.08); }
+/* Today stands on its own, so it reads as one thing: back to today. */
+.today-button {
+  height: 32px; display: inline-flex; align-items: center; gap: 6px; padding: 0 12px;
+  border-radius: 10px; border: 1px solid var(--glass-border); background: var(--glass);
+  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+  color: var(--text); font: inherit; font-size: 13px; font-weight: 800; cursor: pointer;
+}
+.today-button svg { color: var(--accent); }
+.today-button:hover { background: rgba(255, 255, 255, 0.08); }
+/* On a phone the calendar is swiped to move, so the arrows are not shown. */
+@media (max-width: 999px) {
+  .step-nav { display: none; }
+}
 .icon-button {
   width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center;
   border: none; background: transparent; color: var(--text-muted); border-radius: 12px;
@@ -120,6 +153,12 @@
   white-space: nowrap; color: var(--brand-accent);
 }
 .section-id strong b { color: var(--event-mark); font-weight: 800; }
+/* On a phone the title shrinks with the screen so the whole name fits on one line. */
+@media (max-width: 999px) {
+  .section-id { max-width: 100%; gap: 10px; }
+  .section-id .event-icon { width: 44px; height: 44px; border-radius: 10px; }
+  .section-id strong { font-size: min(57px, 8.6vw); }
+}
 /* The pages above, the page's own controls below, both pushed to the right so the
    title has the left. */
 .section-side {

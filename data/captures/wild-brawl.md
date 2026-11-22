@@ -49,3 +49,14 @@ timer of about 10 minutes.
 | Mythic General Decoration Component ×1 | 5 | 6,000 |
 | Lucky Hero Gear Chest ×1 | 15 | 1,000 |
 | 100 Enhancement XP Component ×1 | 30 | 500 |
+
+## Main screen (sent 22 Nov 2026, about 17:26 UTC)
+- Under the name: "Go wild in this exciting solo free-for-all!"
+- Time left: 06:34:17, so the run ends 23 Nov 2026 at 00:00 UTC (21–22 Nov run).
+- Buttons on the right: Rewards, Guide, Battle Record, Shop.
+- Matchmaking times, shown in UTC (the screen has a UTC Time switch): 02:00–04:00,
+  09:00–11:00, 14:00–16:00 and 19:00–21:00, all dated 11-22. The game's words:
+  "Matchmaking will be open daily during the 4 time slots listed above."
+- Next Matchmaking In: 01:34:17 (the 19:00 slot).
+- Two battles to enter: Same-Gen Battle (marked S11) and Cross-Gen Battle.
+- Event attempts: 9.

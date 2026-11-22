@@ -25,7 +25,7 @@ function mixWithWhite(hex: string, amount: number): string {
     .map(channel => channel.toString(16).padStart(2, '0')).join('');
 }
 
-function bannerStyle(alliance: Alliance): string {
+export function bannerStyle(alliance: Alliance): string {
   const main = alliance.mainAllianceId ? allianceById(alliance.mainAllianceId) : undefined;
   const owner = main ?? alliance;
   const base = main

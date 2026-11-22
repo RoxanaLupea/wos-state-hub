@@ -9,10 +9,10 @@
 
 import {
   eventBarSubtitle, eventTypeById, eventTypeColor, eventTypeInitials, eventTypeName, eventTypeShortName, eventTypeTag,
-  hasLogoColors, logoColors, phaseName, windowLabel
+  eventStepsByEventType, hasLogoColors, logoColors, phaseName, showsTimesInLine, windowLabel
 } from '../data/catalog.ts';
-import { MINUTES_PER_DAY, textFromDay } from '../calendar/days.ts';
-import { clockText } from '../calendar/time-mode.ts';
+import { MINUTES_PER_DAY, minutesFromTime, textFromDay } from '../calendar/days.ts';
+import { clockText, windowText } from '../calendar/time-mode.ts';
 import { spanText } from '../calendar/spans.ts';
 import { colorWithAlpha, hexToHsl, hslToHex, mixColors } from './colors.ts';
 import { escapeForPage } from './escape.ts';
@@ -72,6 +72,22 @@ export function partOpenings(part: Bar | Occurrence): { start: number; end: numb
     label: windowLabel(part.eventTypeId, index + 1)
   })).filter(opening => opening.end > opening.start);
   return openings.length ? openings : null;
+}
+
+// The windows of an event open at set times each day, as minutes, from its steps.
+function dailyWindows(bar: Bar): { start: number; end: number; dayNumber: number }[] {
+  if (!showsTimesInLine(bar.eventTypeId)) return [];
+  const windows: { start: number; end: number; dayNumber: number }[] = [];
+  for (const step of eventStepsByEventType.get(bar.eventTypeId) ?? []) {
+    if (!step.startTimeUtc || !step.endTimeUtc) continue;
+    const dayStart = (bar.startDay + step.dayNumber - 1) * MINUTES_PER_DAY;
+    windows.push({
+      start: dayStart + minutesFromTime(step.startTimeUtc),
+      end: dayStart + minutesFromTime(step.endTimeUtc),
+      dayNumber: step.dayNumber
+    });
+  }
+  return windows.sort((left, right) => left.start - right.start);
 }
 
 // The event's name without anything in brackets after it, which is how a bar and a
@@ -270,6 +286,18 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
     });
   }
 
+  // An event open at set times each day (Wild Brawl): each window is a short white line
+  // inside the bar along its bottom edge, like the white lines between days. Pointing
+  // at one, or tapping it, shows its times.
+  const windowLines = dailyWindows(bar)
+    .filter(one => one.end > piece.start && one.start < piece.end)
+    .map(one => {
+      const times = windowText(one.start, one.end);
+      return `<span class="bar-window" data-start-minute="${one.start}" data-end-minute="${one.end}"` +
+        ` data-time="${escapeForPage(times)}" role="button" tabindex="0"` +
+        ` aria-label="${escapeForPage(eventTypeName(bar.eventTypeId) + ' ' + times)}"></span>`;
+    }).join('');
+
   if (subtitle) lineTwo += `<span class="bar-sub">${escapeForPage(subtitle)}</span>`;
 
   // The parts running alongside this event: a line under the bar in the part's own
@@ -312,7 +340,8 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
   // second line of text, not centred in the bar.
   const lineTwoNames = (lineTwo.match(/class="bar-segment-name/g) ?? []).length;
   if (lineTwoNames === 1) classes.push('one-segment');
-  if (bar.stripes.length) classes.push('has-trail');
+  const trailCount = bar.stripes.length;
+  if (trailCount) classes.push('has-trail');
   if (bar.wasCancelled) classes.push('cancelled');
   if (bar.isProvisional) classes.push('provisional');
   if (isLitBar(bar.key, options.litKeys)) classes.push('lit-event');
@@ -327,7 +356,7 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
   return `<div class="${classes.join(' ')}" style="${style}"` +
     ` title="${escapeForPage(fullName + (bar.wasCancelled ? ' (cancelled)' : '') +
       (bar.isProvisional ? ' (date not confirmed)' : ''))}"` +
-    ` data-trail-count="${bar.stripes.length}" data-lane="${piece.lane}"` +
+    ` data-trail-count="${trailCount}" data-lane="${piece.lane}"` +
     ` data-first-column="${piece.firstColumn}" data-last-column="${piece.lastColumn}"` +
     ` data-left-fraction="${piece.leftFraction.toFixed(5)}" data-right-fraction="${piece.rightFraction.toFixed(5)}"` +
     ` data-event-type="${escapeForPage(bar.eventTypeId)}" data-short-name="${escapeForPage(shortName)}"` +
@@ -342,7 +371,7 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
     `<span class="bar-head">${sideLogo ? '' : logo}` +
     (bar.wasCancelled ? '<span class="cancelled-mark" aria-label="Cancelled">&times;</span>' : '') +
     `<span class="bar-label">${escapeForPage(headName)}</span>${tag}${timeText}</span>` +
-    lineTwo + stripes + '</div>';
+    lineTwo + stripes + windowLines + '</div>';
 }
 
 // A bar that shows only its marked times, as logos, instead of a block across the

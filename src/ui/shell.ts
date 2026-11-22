@@ -49,7 +49,9 @@ export const PAGES: Page[] = [
     id: 'alliance', label: 'My alliance', pages: [
       { id: 'times', label: 'Times' },
       { id: 'members', label: 'Members' },
-      { id: 'academies', label: 'Academies' }
+      { id: 'academies', label: 'Academies' },
+      { id: 'results', label: 'Results' },
+      { id: 'opponents', label: 'Opponents' }
     ]
   },
   {
@@ -107,14 +109,17 @@ export function topBar(options: TopBarOptions): string {
 
   return `<header class="top-bar">
     <div class="brand">${logoSvg(options.stateNumber, 34)}</div>
-    <nav class="desktop-nav" aria-label="Main">${tabs}</nav>
+    <nav class="main-nav" aria-label="Main">${tabs}</nav>
     <div class="clock" title="Game time">
-      <span class="clock-time" id="clockTime" aria-live="off">${gameClockText(nowMinute())}</span>
       <span class="clock-zone">UTC</span>
+      <span class="clock-time" id="clockTime" aria-live="off">${gameClockText(nowMinute())}</span>
     </div>
     ${adminButton}
-    <button type="button" class="ghost-button" data-page="player">
-      ${options.playerName ? escapeForPage(options.playerName) : 'Sign in'}</button>
+    <button type="button" class="ghost-button${options.playerName ? ' me-button' : ''}" data-page="player"
+      ${options.playerName ? `aria-label="${escapeForPage(options.playerName)}"` : ''}>${options.playerName
+        ? `<span class="me-initial" aria-hidden="true">${escapeForPage(Array.from(options.playerName)[0] ?? '')}</span>` +
+          `<span class="me-name">${escapeForPage(options.playerName)}</span>`
+        : 'Sign in'}</button>
   </header>`;
 }
 
@@ -159,16 +164,22 @@ const ARROW_RIGHT = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"
 
 export type CalendarView = 'week' | 'month' | 'year';
 
+// An arrow curling back round to a dot: Today takes you back to now.
+const TODAY_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
+  ' stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+  '<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>';
+
 // Today and the two arrows come first and never change width, so the title can grow
-// and shrink with the view without moving anything the hand is aiming at.
+// and shrink with the view without moving anything the hand is aiming at. Today is a
+// button of its own; on a phone the arrows are gone and the calendar is swiped.
 export function calendarToolbar(title: string, view: CalendarView): string {
   const mode = currentTimeMode();
   const viewButton = (id: CalendarView, label: string) =>
     `<button type="button" data-view="${id}" aria-pressed="${view === id}">${label}</button>`;
 
   return `<div class="toolbar">
+    <button type="button" class="today-button" data-step="0">${TODAY_ICON}Today</button>
     <div class="step-nav" role="group" aria-label="Move through the calendar">
-      <button type="button" data-step="0">Today</button>
       <button type="button" data-step="-1" aria-label="Previous">${ARROW_LEFT}</button>
       <button type="button" data-step="1" aria-label="Next">${ARROW_RIGHT}</button>
     </div>
@@ -184,3 +195,4 @@ export function calendarToolbar(title: string, view: CalendarView): string {
     </div>
   </div>`;
 }
+

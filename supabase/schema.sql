@@ -74,13 +74,15 @@ create table account_alt_accounts (
 );
 
 -- What someone is allowed to do. A role is either global or tied to one alliance.
--- NOT FINISHED: the full list of roles and what each may do has not been designed yet.
+-- owner sets event dates and repeats; admin can edit anything; alliance_manager is an
+-- alliance's R4s and R5s, for that alliance; state_manager does the state's planning
+-- except battles; battle_manager plans the battles.
 create table account_roles (
   id                      bigserial primary key,
   account_id              uuid not null references accounts (id) on delete cascade,
   role                    text not null
-                            check (role in ('member', 'r4', 'battle_planner',
-                                            'alliance_manager', 'admin', 'owner')),
+                            check (role in ('member', 'alliance_manager', 'state_manager',
+                                            'battle_manager', 'admin', 'owner')),
   -- Null for a role that applies across the whole state.
   alliance_id             text references alliances (id),
   granted_by              uuid,
@@ -238,6 +240,8 @@ create table results (
   id                      bigserial primary key,
   event_type_id           text not null,
   event_date              date not null,
+  -- The alliance whose own result this is; empty for a state result.
+  alliance_id             text references alliances (id),
   -- Which of our alliances acted as the state alliance for this one.
   state_alliance_id       text references alliances (id),
   -- Only for events the catalog marks as win or loss.
@@ -248,9 +252,10 @@ create table results (
   president_name          text,
   note                    text,
   updated_by              uuid,
-  updated_at              timestamptz not null default now(),
-  unique (event_type_id, event_date)
+  updated_at              timestamptz not null default now()
 );
+-- alliance_records, opponent_notes, personal_entries and the troop columns on accounts
+-- are in results-and-notes.sql.
 
 -- Opponents for one result. Its own table because Canyon Clash has two, most events
 -- have none, and the SvS phases all read the opponent from the parent SvS row.

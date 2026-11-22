@@ -34,6 +34,7 @@ const options = {
   nameOf: (id: string) => id,
   stepLabel: (id: string) => id,
   phaseNameForDay: () => '',
+  dayNameOf: () => '',
   lengthOf: (one: Occurrence) => one.endMinute - one.startMinute
 };
 

@@ -41,8 +41,13 @@ decisions made over the design sessions, so none of it has to be said twice.
 
 - The owner sets event dates and repeat intervals.
 - Admins do everything else.
-- An alliance's R4 or R5 sets their own alliance's times for the events where the
-  alliance picks the time: Bear, Foundry, Canyon, Crazy Joe and Mercenary bosses.
+- Alliance manager is the role of an alliance's R4s and R5s, given for that one
+  alliance; R4 and R5 can do the same things. They set their own alliance's times for
+  the events where the alliance picks the time (Bear, Foundry, Canyon, Crazy Joe and
+  Mercenary bosses), and record their alliance's results. A result played by an
+  alliance used as the state alliance is a state result, entered by admins.
+- State managers do the state's planning, except battles: the forts and the rest.
+- Battle managers plan the battles. They are a separate group of people.
 
 ## Identity and player data
 

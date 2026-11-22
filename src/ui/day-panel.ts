@@ -5,6 +5,7 @@ import { clockText, timeModeText } from '../calendar/time-mode.ts';
 import { escapeForPage } from './escape.ts';
 import { eventBadge } from './event-icon.ts';
 import type { AllDayItem, DayContents, Moment } from '../calendar/day-timeline.ts';
+import { playLineMarkup } from './play-line.ts';
 
 // A dot sits in a soft ring of its own colour. The colour comes from the catalog as
 // six hex digits, so the ring is the same colour with an opacity added.
@@ -28,6 +29,8 @@ function allDayItemMarkup(item: AllDayItem): string {
     <span class="all-day-text">
       <span class="event-title">${mark}${escapeForPage(item.name)}</span>
       ${item.shortLine ? `<span class="event-note">${escapeForPage(item.shortLine)}</span>` : ''}
+      ${item.playWindows && item.dayWindow
+        ? playLineMarkup(item.occurrence.eventTypeId, item.playWindows, item.dayWindow) : ''}
     </span>
     <span class="all-day-arrow" aria-hidden="true" style="color:${color}">&rsaquo;</span>
   </button>`;
@@ -52,6 +55,8 @@ export interface DayPanelOptions {
   // True when the Alliance filter is ticked but the player has not said which
   // alliance is theirs, so no alliance time can be shown.
   needsAlliancePick: boolean;
+  // The alliances to pick from, right where the prompt asks for one.
+  allianceChoices: { id: string; tag: string }[];
 }
 
 export function dayPanel(day: number, contents: DayContents, options: DayPanelOptions): string {
@@ -65,7 +70,10 @@ export function dayPanel(day: number, contents: DayContents, options: DayPanelOp
     </div></div>`;
 
   const alliancePrompt = options.needsAlliancePick
-    ? '<div class="day-empty glass">Pick your alliance to see its times.</div>' : '';
+    ? '<div class="day-empty glass">Pick your alliance to see its times.' +
+      `<div class="chips alliance-pick">${options.allianceChoices.map(one =>
+        `<button type="button" class="chip" data-my-alliance="${escapeForPage(one.id)}">${escapeForPage(one.tag)}</button>`).join('')}</div></div>`
+    : '';
 
   const nothingToShow = !contents.allDayItems.length && !contents.moments.length;
   const body = nothingToShow

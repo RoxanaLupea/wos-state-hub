@@ -162,7 +162,8 @@ The structure these feed into is in supabase/schema.sql.
 
 Used to sort registration lists. One point per tier starting at FC5, so FC5 is 1 and
 FC10 is 6. Helios adds 1, Exalted adds 1 more, and each skill level adds 1.
-Highest is 11 per troop type and 33 in total. Exalted is only possible on FC10.
+Highest is 11 per troop type and 33 in total. Helios is possible from FC5 up;
+Exalted only on FC10 (confirmed 22 Nov). Not confirmed: skill levels 0 to 3.
 
 ## Changes to make in the catalog files
 
@@ -179,8 +180,9 @@ Highest is 11 per troop type and 33 in total. Exalted is only possible on FC10.
 ## Still to design
 
 - The look of every page: Fortress, State and alliances, the calendar port, the map.
-- Roles: member, R4, battle planner, alliance manager, admin, owner, and what each may
-  do, in one place rather than scattered across tables.
+- Roles: owner, admin, alliance manager (per alliance), state manager and battle
+  manager are decided. What each may do goes in one place rather than scattered across
+  tables.
 - Sign-in with Discord and Google.
 - Notifications.
 - Translations: the PO workflow, the font, and a CJK companion face.

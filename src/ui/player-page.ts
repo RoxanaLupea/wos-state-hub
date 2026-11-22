@@ -1,48 +1,74 @@
-// The player's own page: the in-game data events and rosters read from them.
-//
-// Until signing in exists, the one thing here that works is picking which alliance is
-// yours. Everything in the app that depends on that — the alliance bars, the times in
-// the day panel, the alliance pages — comes alive once it is set.
+// The page behind "Sign in". Signed out, it is the sign-in page: a fixed title,
+// signing in with Discord (first, because every alliance already uses it) or Google,
+// and "Continue as a guest". Signed in, it is the player's own page: their in-game
+// name and id, their alliance, and their farms and alts.
 import './pages.css';
+import './forms.css';
 import { escapeForPage } from './escape.ts';
 import type { Alliance } from '../data/alliances.ts';
+import type { SignedInPerson } from '../data/auth.ts';
 
 export interface PlayerPageOptions {
   alliances: Alliance[];
   myAllianceId: string | null;
+  person: SignedInPerson | null;
+  stateNumber: string;
+  // Power and troop tiers, kept on the account.
+  troopsHtml: string;
+}
+
+function signInPage(stateNumber: string): string {
+  return `<section class="sign-in glass"><h2>${escapeForPage(stateNumber)} State Hub</h2>` +
+    '<button type="button" class="primary-button sign-in-button" data-sign-in="discord">Sign in with Discord</button>' +
+    '<button type="button" class="sign-in-button" data-sign-in="google">Sign in with Google</button>' +
+    '<button type="button" class="guest-link" data-page="calendar">Continue as a guest</button>' +
+    '<p class="form-message" data-sign-in-message></p></section>';
+}
+
+function allianceOptions(alliances: Alliance[], chosen: string | null): string {
+  const mains = alliances.filter(one => !one.mainAllianceId).sort((left, right) => left.sortOrder - right.sortOrder);
+  const ordered = mains.flatMap(main => [main, ...alliances
+    .filter(one => one.mainAllianceId === main.id).sort((left, right) => left.sortOrder - right.sortOrder)]);
+  return '<option value="">None</option>' + ordered.map(one =>
+    `<option value="${escapeForPage(one.id)}"${one.id === chosen ? ' selected' : ''}>` +
+    `${escapeForPage(one.tag + ' · ' + one.name)}</option>`).join('');
 }
 
 export function playerPage(options: PlayerPageOptions): string {
-  const mains = options.alliances
-    .filter(alliance => !alliance.mainAllianceId)
-    .sort((left, right) => left.sortOrder - right.sortOrder);
+  const person = options.person;
+  if (!person) return signInPage(options.stateNumber);
 
-  const choices = mains.map(main => {
-    const academies = options.alliances
-      .filter(alliance => alliance.mainAllianceId === main.id)
-      .sort((left, right) => left.sortOrder - right.sortOrder);
-    return [main, ...academies];
-  }).flat();
+  const account = person.account;
+  const alts = person.alts.map(alt =>
+    '<div class="admin-item"><div class="admin-item-text">' +
+    `<span class="admin-item-title">${escapeForPage(alt.inGameName || alt.inGameId)}</span>` +
+    `<span class="admin-item-meta">${escapeForPage((alt.kind === 'farm' ? 'Farm' : 'Alt') + (alt.inGameId ? ' · ' + alt.inGameId : ''))}</span>` +
+    `</div><button type="button" class="danger-button small-button" data-remove-alt="${alt.id}">Remove</button></div>`).join('');
 
-  const buttons = choices.map(alliance =>
-    `<button type="button" class="chip" aria-pressed="${alliance.id === options.myAllianceId}"` +
-    ` data-my-alliance="${escapeForPage(alliance.id)}">` +
-    `${escapeForPage(alliance.tag)}</button>`).join('');
+  return '<section class="admin-section glass"><h2>Your account</h2>' +
+    `<p class="admin-help">Signed in as ${escapeForPage(person.loginName || 'you')}. Every list on the site shows your in-game name.</p>` +
+    '<form class="edit-form" data-form="account">' +
+    '<div class="form-row">' +
+    `<label class="form-field"><span>In-game name</span><input class="text-input" name="inGameName" value="${escapeForPage(account?.inGameName ?? '')}"></label>` +
+    `<label class="form-field"><span>In-game id</span><input class="text-input" name="inGameId" inputmode="numeric" value="${escapeForPage(account?.inGameId ?? '')}"></label>` +
+    '</div>' +
+    `<label class="form-field"><span>Alliance</span><select class="text-input" name="allianceId">${allianceOptions(options.alliances, account?.allianceId ?? options.myAllianceId)}</select></label>` +
+    '<p class="form-message" data-form-message></p>' +
+    '<div class="form-actions"><button type="submit" class="primary-button">Save</button></div></form></section>' +
 
-  return '<section class="admin-section glass"><h2>Player</h2>' +
-    '<p class="admin-help">Signing in is not built yet, so nothing here is saved. ' +
-    'Picking your alliance does work, and the rest of the app follows it.</p>' +
-    '<div class="alliance-block"><span class="alliance-name">My alliance</span>' +
-    `<div class="chips">${buttons || '<span class="admin-item-meta">No alliances yet.</span>'}</div>` +
-    (options.myAllianceId
-      ? ''
-      : '<span class="admin-item-meta">With none picked, no alliance times show anywhere.</span>') +
-    '</div></section>' +
-    '<section class="admin-section glass"><h2>Still to build</h2>' +
-    '<ul class="plan-list">' +
-    '<li>Your in-game name and id, and your farms and alts</li>' +
-    '<li>Your player power and your foundry power, with a prompt when they go stale</li>' +
-    '<li>Your troop tiers and skill levels</li>' +
-    '<li>Which slots you actually play: bear 1 or 2, which legion, another alliance\'s time</li>' +
-    '</ul></section>';
+    '<section class="admin-section glass"><h2>Farms and alts</h2>' +
+    `<div class="admin-list">${alts || '<span class="admin-item-meta">None yet.</span>'}</div>` +
+    '<form class="edit-form" data-form="alt"><div class="form-row">' +
+    '<label class="form-field"><span>In-game name</span><input class="text-input" name="inGameName" required></label>' +
+    '<label class="form-field"><span>In-game id</span><input class="text-input" name="inGameId" inputmode="numeric"></label>' +
+    '</div><label class="form-field"><span>Kind</span><select class="text-input" name="kind">' +
+    '<option value="farm">Farm</option><option value="alt">Alt</option></select></label>' +
+    '<p class="form-message" data-form-message></p>' +
+    '<div class="form-actions"><button type="submit" class="primary-button">Add</button></div></form></section>' +
+
+    options.troopsHtml +
+    '<section class="admin-section glass"><h2>Still to build here</h2><ul class="plan-list">' +
+    '<li>Your heroes</li>' +
+    '<li>Your own results and statistics</li></ul>' +
+    '<div class="form-actions"><button type="button" class="danger-button small-button" data-sign-out>Sign out</button></div></section>';
 }

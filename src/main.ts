@@ -8,7 +8,8 @@ import {
 import { fortressPlanning } from './ui/fortress-planning.ts';
 import { phaseOf, seasonNumberOf, seasonStartFor, FORT_PHASES } from './calendar/fort-season.ts';
 import { fortressBoard, seasonTotals } from './ui/fortress.ts';
-import { loadTransferDates, loadTransferGroups } from './data/transfer-groups.ts';
+import { loadGenerationsOfState, loadTransferDates, loadTransferGroups } from './data/transfer-groups.ts';
+import { setGenerationSteps } from './data/heroes.ts';
 import {
   loadTransferWindows, loadCandidatesOf,
   type TransferWindow, type TransferCandidate
@@ -27,7 +28,7 @@ import { loadDateChanges, loadSchedules, loadSettings } from './data/schedules.t
 import {
   categoryOf, dayNameOf, eventStepsByEventType, eventTypeById, eventTypeName, eventTypeShortName,
   isDetailsOnly, partOfByEventTypeId, phaseName, phaseNameForDay, phaseShortName, phasesByEventType,
-  pointSourcesForDay, sortOrderOf, stepLabel
+  phaseNote, pointSourcesForDay, showsTimesInLine, sortOrderOf, stepLabel, stepNote
 } from './data/catalog.ts';
 import {
   minutesFromTime, startOfMonth, startOfWeek, textFromDay, todayNumber, yearAndMonthOf, dayFromText, MINUTES_PER_DAY
@@ -35,9 +36,31 @@ import {
 import { buildOccurrences, groupChanges, type ExpandOptions, type Occurrence, type Schedule } from './calendar/occurrences.ts';
 import { buildBarsForRange, type Bar } from './calendar/bars.ts';
 import { daySegments } from './calendar/day-segments.ts';
-import { contentsOfDay } from './calendar/day-timeline.ts';
+import { contentsOfDay, timelineOrder, windowOfDay, type Moment } from './calendar/day-timeline.ts';
+import { fortBattleIsShown, fortBattlesOnDay, fortPhaseOfDay } from './calendar/fort-battles.ts';
+import { fortBattlesSection } from './ui/fort-battles.ts';
+import { showdownScoreSection } from './ui/showdown-score.ts';
+import { fortFullName } from './calendar/fort-season.ts';
 import { buildEventTree, familyOccurrences } from './calendar/event-tree.ts';
-import { gameClockText, nowMinute, setTimeMode, type TimeMode } from './calendar/time-mode.ts';
+import { currentTimeMode, gameClockText, nowMinute, setTimeMode, type TimeMode } from './calendar/time-mode.ts';
+import { readPreferences, writePreferences } from './data/preferences.ts';
+import {
+  addAltAccount, isAdmin, isOwner, leadsAlliance, managesBattles, managesState, removeAltAccount, saveAccount, signInWith, signOut,
+  signedInPerson, type SignedInPerson, type SignInProvider
+} from './data/auth.ts';
+import {
+  cleanTime, saveAllianceTime, saveDateChange, saveFortAssignment, saveScheduleRepeat
+} from './data/editing.ts';
+import { allianceTimeForm, dateChangeForm, fortForm, pencilButton, scheduleForm } from './ui/edit-forms.ts';
+import { deleteRow, loadRows, saveRow, type Row } from './data/records.ts';
+import {
+  ALLIANCE_RESULT_EVENTS, allianceResultsPage, championshipStars, opponentNotesPage, resultsTab, showdownScoreOf
+} from './ui/results.ts';
+import { personalEntryForm, personalEntryOf } from './ui/personal-entry.ts';
+import {
+  academiesPage, availabilityPage, facilitiesPage, membersPage, planPage, requestsPage, rolesPage,
+  playerTroopsSection, rosterPage, settingsPage, territoryPage, transferWorkSections, troopScore, type WorkContext
+} from './ui/working-pages.ts';
 import { yearRunSteps, yearViewRuns, type YearRun } from './calendar/year-runs.ts';
 import { PAGES, calendarToolbar, pageById, sectionNav, topBar, type CalendarView } from './ui/shell.ts';
 import { pagePlan } from './ui/page-plan.ts';
@@ -91,6 +114,8 @@ const view = {
   // The run whose own page is open, and which half of it is shown.
   openEventKey: null as string | null,
   openEventView: 'timeline',
+  // The info tab last opened. An event without that tab opens on its first one.
+  openInfoTab: '',
   // The day the open event was tapped on, used to find it among the runs nearby.
   openEventDay: todayNumber(),
   // The day it was opened from, when it was opened from a day's timeline.
@@ -104,9 +129,13 @@ const view = {
   pickedRowKey: null as string | null,
   // Which alliance times the player follows, by schedule.
   followedScheduleIds: new Set<string>(),
+  // The form a pencil opened: "schedule|<id>", "alliance|<id>", "date|<id>|<date>" or
+  // "fort|<season>|<phase>|<fort>". Null when none is open.
+  editing: null as string | null,
   rewardView: {
     openList: new Map<string, string>(),
-    openBand: new Map<string, string>()
+    openBand: new Map<string, string>(),
+    ownBand: new Map<string, string>()
   } as RewardViewState
 };
 
@@ -133,6 +162,8 @@ let transferGroups: TransferGroup[] = [];
 let svsBattleDays = new Set<number>();
 let sunfireDays = new Set<number>();
 let alliances: Alliance[] = [];
+// Who is signed in on this browser, or null for a guest.
+let person: SignedInPerson | null = null;
 
 function runsBetween(fromDay: number, toDay: number) {
   if (!expandOptions) return [];
@@ -253,16 +284,69 @@ function panelContents(): string {
     day,
     {
       stepsByEventType: eventStepsByEventType, nameOf: eventTypeName, stepLabel,
-      phaseNameForDay, myAllianceIds,
+      phaseNameForDay, dayNameOf, myAllianceIds, timesInLine: showsTimesInLine,
       allianceTagsOf: one => one.allianceIds.length
         ? ' · ' + one.allianceIds.filter(id => myAllianceIds.includes(id)).map(allianceTag).join(', ')
         : '',
       lengthOf: one => one.endMinute - one.startMinute
     });
 
+  contents.moments = timelineOrder(contents.moments.concat(fortMomentsOfDay(day, myAllianceIds), pickedTimesOfDay(day)));
+
   return dayPanel(day, contents, {
-    needsAlliancePick: view.shownCategories.has('alliance') && !myAllianceIds.length
+    needsAlliancePick: view.shownCategories.has('alliance') && !myAllianceIds.length,
+    allianceChoices: alliancesStillHere(alliances)
+      .slice().sort((left, right) => left.sortOrder - right.sortOrder)
+      .map(one => ({ id: one.id, tag: one.tag }))
   });
+}
+
+// The fortress battles on a day, as rows of its timeline: "Fortress No. 3 battle · TOP".
+// Each opens the Fortress Battles event it belongs to.
+function fortMomentsOfDay(day: number, myAllianceIds: string[]): Moment[] {
+  const window = windowOfDay(day);
+  const count = { firstBattleDay: firstFortBattleDay, firstSeason: FIRST_FORT_SEASON };
+  const fortRuns = runsBetween(day - 8, day + 8).filter(one => one.eventTypeId === 'fortress-battles');
+  const moments: Moment[] = [];
+  // With "Mine" a shown day can reach into the game days either side of it.
+  for (let gameDay = day - 1; gameDay <= day + 1; gameDay++) {
+    for (const battle of fortBattlesOnDay(gameDay, count, fortAssignments)) {
+      if (battle.minute === null || battle.minute < window.start || battle.minute >= window.end) continue;
+      if (!fortBattleIsShown(battle, view.shownCategories, myAllianceIds)) continue;
+      const run = fortRuns.find(one => one.startMinute <= battle.minute! && one.endMinute > battle.minute!);
+      const holder = battle.allianceId ? ' · ' + allianceTag(battle.allianceId) : '';
+      moments.push({
+        minute: battle.minute, eventTypeId: 'fortress-battles', occurrenceKey: run?.key ?? '',
+        title: fortFullName(battle.fort) + ' battle' + holder,
+        isEnd: false, isReset: false, priority: 0
+      });
+    }
+  }
+  return moments;
+}
+
+// The times the player picked for their personal events (Frostfire's slot), as
+// moments in the day's timeline.
+function pickedTimesOfDay(day: number): Moment[] {
+  if (!person) return [];
+  const entries = rowsOf('personal_entries');
+  if (!entries) return [];
+  const window = windowOfDay(day);
+  const moments: Moment[] = [];
+  for (const run of runsBetween(day - 1, day + 1)) {
+    if (categoryOf(run.eventTypeId) !== 'personal' || !view.shownCategories.has('personal')) continue;
+    const entry = personalEntryOf(entries, run);
+    if (!entry?.my_time) continue;
+    for (let runDay = run.startDay; runDay <= run.endDay; runDay++) {
+      const minute = runDay * MINUTES_PER_DAY + minutesFromTime(String(entry.my_time).slice(0, 5));
+      if (minute < window.start || minute >= window.end || minute < run.startMinute || minute >= run.endMinute) continue;
+      moments.push({
+        minute, eventTypeId: run.eventTypeId, occurrenceKey: run.key,
+        title: eventTypeName(run.eventTypeId) + ' · your slot', isEnd: false, isReset: false, priority: 0
+      });
+    }
+  }
+  return moments;
 }
 
 // What a gathered bar's key looks like: "group|<event type>|<day>".
@@ -283,8 +367,50 @@ function groupPanelMarkup(key: string, myAllianceIds: string[]): string | null {
   return groupPanel({
     eventTypeId, day, times, backToDay: view.openedFromDay,
     nameOfTime: nameOfAllianceTime,
-    followedScheduleIds: view.followedScheduleIds
+    followedScheduleIds: view.followedScheduleIds,
+    pencilFor: one => mayChangeAllianceTime(one)
+      ? pencilButton('alliance|' + one.scheduleId, 'Change this time') : '',
+    formFor: one => allianceTimeFormFor(one)
   });
+}
+
+// An alliance's R4 or R5, or an admin, may change that alliance's own time.
+function mayChangeAllianceTime(occurrence: Occurrence): boolean {
+  return occurrence.allianceIds.some(id => leadsAlliance(person, id));
+}
+
+function allianceTimeFormFor(occurrence: Occurrence): string {
+  if (view.editing !== 'alliance|' + occurrence.scheduleId) return '';
+  const schedule = schedules.find(one => one.id === occurrence.scheduleId);
+  return schedule ? allianceTimeForm(schedule, nameOfAllianceTime(occurrence)) : '';
+}
+
+// One pencil in an event's head, for anyone who may change something about it. It
+// opens every form they may use: this date (admins), the event's dates and repeat
+// (the owner), or their alliance's own time (its R4 or R5).
+function headPencilsOf(occurrence: Occurrence): string {
+  const ownTime = occurrence.allianceIds.length > 0;
+  const mayEdit = isAdmin(person) || (ownTime && mayChangeAllianceTime(occurrence));
+  return mayEdit ? pencilButton('head|' + occurrence.key, 'Change this event') : '';
+}
+
+// The forms the head pencil opened, for this event.
+function headFormOf(occurrence: Occurrence): string {
+  if (view.editing !== 'head|' + occurrence.key) return '';
+  const schedule = schedules.find(one => one.id === occurrence.scheduleId);
+  if (!schedule) return '';
+  let html = '';
+  if (isAdmin(person)) {
+    const originalDate = textFromDay(occurrence.originalDay);
+    const change = expandOptions?.changesBySchedule.get(schedule.id)?.get(originalDate);
+    html += dateChangeForm(schedule.id, originalDate, change, schedule.datesAreEstimated);
+  }
+  if (occurrence.allianceIds.length > 0) {
+    if (mayChangeAllianceTime(occurrence)) html += allianceTimeForm(schedule, nameOfAllianceTime(occurrence));
+  } else if (isOwner(person)) {
+    html += scheduleForm(schedule);
+  }
+  return html;
 }
 
 // "DVL BT1": the alliance tags of a time, and which of the event's slots it is.
@@ -308,6 +434,7 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
     phasesByEventType, stepsByEventType: eventStepsByEventType, minutesFromTime,
     partOfByEventTypeId, nameOf: eventTypeName, shortNameOf: eventTypeShortName,
     phaseNameOf: phaseName, stepLabel, dayNameOf,
+    phaseNoteOf: phaseNote, stepNoteOf: stepNote, timesInLine: showsTimesInLine,
     pointSourceIdsForDay: (eventTypeId, dayNumber) =>
       pointSourcesForDay(eventTypeId, dayNumber).map(source => source.id),
     hasOwnPoints: (eventTypeId, dayNumber) =>
@@ -330,6 +457,7 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
 
   const dayInEvent = Math.min(Math.max(day - occurrence.startDay + 1, 1), occurrence.lengthDays);
 
+  view.rewardView.ownBand = ownRewardBands();
   return eventPanel(occurrence, {
     tree, day, dayOfEvent: dayInEvent,
     allianceTags: occurrence.allianceIds.length
@@ -341,8 +469,54 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
     shownView: view.openEventView,
     rewardView: view.rewardView,
     changeNote: occurrence.note,
-    backToDay: view.openedFromDay
+    backToDay: view.openedFromDay,
+    openTab: view.openInfoTab,
+    headPencils: headPencilsOf(occurrence),
+    editFormHtml: headFormOf(occurrence),
+    fortBattlesHtml: occurrence.eventTypeId === 'fortress-battles'
+      ? fortBattlesHtmlOf(occurrence.startDay, occurrence.endDay, myAllianceIds) : '',
+    resultsHtml: resultsTab({
+      context: workContext(), eventTypeId: occurrence.eventTypeId, runDate: resultRunDate(occurrence, nearby),
+      isSwitchedOff: resultsSwitchedOff
+    }),
+    personalHtml: personalEntryForm({
+      occurrence, category: categoryOf(occurrence.eventTypeId), userId: person?.userId ?? null,
+      entries: person ? rowsOf('personal_entries') : []
+    }),
+    // A day without a recorded winner shows a dash.
+    scoreHtml: showdownScoreSection({
+      eventTypeId: occurrence.eventTypeId, stateNumber: STATE_NUMBER,
+      allianceId: view.myAllianceId,
+      score: occurrence.eventTypeId === 'showdown' ? showdownScoreOf(workContext(), textFromDay(occurrence.startDay)) : null,
+      todayInRun: todayNumber() >= occurrence.startDay && todayNumber() <= occurrence.endDay
+        ? todayNumber() - occurrence.startDay + 1 : 0
+    })
   });
+}
+
+// The battles of the fortress phase whose battle day falls in these days.
+function fortBattlesHtmlOf(firstDay: number, lastDay: number, myAllianceIds: string[]): string {
+  const count = { firstBattleDay: firstFortBattleDay, firstSeason: FIRST_FORT_SEASON };
+  for (let day = firstDay; day <= lastDay; day++) {
+    const fortDay = fortPhaseOfDay(day, count);
+    if (!fortDay) continue;
+    const fortKey = (battle: { phase: number; fort: string }) =>
+      'fort|' + fortDay.season + '|' + battle.phase + '|' + battle.fort;
+    return fortBattlesSection({
+      battleDay: day, phase: fortDay.phase, myAllianceIds,
+      battles: fortBattlesOnDay(day, count, fortAssignments),
+      // State managers and admins set who holds each fort and when its battle starts.
+      pencilFor: battle => managesState(person) ? pencilButton(fortKey(battle), 'Change this fort') : '',
+      formFor: battle => {
+        if (view.editing !== fortKey(battle)) return '';
+        const held = fortAssignments.find(one =>
+          one.season === fortDay.season && one.phase === battle.phase && one.fort === battle.fort);
+        return fortForm(fortKey(battle), fortFullName(battle.fort), alliancesStillHere(alliances),
+          battle.allianceId, held?.battleTimeUtc ?? null);
+      }
+    });
+  }
+  return '';
 }
 
 // The fortress board for the phase on screen. Without the season's first battle day
@@ -484,6 +658,7 @@ function nextTransferMarkup(): string {
   const date = window?.transferDate ??
     transferDates.find(one => one >= todayText) ?? '';
   if (!date) return '';
+  const work = person ? `<div class="work-page">${transferWorkSections(workContext(), date)}</div>` : '';
   return nextTransferPage({
     date,
     window,
@@ -491,7 +666,7 @@ function nextTransferMarkup(): string {
     alliances,
     ourGroup: groupOfState(bigGroupsOf(nextWindowGroups), Number(STATE_NUMBER)) ?? null,
     follows: FOLLOWS_TEXT[followsOfDate(date)] ?? ''
-  });
+  }) + work;
 }
 
 function pastTransfersMarkup(): string {
@@ -502,6 +677,104 @@ function pastTransfersMarkup(): string {
     windows: past.map(one => ({ window: one, candidates: candidatesOf(one.id) })),
     alliances
   });
+}
+
+// The working pages: what is not designed yet, shown as tables of what we have.
+const tableRows = new Map<string, Row[]>();
+const tablesBeingRead = new Set<string>();
+// The choices made above the working pages' tables, such as how a list is sorted.
+const workChoices = new Map<string, string>();
+
+// A table's rows, read the first time a page asks; null until they arrive.
+function rowsOf(table: string): Row[] | null {
+  const rows = tableRows.get(table);
+  if (rows) return rows;
+  if (!tablesBeingRead.has(table)) {
+    tablesBeingRead.add(table);
+    loadRows(table)
+      .then(loaded => tableRows.set(table, loaded))
+      .catch(() => tableRows.set(table, []))
+      .finally(() => { tablesBeingRead.delete(table); draw(); });
+  }
+  return null;
+}
+
+async function rereadTables(...tables: string[]): Promise<void> {
+  await Promise.all(tables.map(async table => {
+    tableRows.set(table, await loadRows(table).catch(() => tableRows.get(table) ?? []));
+  }));
+}
+
+function workContext(): WorkContext {
+  const run = currentEventRun();
+  return {
+    rowsOf, alliances: alliancesStillHere(alliances), myAllianceId: view.myAllianceId,
+    userId: person?.userId ?? null,
+    run: run ? { eventTypeId: run.eventTypeId, date: textFromDay(run.startDay) } : null,
+    editing: view.editing,
+    choiceOf: name => workChoices.get(name) ?? '',
+    isAdmin: isAdmin(person), managesState: managesState(person), managesBattles: managesBattles(person),
+    leads: allianceId => leadsAlliance(person, allianceId),
+    mayReadBlacklist: isAdmin(person) || Boolean(person?.roles.some(one => one.role === 'alliance_manager'))
+  };
+}
+
+// The date a result is recorded under: the run's first day; for SvS, the day of its
+// battle, as the SvS history has always been kept; for a part of a bigger event, the
+// first day of the whole event.
+function resultRunDate(occurrence: Occurrence, nearby: Occurrence[]): string {
+  if (partOfByEventTypeId.get(occurrence.eventTypeId) === 'svs') {
+    const battle = nearby.filter(one => one.eventTypeId === 'svs-battle' && one.startDay >= occurrence.startDay - 1)
+      .sort((left, right) => left.startDay - right.startDay)[0];
+    if (battle) return textFromDay(battle.startDay);
+  }
+  const parentId = partOfByEventTypeId.get(occurrence.eventTypeId);
+  const parent = parentId ? nearby.find(one => one.eventTypeId === parentId &&
+    one.startDay <= occurrence.startDay && one.endDay >= occurrence.startDay) : undefined;
+  return textFromDay((parent ?? occurrence).startDay);
+}
+
+// The reward bands of the player's alliance: its Showdown Star Rating's band and its
+// Winter Siege and Championship tiers, so its members see their own rewards first.
+function ownRewardBands(): Map<string, string> {
+  const bands = new Map<string, string>();
+  const record = view.myAllianceId
+    ? (rowsOf('alliance_records') ?? []).find(one => one.alliance_id === view.myAllianceId) : undefined;
+  if (!record) return bands;
+  const rating = Number(record.showdown_star_rating);
+  if (record.showdown_star_rating !== null && record.showdown_star_rating !== undefined && !Number.isNaN(rating)) {
+    bands.set('showdown|star', rating >= 10 ? '10+' : rating >= 6 ? '6-9' : rating >= 3 ? '3-5' : '1-2');
+  }
+  if (record.winter_siege_tier) bands.set('winter-siege|tier', String(record.winter_siege_tier));
+  if (record.championship_tier) bands.set('alliance-championship|group', String(record.championship_tier));
+  return bands;
+}
+
+// Whether an alliance switched off an event in its results section.
+function resultsSwitchedOff(allianceId: string, eventTypeId: string): boolean {
+  const record = (rowsOf('alliance_records') ?? []).find(one => one.alliance_id === allianceId);
+  return Array.isArray(record?.results_off) && (record.results_off as string[]).includes(eventTypeId);
+}
+
+function workingPageMarkup(openPage: string, subPage: string): string {
+  const key = openPage + '|' + subPage;
+  if (key === 'event|availability') return availabilityPage(workContext());
+  if (key === 'event|roster') return rosterPage(workContext());
+  if (key === 'event|plan') return planPage(workContext());
+  if (key === 'alliance|members') return membersPage(workContext(), allianceFamilyOf(view.myAllianceId));
+  if (key === 'alliance|academies') return academiesPage(workContext());
+  if (key === 'alliance|results') return allianceResultsPage(workContext());
+  if (key === 'alliance|opponents') {
+    return opponentNotesPage(workContext(), workChoices.get('opponents-others') === 'on', workChoices.get('opponents-all') === 'on');
+  }
+  if (key === 'map|territory') return territoryPage(workContext());
+  if (key === 'map|facilities') return facilitiesPage(workContext());
+  if (openPage === 'admin' && isAdmin(person)) {
+    if (subPage === 'settings') return settingsPage(workContext());
+    if (subPage === 'roles') return rolesPage(workContext());
+    if (subPage === 'requests') return requestsPage(workContext());
+  }
+  return '';
 }
 
 // The controls that belong to the open page, shown in the page head.
@@ -552,9 +825,17 @@ function putBackScrollPlaces(app: HTMLElement, places: ScrollPlaces): void {
   startAtTop.wholePage = false;
 }
 
+// The event a form was opened on. Moving to another event, page or day closes it.
+let editingPlace = '';
+
 function draw(): void {
   const app = document.getElementById('app');
   if (!app) return;
+  const place = view.openPage + '|' + (view.openEventKey ?? '') + '|' + view.chosenDay;
+  if (place !== editingPlace) {
+    if (editingPlace) view.editing = null;
+    editingPlace = place;
+  }
   const places = scrollPlaces(app);
   drawPage(app);
   putBackScrollPlaces(app, places);
@@ -562,19 +843,98 @@ function draw(): void {
     view.scrollsToMarkedRow = false;
     scrollToMarkedRow(app);
   }
+  // On a phone the day's panel is a sheet over the page. While it is up, the page under
+  // it is hidden, so the sheet can fade at its edges into the same background.
+  app.classList.toggle('sheet-open', view.isPanelOpen && view.openPage === 'calendar');
   watchScrollEdges(app);
+  showOpenTab(app);
+  syncHistory();
+  rememberChoices();
 }
 
-// An open event's body fades at an edge while there is more to scroll past it.
+// The player's choices are kept between visits, as the old app kept them.
+function rememberChoices(): void {
+  writePreferences({
+    categories: Array.from(view.shownCategories),
+    hiddenEvents: Array.from(view.hiddenEvents),
+    followedScheduleIds: Array.from(view.followedScheduleIds),
+    calendarView: view.calendarView,
+    timeMode: currentTimeMode(),
+    myAllianceId: view.myAllianceId,
+    opponentNotes: { others: workChoices.get('opponents-others') ?? '', all: workChoices.get('opponents-all') ?? '' }
+  });
+}
+
+// The choices kept from the last visit. An alliance that has left the state since, or
+// a category the site no longer has, is dropped.
+function applyKeptChoices(): void {
+  const kept = readPreferences();
+  if (kept.opponentNotes) {
+    workChoices.set('opponents-others', kept.opponentNotes.others);
+    workChoices.set('opponents-all', kept.opponentNotes.all);
+  }
+  if (kept.categories) {
+    view.shownCategories = new Set(kept.categories.filter(id => CATEGORY_ORDER.includes(id)));
+  }
+  if (kept.hiddenEvents) view.hiddenEvents = new Set(kept.hiddenEvents);
+  if (kept.followedScheduleIds) view.followedScheduleIds = new Set(kept.followedScheduleIds);
+  if (kept.calendarView) view.calendarView = kept.calendarView;
+  if (kept.timeMode) setTimeMode(kept.timeMode);
+  if (kept.myAllianceId !== undefined) {
+    const isStillHere = kept.myAllianceId === null ||
+      alliancesStillHere(alliances).some(one => one.id === kept.myAllianceId);
+    view.myAllianceId = isStillHere ? kept.myAllianceId : null;
+  }
+}
+
+// Rows that scroll sideways when their names do not fit: the sections in the top band
+// on a phone, and an event's tabs. The open one is always brought into view, and the
+// row fades at an edge while there are more names past it.
+const SIDEWAYS_ROWS: [string, string][] = [
+  ['.main-nav', '.nav-tab[aria-current="page"]'],
+  ['.info-tabs', '.info-tab[aria-selected="true"]']
+];
+
+function showOpenTab(app: HTMLElement): void {
+  for (const [rowSelector, openSelector] of SIDEWAYS_ROWS) {
+    const row = app.querySelector<HTMLElement>(rowSelector);
+    if (!row) continue;
+    const open = row.querySelector<HTMLElement>(openSelector);
+    if (open) {
+      const left = open.offsetLeft - row.offsetLeft;
+      if (left < row.scrollLeft) row.scrollLeft = left;
+      else if (left + open.offsetWidth > row.scrollLeft + row.clientWidth) {
+        row.scrollLeft = left + open.offsetWidth - row.clientWidth;
+      }
+    }
+    const update = () => {
+      row.classList.toggle('more-left', row.scrollLeft > 1);
+      row.classList.toggle('more-right', row.scrollLeft + row.clientWidth < row.scrollWidth - 1);
+    };
+    update();
+    row.addEventListener('scroll', update, { passive: true });
+  }
+}
+
+// The boxes that scroll on their own. Each fades at an edge while there is more to
+// scroll past it, instead of cutting the rows off.
+const FADING_BOXES = '.event-page-body, .day-panel, .calendar-panel, .admin-page';
+
 function watchScrollEdges(app: HTMLElement): void {
-  const body = app.querySelector<HTMLElement>('.event-page-body');
-  if (!body) return;
-  const update = () => {
-    body.classList.toggle('more-above', body.scrollTop > 1);
-    body.classList.toggle('more-below', body.scrollTop + body.clientHeight < body.scrollHeight - 1);
-  };
-  update();
-  body.addEventListener('scroll', update, { passive: true });
+  for (const box of Array.from(app.querySelectorAll<HTMLElement>(FADING_BOXES))) {
+    const update = () => {
+      // A box that does not scroll (it shows everything, or the window scrolls it)
+      // never fades.
+      const overflow = getComputedStyle(box).overflowY;
+      const scrolls = (overflow === 'auto' || overflow === 'scroll') &&
+        box.scrollHeight > box.clientHeight + 1;
+      box.classList.toggle('more-above', scrolls && box.scrollTop > 1);
+      box.classList.toggle('more-below', scrolls &&
+        box.scrollTop + box.clientHeight < box.scrollHeight - 1);
+    };
+    update();
+    box.addEventListener('scroll', update, { passive: true });
+  }
 }
 
 // An event that has just opened shows its marked row: if the row is out of sight, the
@@ -601,14 +961,17 @@ function drawPage(app: HTMLElement): void {
     stateNumber: STATE_NUMBER,
     openPage: view.openPage,
     eventLabel: currentEventLabel(),
-    // Nobody is an admin until sign-in exists.
-    isAdmin: false,
-    playerName: null
+    isAdmin: isAdmin(person),
+    // Signed in: the in-game name once it is set, otherwise "Me".
+    playerName: person ? person.account?.inGameName || 'Me' : null
   });
 
   if (view.openPage === 'player') {
     app.innerHTML = bar +
-      `<main class="page">${playerPage({ alliances: alliancesStillHere(alliances), myAllianceId: view.myAllianceId })}</main>`;
+      `<main class="page">${playerPage({
+        alliances: alliancesStillHere(alliances), myAllianceId: view.myAllianceId, person, stateNumber: STATE_NUMBER,
+        troopsHtml: playerTroopsSection(workContext())
+      })}</main>`;
     return;
   }
 
@@ -624,7 +987,8 @@ function drawPage(app: HTMLElement): void {
         ? allianceTimesPage(view.myAllianceId ? allianceById(view.myAllianceId) : undefined, schedules) :
       view.openPage === 'transfers' && subPage === 'timeline' ? predictionsMarkup() :
       view.openPage === 'transfers' && subPage === 'invites' ? nextTransferMarkup() :
-      view.openPage === 'transfers' && subPage === 'records' ? pastTransfersMarkup() : '';
+      view.openPage === 'transfers' && subPage === 'records' ? pastTransfersMarkup() :
+      workingPageMarkup(view.openPage, subPage);
     app.innerHTML = bar +
       `<main class="page" data-section="${view.openPage}">` +
       `${sectionNav(view.openPage, subPage, pageControls(view.openPage, subPage))}` +
@@ -663,6 +1027,16 @@ function drawPage(app: HTMLElement): void {
 const PLANNED_EVENT_TYPE_IDS = ['svs', 'tyrant', 'hellfire'];
 
 function currentEventLabel(): string {
+  const eventTypeId = currentEventTypeId();
+  return eventTypeId ? eventTypeShortName(eventTypeId) : PAGES[3].label;
+}
+
+function currentEventTypeId(): string | null {
+  return currentEventRun()?.eventTypeId ?? null;
+}
+
+// The run the event section is about: the planned event running now, or the next one.
+function currentEventRun(): Occurrence | null {
   const today = todayNumber();
   const runs = runsBetween(today - 30, today + 200)
     .filter(one => PLANNED_EVENT_TYPE_IDS.includes(one.eventTypeId))
@@ -670,8 +1044,7 @@ function currentEventLabel(): string {
   const now = nowMinute();
   const running = runs.find(one => one.startMinute <= now && one.endMinute > now);
   const next = runs.find(one => one.startMinute > now);
-  const chosen = running ?? next;
-  return chosen ? eventTypeShortName(chosen.eventTypeId) : PAGES[3].label;
+  return running ?? next ?? null;
 }
 
 function eventTypeIdsWithAllianceTimes(): Set<string> {
@@ -684,9 +1057,16 @@ function eventTypeIdsWithAllianceTimes(): Set<string> {
 
 // Moving a month, a week or a year at a time, depending on the view.
 function step(direction: number): void {
+  // Today goes back to today and picks it, closing any open event, as the old app did.
+  // On a phone it does not slide the day's panel up; the calendar stays in view.
   if (direction === 0) {
     view.focusDay = todayNumber();
     view.chosenDay = todayNumber();
+    view.openEventKey = null;
+    view.pickedRowKey = null;
+    view.openedFromDay = null;
+    view.pickedYearRun = null;
+    startAtTop.panel = true;
     return;
   }
   if (view.calendarView === 'week') {
@@ -705,6 +1085,25 @@ function step(direction: number): void {
 function handleClicks(event: MouseEvent): void {
   const target = event.target as HTMLElement | null;
   if (!target) return;
+
+  // Signing in sends the browser to Discord or Google, which bring it back here.
+  const signInButton = target.closest<HTMLElement>('[data-sign-in]');
+  if (signInButton) {
+    signInWith(signInButton.dataset.signIn as SignInProvider).catch(problem => {
+      const message = document.querySelector('[data-sign-in-message]');
+      if (message) message.textContent = problem instanceof Error ? problem.message : String(problem);
+    });
+    return;
+  }
+  if (target.closest('[data-sign-out]')) {
+    void signOut().then(() => { person = null; view.openPage = 'calendar'; draw(); });
+    return;
+  }
+  const removeAltButton = target.closest<HTMLElement>('[data-remove-alt]');
+  if (removeAltButton) {
+    void removeAltAccount(Number(removeAltButton.dataset.removeAlt)).then(refreshPerson);
+    return;
+  }
 
   const myAllianceButton = target.closest<HTMLElement>('[data-my-alliance]');
   if (myAllianceButton) {
@@ -843,6 +1242,8 @@ function handleClicks(event: MouseEvent): void {
   if (runButton) {
     const name = runButton.dataset.yearRun as string;
     view.pickedYearRun = view.pickedYearRun === name ? null : name;
+    // On a phone the overview is in the panel that slides up, so a tap opens it.
+    view.isPanelOpen = true;
     startAtTop.panel = true;
     draw();
     return;
@@ -857,10 +1258,11 @@ function handleClicks(event: MouseEvent): void {
     return;
   }
 
-  // A white line on a bar shows its time, as on hover, and opens nothing.
-  const lineMark = target.closest<HTMLElement>('.bar-mark');
+  // A white line on a bar shows its time, as on hover, and opens nothing. So does a
+  // play window's line (Wild Brawl).
+  const lineMark = target.closest<HTMLElement>('.bar-mark, .bar-window');
   if (lineMark) {
-    document.querySelectorAll('.bar-mark.show-time').forEach(other => {
+    document.querySelectorAll('.bar-mark.show-time, .bar-window.show-time').forEach(other => {
       if (other !== lineMark) other.classList.remove('show-time');
     });
     lineMark.classList.toggle('show-time');
@@ -869,6 +1271,68 @@ function handleClicks(event: MouseEvent): void {
 
   if (target.closest('[data-toggle-view]')) {
     view.openEventView = view.openEventView === 'timeline' ? 'info' : 'timeline';
+    startAtTop.panel = true;
+    draw();
+    return;
+  }
+
+  // A pencil opens its form in place; Cancel closes it.
+  const editButton = target.closest<HTMLElement>('[data-edit]');
+  // A remove or unlink asks first; the second tap does it.
+  if (editButton && view.editing === editButton.dataset.edit &&
+      /^(remove|unlink)\|/.test(editButton.dataset.edit ?? '')) {
+    void removeFromWorkingPage(editButton.dataset.edit as string);
+    return;
+  }
+  if (editButton) {
+    view.editing = view.editing === editButton.dataset.edit ? null : editButton.dataset.edit as string;
+    // The head's forms open at the top of the event's page.
+    if (view.editing?.startsWith('head|')) startAtTop.panel = true;
+    draw();
+    return;
+  }
+  if (target.closest('[data-cancel-edit]')) {
+    view.editing = null;
+    draw();
+    return;
+  }
+
+  const workChoice = target.closest<HTMLElement>('[data-work-choice]');
+  if (workChoice) {
+    const [name, value] = (workChoice.dataset.workChoice as string).split('|');
+    workChoices.set(name, value);
+    draw();
+    return;
+  }
+  const opponentToggle = target.closest<HTMLElement>('[data-opponent-toggle]');
+  if (opponentToggle) {
+    const name = 'opponents-' + opponentToggle.dataset.opponentToggle;
+    workChoices.set(name, workChoices.get(name) === 'on' ? '' : 'on');
+    rememberChoices();
+    draw();
+    return;
+  }
+  const rosterStatus = target.closest<HTMLElement>('[data-roster-status]');
+  if (rosterStatus && person) {
+    const roster = (tableRows.get('rosters') ?? []).find(one => String(one.id) === rosterStatus.dataset.rosterStatus);
+    if (roster) {
+      void saveRow('rosters', { id: roster.id, status: roster.status === 'final' ? 'in_progress' : 'final',
+        updated_by: person.userId, updated_at: new Date().toISOString() })
+        .then(() => rereadTables('rosters')).then(draw);
+    }
+    return;
+  }
+  const approveButton = target.closest<HTMLElement>('[data-approve-alliance]');
+  if (approveButton && person) {
+    void saveRow('alliances', { id: approveButton.dataset.approveAlliance, status: 'approved',
+      approved_by: person.userId, approved_at: new Date().toISOString() })
+      .then(() => rereadTables('alliances')).then(draw);
+    return;
+  }
+
+  const infoTabButton = target.closest<HTMLElement>('[data-info-tab]');
+  if (infoTabButton) {
+    view.openInfoTab = infoTabButton.dataset.infoTab as string;
     startAtTop.panel = true;
     draw();
     return;
@@ -899,8 +1363,14 @@ function handleClicks(event: MouseEvent): void {
     return;
   }
 
+  // A row's arrow opens or closes its points. The browser does that by itself, so
+  // nothing is redrawn and the rest of the panel stays as it is.
+  if (target.closest('.tree-arrow')) return;
+
+  // Any other tap on a row marks the row. The fold under it must not open or close.
   const rowButton = target.closest<HTMLElement>('[data-row-key]');
   if (rowButton) {
+    event.preventDefault();
     const key = rowButton.dataset.rowKey as string;
     view.pickedRowKey = view.pickedRowKey === key ? null : key;
     draw();
@@ -928,6 +1398,391 @@ function handleClicks(event: MouseEvent): void {
     startAtTop.panel = true;
     draw();
   }
+}
+
+const WORKING_FORMS = ['availability', 'roster', 'roster-member', 'plan', 'academy', 'facility', 'setting', 'role',
+  'result', 'personal', 'alliance-records', 'opponent-note', 'transfer-window', 'candidate', 'candidate-status',
+  'candidate-flag', 'blacklist', 'player-troops'];
+
+// The transfer pages read their own copy of the windows and candidates.
+async function reloadTransfers(): Promise<void> {
+  transferWindows = await loadTransferWindows().catch(() => transferWindows);
+  transferCandidates = await loadCandidatesOf(transferWindows.map(one => one.id)).catch(() => transferCandidates);
+}
+
+// Forms: the player's account, a farm or alt to add, and the forms the pencils open.
+function handleSubmits(event: SubmitEvent): void {
+  const form = (event.target as HTMLElement | null)?.closest<HTMLFormElement>('form[data-form]');
+  if (!form || !person) return;
+  event.preventDefault();
+  const values = new FormData(form);
+  const text = (name: string) => String(values.get(name) ?? '').trim();
+  const message = form.querySelector<HTMLElement>('[data-form-message]');
+  const signedIn = person;
+  if (WORKING_FORMS.includes(form.dataset.form ?? '')) {
+    const formName = form.dataset.form as string;
+    for (const button of Array.from(form.querySelectorAll('button'))) button.disabled = true;
+    saveWorkingForm(formName, form.dataset.key ?? '', text, values, signedIn.userId)
+      .then(async tables => { view.editing = null; await rereadTables(...tables); draw(); })
+      .catch(problem => {
+        for (const button of Array.from(form.querySelectorAll('button'))) button.disabled = false;
+        if (message) message.textContent = problem instanceof Error ? problem.message : String(problem);
+      });
+    return;
+  }
+  if (form.dataset.form?.startsWith('edit-')) {
+    let save: Promise<void>;
+    try {
+      save = saveEdit(form.dataset.form, form.dataset.key ?? '', text, values, signedIn.userId);
+    } catch (problem) {
+      save = Promise.reject(problem);
+    }
+    for (const button of Array.from(form.querySelectorAll('button'))) button.disabled = true;
+    save.then(async () => { view.editing = null; await reloadAfterEdit(form.dataset.form as string); })
+      .catch(problem => {
+        for (const button of Array.from(form.querySelectorAll('button'))) button.disabled = false;
+        if (message) message.textContent = problem instanceof Error ? problem.message : String(problem);
+      });
+    return;
+  }
+  const save = form.dataset.form === 'account'
+    ? saveAccount(signedIn.userId, {
+        inGameName: text('inGameName'), inGameId: text('inGameId'), allianceId: text('allianceId') || null
+      })
+    : form.dataset.form === 'alt'
+      ? addAltAccount(signedIn.userId, {
+          inGameName: text('inGameName'), inGameId: text('inGameId'), kind: text('kind') === 'alt' ? 'alt' : 'farm'
+        })
+      : Promise.resolve();
+  for (const button of Array.from(form.querySelectorAll('button'))) button.disabled = true;
+  save.then(refreshPerson).catch(problem => {
+    for (const button of Array.from(form.querySelectorAll('button'))) button.disabled = false;
+    if (message) message.textContent = problem instanceof Error ? problem.message : String(problem);
+  });
+}
+
+// The second tap on Remove or Unlink on a working page.
+async function removeFromWorkingPage(edit: string): Promise<void> {
+  const parts = edit.split('|');
+  view.editing = null;
+  if (parts[0] === 'remove') {
+    await deleteRow(parts[1], 'id', Number(parts[2])).catch(() => undefined);
+    await rereadTables(parts[1]);
+  } else if (parts[0] === 'unlink') {
+    await saveRow('alliances', { id: parts[1], main_alliance_id: null }).catch(() => undefined);
+    alliances = await loadAlliances().catch(() => alliances);
+    rememberAlliances(alliances);
+  }
+  draw();
+}
+
+// What a working page's form saves, and the tables to read again after it.
+async function saveWorkingForm(
+  formName: string, key: string, text: (name: string) => string, values: FormData, userId: string
+): Promise<string[]> {
+  const now = new Date().toISOString();
+  const orNull = (name: string) => text(name) || null;
+  const hour = (name: string) => {
+    if (!text(name)) return null;
+    const number = Number(text(name));
+    if (!Number.isInteger(number) || number < 0 || number > 23) throw new Error(`"${text(name)}" is not an hour from 0 to 23.`);
+    return number;
+  };
+  const decimal = (name: string) => {
+    if (!text(name)) return null;
+    const number = Number(text(name).replace(/[, ]/g, ''));
+    if (Number.isNaN(number)) throw new Error(`"${text(name)}" is not a number.`);
+    return number;
+  };
+  const run = currentEventRun();
+  const runColumns = run ? { event_type_id: run.eventTypeId, event_date: textFromDay(run.startDay) } : null;
+
+  if (formName === 'availability') {
+    if (!runColumns) throw new Error('No event is coming up.');
+    const scores = ['infantry', 'lancer', 'marksmen'].map(kind =>
+      troopScore(text(kind + '_tier'), text(kind + '_skill_level')));
+    const from = hour('from_hour_utc');
+    const to = hour('to_hour_utc');
+    const isUnavailable = values.get('is_unavailable') === 'on';
+    if (!isUnavailable && (from === null || to === null)) throw new Error('Fill in the hours you can play, or tick that you cannot play.');
+    const saved = await saveRow('availability', {
+      id: key || undefined, ...runColumns, account_id: userId,
+      alliance_id: view.myAllianceId, playing_for_alliance_id: orNull('playing_for_alliance_id'),
+      is_unavailable: isUnavailable,
+      infantry_tier: orNull('infantry_tier'), infantry_skill_level: Number(text('infantry_skill_level')) || 0,
+      lancer_tier: orNull('lancer_tier'), lancer_skill_level: Number(text('lancer_skill_level')) || 0,
+      marksmen_tier: orNull('marksmen_tier'), marksmen_skill_level: Number(text('marksmen_skill_level')) || 0,
+      infantry_score: scores[0], lancer_score: scores[1], marksmen_score: scores[2],
+      total_troop_score: scores.some(score => score !== null) ? scores.reduce<number>((total, score) => total + (score ?? 0), 0) : null,
+      has_monthly_card: values.get('has_monthly_card') === 'on',
+      updated_at: now
+    }, key ? '' : 'event_type_id,event_date,account_id');
+    await deleteRow('availability_times', 'availability_id', saved.id);
+    if (!isUnavailable && from !== null && to !== null) {
+      await saveRow('availability_times', { availability_id: saved.id, from_hour_utc: from, to_hour_utc: to });
+    }
+    return ['availability', 'availability_times'];
+  }
+  if (formName === 'roster') {
+    if (!runColumns) throw new Error('No event is coming up.');
+    await saveRow('rosters', { ...runColumns, alliance_id: text('allianceId') || text('alliance_id'), status: 'in_progress', updated_by: userId, updated_at: now });
+    return ['rosters'];
+  }
+  if (formName === 'roster-member') {
+    await saveRow('roster_members', {
+      roster_id: Number(key), in_game_name: text('in_game_name'), in_game_id: text('in_game_id'),
+      member_role: text('member_role') || 'joiner', note: orNull('note')
+    });
+    return ['roster_members'];
+  }
+  if (formName === 'plan') {
+    if (!runColumns && !key) throw new Error('No event is coming up.');
+    await saveRow('plans', {
+      id: key || undefined, ...(key ? {} : runColumns), title: text('title'), status: text('status') || 'draft',
+      content: text('content'), updated_by: userId, updated_at: now
+    });
+    return ['plans'];
+  }
+  if (formName === 'result') {
+    const [eventTypeId, date, keyAllianceId, existingId] = key.split('|');
+    const allianceId = keyAllianceId || orNull('alliance_id');
+    const whole = (name: string) => {
+      if (!text(name)) return null;
+      const number = Number(text(name));
+      if (!Number.isInteger(number)) throw new Error(`"${text(name)}" is not a whole number.`);
+      return number;
+    };
+    // Winter Siege's "no opponent" is kept with the result's details; a win or loss is
+    // its outcome too.
+    const outcome = orNull('outcome') ?? (['win', 'loss'].includes(text('detail_outcome')) ? text('detail_outcome') : null);
+    const before = (tableRows.get('results') ?? []).find(one => String(one.id) === existingId);
+    const rank = whole('rank');
+    const saved = await saveRow('results', {
+      id: existingId ? Number(existingId) : undefined, event_type_id: eventTypeId, event_date: date,
+      alliance_id: allianceId, state_alliance_id: orNull('state_alliance_id'),
+      outcome, rank, note: orNull('note'),
+      updated_by: userId, updated_at: now
+    });
+    // A Championship group rank adds the alliance's Stars for its tier; changing a rank
+    // already recorded takes back what the old rank gave.
+    if (eventTypeId === 'alliance-championship' && allianceId && rank !== (before?.rank ?? null)) {
+      await rereadTables('alliance_records');
+      const record = (tableRows.get('alliance_records') ?? []).find(one => one.alliance_id === allianceId);
+      const tier = String(record?.championship_tier ?? 'Iron');
+      const change = championshipStars(tier, rank) - championshipStars(tier, (before?.rank as number | null) ?? null);
+      if (change) {
+        await saveRow('alliance_records', {
+          alliance_id: allianceId, championship_tier: tier,
+          championship_stars: (Number(record?.championship_stars) || 0) + change, updated_by: userId, updated_at: now
+        }, 'alliance_id');
+      }
+    }
+    await deleteRow('result_details', 'result_id', saved.id);
+    for (const [name, value] of Array.from(values.entries())) {
+      if (name.startsWith('detail_') && String(value).trim()) {
+        await saveRow('result_details', { result_id: saved.id, detail_key: name.slice(7), detail_value: String(value).trim() });
+      }
+    }
+    await deleteRow('result_opponents', 'result_id', saved.id);
+    for (const [slot, suffix] of [[1, ''], [2, '_2'], [3, '_3'], [4, '_4'], [5, '_5']] as [number, string][]) {
+      if (text('opponent_state' + suffix) || text('opponent_alliance' + suffix)) {
+        await saveRow('result_opponents', { result_id: saved.id, slot,
+          opponent_state: whole('opponent_state' + suffix), opponent_alliance: orNull('opponent_alliance' + suffix) }, 'result_id,slot');
+      }
+    }
+    return ['results', 'result_details', 'result_opponents', 'alliance_records'];
+  }
+  if (formName === 'personal') {
+    const [scheduleId, originalDate, existingId] = key.split('|');
+    const rank = text('rank') ? Number(text('rank')) : null;
+    if (rank !== null && !Number.isInteger(rank)) throw new Error(`"${text('rank')}" is not a rank.`);
+    await saveRow('personal_entries', {
+      id: existingId ? Number(existingId) : undefined, account_id: userId, schedule_id: scheduleId, original_date: originalDate,
+      my_time: cleanTime(text('my_time')), rank, note: orNull('note'), updated_at: now
+    });
+    return ['personal_entries'];
+  }
+  if (formName === 'alliance-records') {
+    const stars = text('championship_stars') ? Number(text('championship_stars')) : null;
+    if (stars !== null && !Number.isInteger(stars)) throw new Error(`"${text('championship_stars')}" is not a number of stars.`);
+    await saveRow('alliance_records', {
+      alliance_id: key,
+      results_off: ALLIANCE_RESULT_EVENTS.filter(eventTypeId => values.get('keep_' + eventTypeId) !== 'on'),
+      showdown_star_rating: decimal('showdown_star_rating'),
+      winter_siege_tier: orNull('winter_siege_tier'), championship_tier: orNull('championship_tier'),
+      championship_stars: stars, updated_by: userId, updated_at: now
+    }, 'alliance_id');
+    return ['alliance_records'];
+  }
+  if (formName === 'opponent-note') {
+    const state = Number(text('opponent_state'));
+    if (!Number.isInteger(state)) throw new Error(`"${text('opponent_state')}" is not a state number.`);
+    await saveRow('opponent_notes', {
+      opponent_state: state, opponent_tag: text('opponent_tag'), alliance_id: key, note: text('note'), written_by: userId
+    });
+    return ['opponent_notes'];
+  }
+  if (formName === 'transfer-window') {
+    const isNew = !/^\d+$/.test(key);
+    await saveRow('transfer_windows', {
+      id: isNew ? undefined : Number(key), ...(isNew ? { transfer_date: key } : {}),
+      state_type: text('state_type') || 'ordinary', power_cap: decimal('power_cap'),
+      special_invites_available: decimal('special_invites_available') ?? 0, status: text('status') || 'planning',
+      note: orNull('note'), updated_by: userId, updated_at: now
+    });
+    await reloadTransfers();
+    return ['transfer_windows'];
+  }
+  if (formName === 'player-troops') {
+    const skill = (name: string) => Number(text(name)) || 0;
+    const before = (tableRows.get('accounts') ?? []).find(one => one.id === userId);
+    const power = decimal('player_power');
+    const foundry = decimal('foundry_power');
+    await saveRow('accounts', {
+      id: userId, player_power: power, foundry_power: foundry,
+      // A figure's date moves only when the figure changes, so a stale one shows as stale.
+      ...(power !== Number(before?.player_power ?? NaN) ? { player_power_updated_at: now } : {}),
+      ...(foundry !== Number(before?.foundry_power ?? NaN) ? { foundry_power_updated_at: now } : {}),
+      infantry_tier: orNull('infantry_tier'), infantry_skill_level: skill('infantry_skill_level'),
+      lancer_tier: orNull('lancer_tier'), lancer_skill_level: skill('lancer_skill_level'),
+      marksmen_tier: orNull('marksmen_tier'), marksmen_skill_level: skill('marksmen_skill_level'),
+      updated_at: now
+    });
+    return ['accounts'];
+  }
+  if (formName === 'candidate') {
+    await saveRow('transfer_candidates', {
+      window_id: Number(key), in_game_name: text('in_game_name'), in_game_id: text('in_game_id'),
+      player_power: decimal('player_power'), fc_level: orNull('fc_level'), current_state: decimal('current_state'),
+      destination_alliance_id: orNull('destination_alliance_id'), stage: orNull('stage'),
+      priority: decimal('priority') ?? 0, note: orNull('note'), added_by: userId, added_at: now, updated_at: now
+    });
+    await reloadTransfers();
+    return ['transfer_candidates'];
+  }
+  if (formName === 'candidate-status') {
+    await saveRow('transfer_candidates', {
+      id: Number(key), stage: orNull('stage'), invite_status: orNull('invite_status'), outcome: orNull('outcome'),
+      note: orNull('note'), updated_at: now
+    });
+    await reloadTransfers();
+    return ['transfer_candidates'];
+  }
+  if (formName === 'candidate-flag') {
+    await saveRow('candidate_flags', { candidate_id: Number(key), flagged_by: userId, reason: text('reason'), created_at: now });
+    return ['candidate_flags'];
+  }
+  if (formName === 'blacklist') {
+    await saveRow('blacklist', { in_game_id: text('in_game_id'), in_game_name: orNull('in_game_name'),
+      reason: text('reason'), added_by: userId, added_at: now }, 'in_game_id');
+    return ['blacklist'];
+  }
+  if (formName === 'academy') {
+    await saveRow('alliances', { id: text('alliance_id'), main_alliance_id: key, updated_by: userId, updated_at: now });
+    alliances = await loadAlliances().catch(() => alliances);
+    rememberAlliances(alliances);
+    return ['alliances'];
+  }
+  if (formName === 'facility') {
+    await saveRow('facilities', { id: Number(key), alliance_id: orNull('alliance_id'), updated_by: userId, updated_at: now });
+    return ['facilities'];
+  }
+  if (formName === 'setting') {
+    await saveRow('settings', { id: Number(key), setting_value: text('setting_value'), updated_by: userId, updated_at: now });
+    return ['settings'];
+  }
+  if (formName === 'role') {
+    const role = text('role');
+    if (role === 'alliance_manager' && !text('alliance_id')) throw new Error('Pick the alliance this person manages.');
+    await saveRow('account_roles', {
+      account_id: text('account_id'), role, alliance_id: role === 'alliance_manager' ? text('alliance_id') : null,
+      granted_by: userId, granted_at: now
+    });
+    return ['account_roles'];
+  }
+  return [];
+}
+
+// What a pencil's form saves. A typed time that is not a time of day stops it here.
+function saveEdit(
+  formName: string, key: string, text: (name: string) => string, values: FormData, userId: string
+): Promise<void> {
+  const wholeNumber = (name: string) => {
+    if (!text(name)) return null;
+    const number = Number(text(name));
+    if (!Number.isInteger(number) || number < 1) throw new Error(`"${text(name)}" is not a number of days.`);
+    return number;
+  };
+  if (formName === 'edit-schedule') {
+    return saveScheduleRepeat(key, {
+      firstDate: text('firstDate'),
+      repeatEveryDays: wholeNumber('repeatEveryDays'),
+      lengthDays: wholeNumber('lengthDays'),
+      startTimeUtc: cleanTime(text('startTimeUtc')),
+      endTimeUtc: cleanTime(text('endTimeUtc')),
+      datesAreEstimated: values.get('datesAreEstimated') === 'on'
+    }, userId);
+  }
+  if (formName === 'edit-alliance-time') {
+    return saveAllianceTime(key, {
+      startTimeUtc: cleanTime(text('startTimeUtc')), endTimeUtc: cleanTime(text('endTimeUtc'))
+    }, userId);
+  }
+  if (formName === 'edit-date') {
+    const [scheduleId, originalDate] = key.split('|');
+    return saveDateChange(scheduleId, originalDate, {
+      movedToDate: text('movedToDate') || null,
+      startTimeUtc: cleanTime(text('startTimeUtc')),
+      endTimeUtc: cleanTime(text('endTimeUtc')),
+      isConfirmed: values.get('isConfirmed') === 'on',
+      note: text('note') || null
+    }, userId);
+  }
+  if (formName === 'edit-fort') {
+    const [, season, phase, fort] = key.split('|');
+    const battleTime = cleanTime(text('battleTime'));
+    const battleDay = fortBattleDayOf(Number(season), Number(phase));
+    return saveFortAssignment({ season: Number(season), phase: Number(phase), fort }, {
+      allianceId: text('allianceId'),
+      // The database keeps the battle's full date and time in UTC.
+      battleAt: battleTime && battleDay !== null ? textFromDay(battleDay) + 'T' + battleTime + ':00Z' : null
+    }, userId);
+  }
+  return Promise.resolve();
+}
+
+// The battle day of a season's phase, counted from the first battle day written down.
+function fortBattleDayOf(season: number, phase: number): number | null {
+  if (Number.isNaN(firstFortBattleDay)) return null;
+  const count = { firstBattleDay: firstFortBattleDay, firstSeason: FIRST_FORT_SEASON };
+  // Seasons run back to back; search the days around the first battle day for this one.
+  for (let day = firstFortBattleDay - 400; day <= firstFortBattleDay + 4000; day++) {
+    const fortDay = fortPhaseOfDay(day, count);
+    if (fortDay && fortDay.season === season && fortDay.phase === phase) return day;
+  }
+  return null;
+}
+
+// After a save: read again what it changed, then redraw.
+async function reloadAfterEdit(formName: string): Promise<void> {
+  if (formName === 'edit-fort') {
+    fortAssignments = await loadFortAssignments(FIRST_FORT_SEASON).catch(() => fortAssignments);
+  } else {
+    const [loadedSchedules, changes] = await Promise.all([loadSchedules(), loadDateChanges()]);
+    schedules = loadedSchedules;
+    expandOptions = { allSchedules: loadedSchedules, changesBySchedule: groupChanges(changes), partOfByEventTypeId };
+  }
+  draw();
+}
+
+// After a change to the account: read it again, follow its alliance, and redraw.
+async function refreshPerson(): Promise<void> {
+  person = await signedInPerson().catch(() => person);
+  // The working pages read accounts and alts again with the change in them.
+  tableRows.delete('accounts');
+  tableRows.delete('account_alt_accounts');
+  if (person?.account?.allianceId) view.myAllianceId = person.account.allianceId;
+  draw();
 }
 
 // Opening an event: from a bar (or anything on it), from the day's timeline, or from
@@ -963,6 +1818,186 @@ function openEventFrom(button: HTMLElement, target: HTMLElement): void {
   view.isPanelOpen = true;
   startAtTop.panel = true;
   view.scrollsToMarkedRow = true;
+}
+
+// ---------- Swiping the calendar on a phone ----------
+// A phone has no arrows: a sideways swipe over the calendar moves a month, a week or a
+// year, the same as the arrows on a computer. A swipe that is mostly up or down is
+// scrolling and is left alone.
+const PHONE_WIDTH = 1000;
+const SWIPE_DISTANCE = 60;
+let swipeStart: { x: number; y: number } | null = null;
+
+function startSwipe(event: TouchEvent): void {
+  const target = event.target as HTMLElement | null;
+  swipeStart = null;
+  if (window.innerWidth >= PHONE_WIDTH || view.openPage !== 'calendar' || view.isPanelOpen) return;
+  if (!target?.closest('.calendar-panel') || event.touches.length !== 1) return;
+  swipeStart = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+}
+
+function endSwipe(event: TouchEvent): void {
+  if (!swipeStart) return;
+  const across = event.changedTouches[0].clientX - swipeStart.x;
+  const down = event.changedTouches[0].clientY - swipeStart.y;
+  swipeStart = null;
+  if (Math.abs(across) < SWIPE_DISTANCE || Math.abs(across) < Math.abs(down) * 1.5) return;
+  // Swiping to the left brings in what comes next, as turning a page does.
+  step(across < 0 ? 1 : -1);
+  startAtTop.calendar = true;
+  draw();
+}
+
+// ---------- The phone's own back ----------
+// Every place the site's own Back would take you from is written into the browser's
+// history, so the phone's back (or the browser's) does what the site's Back does
+// instead of leaving the site. Moving between sections is not written in: the phone's
+// back never goes from one section to another; sections are opened by tapping them.
+//
+// How deep you are: on a phone the day's panel over the calendar is one step; an event
+// opened from a day's timeline is one more, on a computer as well, because it has its
+// own way back to the day there too.
+function backLevel(): number {
+  if (view.openPage !== 'calendar') return 0;
+  const isPhone = window.innerWidth < PHONE_WIDTH;
+  // On a phone a closed panel is the calendar itself, whatever was open in it.
+  if (isPhone && !view.isPanelOpen) return 0;
+  let level = isPhone ? 1 : 0;
+  if (view.openEventKey && view.openedFromDay !== null) level += 1;
+  return level;
+}
+
+function placeKey(): string {
+  return String(backLevel());
+}
+
+// What is put back when the phone's back lands on a place.
+function placeSnapshot() {
+  return {
+    openPage: view.openPage, openSubPage: view.openSubPage, isPanelOpen: view.isPanelOpen,
+    chosenDay: view.chosenDay, openEventKey: view.openEventKey, openEventDay: view.openEventDay,
+    openedFromDay: view.openedFromDay, tappedKey: view.tappedKey,
+    // A minute that is not a number cannot be written into the history, so it is kept
+    // as null and read back as not a number.
+    tappedMinute: Number.isNaN(view.tappedMinute) ? null : view.tappedMinute,
+    pickedRowKey: view.pickedRowKey, pickedYearRun: view.pickedYearRun
+  };
+}
+type PlaceSnapshot = ReturnType<typeof placeSnapshot>;
+
+// The places in the history, in order, and where we are in them.
+const placeKeys: string[] = [];
+let placeIndex = 0;
+// Set when the site's own Back stepped the history back itself, so arriving there
+// changes nothing on screen.
+let isSteppingBackOurselves = false;
+
+// The address of what is on screen, so it can be shared: the section, the picked day
+// and the open event. "?event=...&day=2026-11-27" opens that event from that day.
+function placeAddress(): string {
+  const parts = new URLSearchParams();
+  if (view.openPage !== 'calendar') parts.set('page', view.openPage);
+  if (view.openSubPage) parts.set('sub', view.openSubPage);
+  if (view.openPage === 'calendar') {
+    if (view.openEventKey) {
+      parts.set('event', view.openEventKey);
+      parts.set('day', textFromDay(view.openEventDay));
+    } else if (view.chosenDay !== todayNumber()) {
+      parts.set('day', textFromDay(view.chosenDay));
+    }
+  }
+  const query = parts.toString();
+  return window.location.pathname + (query ? '?' + query : '');
+}
+
+// Opening the site from a shared address: its section, its day and its event.
+function openSharedAddress(): void {
+  const parts = new URLSearchParams(window.location.search);
+  const page = parts.get('page');
+  if (page && pageById(page)) view.openPage = page;
+  const sub = parts.get('sub');
+  if (sub) view.openSubPage = sub;
+  const day = dayFromText(parts.get('day') ?? '');
+  if (!Number.isNaN(day)) {
+    view.chosenDay = day;
+    view.focusDay = day;
+    view.isPanelOpen = true;
+  }
+  const eventKey = parts.get('event');
+  if (eventKey) {
+    view.openEventKey = eventKey;
+    view.openEventDay = Number.isNaN(day) ? todayNumber() : day;
+    view.openEventView = 'timeline';
+    view.isPanelOpen = true;
+    view.scrollsToMarkedRow = true;
+  }
+}
+
+function syncHistory(): void {
+  const key = placeKey();
+  if (!placeKeys.length) {
+    placeKeys.push(key);
+    history.replaceState({ placeIndex: 0, place: placeSnapshot() }, '', placeAddress());
+    return;
+  }
+  if (key === placeKeys[placeIndex]) {
+    // Same place, something else in it (another day, another event): kept up to date
+    // so the phone's back returns to it as it was.
+    history.replaceState({ placeIndex, place: placeSnapshot() }, '', placeAddress());
+    return;
+  }
+  // The site's own Back took us to a place we came through (one step back, or more:
+  // on a phone Back closes the whole panel), so the history steps back to it too.
+  // Otherwise the phone's back would reopen what was just closed.
+  const earlier = placeKeys.lastIndexOf(key, placeIndex - 1);
+  if (placeIndex > 0 && earlier >= 0) {
+    isSteppingBackOurselves = true;
+    history.go(earlier - placeIndex);
+    return;
+  }
+  placeIndex += 1;
+  placeKeys.length = placeIndex;
+  placeKeys.push(key);
+  history.pushState({ placeIndex, place: placeSnapshot() }, '', placeAddress());
+}
+
+function returnToPlace(event: PopStateEvent): void {
+  const state = event.state as { placeIndex: number; place: PlaceSnapshot } | null;
+  if (!state) return;
+  const isGoingBack = state.placeIndex < placeIndex;
+  placeIndex = state.placeIndex;
+  if (isSteppingBackOurselves) {
+    isSteppingBackOurselves = false;
+    history.replaceState({ placeIndex, place: placeSnapshot() }, '', placeAddress());
+    return;
+  }
+  const place = state.place;
+  if (isGoingBack) {
+    // Going back does exactly what the site's own Back does, and nothing more: an
+    // event opened from a day goes back to that day, and otherwise the panel closes
+    // and the calendar shows. The picked day and the open section stay as they are.
+    const targetLevel = Number(placeKeys[placeIndex] ?? 0);
+    while (backLevel() > targetLevel) {
+      if (view.openEventKey && view.openedFromDay !== null) {
+        view.openEventKey = null;
+        view.pickedRowKey = null;
+        view.openedFromDay = null;
+      } else {
+        view.isPanelOpen = false;
+        break;
+      }
+    }
+  } else if (place.openPage === view.openPage) {
+    // The browser's forward, inside the same section: that place as it was.
+    Object.assign(view, place, {
+      tappedMinute: place.tappedMinute === null ? NaN : place.tappedMinute
+    });
+  }
+  // After a reload the list starts again, while the browser still holds the places
+  // from before it, so the place we land on is written into the list here.
+  placeKeys[placeIndex] = placeKey();
+  startAtTop.panel = true;
+  draw();
 }
 
 function eventKeysOf(category: string): string[] {
@@ -1025,6 +2060,8 @@ async function start(): Promise<void> {
     rallyLeads = await loadRallyLeads().catch(() => []);
     buffAllocations = await loadBuffAllocations(fortAssignments.map(one => one.id)).catch(() => []);
     transferDates = await loadTransferDates().catch(() => []);
+    // The state's hero generation on each transfer date, for the heroes named in texts.
+    setGenerationSteps(await loadGenerationsOfState(Number(STATE_NUMBER)).catch(() => []));
     transferWindows = await loadTransferWindows().catch(() => []);
     transferCandidates = await loadCandidatesOf(transferWindows.map(one => one.id)).catch(() => []);
     const comingDate = nextWindow()?.transferDate ??
@@ -1048,7 +2085,16 @@ async function start(): Promise<void> {
       partOfByEventTypeId
     };
 
+    applyKeptChoices();
+    openSharedAddress();
+    // Who is signed in. A signed-in player's alliance is the one on their account.
+    person = await signedInPerson().catch(() => null);
+    if (person?.account?.allianceId) view.myAllianceId = person.account.allianceId;
     document.addEventListener('click', handleClicks);
+    document.addEventListener('submit', handleSubmits);
+    document.addEventListener('touchstart', startSwipe, { passive: true });
+    document.addEventListener('touchend', endSwipe, { passive: true });
+    window.addEventListener('popstate', returnToPlace);
     // The clock in the top bar, and the bars when the window changes width.
     window.setInterval(() => {
       const clock = document.getElementById('clockTime');

@@ -11,12 +11,23 @@ export interface FortAssignment {
   // main alliance. 'shared' means the whole state.
   creditedTo: string;
   reservedForLeads: number;
+  // The fort's battle time on its battle day, in UTC ("20:00"), once it is known.
+  battleTimeUtc: string | null;
+}
+
+// The database keeps a battle's full date and time; the calendar needs its time of day
+// in UTC ("20:00").
+function timeOfDayUtc(value: unknown): string | null {
+  if (!value) return null;
+  const when = new Date(String(value));
+  if (Number.isNaN(when.getTime())) return null;
+  return String(when.getUTCHours()).padStart(2, '0') + ':' + String(when.getUTCMinutes()).padStart(2, '0');
 }
 
 export async function loadFortAssignments(season: number): Promise<FortAssignment[]> {
   const { data, error } = await database()
     .from('fort_assignments')
-    .select('id, season, phase, fort, alliance_id, credited_to, reserved_for_leads')
+    .select('id, season, phase, fort, alliance_id, credited_to, reserved_for_leads, battle_time_utc')
     .eq('season', season)
     .order('phase');
 
@@ -29,7 +40,8 @@ export async function loadFortAssignments(season: number): Promise<FortAssignmen
     fort: row.fort,
     allianceId: row.alliance_id,
     creditedTo: row.credited_to ?? '',
-    reservedForLeads: row.reserved_for_leads ?? 0
+    reservedForLeads: row.reserved_for_leads ?? 0,
+    battleTimeUtc: timeOfDayUtc(row.battle_time_utc)
   }));
 }
 

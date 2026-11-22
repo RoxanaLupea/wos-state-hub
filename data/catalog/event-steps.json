@@ -94,12 +94,64 @@
   {
     "id": "st17",
     "eventTypeId": "wild-brawl",
+    "startTimeUtc": "02:00",
+    "endTimeUtc": "04:00",
+    "dayNumber": 1,
+    "sortOrder": 17
+  },
+  {
+    "id": "st92",
+    "eventTypeId": "wild-brawl",
+    "startTimeUtc": "09:00",
+    "endTimeUtc": "11:00",
+    "dayNumber": 1,
+    "sortOrder": 17
+  },
+  {
+    "id": "st93",
+    "eventTypeId": "wild-brawl",
+    "startTimeUtc": "14:00",
+    "endTimeUtc": "16:00",
+    "dayNumber": 1,
+    "sortOrder": 17
+  },
+  {
+    "id": "st94",
+    "eventTypeId": "wild-brawl",
+    "startTimeUtc": "19:00",
+    "endTimeUtc": "21:00",
     "dayNumber": 1,
     "sortOrder": 17
   },
   {
     "id": "st18",
     "eventTypeId": "wild-brawl",
+    "startTimeUtc": "02:00",
+    "endTimeUtc": "04:00",
+    "dayNumber": 2,
+    "sortOrder": 18
+  },
+  {
+    "id": "st95",
+    "eventTypeId": "wild-brawl",
+    "startTimeUtc": "09:00",
+    "endTimeUtc": "11:00",
+    "dayNumber": 2,
+    "sortOrder": 18
+  },
+  {
+    "id": "st96",
+    "eventTypeId": "wild-brawl",
+    "startTimeUtc": "14:00",
+    "endTimeUtc": "16:00",
+    "dayNumber": 2,
+    "sortOrder": 18
+  },
+  {
+    "id": "st97",
+    "eventTypeId": "wild-brawl",
+    "startTimeUtc": "19:00",
+    "endTimeUtc": "21:00",
     "dayNumber": 2,
     "sortOrder": 18
   },

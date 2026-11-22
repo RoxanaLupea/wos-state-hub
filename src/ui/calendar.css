@@ -246,3 +246,15 @@
 .bar-marker { position: absolute; top: 3px; display: inline-flex; pointer-events: none; }
 .bar-marker img.event-icon { --logo-size: var(--bar-logo); width: var(--bar-logo); height: var(--bar-logo); object-fit: contain; filter: drop-shadow(1px 1.5px 1px rgba(0, 0, 0, 0.85)); }
 .bar-marker svg.event-icon { width: 14px; height: 14px; }
+
+/* An event open at set times each day (Wild Brawl): each window is a short white line
+   inside the bar along its bottom edge, like the white lines between days. Pointing at
+   one, or tapping it, shows its times. */
+.bar-window { position: absolute; z-index: 4; bottom: 4px; height: 2px; border-radius: 1px; background: rgba(255, 255, 255, 0.8); pointer-events: auto; cursor: pointer; }
+.bar-window::before { content: ''; position: absolute; top: -6px; bottom: -4px; left: 0; right: 0; }
+.bar-window::after {
+  content: attr(data-time); display: none; position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+  padding: 2px 6px; border-radius: 6px; background: #0E1424; border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #FFFFFF; font-size: 11px; font-weight: 700; line-height: 16px; white-space: nowrap; text-shadow: none;
+}
+.bar-window:hover::after, .bar-window.show-time::after { display: block; }

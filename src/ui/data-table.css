@@ -1,0 +1,53 @@
+/* The working pages: glass sections holding a table of rows and the form that adds
+   one. They carry the information until each page is designed. */
+.work-page { display: flex; flex-direction: column; gap: var(--gap); min-height: 0; }
+.work-section { padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.work-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.work-head h2 { margin: 0; font-size: 20px; font-weight: 800; }
+.work-head > :not(h2):first-of-type { margin-left: auto; }
+.work-empty { margin: 0; color: var(--text-muted); font-weight: 600; }
+.work-line { margin: 0; color: var(--text-muted); font-weight: 600; }
+
+/* A table scrolls sideways inside its section rather than widening the page. */
+.table-scroll { overflow-x: auto; margin: 0 -4px; padding: 0 4px; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.data-table th {
+  text-align: left; padding: 8px 10px; font-size: 12px; font-weight: 800; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--text-faint); white-space: nowrap;
+  border-bottom: 1px solid var(--glass-border);
+}
+.data-table td { padding: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.07); vertical-align: middle; font-weight: 600; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table .number { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.data-table small { display: block; font-size: 12px; color: var(--text-faint); font-weight: 600; }
+.data-table .muted { color: var(--text-muted); }
+.data-table .cell-actions { display: flex; gap: 6px; justify-content: flex-end; }
+
+.work-fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; align-items: end; }
+.work-fields .form-field.wide { grid-column: 1 / -1; }
+.work-fields .check-option { min-height: 44px; }
+
+.row-action {
+  min-height: 32px; padding: 0 10px; border-radius: 10px; border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.06); color: var(--text); font: inherit; font-size: 13px; font-weight: 700;
+  cursor: pointer; white-space: nowrap;
+}
+.row-action.asking { border-color: rgba(242, 160, 160, 0.5); color: var(--danger); }
+
+.work-choices { display: flex; gap: 6px; flex-wrap: wrap; }
+.work-choice {
+  min-height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--glass-border);
+  background: var(--glass); color: var(--text-muted); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+}
+.work-choice.on { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+
+/* A plotted map: dots on a square of the state. */
+.map-plot { width: 100%; max-width: 640px; aspect-ratio: 1; border-radius: var(--radius-small);
+  background: rgba(255, 255, 255, 0.04); border: 1px solid var(--glass-border); }
+.map-keys { display: flex; gap: 14px; flex-wrap: wrap; }
+.map-key { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--text-muted); }
+.map-key i { width: 12px; height: 12px; border-radius: 3px; }
+.plan-text { line-height: 1.55; font-weight: 600; }
+.work-form .form-message { margin: 0; }
+.work-form .form-message:empty { display: none; }
+.data-table td:first-child { white-space: nowrap; }
