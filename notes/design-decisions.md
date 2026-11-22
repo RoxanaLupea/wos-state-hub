@@ -116,6 +116,9 @@ there before discussing it again.
   played: TOP Legion 1 5th, DVL 38th, SKY 45th, TOP Legion 2 48th and FUN 51st. They
   are in seed/tal-results.json. A legion's TAL rank shows in its alliance's info and in
   the state's info.
+- For every TAL season the site keeps ranks 1 to 4 of the zone's League Leaderboard
+  and the Seasonal MVP and Final MVP boards (MVP, Occupation, Gathering, Looting and
+  Kill). They are in seed/tal-seasons.json, starting with season 6, zone 22.
 - Tyrant records the alliance's rank with its points, and every player from 1458 who
   ranked in the top 100, with how long they held the capital.
 - Each alliance records its own result for alliance events: Foundry, Canyon, Showdown,

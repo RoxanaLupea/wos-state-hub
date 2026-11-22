@@ -1,0 +1,122 @@
+[
+  {
+    "season": 6,
+    "zone": 22,
+    "topRanks": [
+      {
+        "rank": 1,
+        "state": 1436,
+        "allianceTag": "S36",
+        "allianceName": "S1436",
+        "legion": 1,
+        "troopPower": 496053
+      },
+      {
+        "rank": 2,
+        "state": 1433,
+        "allianceTag": "FBO",
+        "allianceName": "你好嗎？歡迎光臨～",
+        "legion": 2,
+        "troopPower": 440360
+      },
+      {
+        "rank": 3,
+        "state": 1453,
+        "allianceTag": "CON",
+        "allianceName": "Conglomerate",
+        "legion": 1,
+        "troopPower": 375954
+      },
+      {
+        "rank": 4,
+        "state": 1438,
+        "allianceTag": "s38",
+        "allianceName": "Sirius",
+        "legion": 1,
+        "troopPower": 362586
+      }
+    ],
+    "mvps": [
+      {
+        "board": "seasonal",
+        "category": "mvp",
+        "state": 1433,
+        "allianceTag": "FBO",
+        "player": "AiBao愛寶⓿Ω⓿",
+        "score": 54281302
+      },
+      {
+        "board": "seasonal",
+        "category": "occupation",
+        "state": 1458,
+        "allianceTag": "TOP",
+        "player": "RONN",
+        "score": 224525
+      },
+      {
+        "board": "seasonal",
+        "category": "gathering",
+        "state": 1457,
+        "allianceTag": "PFL",
+        "player": "Cheetos",
+        "score": 39448
+      },
+      {
+        "board": "seasonal",
+        "category": "looting",
+        "state": 1433,
+        "allianceTag": "FBO",
+        "player": "呀咧呀咧",
+        "score": 31781
+      },
+      {
+        "board": "seasonal",
+        "category": "kill",
+        "state": 1433,
+        "allianceTag": "FBO",
+        "player": "AiBao愛寶⓿Ω⓿",
+        "score": 54259000
+      },
+      {
+        "board": "final",
+        "category": "mvp",
+        "state": 1436,
+        "allianceTag": "S36",
+        "player": "Knight Artorias",
+        "score": 5178111
+      },
+      {
+        "board": "final",
+        "category": "occupation",
+        "state": 1436,
+        "allianceTag": "S36",
+        "player": "haya",
+        "score": 109717
+      },
+      {
+        "board": "final",
+        "category": "gathering",
+        "state": 1436,
+        "allianceTag": "S36",
+        "player": "I am not Floki",
+        "score": 15704
+      },
+      {
+        "board": "final",
+        "category": "looting",
+        "state": 1433,
+        "allianceTag": "FBO",
+        "player": "呀咧呀咧",
+        "score": 31781
+      },
+      {
+        "board": "final",
+        "category": "kill",
+        "state": 1436,
+        "allianceTag": "S36",
+        "player": "Knight Artorias",
+        "score": 5158040
+      }
+    ]
+  }
+]
