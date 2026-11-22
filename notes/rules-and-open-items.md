@@ -233,3 +233,6 @@ Item pictures the owner still has to get, for public/images/items/ (lowercase na
 - triumph-of-tyrant.png: Triumph of Tyrant, the gold trophy (Tyrant rank 1).
 - The silver trophy (Tyrant ranks 2 and 3) and the bronze trophy (ranks 4 to 10). Names
   not known.
+- The third Tyrant 30-day skin (snowy landscape picture). Name not known.
+- The purple-tile tower skin for Tyrant Occupation ranks 2 to 10 (30-Day and 14-Day).
+  Name not known.
