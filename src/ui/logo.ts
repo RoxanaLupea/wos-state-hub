@@ -26,8 +26,8 @@ export function logoSvg(stateNumber: string, heightPx: number): string {
   return `<svg class="logo" viewBox="0 -1.5 ${logoWidth} ${BLOCK_HEIGHT + 3.1}" height="${heightPx}"
     role="img" aria-label="${stateNumber} State Hub">
     <text x="0" y="${BLOCK_HEIGHT}" font-size="${NUMBER_FONT_SIZE}" textLength="${numberWidth}"
-      lengthAdjust="spacing" fill="var(--text)">${stateNumber}</text>
-    <text x="${stackLeft}" y="${topBaseline}" font-size="${TOP_LINE_FONT_SIZE}" ${fitStack} fill="var(--accent)">STATE</text>
-    <text x="${stackLeft}" y="${BLOCK_HEIGHT}" font-size="${BOTTOM_LINE_FONT_SIZE}" ${fitStack} fill="var(--accent)">HUB</text>
+      lengthAdjust="spacing" fill="var(--accent)">${stateNumber}</text>
+    <text x="${stackLeft}" y="${topBaseline}" font-size="${TOP_LINE_FONT_SIZE}" ${fitStack} fill="var(--text)">STATE</text>
+    <text x="${stackLeft}" y="${BLOCK_HEIGHT}" font-size="${BOTTOM_LINE_FONT_SIZE}" ${fitStack} fill="var(--text)">HUB</text>
   </svg>`;
 }

@@ -27,8 +27,8 @@ there before discussing it again.
 
 ### Name
 - The site is called State Hub, not State Events. The browser tab reads "1458 State Hub".
-- The logo reads "1458 STATE HUB": the state number largest, in white, with STATE over
-  HUB stacked to its right in the accent colour, the two words the same width and
+- The logo reads "1458 STATE HUB": the state number largest, in the accent blue, with
+  STATE over HUB stacked to its right in white, the two words the same width and
   together as tall as the number.
 
 ### Navigation
