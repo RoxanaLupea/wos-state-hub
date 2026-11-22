@@ -272,7 +272,7 @@ export function fitBarLabels(panel: HTMLElement): void {
     // A part's name a little too long for its stretch (BATTLE, in the twelve hours it
     // lasts): its white lines move out, up to 2px on each side, so the name shows whole
     // at its usual size. A name that needs more room than that is cut with "…".
-    for (const part of barsGrid.querySelectorAll<HTMLElement>('.bar-part')) {
+    for (const part of Array.from(barsGrid.querySelectorAll<HTMLElement>('.bar-part'))) {
       const partText = part.querySelector<HTMLElement>('.bar-part-text');
       const bar = part.closest<HTMLElement>('.bar');
       if (!partText || !bar || fits(part)) continue;
@@ -296,7 +296,7 @@ export function fitBarLabels(panel: HTMLElement): void {
 
     // The white lines between parts are only as tall as the parts' capitals, with a
     // pixel above and below, so they frame the words instead of standing over them.
-    for (const bar of barsGrid.querySelectorAll<HTMLElement>('.bar')) {
+    for (const bar of Array.from(barsGrid.querySelectorAll<HTMLElement>('.bar'))) {
       const partText = bar.querySelector<HTMLElement>('.bar-part-text');
       if (!partText) continue;
       const capitals = capitalsOf(partText, bar);
