@@ -390,3 +390,19 @@
 @media (min-width: 1000px) {
   .back-to-day { margin-left: 0; }
 }
+
+/* An open event fills the panel: the way back and the head stay at the top, and only
+   the body under the head scrolls (the tabs will sit in the head too). */
+.day-panel.holds-event { overflow: hidden; display: flex; flex-direction: column; }
+.day-panel.holds-event .event-page { flex: 1 1 auto; min-height: 0; }
+.event-page-body {
+  flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;
+  margin-right: -8px; padding-right: 8px;
+  scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--accent) 35%, transparent) transparent;
+}
+.day-panel:not(.holds-event) .event-page-body { overflow: visible; }
+.event-alliance-times { display: flex; flex-direction: column; margin-top: 6px; }
+.event-alliance-times h3 { margin: 0 0 4px; font-size: 17px; font-weight: 800; }
+@media (max-width: 999px) {
+  .day-panel.holds-event { padding-bottom: 12px; }
+}

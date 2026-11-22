@@ -215,9 +215,12 @@ function calendarBody(range: { from: number; to: number }): string {
 function sideColumn(): string {
   const today = todayNumber();
   const nextUp = `<div class="next-up">${nextUpTiles(runsBetween(today, today + 60))}</div>`;
+  const contents = panelContents();
+  // An open event keeps its way back and its head in place; only its body scrolls.
+  const holdsEvent = contents.includes('class="event-page-body"');
   return nextUp +
-    `<aside class="day-panel${view.isPanelOpen ? ' open' : ''}" aria-label="Day details">` +
-    panelContents() + '</aside>';
+    `<aside class="day-panel${view.isPanelOpen ? ' open' : ''}${holdsEvent ? ' holds-event' : ''}"` +
+    ` aria-label="Day details">` + contents + '</aside>';
 }
 
 const BACK_ARROW_SVG = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
@@ -517,27 +520,32 @@ interface ScrollPlaces {
   window: number;
   calendar: number;
   panel: number;
+  eventBody: number;
 }
 
 function scrollPlaces(app: HTMLElement): ScrollPlaces {
   return {
     window: window.scrollY,
     calendar: app.querySelector<HTMLElement>('.calendar-panel')?.scrollTop ?? 0,
-    panel: app.querySelector<HTMLElement>('.day-panel')?.scrollTop ?? 0
+    panel: app.querySelector<HTMLElement>('.day-panel')?.scrollTop ?? 0,
+    eventBody: app.querySelector<HTMLElement>('.event-page-body')?.scrollTop ?? 0
   };
 }
 
 function putBackScrollPlaces(app: HTMLElement, places: ScrollPlaces): void {
   const calendar = app.querySelector<HTMLElement>('.calendar-panel');
   const panel = app.querySelector<HTMLElement>('.day-panel');
+  const eventBody = app.querySelector<HTMLElement>('.event-page-body');
   if (startAtTop.wholePage) {
     window.scrollTo(0, 0);
     if (calendar) calendar.scrollTop = 0;
     if (panel) panel.scrollTop = 0;
+    if (eventBody) eventBody.scrollTop = 0;
   } else {
     window.scrollTo(0, places.window);
     if (calendar) calendar.scrollTop = startAtTop.calendar ? 0 : places.calendar;
     if (panel) panel.scrollTop = startAtTop.panel ? 0 : places.panel;
+    if (eventBody) eventBody.scrollTop = startAtTop.panel ? 0 : places.eventBody;
   }
   startAtTop.calendar = false;
   startAtTop.panel = false;
@@ -559,7 +567,8 @@ function draw(): void {
 // An event that has just opened shows its marked row: if the row is out of sight, the
 // panel scrolls so it sits a third of the way down.
 function scrollToMarkedRow(app: HTMLElement): void {
-  const panel = app.querySelector<HTMLElement>('.day-panel');
+  const panel = app.querySelector<HTMLElement>('.event-page-body') ??
+    app.querySelector<HTMLElement>('.day-panel');
   const marked = panel?.querySelector<HTMLElement>('.tree-row.current');
   if (!panel || !marked) return;
   const panelBox = panel.getBoundingClientRect();

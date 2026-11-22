@@ -648,7 +648,9 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
     (occurrence.wasCancelled ? '<span class="cancelled-mark" aria-label="Cancelled">&times;</span> ' : '') +
     escapeForPage(eventTypeName(eventTypeId) + options.allianceTags) + '</h2>' +
     `<span class="event-note">${escapeForPage(spanText(occurrence.startMinute, occurrence.endMinute))}</span>` +
-    `</div><div class="row-buttons">${viewButton}</div></div>`;
+    `</div><div class="row-buttons">${viewButton}</div></div>` +
+    // Everything under the head scrolls; the way back and the head stay at the top.
+    '<div class="event-page-body">';
 
   if (facts.length) {
     html += '<div class="event-facts">' +
@@ -657,19 +659,18 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
   }
 
   html += view === 'timeline' ? timelineHtml : infoHtml;
-  html += '</section>';
 
   if (options.allianceTimes.length) {
-    html += '<section class="day-section glass"><h3>Alliance times</h3>' +
+    html += '<div class="event-alliance-times"><h3>Alliance times</h3>' +
       options.allianceTimes.map(other =>
         `<button type="button" class="schedule-row" data-open-event="${escapeForPage(other.key)}">` +
         `<span>${escapeForPage(options.allianceTagsOf(other))}</span>` +
         `<span class="schedule-when">${escapeForPage(shortDayText(shownDayOf(other.startMinute)) +
           (other.startTimeUtc ? ' · ' + clockText(other.startMinute) : ''))}</span></button>`).join('') +
-      '</section>';
+      '</div>';
   }
 
-  return html;
+  return html + '</div></section>';
 }
 
 // The panel behind a gathered bar ("Bear Hunt x16"): every alliance's time of that
@@ -691,7 +692,7 @@ export function groupPanel(options: GroupPanelOptions): string {
     `<div class="event-page-head">${eventBadge(options.eventTypeId, 'large')}` +
     `<div class="event-page-title"><h2>${escapeForPage(eventTypeName(options.eventTypeId))}</h2>` +
     `<span class="event-note">${escapeForPage(shortDayText(options.day))}</span></div></div>` +
-    '<p class="event-info-line">Tick the times you follow. Only those show in your calendar, at their time.</p>' +
+    '<div class="event-page-body"><p class="event-info-line">Tick the times you follow. Only those show in your calendar, at their time.</p>' +
     '<div class="time-list">' + options.times.map(one => {
       const isFollowed = options.followedScheduleIds.has(one.scheduleId);
       return `<div class="time-row${isFollowed ? ' followed' : ''}">` +
@@ -700,7 +701,7 @@ export function groupPanel(options: GroupPanelOptions): string {
         `<span class="filter-box${isFollowed ? ' on' : ''}" aria-hidden="true">${isFollowed ? '&#10003;' : ''}</span>` +
         `<span class="time-name">${escapeForPage(options.nameOfTime(one))}</span></button>` +
         `<span class="time-value">${escapeForPage(clockText(one.startMinute))}</span></div>`;
-    }).join('') + '</div></section>';
+    }).join('') + '</div></div></section>';
 }
 
 // Kept so the colour helpers have one home, used by the panel and by anything that
