@@ -217,6 +217,12 @@ there before discussing it again.
   info shown, as in the old app.
 - A white line on a bar shows its time on hover, as a small label. A tap that does
   land on one shows it too; any other tap on the bar opens the event.
+- An event's info is in tabs, one per piece: Requirements, Points, Rules, Predictions,
+  Rewards, Missions, and the event-specific ones (Showdown's total score, the
+  fortress battles, alliance times, results to come). Only the pieces an event has
+  get a tab. When the tabs do not fit, they scroll sideways. Each tab is designed
+  when we get to it. The other name, the event's note and the date's note show with
+  the name at the top, not in a tab.
 - Everything in "Still to design" in rules-and-open-items.md.
 
 ## Data to check at the source
