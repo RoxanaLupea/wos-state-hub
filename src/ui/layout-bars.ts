@@ -46,7 +46,9 @@ export function layoutBars(panel: HTMLElement): void {
       bar.style.marginRight = (last.right - right) + 'px';
       const width = right - left;
 
-      // A bar narrower than its own logo: the logo shrinks to fit.
+      // A bar narrower than its own logo is tiny. A one-line bar then shows only its
+      // logo at full size, centred on its time (see calendar.css). A two-line bar's logo
+      // shrinks to fit inside it.
       const logo = bar.querySelector<HTMLElement>('.bar-head .event-icon, .bar-side-icon .event-icon');
       bar.classList.remove('tiny');
       if (logo) {
@@ -56,10 +58,12 @@ export function layoutBars(panel: HTMLElement): void {
         const logoSize = logo.getBoundingClientRect().width;
         if (width < logoSize + 6) {
           bar.classList.add('tiny');
-          const size = Math.max(6, Math.floor(width - 4));
-          logo.style.width = size + 'px';
-          logo.style.height = size + 'px';
-          logo.style.setProperty('--logo-size', size + 'px');
+          if (bar.classList.contains('phase-lines')) {
+            const size = Math.max(6, Math.floor(width - 4));
+            logo.style.width = size + 'px';
+            logo.style.height = size + 'px';
+            logo.style.setProperty('--logo-size', size + 'px');
+          }
         }
       }
 

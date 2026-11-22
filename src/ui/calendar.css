@@ -73,6 +73,13 @@
 .bar.tiny { padding: 2px 0; }
 .bar.tiny .bar-label, .bar.tiny .bar-count, .bar.tiny .bar-time { display: none; }
 .bar.tiny svg.event-icon { margin: 0; }
+/* A bar too short for anything but its logo (Sunfire Castle, a few hours) is drawn like
+   a followed time: the logo at full size, centred on its time, with no bar behind it. */
+.bar.tiny:not(.phase-lines) {
+  background: none !important; box-shadow: none !important;
+  backdrop-filter: none; -webkit-backdrop-filter: none; overflow: visible;
+}
+.bar.tiny:not(.phase-lines) .bar-head { overflow: visible; justify-content: center; }
 
 /* Line 2: named days, a part on the same hours, or a second name. */
 .bar-segment, .bar-sub, .bar-inside { position: absolute; bottom: 2px; height: var(--line-two-height); z-index: 1; }
