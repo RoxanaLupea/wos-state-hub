@@ -144,6 +144,19 @@ The structure these feed into is in supabase/schema.sql.
 - A complete facility set is 12: construction and tech at levels 1 and 3, defense and
   weapons at levels 2 and 4, and one each of training, expedition, production and
   gathering. Two of the same type and level do not stack.
+- The site has two maps. The state map holds the facilities, fortresses, strongholds,
+  the castle, every alliance's HQs and banners, and the alliance territory they build,
+  which branches out to the facilities. Cities are placed on it too.
+- The alliance map opens once the alliance's HQ is placed on the state map. It is the
+  smaller view where the alliance maps its hive: its cities and everything that blocks
+  a tile, such as water, mountains and alliance mills.
+- A third map is the castle map, about the size of the alliance map. Players from the
+  state are assigned to spots on it. The spots change for every SvS, and each one starts
+  as a draft copied from the previous SvS. For SvS, terrain is marked in one colour for
+  us and another for the enemy. For Sunfire it is probably split in 4 instead. The user
+  will show examples before it is built.
+- Event maps, very different from the three above: one each for Winter Siege, Foundry
+  Battle and Canyon Clash, and probably one for Wild Brawl.
 
 ## Troop score
 
@@ -160,6 +173,8 @@ Highest is 11 per troop type and 33 in total. Exalted is only possible on FC10.
 - seed/fort-holders.json keys on a season start date and only covers phase 2. It moves
   to season 16 with phases.
 - The facilities and their coordinates can be seeded from the 1060 transfer workbook.
+- data/catalog/fort-locations.json holds the 1458 fortress and stronghold coordinates
+  (from the game, season 16). They are for the map only, not the Fortress page.
 
 ## Still to design
 
