@@ -17,6 +17,16 @@
   width: 1px; background: var(--glass-border);
 }
 .predictions-head .prediction-back { position: relative; }
+.prediction-views { display: flex; align-items: center; gap: 12px; }
+/* The two-word choices, as small as the boxes beside them. */
+.predictions-head .prediction-pair { padding: 2px; border-radius: 9px; }
+.predictions-head .prediction-pair button {
+  min-height: 22px; padding: 0 9px; font-size: 12px; font-weight: 700; border-radius: 7px; box-shadow: none;
+}
+/* The chosen word in the page's own parchment, like the ticked boxes beside it. */
+.predictions-head .prediction-pair button[aria-pressed="true"] {
+  background: var(--event-mark); color: var(--event-ink); font-weight: 800; box-shadow: none;
+}
 .prediction-control { display: flex; align-items: baseline; gap: 7px; }
 /* The label separates one control from the next, so nothing else has to. */
 .prediction-control-label {
@@ -100,14 +110,17 @@
 
 .prediction-dates {
   display: flex; align-items: flex-start; gap: var(--date-gap); padding-bottom: 10px;
-  overflow-x: auto; overflow-y: hidden; flex: 1 1 auto; min-height: 0;
+  /* The dates move as one sheet, like a spreadsheet: one scroll across and one down,
+     for every column together. */
+  overflow: auto; overscroll-behavior: contain; flex: 1 1 auto; min-height: 0;
   /* Whole columns only: the next date shows as a sliver at the edge, the scroll
      snaps a peek in from the left, and the fade covers exactly that sliver. */
   scroll-snap-type: x mandatory; scroll-padding-left: var(--date-peek);
   scroll-behavior: smooth; scrollbar-width: none;
   scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--accent) 35%, transparent) transparent;
 }
-.prediction-dates::-webkit-scrollbar { display: none; }
+.prediction-dates::-webkit-scrollbar { width: 8px; height: 8px; }
+.prediction-dates::-webkit-scrollbar-corner { background: transparent; }
 .prediction-dates.can-left {
   -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--date-sliver));
   mask-image: linear-gradient(to right, transparent 0, #000 var(--date-sliver));
@@ -131,7 +144,7 @@
   /* A column is as tall as its groups, up to the height there is. A short list ends
      where it ends instead of leaving dead space under it; a long one scrolls. */
   flex: 0 0 calc((100% - 2 * var(--date-peek) - 5 * var(--date-gap)) / 6);
-  min-width: 190px; max-height: 100%; scroll-snap-align: start;
+  min-width: 190px; scroll-snap-align: start;
   display: flex; flex-direction: column;
   border-radius: 8px;
   background: var(--glass); border: 1px solid var(--glass-border);
@@ -141,7 +154,9 @@
    surface is the event's own colour but still a glass panel: translucent, with the
    light along its top edge and the shadow along its bottom that every other surface
    in the app has. */
+/* The date heads stay at the top while the rows scroll under them. */
 .date-block-top {
+  position: sticky; top: 0; z-index: 2;
   flex: none; border-radius: 7px 7px 0 0; overflow: hidden;
   background: linear-gradient(180deg,
     color-mix(in srgb, var(--event-mark) 86%, white 14%),
@@ -151,30 +166,9 @@
   color: var(--event-ink);
 }
 
-/* Each column scrolls on its own, because the group this state is in sits at a
-   different depth on every date. */
-.date-block-scroll {
-  flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
-}
-/* The rows fade out at whichever edge still has more to scroll towards. */
-.date-block-scroll.can-up {
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 16px);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 16px);
-}
-.date-block-scroll.can-down {
-  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 16px), transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 calc(100% - 16px), transparent 100%);
-}
-.date-block-scroll.can-up.can-down {
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 16px,
-    #000 calc(100% - 16px), transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 16px,
-    #000 calc(100% - 16px), transparent 100%);
-}
-.date-block-scroll::-webkit-scrollbar { width: 6px; }
-.date-block-scroll::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.16); border-radius: 999px;
-}
+/* A column's rows scroll with the whole sheet. Each column starts lower or higher by
+   the space set above its rows, so this state's group lines up across the dates. */
+.date-block-scroll { flex: none; }
 .date-block-rows { flex: 1 1 auto; }
 .date-block-rows .group-row:last-child { border-bottom: none; border-radius: 0 0 7px 7px; }
 .date-block-head {
@@ -240,3 +234,45 @@
 /* Which state's group is being followed, typed in rather than picked from a list,
    because it can be any state in the game. */
 /* What each date follows, under its date. */
+
+/* On a phone: the battles on the left, the two views on the right, the way back to
+   the next transfer under them; two whole dates side by side with room at the edges
+   for the next and the last to show as a fading sliver; smaller text, so our group's
+   range fits its column. */
+@media (max-width: 999px) {
+  .predictions-head { justify-content: space-between; align-items: center; gap: 8px 12px; width: 100%; }
+  .prediction-views { gap: 6px; }
+  .predictions-head .prediction-pair button { padding: 0 6px; font-size: 11.5px; }
+  .filter-check { font-size: 11.5px; gap: 4px; }
+  .filter-check + .filter-check { margin-left: 8px; }
+  .predictions-head .prediction-back { margin: 0 auto; }
+  .predictions-head .prediction-back::before { display: none; }
+  .predictions-page { --date-peek: 20px; --date-gap: 6px; }
+  .date-block { flex-basis: calc((100% - 2 * var(--date-peek) - var(--date-gap)) / 2); min-width: 0; }
+  .date-block-head { font-size: 12px; padding: 6px 6px 2px; }
+  .date-block-labels { grid-template-columns: 1fr 9px 1fr 24px 42px; padding: 0 5px 5px; font-size: 8.5px; }
+  .group-row { grid-template-columns: 1fr 9px 1fr 24px 42px; padding: 3px 5px; font-size: 11px; }
+  .group-row.is-us { font-size: 12px; padding-top: 4px; padding-bottom: 4px; }
+}
+
+/* The way back to the next transfer: a small glass tab at the bottom of the dates, on
+   the side the next transfer is on, there only while it is out of sight. */
+.predictions-page { position: relative; }
+.next-transfer-tab {
+  position: absolute; z-index: 5; display: inline-flex; align-items: center; gap: 5px;
+  min-height: 30px; padding: 0 10px; border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--event-mark) 60%, transparent);
+  background: color-mix(in srgb, var(--page-color) 70%, transparent);
+  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+  color: var(--event-mark); font: inherit; font-size: 12px; font-weight: 800; cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+.next-transfer-tab[hidden] { display: none; }
+.next-transfer-tab { bottom: 18px; }
+.next-transfer-tab.on-left { left: 12px; }
+.next-transfer-tab.on-right { right: 12px; flex-direction: row-reverse; }
+.next-transfer-tab .tab-arrow {
+  width: 7px; height: 7px; border-left: 2px solid currentColor; border-bottom: 2px solid currentColor;
+  transform: rotate(45deg); margin-left: 2px;
+}
+.next-transfer-tab.on-right .tab-arrow { transform: rotate(-135deg); margin: 0 2px 0 0; }

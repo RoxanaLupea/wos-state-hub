@@ -77,6 +77,18 @@ there before discussing it again.
   our group and the whole group in view.
 - Where there is not enough to fill the height, the space is not left empty to
   scroll through.
+- On a phone two whole dates show side by side, with a fading sliver of the dates on
+  either side; the text is smaller so our group's range fits its column. The SvS and
+  Sunfire boxes sit on the left of the controls and the two switches on the right
+  (23 Nov).
+- The way back to the next transfer is a small glass tab with its date at the bottom
+  of the dates, on the side the next transfer is on (left or right, arrow pointing
+  that way), shown only while the next transfer is out of sight (23 Nov). The
+  controls are "Ours | All" and "Groups | Ranges", each showing both choices with the
+  chosen one lit in the page's parchment colour, like the ticked boxes (23 Nov).
+- The date columns scroll as one sheet, like a spreadsheet: no scrollbar per column,
+  one scroll down for all of them under date heads that stay at the top. Each column
+  starts lower or higher so our group lines up across the dates (23 Nov).
 
 ### King of Icefield
 - Its bar shows its seven named days on line 2 on a computer, like SvS preparation
@@ -221,6 +233,24 @@ there before discussing it again.
   info shown, as in the old app.
 - A white line on a bar shows its time on hover, as a small label. A tap that does
   land on one shows it too; any other tap on the bar opens the event.
+- On a phone the top bar is kept low: a smaller logo, clock and buttons, and the
+  signed-in player's name shown in full on the first row, cut short only when it is
+  long (23 Nov). Section pages and page controls sit centred under the title.
+- On a phone the clock sits right of the middle, clear of the front camera, and the
+  sections row is low (23 Nov).
+- The open section is shown by accent text with a line under it, on a phone and on a
+  computer (23 Nov).
+- Every event has the same tabs, in the same order, showing only those it has:
+  Timeline, Rules (requirements, rules and predictions together), Points, Rewards,
+  the tabs only one kind of event needs (Battles, Total score, Alliance times),
+  Missions, Results, Mine (23 Nov). Whether Missions joins Rewards is still open.
+- SvS (with its Castle Battle) shows on the event only that date's result; the whole
+  history is on the State page, reached from "Check history" under it (23 Nov).
+- An opponent is recorded as its state and its alliance, written as text; opponent
+  alliances are not added to the site's alliances (23 Nov).
+- An event's timeline is the first of its tabs; there is no separate button to switch
+  between timeline and info (22 Nov). The panel opens on Timeline, or on the tab the
+  player looked at last when the event has it.
 - An event's info is in tabs, one per piece: Requirements, Points, Rules, Predictions,
   Rewards, Missions, and the event-specific ones (Showdown's total score, the
   fortress battles, alliance times, results to come). Only the pieces an event has

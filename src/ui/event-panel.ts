@@ -119,7 +119,10 @@ function pointsList(eventTypeId: string, sources: PointSource[], isOpen: boolean
 
 // A fold of plain notes from one named list.
 function notesFold(eventTypeId: string, list: string, title: string): string {
-  const notes = pointSourcesInList(eventTypeId, list);
+  // A rewards note written for one list or band shows with that list, under its
+  // buttons, as in the game; only the notes for all the rewards stay on top.
+  const notes = pointSourcesInList(eventTypeId, list)
+    .filter(source => list !== 'rewards' || !pointSourceDayName(source.id));
   if (!notes.length) return '';
   return `<details class="points-list" open><summary>${escapeForPage(title)}</summary>` +
     notes.map(source => noteRow(pointSourceTask(source.id, heroDay), source.imageFile)).join('') +
@@ -425,6 +428,13 @@ function rewardsFold(eventTypeId: string, state: RewardViewState): string {
 }
 
 // The whole run as one timeline.
+// The rows whose points the player opened, so they stay open when the page is drawn
+// again (a table arriving, a tab, another row picked).
+let openPointRows = new Set<string>();
+export function setOpenPointRows(rows: Set<string>): void {
+  openPointRows = rows;
+}
+
 export function renderEventTree(tree: EventTree): string {
   const rows = tree.rows;
   const side = tree.side;
@@ -591,7 +601,9 @@ export function renderEventTree(tree: EventTree): string {
     }
     const sources = pointSourcesForDay(row.eventTypeId, row.dayNumber ?? 1)
       .filter(source => row.pointSourceIds.includes(source.id));
-    return `<details class="tree-item"><summary class="${rowClass}"${currentStyle}${rowKey}>` +
+    const pointsKey = row.key || 'row-' + index;
+    return `<details class="tree-item" data-points-key="${escapeForPage(pointsKey)}"` +
+      `${openPointRows.has(pointsKey) ? ' open' : ''}><summary class="${rowClass}"${currentStyle}${rowKey}>` +
       `${inside}</summary>` +
       `<div class="tree-points${sideGoesOn ? ' with-side' : ''}` +
       `${sideGoesOn && isDashedBelow(index) ? ' dash-side' : ''}"` +
@@ -614,8 +626,6 @@ export interface EventPanelOptions {
   // Other alliances' own times for this event in these days.
   allianceTimes: Occurrence[];
   allianceTagsOf: (occurrence: Occurrence) => string;
-  // 'timeline' or 'info'.
-  shownView: string;
   rewardView: RewardViewState;
   changeNote: string;
   // The day the event was opened from, when it was opened from a day's timeline.
@@ -628,7 +638,8 @@ export interface EventPanelOptions {
   resultsHtml: string;
   // The player's own entry for this run: their time, rank and note.
   personalHtml: string;
-  // The info tab the player last opened; the first tab when it is not one of this event's.
+  // The tab the player last opened (Timeline is the first); the first tab when it is not
+  // one of this event's.
   openTab: string;
   // Pencils in the head, for those allowed to edit this event's dates or this date.
   headPencils: string;
@@ -636,14 +647,6 @@ export interface EventPanelOptions {
   editFormHtml: string;
 }
 
-const INFO_ICON = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
-  ' stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/>' +
-  '<path d="M12 11v6"/><circle cx="12" cy="7.5" r="0.8" fill="currentColor"/></svg>';
-const TIMELINE_ICON = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
-  ' stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 3v18"/>' +
-  '<circle cx="6" cy="6" r="2.2" fill="currentColor"/><circle cx="6" cy="18" r="2.2" fill="currentColor"/>' +
-  '<path d="M6 12h5"/><circle cx="13" cy="12" r="1.8" fill="currentColor"/>' +
-  '<path d="M11 6h9M11 18h9M16 12h4"/></svg>';
 
 // One tab of an event's info.
 interface InfoTab {
@@ -669,6 +672,17 @@ function joinFolds(first: string, second: string): string {
   if (!second) return first;
   const inner = tabFromFold('', second).html;
   return first.slice(0, -'</details>'.length) + inner + '</details>';
+}
+
+// The Rules tab: the requirements, the rules and the predictions, each under its own
+// heading, as one page.
+function rulesPage(eventTypeId: string, requirements: string): string {
+  const parts = [
+    requirements,
+    notesFold(eventTypeId, 'rules', 'Rules'),
+    notesFold(eventTypeId, 'predictions', 'Predictions')
+  ].filter(Boolean);
+  return parts.join('');
 }
 
 // The first day of the event being drawn. Hero names in its texts are those of the
@@ -720,19 +734,19 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
       '</div>'
     : '';
 
-  // The event's info, one tab per piece it has, in this order. A piece written as a
-  // fold gets its title as the tab's name and its contents as the tab's page.
+  // The same tabs, in the same order, on every event; an event shows only the ones it
+  // has. Timeline first; Rules holds the requirements, the rules and the predictions;
+  // the tabs only one kind of event needs come after Rewards.
   const tabs: InfoTab[] = [
-    tabFromFold('requirements', requirements),
-    { id: 'battles', label: 'Battles', html: options.fortBattlesHtml },
-    { id: 'score', label: 'Total score', html: options.scoreHtml },
+    { id: 'timeline', label: 'Timeline', html: timelineHtml },
+    { id: 'rules', label: 'Rules', html: rulesPage(eventTypeId, requirements) },
     tabFromFold('points', ownPoints),
-    tabFromFold('rules', notesFold(eventTypeId, 'rules', 'Rules')),
-    tabFromFold('predictions', notesFold(eventTypeId, 'predictions', 'Predictions')),
     tabFromFold('rewards', joinFolds(
       notesFold(eventTypeId, 'rewards', 'Rewards'), rewardsFold(eventTypeId, options.rewardView))),
-    tabFromFold('missions', missionsFold(eventTypeId, options.rewardView)),
+    { id: 'battles', label: 'Battles', html: options.fortBattlesHtml },
+    { id: 'score', label: 'Total score', html: options.scoreHtml },
     { id: 'alliance-times', label: 'Alliance times', html: allianceTimesHtml },
+    tabFromFold('missions', missionsFold(eventTypeId, options.rewardView)),
     { id: 'results', label: 'Results', html: options.resultsHtml },
     { id: 'mine', label: 'Mine', html: options.personalHtml }
   ].filter(tab => tab.html);
@@ -743,21 +757,12 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
         `<button type="button" class="info-tab" role="tab" data-info-tab="${tab.id}"` +
         ` aria-selected="${tab === openTab}">${escapeForPage(tab.label)}</button>`).join('') + '</div>'
     : '';
-  const infoHtml = openTab
-    ? `<div class="event-folds" style="--fold-color:${escapeForPage(color)}">` +
-      `<div class="points-list tab-page ${openTab.id}-tab">` +
-      (tabs.length === 1 ? `<h3 class="tab-page-title">${escapeForPage(openTab.label)}</h3>` : '') +
-      `${openTab.html}</div></div>`
-    : '';
-
-  const hasBothViews = Boolean(timelineHtml) && Boolean(infoHtml);
-  const view = hasBothViews ? options.shownView : timelineHtml ? 'timeline' : 'info';
-
-  const viewButton = !hasBothViews ? '' :
-    `<button type="button" class="view-button" data-toggle-view` +
-    ` aria-label="${view === 'timeline' ? 'Show info' : 'Show timeline'}"` +
-    ` title="${view === 'timeline' ? 'Info' : 'Timeline'}">` +
-    (view === 'timeline' ? INFO_ICON : TIMELINE_ICON) + '</button>';
+  const openHtml = !openTab ? ''
+    : openTab.id === 'timeline' ? timelineHtml
+      : `<div class="event-folds" style="--fold-color:${escapeForPage(color)}">` +
+        `<div class="points-list tab-page ${openTab.id}-tab">` +
+        (tabs.length === 1 ? `<h3 class="tab-page-title">${escapeForPage(openTab.label)}</h3>` : '') +
+        `${openTab.html}</div></div>`;
 
   let html = backLinks(options.backToDay) +
     `<section class="day-section glass event-page" style="${tintedPanelStyle(color)}">` +
@@ -766,11 +771,11 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
     (occurrence.wasCancelled ? '<span class="cancelled-mark" aria-label="Cancelled">&times;</span> ' : '') +
     escapeForPage(eventTypeName(eventTypeId) + options.allianceTags) + '</h2>' +
     `<span class="event-note">${escapeForPage(spanText(occurrence.startMinute, occurrence.endMinute))}</span>` +
-    `</div><div class="row-buttons">${options.headPencils}${viewButton}</div></div>` +
+    `</div><div class="row-buttons">${options.headPencils}</div></div>` +
     // The other name, the event's note and this date's note go with the name, not in a tab.
     (notes.length ? `<div class="event-notes">${notes.join('')}</div>` : '') +
     // The tabs stay at the top with the head; only what is under them scrolls.
-    (view === 'info' ? tabsHtml : '') +
+    tabsHtml +
     '<div class="event-page-body">';
 
   if (facts.length) {
@@ -780,7 +785,7 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
   }
 
   html += options.editFormHtml;
-  html += view === 'timeline' ? timelineHtml : infoHtml;
+  html += openHtml;
   return html + '</div></section>';
 }
 

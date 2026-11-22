@@ -37,10 +37,6 @@ const TICK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
   ' stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
   '<path d="M5 13l5 5L19 7"/></svg>';
 
-const TARGET = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none"' +
-  ' stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">' +
-  '<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>';
-
 
 // A range is written in three parts, not one: the first state against the dash from
 // the right, the dash, and the last state away from it to the left. Every dash in a
@@ -126,13 +122,15 @@ function checkBox(value: string, eventTypeId: string, label: string, isOn: boole
     `${escapeForPage(label)}</button>`;
 }
 
-// A switch between two ways of looking at the same list.
-function viewSwitch(name: string, label: string, isOn: boolean): string {
-  return `<button type="button" role="switch" aria-checked="${isOn}" class="filter-switch"` +
-    ` data-prediction-filter="${escapeForPage(name + '|toggle')}">` +
-    '<span class="switch-track"><span class="switch-knob"></span></span>' +
-    `${escapeForPage(label)}</button>`;
+// Two ways of looking at the same list, side by side; tapping the other one switches.
+function choicePair(name: string, label: string, words: [string, string], isFirst: boolean): string {
+  const button = (word: string, isOn: boolean) =>
+    `<button type="button" aria-pressed="${isOn}"` +
+    (isOn ? '' : ` data-prediction-filter="${escapeForPage(name + '|toggle')}"`) + `>${escapeForPage(word)}</button>`;
+  return `<div class="segmented time-switch prediction-pair" role="group" aria-label="${escapeForPage(label)}">` +
+    button(words[0], isFirst) + button(words[1], !isFirst) + '</div>';
 }
+
 
 // The page's own controls, which sit in the page head under the list of pages.
 export function predictionsControls(options: PredictionsOptions): string {
@@ -140,17 +138,19 @@ export function predictionsControls(options: PredictionsOptions): string {
     checkBox('svs', 'svs-battle', 'SvS', options.showsSvs) +
     checkBox('sunfire', 'sunfire', 'Sunfire', options.showsSunfire) + '</div>';
 
-  const scope = viewSwitch('scope', 'Only my group', options.scope === 'mine');
+  // Two choices each, the chosen one lit, as UTC | Mine is on the calendar: only the
+  // group 1458 is in, or every state; and each transfer group as one row, or cut into
+  // the ranges it is made of.
+  const scope = choicePair('scope', 'Which states', ['Ours', 'All'], options.scope === 'mine');
+  const rows = choicePair('rows', 'How groups show', ['Groups', 'Ranges'], options.mergesGroups);
 
-  const rows = viewSwitch('rows', 'Subgroups', !options.mergesGroups);
+  return '<div class="predictions-head">' + follows +
+    `<div class="prediction-views">${scope}${rows}</div></div>`;
+}
 
-  // One control takes you back to the transfer that is next, named by its date.
-  const backToNext = options.nextDate
-    ? '<button type="button" class="prediction-back" data-prediction-back>' +
-      `${TARGET}${escapeForPage(dayMonthYearText(dayFromText(options.nextDate)))}</button>`
-    : '';
-
-  return '<div class="predictions-head">' + follows + scope + rows + backToNext + '</div>';
+// "22 Nov", for the way back to the next transfer.
+function shortDateText(date: string): string {
+  return dayMonthYearText(dayFromText(date)).replace(/\s\d{4}$/, '');
 }
 
 export function predictionsPage(options: PredictionsOptions): string {
@@ -170,7 +170,13 @@ export function predictionsPage(options: PredictionsOptions): string {
       'No transfers of that kind in this stretch.</p></section></div>';
   }
 
+  // The way back to the next transfer shows only once it is out of sight, on the edge
+  // it went off, named by its date (layout-predictions.ts shows and places it).
+  const backToNext = options.nextDate
+    ? '<button type="button" class="next-transfer-tab" data-prediction-back hidden>' +
+      `<span class="tab-arrow" aria-hidden="true"></span>${escapeForPage(shortDateText(options.nextDate))}</button>`
+    : '';
   return '<div class="predictions-page"><div class="prediction-dates">' +
     options.dates.map(one => dateBlock(one.date, one.groups, one.follows, options)).join('') +
-    '</div></div>';
+    '</div>' + backToNext + '</div>';
 }

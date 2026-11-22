@@ -85,10 +85,10 @@ export function resultsTab(options: ResultsOptions): string {
 // SvS: one record per SvS, as the old sheet kept it.
 // ---------------------------------------------------------------------------
 
-function svsResults(options: ResultsOptions): string {
-  const { context } = options;
+// Every SvS: those recorded here, and the history collected before the site.
+function svsRows(context: WorkContext): Row[] | null {
   const recorded = resultsOf(context, 'svs');
-  if (!recorded) return '<p class="work-empty">Loading…</p>';
+  if (!recorded) return null;
   const recordedDates = new Set(recorded.map(one => String(one.row.event_date)));
   const history = (svsHistory as Record<string, unknown>[])
     .filter(one => !recordedDates.has(String(one.date)))
@@ -96,23 +96,39 @@ function svsResults(options: ResultsOptions): string {
       date: one.date, result: one.result, opponent: one.opponentState ? '#' + one.opponentState : '',
       preparation: one.preparation, castle: one.castleBattle, castleAlliance: one.castleAllianceId ?? ''
     }));
-  const rows: Row[] = recorded.map(one => ({
+  return recorded.map(one => ({
     date: one.row.event_date, result: one.details.get('result') ?? one.row.outcome,
     opponent: [one.opponents[0]?.opponent_alliance, one.opponents[0]?.opponent_state ? '#' + one.opponents[0].opponent_state : '']
       .filter(Boolean).join(' '),
     preparation: one.details.get('preparation'), castle: one.details.get('castle_battle'),
-    castleAlliance: one.row.state_alliance_id ?? ''
+    castleAlliance: one.row.state_alliance_id ?? '', note: one.row.note
   } as Row)).concat(history as Row[])
     .sort((left, right) => String(right.date).localeCompare(String(left.date)));
+}
 
-  const columns: Column[] = [
-    { label: 'Date', cell: row => dateCell(row.date) },
-    { label: 'Opponent', cell: row => text(row.opponent) },
-    { label: 'Result', cell: row => outcomeText(row.result) },
-    { label: 'Preparation', cell: row => outcomeText(row.preparation) },
-    { label: 'Castle battle', cell: row => outcomeText(row.castle) },
-    { label: 'Castle held by', cell: row => text(row.castleAlliance ? allianceTag(String(row.castleAlliance)) : '') }
-  ];
+const SVS_COLUMNS: Column[] = [
+  { label: 'Date', cell: row => dateCell(row.date) },
+  { label: 'Opponent', cell: row => text(row.opponent) },
+  { label: 'Result', cell: row => outcomeText(row.result) },
+  { label: 'Preparation', cell: row => outcomeText(row.preparation) },
+  { label: 'Castle battle', cell: row => outcomeText(row.castle) },
+  { label: 'Castle held by', cell: row => text(row.castleAlliance ? allianceTag(String(row.castleAlliance)) : '') }
+];
+
+// The whole SvS history, for the State page.
+export function svsHistorySection(context: WorkContext): string {
+  const rows = svsRows(context);
+  return '<section class="work-section glass" id="svs-history"><div class="work-head"><h2>SvS history</h2></div>' +
+    (rows ? dataTable(SVS_COLUMNS, rows, 'No SvS is recorded yet.') : '<p class="work-empty">Loading…</p>') +
+    '</section>';
+}
+
+// An SvS event's Results tab: this SvS only, and the way to the whole history.
+function svsResults(options: ResultsOptions): string {
+  const { context } = options;
+  const recorded = resultsOf(context, 'svs');
+  const rows = svsRows(context);
+  if (!recorded || !rows) return '<p class="work-empty">Loading…</p>';
   const existing = recorded.find(one => one.row.event_date === options.runDate);
   // A run already in the history collected before the site fills the form until it is
   // recorded here.
@@ -124,6 +140,8 @@ function svsResults(options: ResultsOptions): string {
     fields: [
       { name: 'opponent_state', label: 'Opponent state', kind: 'number',
         value: existing ? existing.opponents[0]?.opponent_state ?? '' : known?.opponentState ?? '' },
+      // Written as text: an opponent alliance is not one of ours, so it is not on the site's list.
+      { name: 'opponent_alliance', label: 'Opponent alliance', kind: 'text', value: existing?.opponents[0]?.opponent_alliance ?? '' },
       { name: 'detail_result', label: 'Result', kind: 'select', value: start('result', known?.result),
         choices: [['', 'Not known'], ['win', 'Win'], ['loss', 'Loss'], ['draw', 'Draw']] },
       { name: 'detail_preparation', label: 'Preparation', kind: 'select', value: start('preparation', known?.preparation), choices: OUTCOMES },
@@ -134,7 +152,9 @@ function svsResults(options: ResultsOptions): string {
       { name: 'note', label: 'Note', kind: 'text', value: existing?.row.note ?? '' }
     ]
   }) : '';
-  return form + dataTable(columns, rows, 'No SvS is recorded yet.');
+  const thisRun = rows.filter(row => row.date === options.runDate);
+  return form + dataTable(SVS_COLUMNS, thisRun, 'This SvS is not recorded yet.') +
+    '<button type="button" class="history-link" data-page="state" data-scroll-to="svs-history">Check history</button>';
 }
 
 // ---------------------------------------------------------------------------

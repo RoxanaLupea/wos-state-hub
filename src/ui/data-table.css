@@ -51,3 +51,8 @@
 .work-form .form-message { margin: 0; }
 .work-form .form-message:empty { display: none; }
 .data-table td:first-child { white-space: nowrap; }
+/* "Check history": the way from one run's result to the whole history. */
+.history-link {
+  align-self: flex-start; margin-top: 10px; min-height: 40px; padding: 0 4px; border: none; background: none;
+  color: var(--accent); font: inherit; font-size: 14px; font-weight: 800; cursor: pointer;
+}

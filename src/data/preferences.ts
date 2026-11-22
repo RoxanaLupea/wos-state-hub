@@ -12,6 +12,8 @@ export interface Preferences {
   calendarView: 'week' | 'month' | 'year';
   timeMode: 'game' | 'local';
   myAllianceId: string | null;
+  // The event tab looked at last; an event opens on it when it has one (Timeline first).
+  openInfoTab?: string;
   // Opponent notes: 'on' hides other alliances' notes, or all of them.
   opponentNotes?: { others: string; all: string };
 }
@@ -39,6 +41,7 @@ export function readPreferences(): Partial<Preferences> {
     if (typeof stored.myAllianceId === 'string' || stored.myAllianceId === null) {
       read.myAllianceId = stored.myAllianceId;
     }
+    if (typeof stored.openInfoTab === 'string') read.openInfoTab = stored.openInfoTab;
     const notes = stored.opponentNotes as Record<string, unknown> | undefined;
     if (notes && typeof notes === 'object') {
       read.opponentNotes = { others: notes.others === 'on' ? 'on' : '', all: notes.all === 'on' ? 'on' : '' };

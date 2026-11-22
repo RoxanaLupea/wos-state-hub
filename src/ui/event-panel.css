@@ -98,9 +98,6 @@
 .tree-label.side-row { color: var(--text-muted); font-weight: 700; }
 /* Instructions of a phase or step: open from its row (same arrow as points), smaller text. */
 .tree-instructions { margin: 2px 0 6px; font-size: 13px; line-height: 1.4; color: var(--text-muted); }
-/* The button that switches an event card between its timeline and its info. */
-.view-button { width: 34px; height: 34px; border-radius: 999px; border: 1px solid var(--glass-border); background: var(--glass);
-  color: var(--accent); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; flex: none; }
 /* Requirements under the event's name: one line for the alliance, one for the player. */
 .event-requirements p { margin: 0 0 4px; font-size: 13px; line-height: 1.4; color: var(--text-muted); }
 .event-requirements b { color: var(--text); font-weight: 700; }

@@ -54,7 +54,8 @@ import {
 import { allianceTimeForm, dateChangeForm, fortForm, pencilButton, scheduleForm } from './ui/edit-forms.ts';
 import { deleteRow, loadRows, saveRow, type Row } from './data/records.ts';
 import {
-  ALLIANCE_RESULT_EVENTS, allianceResultsPage, championshipStars, opponentNotesPage, resultsTab, showdownScoreOf
+  ALLIANCE_RESULT_EVENTS, allianceResultsPage, championshipStars, opponentNotesPage, resultsTab, showdownScoreOf,
+  svsHistorySection
 } from './ui/results.ts';
 import { personalEntryForm, personalEntryOf } from './ui/personal-entry.ts';
 import {
@@ -71,7 +72,7 @@ import { weekTitle, weekView } from './ui/week-view.ts';
 import { yearView } from './ui/year-view.ts';
 import { yearOverview } from './ui/year-overview.ts';
 import { dayPanel } from './ui/day-panel.ts';
-import { eventPanel, groupPanel, type RewardViewState } from './ui/event-panel.ts';
+import { eventPanel, groupPanel, type RewardViewState, setOpenPointRows } from './ui/event-panel.ts';
 import { partOpenings } from './ui/bar.ts';
 import { nextUpTiles } from './ui/next-up.ts';
 import { problemPanel } from './ui/problem-panel.ts';
@@ -111,10 +112,10 @@ const view = {
   // What is typed in the state box, kept as written.
   // True to show each group as one row rather than its subgroups.
   predictionMergesGroups: false,
-  // The run whose own page is open, and which half of it is shown.
+  // The run whose own page is open.
   openEventKey: null as string | null,
-  openEventView: 'timeline',
-  // The info tab last opened. An event without that tab opens on its first one.
+  // The tab last opened (Timeline is the first). An event without that tab opens on
+  // its first one.
   openInfoTab: '',
   // The day the open event was tapped on, used to find it among the runs nearby.
   openEventDay: todayNumber(),
@@ -129,6 +130,8 @@ const view = {
   pickedRowKey: null as string | null,
   // Which alliance times the player follows, by schedule.
   followedScheduleIds: new Set<string>(),
+  // The rows of the open event whose points are open.
+  openPointRows: new Set<string>(),
   // The form a pencil opened: "schedule|<id>", "alliance|<id>", "date|<id>|<date>" or
   // "fort|<season>|<phase>|<fort>". Null when none is open.
   editing: null as string | null,
@@ -466,7 +469,6 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
     allianceTimes,
     allianceTagsOf: other => other.allianceIds.filter(id => myAllianceIds.includes(id))
       .map(allianceTag).join(', '),
-    shownView: view.openEventView,
     rewardView: view.rewardView,
     changeNote: occurrence.note,
     backToDay: view.openedFromDay,
@@ -834,6 +836,8 @@ function draw(): void {
   const place = view.openPage + '|' + (view.openEventKey ?? '') + '|' + view.chosenDay;
   if (place !== editingPlace) {
     if (editingPlace) view.editing = null;
+    // Another event's rows start closed.
+    if (editingPlace.split('|')[1] !== (view.openEventKey ?? '')) view.openPointRows.clear();
     editingPlace = place;
   }
   const places = scrollPlaces(app);
@@ -861,6 +865,7 @@ function rememberChoices(): void {
     calendarView: view.calendarView,
     timeMode: currentTimeMode(),
     myAllianceId: view.myAllianceId,
+    openInfoTab: view.openInfoTab,
     opponentNotes: { others: workChoices.get('opponents-others') ?? '', all: workChoices.get('opponents-all') ?? '' }
   });
 }
@@ -869,6 +874,7 @@ function rememberChoices(): void {
 // a category the site no longer has, is dropped.
 function applyKeptChoices(): void {
   const kept = readPreferences();
+  if (kept.openInfoTab) view.openInfoTab = kept.openInfoTab;
   if (kept.opponentNotes) {
     workChoices.set('opponents-others', kept.opponentNotes.others);
     workChoices.set('opponents-all', kept.opponentNotes.all);
@@ -982,7 +988,9 @@ function drawPage(app: HTMLElement): void {
       view.openPage === 'fortress' && subPage === 'board' ? fortressBoardMarkup() :
       view.openPage === 'fortress' && subPage === 'planning' ? fortressPlanningMarkup() :
       view.openPage === 'fortress' && subPage === 'rewards' ? fortressRewardsMarkup() :
-      view.openPage === 'state' ? statePage({ stateNumber: STATE_NUMBER, alliances: alliancesStillHere(alliances), schedules }) :
+      view.openPage === 'state'
+        ? statePage({ stateNumber: STATE_NUMBER, alliances: alliancesStillHere(alliances), schedules }) +
+          svsHistorySection(workContext()) :
       view.openPage === 'alliance' && subPage === 'times'
         ? allianceTimesPage(view.myAllianceId ? allianceById(view.myAllianceId) : undefined, schedules) :
       view.openPage === 'transfers' && subPage === 'timeline' ? predictionsMarkup() :
@@ -1119,6 +1127,9 @@ function handleClicks(event: MouseEvent): void {
     view.openSubPage = '';
     startAtTop.wholePage = true;
     draw();
+    // "Check history" goes to its part of the page.
+    const part = pageButton.dataset.scrollTo ? document.getElementById(pageButton.dataset.scrollTo) : null;
+    part?.scrollIntoView({ block: 'start' });
     return;
   }
 
@@ -1269,13 +1280,6 @@ function handleClicks(event: MouseEvent): void {
     return;
   }
 
-  if (target.closest('[data-toggle-view]')) {
-    view.openEventView = view.openEventView === 'timeline' ? 'info' : 'timeline';
-    startAtTop.panel = true;
-    draw();
-    return;
-  }
-
   // A pencil opens its form in place; Cancel closes it.
   const editButton = target.closest<HTMLElement>('[data-edit]');
   // A remove or unlink asks first; the second tap does it.
@@ -1333,6 +1337,7 @@ function handleClicks(event: MouseEvent): void {
   const infoTabButton = target.closest<HTMLElement>('[data-info-tab]');
   if (infoTabButton) {
     view.openInfoTab = infoTabButton.dataset.infoTab as string;
+    rememberChoices();
     startAtTop.panel = true;
     draw();
     return;
@@ -1363,9 +1368,21 @@ function handleClicks(event: MouseEvent): void {
     return;
   }
 
-  // A row's arrow opens or closes its points. The browser does that by itself, so
-  // nothing is redrawn and the rest of the panel stays as it is.
-  if (target.closest('.tree-arrow')) return;
+  // A row's arrow opens or closes its points, any number of them at once. Only that
+  // fold changes: nothing is redrawn, so the panel does not move. What is open is
+  // kept, so a later redraw leaves it open.
+  const pointsArrow = target.closest('.tree-arrow');
+  if (pointsArrow) {
+    event.preventDefault();
+    const fold = pointsArrow.closest<HTMLDetailsElement>('details[data-points-key]');
+    if (fold) {
+      const key = fold.dataset.pointsKey as string;
+      fold.open = !fold.open;
+      if (fold.open) view.openPointRows.add(key);
+      else view.openPointRows.delete(key);
+    }
+    return;
+  }
 
   // Any other tap on a row marks the row. The fold under it must not open or close.
   const rowButton = target.closest<HTMLElement>('[data-row-key]');
@@ -1774,6 +1791,8 @@ async function reloadAfterEdit(formName: string): Promise<void> {
     const [loadedSchedules, changes] = await Promise.all([loadSchedules(), loadDateChanges()]);
     schedules = loadedSchedules;
     expandOptions = { allSchedules: loadedSchedules, changesBySchedule: groupChanges(changes), partOfByEventTypeId };
+    // A moved SvS or Sunfire changes which battle a transfer follows.
+    rememberBattleDays();
   }
   draw();
 }
@@ -1930,7 +1949,6 @@ function openSharedAddress(): void {
   if (eventKey) {
     view.openEventKey = eventKey;
     view.openEventDay = Number.isNaN(day) ? todayNumber() : day;
-    view.openEventView = 'timeline';
     view.isPanelOpen = true;
     view.scrollsToMarkedRow = true;
   }
@@ -2072,6 +2090,14 @@ async function start(): Promise<void> {
     if (comingDate) {
       nextWindowGroups = await loadTransferGroups([comingDate]).catch(() => []);
     }
+    // The runs are worked out from these, so they are set before the battle days are
+    // read; without them every transfer followed neither battle and the SvS and
+    // Sunfire filters emptied the page.
+    expandOptions = {
+      allSchedules: loadedSchedules,
+      changesBySchedule: groupChanges(changes),
+      partOfByEventTypeId
+    };
     rememberBattleDays();
     // The predictions open on the next transfer, or the last one there is.
     const todayText = textFromDay(todayNumber());
@@ -2082,14 +2108,10 @@ async function start(): Promise<void> {
     if (view.predictionFirstDate) {
       transferGroups = await loadTransferGroups(shownPredictionDates()).catch(() => []);
     }
-    expandOptions = {
-      allSchedules: loadedSchedules,
-      changesBySchedule: groupChanges(changes),
-      partOfByEventTypeId
-    };
 
     applyKeptChoices();
     openSharedAddress();
+    setOpenPointRows(view.openPointRows);
     // Who is signed in. A signed-in player's alliance is the one on their account.
     person = await signedInPerson().catch(() => null);
     if (person?.account?.allianceId) view.myAllianceId = person.account.allianceId;
@@ -2098,6 +2120,9 @@ async function start(): Promise<void> {
     document.addEventListener('touchstart', startSwipe, { passive: true });
     document.addEventListener('touchend', endSwipe, { passive: true });
     window.addEventListener('popstate', returnToPlace);
+    // The site puts every scroll back itself; the browser's own would jump to the top
+    // whenever the history steps back.
+    history.scrollRestoration = 'manual';
     // The clock in the top bar, and the bars when the window changes width.
     window.setInterval(() => {
       const clock = document.getElementById('clockTime');
