@@ -147,6 +147,7 @@
   "eventType.frostfire.notes": "Each chief picks one of the game's slots (30 minutes).",
   "eventType.frostfire.playerRequirement": "Furnace 16",
   "eventType.frostfire.shortName": "Frostfire",
+  "eventType.frostfire.tag": "FF",
   "eventType.frostwind-journey.name": "Frostwind Journey",
   "eventType.frostwind-journey.shortName": "Frostwind Journey",
   "eventType.frosty-fortune.name": "Frosty Fortune",
