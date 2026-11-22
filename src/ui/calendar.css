@@ -36,6 +36,9 @@
    year view, left of each line, 16 / 14 px. */
 .bars { position: relative; z-index: 1; grid-auto-rows: 24px; row-gap: 2px; pointer-events: none; }
 .bar {
+  /* One size for an event's own logo on every bar, with one line or two, so the logos
+     that line up at the start of each week are all the same. */
+  --bar-logo: 22px;
   --head-height: 20px; --line-two-height: 14px;
   position: relative; min-width: 0; align-self: start;
   display: flex; flex-direction: column; justify-content: center; align-items: stretch;
@@ -57,6 +60,7 @@
 .bar .event-icon { flex: none; filter: drop-shadow(calc(var(--logo-size) * 0.0625) calc(var(--logo-size) * 0.078) calc(var(--logo-size) * 0.047) rgba(0, 0, 0, 0.85)); }
 .bar img.event-icon { --logo-size: 18px; width: 18px; height: 18px; object-fit: contain; }
 .bar svg.event-icon { --logo-size: 14px; width: 14px; height: 14px; margin: 0 3px; }
+.bar .bar-head img.event-icon { --logo-size: var(--bar-logo); width: var(--bar-logo); height: var(--bar-logo); }
 /* The name is cut with "…" when it does not fit (only the logo when not even 4 letters fit). */
 .bar .bar-label { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .bar .bar-count, .bar .bar-time { flex: none; }
@@ -80,7 +84,7 @@
 /* A phase (or a second name) under the name: a smaller line, with a bigger logo beside both lines.
    Phones: 32 px bars, 24 px logo; computers: 40 px bars, 32 px logo. */
 .bar.phase-lines {
-  --side-icon: 24px; --side-gap: 4px;
+  --side-icon: var(--bar-logo); --side-gap: 4px;
   height: 32px; justify-content: center; padding: 1px 4px 1px calc(4px + var(--side-icon) + var(--side-gap));
 }
 .bar.phase-lines .bar-head { height: 16px; line-height: 16px; }
@@ -99,7 +103,8 @@
 .bar.phase-lines.day-lines .bar-segment, .bar.phase-lines.day-lines .bar-inside { bottom: 2px; }
 .bar.phase-lines.day-lines .bar-segment-name { font-size: 9px; padding: 0 3px; }
 .bar.phase-lines.too-narrow, .bar.phase-lines.tiny { padding-left: 0; padding-right: 0; }
-.bar.phase-lines.too-narrow .bar-sub, .bar.phase-lines.tiny .bar-sub { display: none; }
+.bar.phase-lines.too-narrow .bar-sub, .bar.phase-lines.tiny .bar-sub,
+.bar.phase-lines.too-narrow .bar-segment, .bar.phase-lines.tiny .bar-segment { display: none; }
 .bar.phase-lines.too-narrow .bar-side-icon, .bar.phase-lines.tiny .bar-side-icon { left: 50%; transform: translate(-50%, -50%); }
 .bar-segment.lit .bar-segment-name { font-weight: 800; color: #FFFFFF; }
 .bar-segment.bar-chain { pointer-events: auto; cursor: pointer; z-index: 3; }
@@ -114,7 +119,7 @@
   /* Two lines of their own (Tundra Arms League with its tickets): 2px more between
      them, so the name never touches the logos on line 2. */
   .bar.phase-lines.day-lines:not(.parts-bar) { height: 34px; }
-  .bar.phase-lines.day-lines.parts-bar { --side-icon: 20px; --line-one-height: 20px; height: 24px; padding-top: 2px; justify-content: flex-start; }
+  .bar.phase-lines.day-lines.parts-bar { --line-one-height: 20px; height: 24px; padding-top: 2px; justify-content: flex-start; }
   .bar.parts-bar .bar-head { height: 20px; line-height: 20px; }
   .bar.parts-bar .bar-part { padding: 0; letter-spacing: 0; }
   .bar.parts-bar .bar-part-text { font-size: 7.5px; }
@@ -175,13 +180,13 @@
   .day-box { padding: 4px 0 0; font-size: 15px; }
   .day-box .day-number { min-width: 26px; height: 26px; }
   .bars { grid-auto-rows: 30px; row-gap: 3px; }
-  .bar { --head-height: 26px; --line-two-height: 16px; height: 30px; padding: 2px 6px; border-radius: 8px; font-size: 14px; line-height: 26px; }
+  .bar { --bar-logo: 28px; --head-height: 26px; --line-two-height: 16px; height: 30px; padding: 2px 6px; border-radius: 8px; font-size: 14px; line-height: 26px; }
   .bar-head { gap: 6px; }
   .bar img.event-icon { --logo-size: 24px; width: 24px; height: 24px; }
   .bar svg.event-icon { --logo-size: 18px; width: 18px; height: 18px; margin: 0 4px; }
   .bar .bar-time { display: inline; }
   .bar-segment-name { font-size: 11.5px; }
-  .bar.phase-lines { --side-icon: 32px; --side-gap: 6px; height: 40px; padding-left: calc(6px + var(--side-icon) + var(--side-gap)); }
+  .bar.phase-lines { --side-icon: var(--bar-logo); --side-gap: 6px; height: 40px; padding-left: calc(6px + var(--side-icon) + var(--side-gap)); }
   .bar.phase-lines .bar-head { height: 20px; line-height: 20px; }
   .bar.phase-lines .bar-sub { height: 15px; font-size: 11.5px; line-height: 15px; }
   .bar.phase-lines.day-lines { --line-one-height: 20px; --line-two-height: 15px; padding-top: 2px; }
@@ -195,6 +200,5 @@
 /* Followed times and a picked Frostfire slot: only the logo, at its time in the day. */
 .bar.marker-bar { background: none !important; box-shadow: none !important; backdrop-filter: none; -webkit-backdrop-filter: none; padding: 0; }
 .bar-marker { position: absolute; top: 3px; display: inline-flex; pointer-events: none; }
-.bar-marker img.event-icon { --logo-size: 18px; width: 18px; height: 18px; object-fit: contain; filter: drop-shadow(1px 1.5px 1px rgba(0, 0, 0, 0.85)); }
+.bar-marker img.event-icon { --logo-size: var(--bar-logo); width: var(--bar-logo); height: var(--bar-logo); object-fit: contain; filter: drop-shadow(1px 1.5px 1px rgba(0, 0, 0, 0.85)); }
 .bar-marker svg.event-icon { width: 14px; height: 14px; }
-@media (min-width: 1000px) { .bar-marker img.event-icon { --logo-size: 24px; width: 24px; height: 24px; } }
