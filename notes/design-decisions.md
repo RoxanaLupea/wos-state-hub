@@ -234,7 +234,8 @@ there before discussing it again.
   only what is under them scrolls. Where there is more to scroll, the edge fades out
   instead of cutting the rows off.
 - The event open in the panel is lit on every one of its bars with a white outline and
-  a lighter fill; the text on a lit bar gets a darker shadow so it stays readable.
+  a lighter fill; the text on a lit bar gets a darker, sharp shadow to the bottom right
+  (lit from the top left, like the logos) so it stays readable.
 - Everything in "Still to design" in rules-and-open-items.md.
 
 ## Data to check at the source
