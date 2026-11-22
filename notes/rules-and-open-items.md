@@ -182,15 +182,11 @@ Highest is 11 per troop type and 33 in total. Exalted is only possible on FC10.
   unknown: how many points each tier needs, and whether an alliance can drop a tier.
   Guides do not give it (searched 20 Nov 2026).
 
-- King of Icefield point targets. They change with the stage and with the player's
-  level. The outof.games guide (Nov 2024, one player) gives all seven stages, and its
-  Stage VII matches one of our accounts in Nov 2026 exactly, so its points still hold
-  for that level. Its reward items mostly do too: around the start of Nov 2026 only the
-  resources in the third and fourth targets were replaced (Strength in Unity and
-  resource chests now), on every stage. Targets 1 and 2 and the other items are as
-  the guide shows. The catalog has Stage 1 from the lower account
-  (3,900, 40,000 and 110,000 points, its fourth target missing) and Stage 2 from the
-  higher one (5,800, 70,000, 161,000 and 312,000 points).
+- King of Icefield targets, at the highest level. All seven stages are in the
+  catalog, from the outof.games guide (Nov 2024), which matches the game in Nov 2026.
+  The resources in the third and fourth targets were replaced around the start of
+  Nov 2026, so on Stages 1 to 6 the Strength in Unity, the Shot Token and the
+  resource chests are worked out from Stage 7 and still to check against the game.
 
 - Strength in Unity: a new item, added around the start of Nov 2026, given by
   whichever weekly event is running (seen in King of Icefield, Alliance Showdown and
