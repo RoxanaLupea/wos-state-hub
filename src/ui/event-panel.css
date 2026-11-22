@@ -406,3 +406,11 @@
 @media (max-width: 999px) {
   .day-panel.holds-event { padding-bottom: 12px; }
 }
+
+/* When there is more to scroll, the edge fades out instead of cutting the rows off. */
+.event-page-body.more-below { -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 48px), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 48px), transparent); }
+.event-page-body.more-above { -webkit-mask-image: linear-gradient(to bottom, transparent, #000 28px); mask-image: linear-gradient(to bottom, transparent, #000 28px); }
+.event-page-body.more-above.more-below {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 28px, #000 calc(100% - 48px), transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 28px, #000 calc(100% - 48px), transparent);
+}

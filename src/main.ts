@@ -562,6 +562,19 @@ function draw(): void {
     view.scrollsToMarkedRow = false;
     scrollToMarkedRow(app);
   }
+  watchScrollEdges(app);
+}
+
+// An open event's body fades at an edge while there is more to scroll past it.
+function watchScrollEdges(app: HTMLElement): void {
+  const body = app.querySelector<HTMLElement>('.event-page-body');
+  if (!body) return;
+  const update = () => {
+    body.classList.toggle('more-above', body.scrollTop > 1);
+    body.classList.toggle('more-below', body.scrollTop + body.clientHeight < body.scrollHeight - 1);
+  };
+  update();
+  body.addEventListener('scroll', update, { passive: true });
 }
 
 // An event that has just opened shows its marked row: if the row is out of sight, the

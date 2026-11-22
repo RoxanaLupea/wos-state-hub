@@ -231,7 +231,8 @@ there before discussing it again.
   when we get to it. The other name, the event's note and the date's note show with
   the name at the top, not in a tab.
 - An open event's way back, its head and (later) its tabs stay at the top of the panel;
-  only what is under them scrolls.
+  only what is under them scrolls. Where there is more to scroll, the edge fades out
+  instead of cutting the rows off.
 - The event open in the panel is lit on every one of its bars with a white outline and
   a lighter fill; the text on a lit bar gets a darker shadow so it stays readable.
 - Everything in "Still to design" in rules-and-open-items.md.
