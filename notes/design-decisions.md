@@ -235,6 +235,8 @@ there before discussing it again.
   instead of cutting the rows off.
 - The event open in the panel is marked on every one of its bars. Its bars are not
   lightened (that made their text hard to read). How it is marked is still open.
+- On the SvS bar, Castle Battle showing as its logo instead of its name is fine on a
+  computer too: it sits under BATTLE, so the logo says as much as the word.
 - Everything in "Still to design" in rules-and-open-items.md.
 
 ## Data to check at the source
