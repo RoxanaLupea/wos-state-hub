@@ -77,8 +77,9 @@ export function eventTypeInitials(id: string): string {
 export function eventTypeTag(id: string): string {
   // Deals have no second name.
   if (categoryOf(id) === 'deals') return '';
+  // A stored tag wins, and a stored empty tag means the event has no second name.
   const own = text['eventType.' + id + '.tag'];
-  if (own) return own;
+  if (own !== undefined) return own;
   const words = eventTypeName(id).split(/\s+/).filter(word => /^[A-Za-z]/.test(word));
   if (words.length < 2) return '';
   return words.map(word => word[0].toUpperCase()).join('');
