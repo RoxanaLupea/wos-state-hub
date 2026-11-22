@@ -14,3 +14,6 @@ dist/
 !.vscode/extensions.json
 .DS_Store
 Thumbs.db
+
+# Copy of the database for rendering in Claude's workspace, never committed
+tools/render/data/
