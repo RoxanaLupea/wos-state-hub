@@ -8,7 +8,7 @@
 // layout-bars.ts, once the browser knows how wide a day column is.
 
 import {
-  eventBarSubtitle, eventTypeById, eventTypeColor, eventTypeName, eventTypeShortName,
+  eventBarSubtitle, eventTypeById, eventTypeColor, eventTypeInitials, eventTypeName, eventTypeShortName, eventTypeTag,
   hasLogoColors, logoColors, phaseName, windowLabel
 } from '../data/catalog.ts';
 import { MINUTES_PER_DAY, textFromDay } from '../calendar/days.ts';
@@ -122,9 +122,11 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
   const partsMode = Boolean(mainOfParts) && piece.chainParts.length > 0;
   const phaseText = bar.phaseId ? phaseName(bar.phaseId) : '';
 
-  const timeText = piece.firstColumn === piece.lastColumn && bar.startTimeUtc
+  // A one-day bar shows the time it starts, but only on the piece where it does start:
+  // a piece carrying on from the week before (Field Triage's Monday) has no start time.
+  const timeText = piece.firstColumn === piece.lastColumn && bar.startTimeUtc &&
+    bar.startMinute >= piece.start
     ? `<span class="bar-time">${clockText(bar.startMinute)}</span>` : '';
-  const countText = bar.count > 1 ? `<span class="bar-count">&times;${bar.count}</span>` : '';
   const fullName = eventTypeName(bar.eventTypeId) + (phaseText ? ' · ' + phaseText : '');
 
   // The smaller second line: the phase, the part's own name, or the event's own
@@ -251,7 +253,8 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
     piece.phaseParts.forEach((part, index) => {
       if (index > 0) lineTwo += barMark(part.start, 'divider', part.name + ' starts');
       lineTwo += `<span class="bar-segment" data-start-minute="${part.start}" data-end-minute="${part.end}">` +
-        `<span class="bar-segment-name">${escapeForPage(part.name)}</span></span>`;
+        `<span class="bar-segment-name" data-phase-short="${escapeForPage(part.shortName ?? '')}">` +
+        `${escapeForPage(part.name)}</span></span>`;
     });
   }
 
@@ -293,6 +296,10 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
   if (sideLogo) classes.push('phase-lines');
   if (hasTwoLines) classes.push('two-lines', 'day-lines');
   if (partsMode) classes.push('parts-bar');
+  // One named stretch on line 2 (TAL's Preview) is written under the name, like a
+  // second line of text, not centred in the bar.
+  const lineTwoNames = (lineTwo.match(/class="bar-segment-name/g) ?? []).length;
+  if (lineTwoNames === 1) classes.push('one-segment');
   if (bar.stripes.length) classes.push('has-trail');
   if (bar.wasCancelled) classes.push('cancelled');
   if (bar.isProvisional) classes.push('provisional');
@@ -300,6 +307,9 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
   const logo = eventIcon(mainOfParts ?? bar.eventTypeId);
   const headName = mainOfParts ? plainName(mainOfParts) : plainName(bar.eventTypeId);
   const shortName = eventTypeShortName(mainOfParts ?? bar.eventTypeId);
+  // A second name players use (SvS, KE) follows the full name, written more quietly.
+  const tagText = eventTypeTag(mainOfParts ?? bar.eventTypeId);
+  const tag = tagText ? `<span class="bar-tag">${escapeForPage(tagText)}</span>` : '';
 
   return `<div class="${classes.join(' ')}" style="${style}"` +
     ` title="${escapeForPage(fullName + (bar.wasCancelled ? ' (cancelled)' : '') +
@@ -308,6 +318,8 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
     ` data-first-column="${piece.firstColumn}" data-last-column="${piece.lastColumn}"` +
     ` data-left-fraction="${piece.leftFraction.toFixed(5)}" data-right-fraction="${piece.rightFraction.toFixed(5)}"` +
     ` data-event-type="${escapeForPage(bar.eventTypeId)}" data-short-name="${escapeForPage(shortName)}"` +
+    (eventTypeInitials(bar.eventTypeId)
+      ? ` data-initials="${escapeForPage(eventTypeInitials(bar.eventTypeId))}"` : '') +
     ` data-open-event="${escapeForPage(bar.key)}" data-day="${textFromDay(options.weekStart + piece.firstColumn)}"` +
     ' role="button" tabindex="0">' +
     light +
@@ -315,7 +327,7 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
     lineOne +
     `<span class="bar-head">${sideLogo ? '' : logo}` +
     (bar.wasCancelled ? '<span class="cancelled-mark" aria-label="Cancelled">&times;</span>' : '') +
-    `<span class="bar-label">${escapeForPage(headName)}</span>${countText}${timeText}</span>` +
+    `<span class="bar-label">${escapeForPage(headName)}</span>${tag}${timeText}</span>` +
     lineTwo + stripes + '</div>';
 }
 

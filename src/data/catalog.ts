@@ -64,6 +64,19 @@ export function eventTypeShortName(id: string): string {
   return text['eventType.' + id + '.shortName'] ?? eventTypeName(id);
 }
 
+// A name of two or three letters for a bar too narrow even for the short name
+// (Field Triage's last day: "FT", Brothers in Arms after "BIA / KE": "BIA"). Most events
+// have none, and then show only their logo.
+export function eventTypeInitials(id: string): string {
+  return text['eventType.' + id + '.initials'] ?? '';
+}
+
+// A second name written quietly after the full one on a bar (State of Power SvS,
+// Brothers in Arms KE). Most events have none.
+export function eventTypeTag(id: string): string {
+  return text['eventType.' + id + '.tag'] ?? '';
+}
+
 // Some events run more than once per alliance: two bear traps, two foundry legions.
 // This is what one of them is called — "Trap", "Legion", "Session".
 export function eventGroupName(id: string): string | null {
@@ -72,6 +85,12 @@ export function eventGroupName(id: string): string | null {
 
 export function phaseName(phaseId: string): string {
   return text['eventPhase.' + phaseId + '.name'] ?? '';
+}
+
+// A shorter name for a phase, for a bar where the full one does not fit
+// (Invitation Transfer: "Invite"). Most phases have none.
+export function phaseShortName(phaseId: string): string {
+  return text['eventPhase.' + phaseId + '.shortName'] ?? '';
 }
 
 export function eventTypeColor(id: string): string {

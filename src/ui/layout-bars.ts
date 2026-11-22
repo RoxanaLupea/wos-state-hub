@@ -138,7 +138,7 @@ function placeFirstPart(bar: HTMLElement): void {
   }
   const baseLeft = Number(first.dataset.baseLeft);
   const baseRight = baseLeft + Number(first.dataset.baseWidth);
-  const nameRight = label.getBoundingClientRect().right - bar.getBoundingClientRect().left + 6;
+  const nameRight = nameEnd(bar, label) - bar.getBoundingClientRect().left + 6;
   const left = Math.min(baseRight, Math.max(baseLeft, nameRight));
   first.style.left = left + 'px';
   first.style.width = (baseRight - left) + 'px';
@@ -150,6 +150,41 @@ function placeFirstPart(bar: HTMLElement): void {
 //     where not even four letters fit the bar shows only its logo;
 //   a short part on line two shows its logo instead of its name;
 //   a white line or a logo never sits on top of a name.
+// Where a text's capitals sit inside its bar: from the top of a capital letter down to
+// the line the letters stand on. A capital is 0.72 of the text size in Manrope.
+const CAPITAL_HEIGHT_RATIO = 0.72;
+
+function capitalsOf(text: HTMLElement, bar: HTMLElement): { top: number; height: number } {
+  const marker = document.createElement('span');
+  marker.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
+  text.appendChild(marker);
+  const baseline = marker.getBoundingClientRect().top - bar.getBoundingClientRect().top;
+  marker.remove();
+  const height = parseFloat(window.getComputedStyle(text).fontSize) * CAPITAL_HEIGHT_RATIO;
+  return { top: baseline - height, height };
+}
+
+// Where a bar's name ends on screen: after its short form when that is shown.
+function nameEnd(bar: HTMLElement, label: HTMLElement): number {
+  const tag = bar.querySelector<HTMLElement>('.bar-head .bar-tag');
+  const shown = tag && tag.style.display !== 'none' ? tag : label;
+  return shown.getBoundingClientRect().right;
+}
+
+// Where a piece of text's first letter is drawn on screen.
+function drawnLeft(element: HTMLElement): number {
+  const range = document.createRange();
+  range.selectNodeContents(element);
+  return range.getBoundingClientRect().left;
+}
+
+// How wide a piece of text is as drawn on screen, capitals and spacing included.
+function drawnWidth(element: HTMLElement): number {
+  const range = document.createRange();
+  range.selectNodeContents(element);
+  return range.getBoundingClientRect().width;
+}
+
 export function fitBarLabels(panel: HTMLElement): void {
   const canvas = document.createElement('canvas');
   const context = canvas.getContext('2d');
@@ -159,15 +194,32 @@ export function fitBarLabels(panel: HTMLElement): void {
   // pixel too long would still be cut.
   const fits = (element: HTMLElement) => {
     const style = window.getComputedStyle(element);
-    context.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
     const room = element.getBoundingClientRect().width -
       parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+    // A part's words sit in their own smaller text inside it, in capitals, so they are
+    // measured as drawn rather than from the letters as written.
+    const partText = element.querySelector<HTMLElement>('.bar-part-text');
+    if (partText) return drawnWidth(partText) <= room + 0.25;
+    context.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
     return element.scrollWidth <= element.clientWidth &&
       context.measureText(element.textContent ?? '').width <= room + 0.25;
   };
 
   panel.querySelectorAll<HTMLElement>('.bars').forEach(barsGrid => {
     const bars = Array.from(barsGrid.querySelectorAll<HTMLElement>('.bar'));
+
+    // Each pass starts again from the full name and its quiet second name, so a pass
+    // after a resize never keeps a short form from the pass before.
+    for (const bar of bars) {
+      const label = bar.querySelector<HTMLElement>('.bar-head .bar-label');
+      if (label) {
+        label.dataset.fullName ??= label.textContent ?? '';
+        label.textContent = label.dataset.fullName;
+      }
+      const tag = bar.querySelector<HTMLElement>('.bar-head .bar-tag');
+      if (tag) tag.style.display = '';
+      bar.classList.remove('too-narrow', 'shows-initials');
+    }
 
     barsGrid.querySelectorAll<HTMLElement>('.bar-chain').forEach(part => {
       const name = part.querySelector<HTMLElement>('.bar-segment-name');
@@ -178,7 +230,7 @@ export function fitBarLabels(panel: HTMLElement): void {
     for (const bar of bars) {
       const label = bar.querySelector<HTMLElement>('.bar-head .bar-label');
       if (!label || bar.classList.contains('too-narrow') || bar.classList.contains('tiny')) continue;
-      const nameRight = label.getBoundingClientRect().right + 3;
+      const nameRight = nameEnd(bar, label) + 3;
       bar.querySelectorAll<HTMLElement>('.bar-mark.end-mark, .bar-stripe-end').forEach(onLineOne => {
         if (onLineOne.style.display === 'none') return;
         if (onLineOne.getBoundingClientRect().left < nameRight) onLineOne.style.display = 'none';
@@ -186,18 +238,25 @@ export function fitBarLabels(panel: HTMLElement): void {
     }
 
     for (const bar of bars) {
+      // Every ticket shows, even at the start of a week where the bar's logo takes the
+      // room. A labelled ticket ("×4") on a stretch too short for it grows to the right
+      // to fit, and a ticket that would sit under the bar's logo moves to just after it.
       bar.querySelectorAll<HTMLElement>('.opening-mark:not(.at-end) .opening-mark-inside')
         .forEach(inside => {
-          const icon = inside.querySelector<HTMLElement>('.event-icon, svg');
-          if (icon && inside.scrollWidth > inside.clientWidth + 0.5) icon.style.display = 'none';
+          const mark = inside.parentElement as HTMLElement;
+          if (inside.scrollWidth > inside.clientWidth + 0.5) {
+            mark.style.width = (inside.scrollWidth + 2) + 'px';
+          }
         });
       const sideIcon = bar.querySelector<HTMLElement>('.bar-side-icon');
       if (sideIcon) {
         const sideRight = sideIcon.getBoundingClientRect().right + 2;
-        bar.querySelectorAll<HTMLElement>('.opening-mark.at-end .event-icon, .opening-mark.at-end svg')
-          .forEach(icon => {
-            if (icon.getBoundingClientRect().left < sideRight) icon.style.display = 'none';
-          });
+        bar.querySelectorAll<HTMLElement>('.opening-mark').forEach(mark => {
+          const icon = mark.querySelector<HTMLElement>('.event-icon, svg');
+          if (!icon) return;
+          const overlap = sideRight - icon.getBoundingClientRect().left;
+          if (overlap > 0) mark.style.left = (parseFloat(mark.style.left) + overlap) + 'px';
+        });
       }
       const phase = bar.querySelector<HTMLElement>('.phase-line-one');
       if (!phase) continue;
@@ -210,11 +269,82 @@ export function fitBarLabels(panel: HTMLElement): void {
       });
     }
 
+    // A part's name a little too long for its stretch (BATTLE, in the twelve hours it
+    // lasts): its white lines move out, up to 2px on each side, so the name shows whole
+    // at its usual size. A name that needs more room than that is cut with "…".
+    for (const part of barsGrid.querySelectorAll<HTMLElement>('.bar-part')) {
+      const partText = part.querySelector<HTMLElement>('.bar-part-text');
+      const bar = part.closest<HTMLElement>('.bar');
+      if (!partText || !bar || fits(part)) continue;
+      const style = window.getComputedStyle(part);
+      const room = part.getBoundingClientRect().width -
+        parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+      const missing = drawnWidth(partText) - room;
+      // One pixel of space between the name and each line.
+      const extra = Math.ceil(missing + 3) / 2;
+      if (extra > 2) continue;
+      part.style.left = (parseFloat(part.style.left) - extra) + 'px';
+      part.style.width = (parseFloat(part.style.width) + 2 * extra) + 'px';
+      const startMinute = part.getAttribute('data-start-minute');
+      const endMinute = part.getAttribute('data-end-minute');
+      bar.querySelectorAll<HTMLElement>('.bar-mark').forEach(mark => {
+        const minute = mark.getAttribute('data-minute');
+        if (minute === startMinute) mark.style.left = (parseFloat(mark.style.left) - extra) + 'px';
+        if (minute === endMinute) mark.style.left = (parseFloat(mark.style.left) + extra) + 'px';
+      });
+    }
+
+    // The white lines between parts are only as tall as the parts' capitals, with a
+    // pixel above and below, so they frame the words instead of standing over them.
+    for (const bar of barsGrid.querySelectorAll<HTMLElement>('.bar')) {
+      const partText = bar.querySelector<HTMLElement>('.bar-part-text');
+      if (!partText) continue;
+      const capitals = capitalsOf(partText, bar);
+      bar.querySelectorAll<HTMLElement>('.bar-mark.part-line').forEach(mark => {
+        mark.style.top = (capitals.top - 1) + 'px';
+        mark.style.height = (capitals.height + 2) + 'px';
+      });
+    }
+
+    // A name on line 2 that does not fit its stretch takes its shorter name, where it
+    // has one (Invitation Transfer becomes "Invite").
+    // Only phases: a day's name is never swapped for "Day N".
+    barsGrid.querySelectorAll<HTMLElement>('.bar-segment-name[data-phase-short]').forEach(name => {
+      const shorter = name.getAttribute('data-phase-short');
+      if (shorter && !fits(name)) name.textContent = shorter;
+    });
+
+    // Where line 2 starts right under the name (Preview under TAL, a first phase whose
+    // name fills its stretch), its first letter lines up exactly with the name's.
+    for (const bar of bars) {
+      const label = bar.querySelector<HTMLElement>('.bar-head .bar-label');
+      if (!label || window.getComputedStyle(label).display === 'none') continue;
+      const lineTwo = Array.from(bar.querySelectorAll<HTMLElement>('.bar-sub, .bar-segment-name'))
+        .filter(element => window.getComputedStyle(element).display !== 'none' &&
+          (element.textContent ?? '').trim() !== '')
+        .sort((one, other) => drawnLeft(one) - drawnLeft(other))[0];
+      if (!lineTwo) continue;
+      const gap = drawnLeft(label) - drawnLeft(lineTwo);
+      if (gap === 0 || Math.abs(gap) > 3) continue;
+      // A centred name that nearly fills its stretch is written from the left instead,
+      // so moving its start moves it by the whole gap, not half of it.
+      lineTwo.style.textAlign = 'left';
+      const afterAlign = drawnLeft(label) - drawnLeft(lineTwo);
+      const padding = parseFloat(window.getComputedStyle(lineTwo).paddingLeft) || 0;
+      lineTwo.style.paddingLeft = Math.max(0, padding + afterAlign) + 'px';
+    }
+
     // When the first part does not fit after the full name, the name becomes short.
     for (const bar of bars) {
       const first = bar.querySelector<HTMLElement>('.bar-part.first-part');
       const label = bar.querySelector<HTMLElement>('.bar-head .bar-label');
       if (!first || !label || fits(first)) continue;
+      const tag = bar.querySelector<HTMLElement>('.bar-head .bar-tag');
+      if (tag && tag.style.display !== 'none') {
+        tag.style.display = 'none';
+        placeFirstPart(bar);
+        if (fits(first)) continue;
+      }
       label.textContent = bar.getAttribute('data-short-name');
       placeFirstPart(bar);
     }
@@ -222,13 +352,29 @@ export function fitBarLabels(panel: HTMLElement): void {
     for (const bar of bars) {
       const label = bar.querySelector<HTMLElement>('.bar-head .bar-label');
       if (!label || bar.classList.contains('tiny')) continue;
+      const tag = bar.querySelector<HTMLElement>('.bar-head .bar-tag');
+      if (fits(label) && (!tag || fits(tag))) continue;
+      // Without room for both, the quiet short form goes first; if the name still does
+      // not fit, the name itself becomes the short form.
+      if (tag) tag.style.display = 'none';
       if (fits(label)) continue;
       label.textContent = bar.getAttribute('data-short-name');
       if (fits(label)) continue;
+      // Then the initials, where the event has them ("BIA" after "BIA / KE").
+      const initials = bar.getAttribute('data-initials');
+      if (initials) {
+        label.textContent = initials;
+        if (fits(label)) continue;
+      }
       const style = window.getComputedStyle(label);
       context.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
       const fourLetters = context.measureText((label.textContent ?? '').slice(0, 4) + '…').width;
-      if (label.clientWidth < fourLetters) bar.classList.add('too-narrow');
+      if (label.clientWidth >= fourLetters) continue;
+      // An event with initials ("FT") writes them beside its logo rather than show the
+      // logo alone with empty space after it. Initials are two or three letters, kept
+      // short enough for a one-day bar, so they are always written.
+      if (initials) bar.classList.add('shows-initials');
+      bar.classList.add('too-narrow');
     }
   });
 }

@@ -58,6 +58,8 @@ export interface WeekPieceOptions {
   categoryOrder: string[];
   sortOrderOf: (eventTypeId: string) => number;
   phaseNameOf: (phaseId: string) => string;
+  // A shorter name for a phase, used where the full one does not fit.
+  phaseShortNameOf?: (phaseId: string) => string;
 }
 
 interface Family {
@@ -200,11 +202,12 @@ function foldPhaseParts(familyList: Family[], options: WeekPieceOptions): void {
       let host: WeekPiece | null = null;
       for (const piece of pieces.sort((left, right) => left.start - right.start)) {
         const name = options.phaseNameOf(piece.bar.phaseId as string);
-        piece.phaseParts = [{ name, start: piece.start, end: piece.end }];
+        const shortName = options.phaseShortNameOf?.(piece.bar.phaseId as string) || undefined;
+        piece.phaseParts = [{ name, shortName, start: piece.start, end: piece.end }];
         if (host && piece.start - host.end < MINUTES_PER_DAY) {
           const last = host.phaseParts[host.phaseParts.length - 1];
           last.end = Math.max(host.end, piece.start);
-          host.phaseParts.push({ name, start: Math.max(piece.start, host.end), end: piece.end });
+          host.phaseParts.push({ name, shortName, start: Math.max(piece.start, host.end), end: piece.end });
           host.end = Math.max(host.end, piece.end);
           host.lastColumn = piece.lastColumn;
           host.rightFraction = piece.rightFraction;

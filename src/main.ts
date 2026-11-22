@@ -26,7 +26,7 @@ import { allianceTimesPage, statePage } from './ui/state-page.ts';
 import { loadDateChanges, loadSchedules, loadSettings } from './data/schedules.ts';
 import {
   categoryOf, dayNameOf, eventStepsByEventType, eventTypeById, eventTypeName, eventTypeShortName,
-  isDetailsOnly, partOfByEventTypeId, phaseName, phaseNameForDay, phasesByEventType,
+  isDetailsOnly, partOfByEventTypeId, phaseName, phaseNameForDay, phaseShortName, phasesByEventType,
   pointSourcesForDay, sortOrderOf, stepLabel
 } from './data/catalog.ts';
 import {
@@ -142,7 +142,7 @@ function weekRowOptions() {
     pieceOptions: {
       daySegmentsOf: (bar: Bar) => daySegments(bar, dayNameOf),
       partOfByEventTypeId, categoryOf, categoryOrder: CATEGORY_ORDER, sortOrderOf,
-      phaseNameOf: phaseName
+      phaseNameOf: phaseName, phaseShortNameOf: phaseShortName
     },
     barOptions: { partOfByEventTypeId, lit: null },
     chosenDay: view.chosenDay

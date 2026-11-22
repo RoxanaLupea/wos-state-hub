@@ -6,7 +6,7 @@
 
 import './event-panel.css';
 import {
-  allianceRequirement, eventNotes, eventOtherName, eventTypeColor, eventTypeName, logoColors,
+  allianceRequirement, eventNotes, eventOtherName, eventTypeColor, eventTypeName, hasLogoColors, logoColors,
   eventTypeLabel, itemImageFile, itemLabel, itemName, phaseName, playerRequirement,
   pointSourceDayName, pointSourceTask, pointSourcesForDay, pointSourcesInList, pointsNote,
   pointsTitle, rewardsOf, type PointSource, type RewardRow
@@ -37,8 +37,14 @@ export function backLink(): string {
 // A colour taken from somewhere along a bar's fade, used to paint the timeline so it
 // matches the bar the player tapped.
 function fadeColorAt(eventTypeId: string, position: number): string {
-  const fade = barFadeColors(eventTypeId);
   const at = Math.min(1, Math.max(0, position));
+  // An event with its logo's colours runs from its first colour to its second down
+  // the timeline, the same way as its bar runs left to right.
+  if (hasLogoColors(eventTypeId)) {
+    const { light, dark } = logoColors(eventTypeId);
+    return mixColors(light, dark, at);
+  }
+  const fade = barFadeColors(eventTypeId);
   const from = at <= 0.4 ? fade.dark : fade.middle;
   const to = at <= 0.4 ? fade.middle : fade.light;
   const share = at <= 0.4 ? at / 0.4 : (at - 0.4) / 0.6;

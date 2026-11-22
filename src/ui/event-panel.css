@@ -314,6 +314,11 @@
    (Champion Prediction "×16"), or the logo alone where an opening ends (Match Prediction). */
 .bar .opening-mark-inside { display: inline-flex; align-items: center; justify-content: center; gap: 3px; overflow: visible; }
 .bar .opening-mark.at-end .opening-mark-inside { justify-content: flex-end; padding: 0; overflow: visible; }
+/* On a phone a ticket marking where an opening closes is centred on that moment, half before and half
+   after, so it has room at the start of a week. A computer has room for it to end at that moment. */
+@media (max-width: 999.98px) {
+  .bar .opening-mark.at-end .event-icon, .bar .opening-mark.at-end svg { transform: translateX(50%); }
+}
 /* The logos are bigger than the line's text; the negative margin keeps the bar's height the same. */
 .bar .opening-mark-inside { align-items: flex-end; }
 .bar .opening-mark .event-icon, .bar .opening-mark svg { --logo-size: 16px; width: 16px !important; height: 16px !important; margin: -1px 0 0; flex: none; }

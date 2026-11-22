@@ -38,7 +38,7 @@
 .bar {
   /* One size for an event's own logo on every bar, with one line or two, so the logos
      that line up at the start of each week are all the same. */
-  --bar-logo: 22px;
+  --bar-logo: 18px;
   --head-height: 20px; --line-two-height: 14px;
   position: relative; min-width: 0; align-self: start;
   display: flex; flex-direction: column; justify-content: center; align-items: stretch;
@@ -63,15 +63,17 @@
 .bar .bar-head img.event-icon { --logo-size: var(--bar-logo); width: var(--bar-logo); height: var(--bar-logo); }
 /* The name is cut with "…" when it does not fit (only the logo when not even 4 letters fit). */
 .bar .bar-label { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-.bar .bar-count, .bar .bar-time { flex: none; }
+/* The short form after the name: the same size, lighter and fainter, so the name leads. */
+.bar .bar-tag { flex: none; font-weight: 600; opacity: 0.7; }
+.bar .bar-time { flex: none; }
 .bar .bar-time { display: none; opacity: 0.85; margin-left: 4px; }
-.bar .bar-count { margin-left: 3px; opacity: 0.85; }
-.bar.too-narrow .bar-label, .bar.too-narrow .bar-count, .bar.too-narrow .bar-time { display: none; }
+.bar.too-narrow .bar-label, .bar.too-narrow .bar-time { display: none; }
 /* Only the logo shows: it sits in the middle of the bar. */
-.bar.too-narrow .bar-head { justify-content: center; }
+/* A bar with no room for its name keeps its tile, with its logo at the start like every other bar's. */
+.bar.too-narrow .bar-head { justify-content: flex-start; }
 /* Narrower than its logo: the logo shrinks to fit. */
 .bar.tiny { padding: 2px 0; }
-.bar.tiny .bar-label, .bar.tiny .bar-count, .bar.tiny .bar-time { display: none; }
+.bar.tiny .bar-label, .bar.tiny .bar-time { display: none; }
 .bar.tiny svg.event-icon { margin: 0; }
 /* A bar too short for anything but its logo (Sunfire Castle, a few hours) is drawn like
    a followed time: the logo at full size, centred on its time, with no bar behind it. */
@@ -113,29 +115,33 @@
 .bar.phase-lines.too-narrow .bar-sub, .bar.phase-lines.tiny .bar-sub,
 .bar.phase-lines.too-narrow .bar-segment, .bar.phase-lines.tiny .bar-segment { display: none; }
 .bar.phase-lines.tiny .bar-side-icon { left: 50%; transform: translate(-50%, -50%); }
+/* A narrow bar with initials ("FT") keeps its name's place after the logo and writes them there. */
+.bar.too-narrow.shows-initials .bar-label { display: block; overflow: visible; }
+.bar.too-narrow.shows-initials { padding-right: 2px; }
+
+.bar.too-narrow.shows-initials .bar-head { justify-content: flex-start; overflow: visible; }
+.bar.phase-lines.too-narrow.shows-initials { padding-left: calc(4px + var(--side-icon) + var(--side-gap)); padding-right: 2px; }
 /* A two-line bar too narrow to say anything on either line (Field Triage's last day,
    alone on a Monday) has no reason for two lines: it is a one-line bar with only its
    logo, at the start like every other bar's logo. */
 .bar.phase-lines.too-narrow { height: 24px; }
 .bar-segment.lit .bar-segment-name { font-weight: 800; color: #FFFFFF; }
+.bar.one-segment .bar-segment { justify-content: flex-start; }
 .bar-segment.bar-chain { pointer-events: auto; cursor: pointer; z-index: 3; }
 .bar-chain .bar-chain-logo { display: none; }
 .bar-chain.logo-only .bar-segment-name { display: none; }
 .bar-chain.logo-only .bar-chain-logo { display: flex; align-items: center; justify-content: center; height: var(--line-two-height); }
 /* SvS: line 1 holds the name and the parts, so it is not cut by the name. */
 .bar.parts-bar .bar-head { overflow: visible; }
-/* Phones: SvS is a one-line bar, like the others without a second line: the name and the parts in a smaller font,
-   no days, Castle Battle or Troop Revival under them. */
+/* Phones: every two-line bar, SvS included, keeps both lines, so SvS shows its days
+   (City Construction, Castle Battle, Troop Revival) under its parts. The parts are in a
+   smaller font so they fit their days. */
 @media (max-width: 999.98px) {
-  /* Two lines of their own (Tundra Arms League with its tickets): 2px more between
-     them, so the name never touches the logos on line 2. */
-  .bar.phase-lines.day-lines:not(.parts-bar) { height: 34px; }
-  .bar.phase-lines.day-lines.too-narrow:not(.parts-bar) { height: 24px; }
-  .bar.phase-lines.day-lines.parts-bar { --line-one-height: 20px; height: 24px; padding-top: 2px; justify-content: flex-start; }
-  .bar.parts-bar .bar-head { height: 20px; line-height: 20px; }
+  /* 2px more between the two lines, so the name never touches what is on line 2. */
+  .bar.phase-lines.day-lines { height: 34px; }
+  .bar.phase-lines.day-lines.too-narrow { height: 24px; }
   .bar.parts-bar .bar-part { padding: 0; letter-spacing: 0; }
   .bar.parts-bar .bar-part-text { font-size: 7.5px; }
-  .bar.parts-bar .bar-segment, .bar.parts-bar .bar-mark.divider { display: none; }
 }
 .bar .bar-chain-logo img.event-icon, .bar .bar-chain-logo svg.event-icon { --logo-size: 13px; width: 13px; height: 13px; margin: 0; }
 /* SvS: its parts on line 1, in capitals, between white lines that go through both lines. */
@@ -192,7 +198,7 @@
   .day-box { padding: 4px 0 0; font-size: 15px; }
   .day-box .day-number { min-width: 26px; height: 26px; }
   .bars { grid-auto-rows: 30px; row-gap: 3px; }
-  .bar { --bar-logo: 28px; --head-height: 26px; --line-two-height: 16px; height: 30px; padding: 2px 6px; border-radius: 8px; font-size: 14px; line-height: 26px; }
+  .bar { --bar-logo: 24px; --head-height: 26px; --line-two-height: 16px; height: 30px; padding: 2px 6px; border-radius: 8px; font-size: 14px; line-height: 26px; }
   .bar-head { gap: 6px; }
   .bar img.event-icon { --logo-size: 24px; width: 24px; height: 24px; }
   .bar svg.event-icon { --logo-size: 18px; width: 18px; height: 18px; margin: 0 4px; }
@@ -205,6 +211,7 @@
   .bar-part-text { font-size: 11px; }
   .bar-side-icon { left: 6px; }
   .bar.phase-lines.too-narrow { height: 30px; }
+  .bar.phase-lines.too-narrow.shows-initials { padding-left: calc(6px + var(--side-icon) + var(--side-gap)); }
   .bar-stripe-end .event-icon { --logo-size: 20px; width: 20px; height: 20px; }
 }
 
