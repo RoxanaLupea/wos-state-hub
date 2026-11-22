@@ -195,22 +195,9 @@ there before discussing it again.
   function so its key stays secret. A note is translated the first time someone asks
   for it in their language, and the translation is kept with the note.
 
-## Open
+### Calendar selection, bars and event panel (settled and built 22 Nov)
 
-- Roles. For now an alliance's R4 and R5 can do exactly the same things; what each may
-  do is decided when roles are designed.
-- Alliance colours. None is approved. The site uses the colours from the old sheet's
-  Alliances tab for now.
-- The shape of each of the three page controls.
-- The names of the Timeline's controls, and how they are arranged.
-- Where the UTC / Mine choice lives, now that it is out of the navigation. Pages
-  other than the calendar also show times.
-- How Availability is sorted.
-- The header and calendar toolbar redesign (asked 22 Nov): the clock as "UTC" over
-  the time, centred together in the top bar; no left and right arrows on a phone,
-  where the calendar is swiped instead; Today as one clear button that reads as
-  going back to today.
-- Selecting in the calendar (22 Nov, being designed): tapping a day picks the day;
+- Selecting in the calendar: tapping a day picks the day;
   tapping a bar, or anything on it such as a ticket, lights the whole event and
   opens its timeline, marked and scrolled to the current phase if it is running,
   otherwise to the phase tapped. Nothing closes the selection; it changes only when
@@ -251,7 +238,65 @@ there before discussing it again.
 - A Missions tab goes on the events whose missions the owner has found in game: TAL,
   Treasure Hunt Drill, Dreamscape Memory (daily missions, list not sent yet) and Wild
   Brawl. More are added as the owner sends them.
+
+## Open
+
+- Roles. For now an alliance's R4 and R5 can do exactly the same things; what each may
+  do is decided when roles are designed.
+- Alliance colours. None is approved. The site uses the colours from the old sheet's
+  Alliances tab for now.
+- The shape of each of the three page controls.
+- The names of the Timeline's controls, and how they are arranged.
+- Where the UTC / Mine choice lives, now that it is out of the navigation. Pages
+  other than the calendar also show times.
+- How Availability is sorted.
+- The header and calendar toolbar redesign (asked 22 Nov): the clock as "UTC" over
+  the time, centred together in the top bar; no left and right arrows on a phone,
+  where the calendar is swiped instead; Today as one clear button that reads as
+  going back to today.
+- Bear, Crazy Joe and Frostfire as one-day tiles: whether they show as the logo only,
+  like Sunfire Battle. Not decided.
+- Where next-up sits on a phone (above the calendar, with notifications later).
+- The chosen day's soft white fade at its top and bottom is built but the owner has
+  not seen it yet.
+- Short names that repeat between events: check the list again (Foundry, Fortress
+  and the Deals no longer have one).
+- Real short names and initials for every event; initials are a stand-in for now.
+- Short day names on a phone for SvS, Showdown and King of Icefield, and King of
+  Icefield's days on its bar.
+- Colours from their logos for every event that still lacks them.
+- The Fortress rewards view needs work and a redesign.
+- How results are shown (SvS, Sunfire presidents, TAL ranks and MVPs). The data is
+  already in seed/ and data/captures/, waiting for this.
+- The maps (state, alliance, castle and event maps), described in
+  rules-and-open-items.md; the owner will show examples first.
 - Everything in "Still to design" in rules-and-open-items.md.
+
+## Still to build, in this order (agreed 22 Nov)
+
+Go through them one at a time and wait for the owner's "next" after each.
+
+1. A day's points arrow opens the points without redrawing the panel.
+2. An event's info in tabs (see above).
+3. Hero names filled in where the text has {eventsHero} or {luckyWheelHero}, as the old
+   app did (fillHeroNames, generationOnDay, HEROES_BY_GENERATION in old-app).
+4. Fortress battle times in the day and in the event (old fortMoments and
+   renderFortBattlesSection).
+5. Showdown's total score (old renderScoreFold).
+6. Phase and step notes.
+7. The all-day line shows the event, the day's name and its steps, without times.
+8. Today picks today.
+9. The year view opens the overview on a phone.
+
+## Game data waiting to be used
+
+- data/captures/ holds everything the owner sent from the game, one file per event.
+  Rewards and rules there are not yet in data/catalog/; moving each one over is its own
+  piece of work.
+- Still to come from the owner: Fishing's Fishing Techniques tab and rewards, Alliance
+  Mobilization's other tiers, Dreamscape Memory's daily missions, King of Icefield's
+  targets 3 and 4 for stages 1 to 6 (next month).
+- Pictures still to get: the list in rules-and-open-items.md.
 
 ## Data to check at the source
 
