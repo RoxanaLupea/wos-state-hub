@@ -215,6 +215,8 @@ there before discussing it again.
 - Castle Battle belongs to its State of Power: it shares the SvS's opponent. Tapping it
   inside State of Power's timeline stays in State of Power, with its row marked and its
   info shown, as in the old app.
+- A white line on a bar shows its time on hover, as a small label. A tap that does
+  land on one shows it too; any other tap on the bar opens the event.
 - Everything in "Still to design" in rules-and-open-items.md.
 
 ## Data to check at the source
