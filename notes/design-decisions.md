@@ -241,6 +241,9 @@ there before discussing it again.
   capitals. Deals have no short name (Frosty Fortune, with Treasure Hunt Drill and
   Emporium of Enigma, is a Deal), and neither do Foundry Battle and Fortress
   Battles. Flame and Fangs is F&F, Frostfire Mine is FF.
+- A Missions tab goes on the events whose missions the owner has found in game: TAL,
+  Treasure Hunt Drill, Dreamscape Memory (daily missions, list not sent yet) and Wild
+  Brawl. More are added as the owner sends them.
 - Everything in "Still to design" in rules-and-open-items.md.
 
 ## Data to check at the source
