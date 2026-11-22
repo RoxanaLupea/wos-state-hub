@@ -18,6 +18,12 @@
   --glass-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 14px 34px rgba(0, 0, 0, 0.30);
   /* A small black shadow behind white text on a coloured bar, so it stands out on light colours too. */
   --text-shadow-on-colour: 0 1px 2px rgba(0, 0, 0, 0.7);
+  /* Text on event bars: one deep indigo for every event, never black. Names get a thin
+     border all round; the small second-line text only a soft shadow. */
+  --bar-text-edge: #2B2752;
+  --bar-text-border: 1px 1px 0 var(--bar-text-edge), -1px 0 0 var(--bar-text-edge), 0 -1px 0 var(--bar-text-edge),
+    1px 0 0 var(--bar-text-edge), 0 1px 0 var(--bar-text-edge);
+  --bar-small-text-shadow: 0.5px 1px 0 var(--bar-text-edge), 0 0 2px var(--bar-text-edge);
   /* The short name after an event's name (SvS, TAL): its own font, in small spaced capitals. */
   --tag-font: 'Montserrat', system-ui, sans-serif;
   --blur: blur(18px) saturate(140%);

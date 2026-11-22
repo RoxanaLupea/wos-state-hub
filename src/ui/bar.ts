@@ -127,7 +127,7 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
         : `${colorWithAlpha(firstColor, 0.8)} 0%,`) +
       `${colorWithAlpha(middleColor, 0.68)} 40%,${colorWithAlpha(lastColor, 0.58)} 100%);` +
     `box-shadow:inset 0 0 0 1px ${colorWithAlpha(fade.middle, 0.55)};` +
-    `--logo-shade:${fade.dark};`;
+    `--logo-shade:${fade.dark};--bar-glow:${fade.light};`;
 
   const partOf = options.partOfByEventTypeId.get(bar.eventTypeId) ?? null;
   const mainOfParts = partOf && !bar.count ? partOf : null;

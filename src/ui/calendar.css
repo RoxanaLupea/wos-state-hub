@@ -49,7 +49,7 @@
   display: flex; flex-direction: column; justify-content: center; align-items: stretch;
   height: 24px; padding: 2px 4px; border-radius: 5px; border: none;
   color: #FFFFFF; font-size: 11px; font-weight: 800; line-height: 20px; white-space: nowrap;
-  text-shadow: var(--text-shadow-on-colour);
+  text-shadow: var(--bar-text-border);
   /* Taps go through the bar to the day box under it, so the right day opens. */
   pointer-events: none;
   backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
@@ -97,7 +97,7 @@
 .bar-segment { display: flex; justify-content: center; min-width: 0; pointer-events: none; }
 .bar-segment-name, .bar-sub {
   min-width: 0; padding: 0 5px; overflow: hidden; text-overflow: ellipsis; text-align: center;
-  font-size: 9.5px; font-weight: 600; line-height: var(--line-two-height); color: rgba(255, 255, 255, 0.92); text-shadow: var(--text-shadow-on-colour);
+  font-size: 9.5px; font-weight: 600; line-height: var(--line-two-height); color: rgba(255, 255, 255, 0.92); text-shadow: var(--bar-small-text-shadow);
 }
 /* A phase (or a second name) under the name: a smaller line, with a bigger logo beside both lines.
    Phones: 32 px bars, 24 px logo; computers: 40 px bars, 32 px logo. */
@@ -161,6 +161,9 @@
    only its words are smaller. Smaller words on the same line then stand on the same
    baseline as the name instead of floating above it. */
 .bar-part-text { font-size: 9.5px; }
+/* Small text on a bar (phase names, short names, ticket counts) gets only the soft shadow:
+   a full border would blur letters this small. */
+.bar-part-text, .bar .bar-tag, .bar .opening-mark-inside { text-shadow: var(--bar-small-text-shadow); }
 /* White lines on a two-line bar: each line of text gets its own piece, centred on that line, so the pieces
    on line 2 (between days, where a part starts) all look the same, and a part's start also has one on line 1. */
 .bar.day-lines .bar-mark.divider { top: auto; bottom: 4px; height: calc(var(--line-two-height) - 4px); }
@@ -177,7 +180,7 @@
 }
 
 /* The event open in the panel: every bar of it lit, in every week it crosses. */
-.bar.lit-event { box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.9) !important; z-index: 4; }
+.bar.lit-event { box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.9), 0 0 7px 1px var(--bar-glow) !important; z-index: 4; }
 
 /* The lit part (the selected day, phase, part or event): a lighter fill, nothing else. */
 .bar-light { position: absolute; top: 0; bottom: 0; z-index: 0; background: rgba(255, 255, 255, 0.30); pointer-events: none; }
@@ -221,6 +224,7 @@
   .bar.phase-lines .bar-sub { height: 15px; font-size: 11.5px; line-height: 15px; }
   .bar.phase-lines.day-lines { --line-one-height: 20px; --line-two-height: 15px; padding-top: 2px; }
   .bar-part-text { font-size: 11px; }
+  .bar.phase-lines.day-lines .bar-segment-name { font-size: 10.5px; }
   .bar-side-icon { left: 6px; }
   .bar.phase-lines.too-narrow { height: 30px; }
   .bar.phase-lines.too-narrow.shows-initials { padding-left: calc(6px + var(--side-icon) + var(--side-gap)); }

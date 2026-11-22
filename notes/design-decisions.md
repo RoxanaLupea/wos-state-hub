@@ -233,8 +233,14 @@ there before discussing it again.
 - An open event's way back, its head and (later) its tabs stay at the top of the panel;
   only what is under them scrolls. Where there is more to scroll, the edge fades out
   instead of cutting the rows off.
-- The event open in the panel is marked on every one of its bars. Its bars are not
-  lightened (that made their text hard to read). How it is marked is still open.
+- The event open in the panel is marked on every one of its bars with a white line just
+  outside the bar (so it never crowds the text) and a small glow in the event's own light
+  colour. Its bars are not lightened (that made their text hard to read).
+- Text on every bar is white. Names have a thin border in one deep indigo (#2B2752) for
+  every event, never black. Small text (the second line, phase names, short names,
+  ticket counts) gets only a soft indigo shadow, because a border blurs letters that
+  small.
+- On a computer, a bar's second line of day names is 10.5px (it was 9px).
 - On the SvS bar, Castle Battle showing as its logo instead of its name is fine on a
   computer too: it sits under BATTLE, so the logo says as much as the word.
 - An event's short name after its name (SvS, TAL) is in Montserrat, smaller, in spaced
