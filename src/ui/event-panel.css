@@ -312,7 +312,7 @@
 .score-edit { margin-top: 8px; }
 /* Openings of a part on line 2 of its main event's bar (Tundra Arms League): the part's logo and the opening's label
    (Champion Prediction "×16"), or the logo alone where an opening ends (Match Prediction). */
-.bar .opening-mark-inside { display: inline-flex; align-items: center; justify-content: center; gap: 3px; }
+.bar .opening-mark-inside { display: inline-flex; align-items: center; justify-content: center; gap: 3px; overflow: visible; }
 .bar .opening-mark.at-end .opening-mark-inside { justify-content: flex-end; padding: 0; overflow: visible; }
 /* The logos are bigger than the line's text; the negative margin keeps the bar's height the same. */
 .bar .opening-mark-inside { align-items: flex-end; }
