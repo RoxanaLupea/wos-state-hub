@@ -231,6 +231,14 @@
   .bar-stripe-end .event-icon { --logo-size: 20px; width: 20px; height: 20px; }
 }
 
+/* Large screens: the second line is bigger, with room for it. */
+@media (min-width: 1700px) {
+  .bar.phase-lines.day-lines { --line-two-height: 17px; height: 42px; }
+  .bar.phase-lines.day-lines .bar-segment-name { font-size: 12px; }
+  .bar.phase-lines .bar-sub { height: 17px; font-size: 12px; line-height: 17px; }
+  .bar.phase-lines { height: 42px; }
+}
+
 /* A bar that shows only its marked times, as logos: the player's own slot, or the
    alliance times they follow. */
 /* Followed times and a picked Frostfire slot: only the logo, at its time in the day. */

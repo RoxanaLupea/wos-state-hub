@@ -240,7 +240,8 @@ there before discussing it again.
   every event, never black. Small text (the second line, phase names, short names,
   ticket counts) gets only a soft indigo shadow, because a border blurs letters that
   small.
-- On a computer, a bar's second line of day names is 10.5px (it was 9px).
+- On a computer, a bar's second line of day names is 10.5px (it was 9px), and 12px on
+  screens 1700px and wider, where two-line bars are 2px taller to make room.
 - On the SvS bar, Castle Battle showing as its logo instead of its name is fine on a
   computer too: it sits under BATTLE, so the logo says as much as the word.
 - An event's short name after its name (SvS, TAL) is in Montserrat, smaller, in spaced
