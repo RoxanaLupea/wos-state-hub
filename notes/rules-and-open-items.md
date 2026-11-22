@@ -185,8 +185,10 @@ Highest is 11 per troop type and 33 in total. Exalted is only possible on FC10.
 - King of Icefield point targets. They change with the stage and with the player's
   level. The outof.games guide (Nov 2024, one player) gives all seven stages, and its
   Stage VII matches one of our accounts in Nov 2026 exactly, so its points still hold
-  for that level. Its reward items do not: Strength in Unity was added to the third
-  target around the start of Nov 2026. The catalog has Stage 1 from the lower account
+  for that level. Its reward items mostly do too: around the start of Nov 2026 only the
+  resources in the third and fourth targets were replaced (Strength in Unity and
+  resource chests now), on every stage. Targets 1 and 2 and the other items are as
+  the guide shows. The catalog has Stage 1 from the lower account
   (3,900, 40,000 and 110,000 points, its fourth target missing) and Stage 2 from the
   higher one (5,800, 70,000, 161,000 and 312,000 points).
 
