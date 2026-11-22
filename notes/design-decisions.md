@@ -212,6 +212,9 @@ there before discussing it again.
   panel has no Back button. On a phone, Back closes the panel and shows the calendar,
   whether a day or an event was open. The one exception: an event opened from a day's
   timeline gets a discreet back, to that day, on a computer and on a phone.
+- Castle Battle belongs to its State of Power: it shares the SvS's opponent. Tapping it
+  inside State of Power's timeline stays in State of Power, with its row marked and its
+  info shown, as in the old app.
 - Everything in "Still to design" in rules-and-open-items.md.
 
 ## Data to check at the source
