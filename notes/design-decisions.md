@@ -237,8 +237,8 @@ there before discussing it again.
   lightened (that made their text hard to read). How it is marked is still open.
 - On the SvS bar, Castle Battle showing as its logo instead of its name is fine on a
   computer too: it sits under BATTLE, so the logo says as much as the word.
-- An event's short name after its name (SvS, TAL) is in Fira Sans, smaller, inside a
-  small dark chip. Deals have no short name, and neither do Foundry Battle and Fortress
+- An event's short name after its name (SvS, TAL) is in Montserrat, smaller, in spaced
+  capitals. Deals have no short name, and neither do Foundry Battle and Fortress
   Battles. Flame and Fangs is F&F, Frostfire Mine is FF.
 - Everything in "Still to design" in rules-and-open-items.md.
 

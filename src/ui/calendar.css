@@ -68,12 +68,11 @@
 .bar .bar-head img.event-icon { --logo-size: var(--bar-logo); width: var(--bar-logo); height: var(--bar-logo); }
 /* The name is cut with "…" when it does not fit (only the logo when not even 4 letters fit). */
 .bar .bar-label { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-/* The short form after the name: its own font, smaller, in a small dark chip, so it reads
-   on every bar colour and the name still leads. */
+/* The short form after the name: its own font, smaller, in spaced capitals, so it is
+   clearly different from the name and the name still leads. */
 .bar .bar-tag {
-  flex: none; align-self: center; padding: 0 4px; border-radius: 4px; background: var(--tag-chip);
-  font-family: var(--tag-font); font-size: 0.72em; font-weight: 600; line-height: 1.45; letter-spacing: 0.03em;
-  text-shadow: none;
+  flex: none; align-self: center;
+  font-family: var(--tag-font); font-size: 0.72em; font-weight: 700; letter-spacing: 0.08em; opacity: 0.9;
 }
 .bar .bar-time { flex: none; }
 .bar .bar-time { display: none; opacity: 0.85; margin-left: 4px; }

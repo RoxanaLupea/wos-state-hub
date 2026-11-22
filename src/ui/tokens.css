@@ -18,9 +18,8 @@
   --glass-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 14px 34px rgba(0, 0, 0, 0.30);
   /* A small black shadow behind white text on a coloured bar, so it stands out on light colours too. */
   --text-shadow-on-colour: 0 1px 2px rgba(0, 0, 0, 0.7);
-  /* The short name after an event's name (SvS, TAL): its own font, in a small dark chip. */
-  --tag-font: 'Fira Sans', system-ui, sans-serif;
-  --tag-chip: rgba(20, 18, 48, 0.45);
+  /* The short name after an event's name (SvS, TAL): its own font, in small spaced capitals. */
+  --tag-font: 'Montserrat', system-ui, sans-serif;
   --blur: blur(18px) saturate(140%);
 
   /* Text */
