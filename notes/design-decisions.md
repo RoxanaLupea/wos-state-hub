@@ -77,9 +77,10 @@ there before discussing it again.
   How those show on a phone is still open (short day names where the full ones do
   not fit).
 
-### Rewards that depend on the player's level
-- Where an event's targets and rewards change with the player's level (King of
-  Icefield), the site records only those of the highest level.
+### King of Icefield rewards
+- Its targets and rewards change with the player's level. The site records only those
+  of the highest level. Whether other events that change with level follow the same
+  rule is still open.
 
 ### Controls
 - Page controls and card controls are two different languages. What a card shows
