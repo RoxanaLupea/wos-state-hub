@@ -112,7 +112,11 @@
 .bar.phase-lines.too-narrow, .bar.phase-lines.tiny { padding-left: 0; padding-right: 0; }
 .bar.phase-lines.too-narrow .bar-sub, .bar.phase-lines.tiny .bar-sub,
 .bar.phase-lines.too-narrow .bar-segment, .bar.phase-lines.tiny .bar-segment { display: none; }
-.bar.phase-lines.too-narrow .bar-side-icon, .bar.phase-lines.tiny .bar-side-icon { left: 50%; transform: translate(-50%, -50%); }
+.bar.phase-lines.tiny .bar-side-icon { left: 50%; transform: translate(-50%, -50%); }
+/* A two-line bar too narrow to say anything on either line (Field Triage's last day,
+   alone on a Monday) has no reason for two lines: it is a one-line bar with only its
+   logo, at the start like every other bar's logo. */
+.bar.phase-lines.too-narrow { height: 24px; }
 .bar-segment.lit .bar-segment-name { font-weight: 800; color: #FFFFFF; }
 .bar-segment.bar-chain { pointer-events: auto; cursor: pointer; z-index: 3; }
 .bar-chain .bar-chain-logo { display: none; }
@@ -126,6 +130,7 @@
   /* Two lines of their own (Tundra Arms League with its tickets): 2px more between
      them, so the name never touches the logos on line 2. */
   .bar.phase-lines.day-lines:not(.parts-bar) { height: 34px; }
+  .bar.phase-lines.day-lines.too-narrow:not(.parts-bar) { height: 24px; }
   .bar.phase-lines.day-lines.parts-bar { --line-one-height: 20px; height: 24px; padding-top: 2px; justify-content: flex-start; }
   .bar.parts-bar .bar-head { height: 20px; line-height: 20px; }
   .bar.parts-bar .bar-part { padding: 0; letter-spacing: 0; }
@@ -199,6 +204,7 @@
   .bar.phase-lines.day-lines { --line-one-height: 20px; --line-two-height: 15px; padding-top: 2px; }
   .bar-part-text { font-size: 11px; }
   .bar-side-icon { left: 6px; }
+  .bar.phase-lines.too-narrow { height: 30px; }
   .bar-stripe-end .event-icon { --logo-size: 20px; width: 20px; height: 20px; }
 }
 
