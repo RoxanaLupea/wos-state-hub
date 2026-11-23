@@ -12,7 +12,10 @@ work again.
 2. Clone it to /home/claude/wos-state-hub, then call register_repo_root with that folder.
 3. GitHub: `gh run list -R RoxanaLupea/wos-state-hub -L 1` shows the last build.
 4. Database: the Supabase project "wos-state-hub", id tnfghlayeguyheoyrakq.
-5. Rendering: follow tools/render/README.md. npm packages cannot be installed here, so
+5. Calls to outside websites (this workspace cannot reach them): run them from the
+   database with admin_tools.http (see supabase/admin-tools.sql). The Whiteout Stats API
+   gives player data by in-game ID; its key is never written into the repo.
+6. Rendering: follow tools/render/README.md. npm packages cannot be installed here, so
    the real build only runs on GitHub after a push.
 
 Then read, in full: notes/what-this-is.md, notes/design-decisions.md,
