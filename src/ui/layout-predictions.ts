@@ -19,7 +19,7 @@ export function layoutPredictions(root: ParentNode): void {
   if (window.innerWidth < 1000) {
     strip.style.height = '';
     const top = strip.getBoundingClientRect().top + window.scrollY;
-    const visibleHeight = Math.min(window.innerHeight, window.visualViewport?.height ?? window.innerHeight);
+    const visibleHeight = Math.min(window.innerHeight, window.visualViewport?.height ?? window.innerHeight, visibleBottom());
     const below = pageSpaceBelow(strip);
     strip.style.height = Math.max(240, visibleHeight - top - below) + 'px';
   }
@@ -91,6 +91,19 @@ export function layoutPredictions(root: ParentNode): void {
     sheet.addEventListener('scroll', place, { passive: true });
     place();
   }
+}
+
+// Where the screen really ends. With its address bar at the bottom, Chrome on Android
+// reports the window as tall as it would be with the bar hidden, and the bar covers the
+// end of the page. Something fixed to the bottom of the screen is placed above the bar,
+// so its place is the real end.
+function visibleBottom(): number {
+  const probe = document.createElement('div');
+  probe.style.cssText = 'position: fixed; bottom: 0; left: 0; width: 1px; height: 1px; visibility: hidden;';
+  document.body.appendChild(probe);
+  const bottom = probe.getBoundingClientRect().bottom;
+  probe.remove();
+  return bottom || window.innerHeight;
 }
 
 // The places the strip settles on: one at the left edge of every date. The dates sit
