@@ -7,7 +7,11 @@ export interface Alliance {
   mainAllianceId: string | null;
   baseColor: string | null;
   secondColor: string | null;
+  // The colour only this alliance has, from its logo, or null until it is set.
+  accentColor: string | null;
   sortOrder: number;
+  // The alliance's logo, a picture in the images/alliances folder, or null until it has one.
+  logoFile: string | null;
   // The day the alliance left the state, or null while it is still here.
   leftOn: string | null;
 }
@@ -15,7 +19,7 @@ export interface Alliance {
 export async function loadAlliances(): Promise<Alliance[]> {
   const { data, error } = await database()
     .from('alliances')
-    .select('id, name, tag, main_alliance_id, base_color, second_color, sort_order, left_on')
+    .select('id, name, tag, main_alliance_id, base_color, second_color, accent_color, logo_file, sort_order, left_on')
     .eq('status', 'approved')
     .order('sort_order');
 
@@ -28,7 +32,9 @@ export async function loadAlliances(): Promise<Alliance[]> {
     mainAllianceId: row.main_alliance_id,
     baseColor: row.base_color,
     secondColor: row.second_color,
+    accentColor: row.accent_color,
     sortOrder: row.sort_order,
+    logoFile: row.logo_file,
     leftOn: row.left_on
   }));
 }

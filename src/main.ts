@@ -45,7 +45,7 @@ import { buildEventTree, familyOccurrences } from './calendar/event-tree.ts';
 import { currentTimeMode, gameClockText, nowMinute, setTimeMode, type TimeMode } from './calendar/time-mode.ts';
 import { readPreferences, writePreferences } from './data/preferences.ts';
 import {
-  addAltAccount, isAdmin, isOwner, leadsAlliance, managesBattles, managesState, removeAltAccount, saveAccount, signInWith, signOut,
+  isAdmin, isOwner, leadsAlliance, managesBattles, managesState, saveAccount, signInWith, signOut,
   signedInPerson, type SignedInPerson, type SignInProvider
 } from './data/auth.ts';
 import {
@@ -53,6 +53,11 @@ import {
 } from './data/editing.ts';
 import { PENCIL_ICON, allianceTimeForm, dateChangeForm, fortForm, pencilButton, scheduleForm } from './ui/edit-forms.ts';
 import { deleteRow, loadRows, saveRow, type Row } from './data/records.ts';
+import { removeGameAccount, saveGameAccount, saveLoginDetails } from './data/player-profile.ts';
+import {
+  changeTier, filterFoundryPower, filterId, filterName, filterPower, idProblem, nameProblem, powerFromText, powerProblem, readTier, tierText,
+  type PowerUnit, type TroopKind
+} from './ui/player-profile.ts';
 import {
   ALLIANCE_RESULT_EVENTS, allianceResultsPage, championshipStars, opponentNotesPage, resultsTab, showdownScoreOf,
   svsHistorySection
@@ -60,12 +65,13 @@ import {
 import { personalEntryForm, personalEntryOf } from './ui/personal-entry.ts';
 import {
   academiesPage, availabilityPage, facilitiesPage, membersPage, planPage, requestsPage, rolesPage,
-  playerTroopsSection, rosterPage, settingsPage, territoryPage, transferWorkSections, troopScore, type WorkContext
+  rosterPage, settingsPage, territoryPage, transferWorkSections, troopScore, type WorkContext
 } from './ui/working-pages.ts';
 import { yearRunSteps, yearViewRuns, type YearRun } from './calendar/year-runs.ts';
 import { PAGES, calendarToolbar, pageById, sectionNav, topBar, type CalendarView } from './ui/shell.ts';
 import { pagePlan } from './ui/page-plan.ts';
 import { playerPage } from './ui/player-page.ts';
+import { accountMenu } from './ui/player-profile.ts';
 import { CATEGORY_ORDER, DEFAULT_CATEGORIES, categoryChips, filterListEvents } from './ui/category-chips.ts';
 import { monthGridRange, monthTitle, monthView } from './ui/month-view.ts';
 import { weekTitle, weekView } from './ui/week-view.ts';
@@ -176,6 +182,26 @@ let sunfireDays = new Set<number>();
 let alliances: Alliance[] = [];
 // Who is signed in on this browser, or null for a guest.
 let person: SignedInPerson | null = null;
+// Which parts of the player's page are open for editing ('info', 'troop-infantry',
+// 'alts'); a pencil opens and closes each. They stay open while the page is redrawn
+// after a pick.
+const playerEditing = new Set<string>();
+// The account's columns changed on the player's page but not saved yet.
+const playerDraft: Row = {};
+// The game account open on the player's page: its id, 'new' for an alt being added, or
+// null for the main.
+let openGameAccount: number | 'new' | null = null;
+// The account open under "Your accounts" (a farm, or 'new' for one being added) and its
+// changes not saved yet. Only one part of the page is open at a time.
+let openListed: number | 'new' | null = null;
+const listedDraft: Row = {};
+// Set while the player is asked whether to remove the open alt ('info') or farm ('listed').
+let removingPart: string | null = null;
+// The alliance of the account the player is on becomes "my alliance" once the game
+// accounts are read after signing in.
+let activeAllianceApplied = false;
+// What the player was doing when asked to save before leaving: run once they answer.
+let pendingLeave: { parts: string[]; then: () => void } | null = null;
 
 function runsBetween(fromDay: number, toDay: number) {
   if (!expandOptions) return [];
@@ -766,6 +792,7 @@ function workContext(): WorkContext {
   return {
     rowsOf, alliances: alliancesStillHere(alliances), myAllianceId: view.myAllianceId,
     userId: person?.userId ?? null,
+    activeAccount: person ? myAccountRow() : null,
     run: run ? { eventTypeId: run.eventTypeId, date: textFromDay(run.startDay) } : null,
     editing: view.editing,
     choiceOf: name => workChoices.get(name) ?? '',
@@ -920,7 +947,8 @@ function rememberChoices(): void {
     timeMode: currentTimeMode(),
     myAllianceId: view.myAllianceId,
     openInfoTab: view.openInfoTab,
-    opponentNotes: { others: workChoices.get('opponents-others') ?? '', all: workChoices.get('opponents-all') ?? '' }
+    opponentNotes: { others: workChoices.get('opponents-others') ?? '', all: workChoices.get('opponents-all') ?? '' },
+    activeGameAccountId: typeof openGameAccount === 'number' ? openGameAccount : null
   });
 }
 
@@ -929,6 +957,7 @@ function rememberChoices(): void {
 function applyKeptChoices(): void {
   const kept = readPreferences();
   if (kept.openInfoTab) view.openInfoTab = kept.openInfoTab;
+  if (typeof kept.activeGameAccountId === 'number') openGameAccount = kept.activeGameAccountId;
   if (kept.opponentNotes) {
     workChoices.set('opponents-others', kept.opponentNotes.others);
     workChoices.set('opponents-all', kept.opponentNotes.all);
@@ -1016,21 +1045,37 @@ function scrollToMarkedRow(app: HTMLElement): void {
 
 function drawPage(app: HTMLElement): void {
   const range = viewRange();
+  if (person && !activeAllianceApplied && rowsOf('game_accounts')) {
+    activeAllianceApplied = true;
+    const active = myAccountRow();
+    if (active?.alliance_id) view.myAllianceId = String(active.alliance_id);
+  }
 
   const bar = topBar({
     stateNumber: STATE_NUMBER,
     openPage: view.openPage,
     eventLabel: currentEventLabel(),
     isAdmin: isAdmin(person),
-    // Signed in: the in-game name once it is set, otherwise "Me".
-    playerName: person ? person.account?.inGameName || 'Me' : null
+    // Signed in: the name of the game account they are on, otherwise "Me".
+    playerName: person ? String(myAccountRow()?.in_game_name ?? '') || person.account?.inGameName || 'Me' : null,
+    accountMenu: person ? accountMenu(myGameAccounts(), openGameAccountId(), alliancesStillHere(alliances)) : null
   });
 
   if (view.openPage === 'player') {
     app.innerHTML = bar +
-      `<main class="page">${playerPage({
+      `<main class="page" data-section="player">${playerPage({
         alliances: alliancesStillHere(alliances), myAllianceId: view.myAllianceId, person, stateNumber: STATE_NUMBER,
-        troopsHtml: playerTroopsSection(workContext())
+        savedRow: person ? savedAccountRow() : null,
+        draftRow: person ? { ...(savedAccountRow() ?? {}), ...playerDraft } : null,
+        editing: playerEditing,
+        changed: new Set(PLAYER_PARTS.filter(partHasChanges)),
+        leavePrompt: pendingLeave !== null,
+        accounts: person ? allMyAccounts() : [],
+        activeId: openGameAccountId(),
+        openListed: playerEditing.has('listed') ? openListed : null,
+        listedDraft: { ...(openListedRow() ?? { kind: 'alt', alliance_id: savedOf('listed', 'alliance_id') }), ...listedDraft },
+        listedChanged: partHasChanges('listed'),
+        removePrompt: removingPart ? String((removingPart === 'listed' ? openListedRow() : myAccountRow())?.in_game_name ?? '') : null
       })}</main>`;
     return;
   }
@@ -1148,6 +1193,19 @@ function handleClicks(event: MouseEvent): void {
   const target = event.target as HTMLElement | null;
   if (!target) return;
 
+  // The menu under the player's name opens and closes in place; a tap anywhere else
+  // while it is open only closes it.
+  const menuButton = target.closest<HTMLElement>('[data-account-menu]');
+  const openMenu = document.querySelector<HTMLElement>('.account-menu-wrap.open');
+  if (menuButton) {
+    setAccountMenu(!openMenu);
+    return;
+  }
+  if (openMenu && !target.closest('.account-menu')) {
+    setAccountMenu(false);
+    return;
+  }
+
   // Signing in sends the browser to Discord or Google, which bring it back here.
   const signInButton = target.closest<HTMLElement>('[data-sign-in]');
   if (signInButton) {
@@ -1157,15 +1215,32 @@ function handleClicks(event: MouseEvent): void {
     });
     return;
   }
+  // Leaving the player's page with changes not saved asks first, then goes on.
+  const leavingButton = target.closest<HTMLElement>('[data-page], [data-sign-out]');
+  if (leavingButton && view.openPage === 'player' && !leavingButton.closest('.leave-prompt')) {
+    const withChanges = PLAYER_PARTS.filter(partHasChanges);
+    if (withChanges.length > 0) {
+      // The page is redrawn for the question, so where the player was going is kept
+      // as data rather than as the button they tapped.
+      const page = leavingButton.dataset.page;
+      leaveParts(withChanges, () => {
+        if (page) {
+          view.openPage = page;
+          view.openSubPage = '';
+          startAtTop.wholePage = true;
+          draw();
+        } else {
+          void signOut().then(signedOut);
+        }
+      });
+      return;
+    }
+  }
   if (target.closest('[data-sign-out]')) {
-    void signOut().then(() => { person = null; view.openPage = 'calendar'; draw(); });
+    void signOut().then(signedOut);
     return;
   }
-  const removeAltButton = target.closest<HTMLElement>('[data-remove-alt]');
-  if (removeAltButton) {
-    void removeAltAccount(Number(removeAltButton.dataset.removeAlt)).then(refreshPerson);
-    return;
-  }
+  if (handlePlayerPicks(target)) return;
 
   const myAllianceButton = target.closest<HTMLElement>('[data-my-alliance]');
   if (myAllianceButton) {
@@ -1522,7 +1597,7 @@ function handleClicks(event: MouseEvent): void {
 
 const WORKING_FORMS = ['rally-lead', 'fort-reserve', 'buff-share', 'availability', 'roster', 'roster-member', 'plan', 'academy', 'facility', 'setting', 'role',
   'result', 'personal', 'alliance-records', 'opponent-note', 'transfer-window', 'candidate', 'candidate-status',
-  'candidate-flag', 'blacklist', 'player-troops'];
+  'candidate-flag', 'blacklist'];
 
 // The transfer pages read their own copy of the windows and candidates.
 async function reloadTransfers(): Promise<void> {
@@ -1569,16 +1644,407 @@ function handleSubmits(event: SubmitEvent): void {
     ? saveAccount(signedIn.userId, {
         inGameName: text('inGameName'), inGameId: text('inGameId'), allianceId: text('allianceId') || null
       })
-    : form.dataset.form === 'alt'
-      ? addAltAccount(signedIn.userId, {
-          inGameName: text('inGameName'), inGameId: text('inGameId'), kind: text('kind') === 'alt' ? 'alt' : 'farm'
-        })
-      : Promise.resolve();
+    : Promise.resolve();
   for (const button of Array.from(form.querySelectorAll('button'))) button.disabled = true;
   save.then(refreshPerson).catch(problem => {
     for (const button of Array.from(form.querySelectorAll('button'))) button.disabled = false;
     if (message) message.textContent = problem instanceof Error ? problem.message : String(problem);
   });
+}
+
+// ---------------------------------------------------------------------------
+// The player's own details: every pick saved at once, every typed value when its
+// field is left (or Enter is pressed). The rules are the old registration forms'.
+// ---------------------------------------------------------------------------
+
+// The parts of the player's page that are saved with their own Save button, and the
+// account columns each one holds.
+const PLAYER_PARTS = ['info', 'troop-infantry', 'troop-lancer', 'troop-marksmen', 'listed'];
+
+function partColumns(part: string): string[] {
+  if (part === 'info' || part === 'listed') return ['kind', 'in_game_name', 'in_game_id', 'player_power', 'foundry_power', 'alliance_id'];
+  const kind = part.replace('troop-', '');
+  return [kind + '_tier', kind + '_skill_level'];
+}
+
+// The person's game accounts they can be on: the main first, then the alts, each in the
+// order they were added (the table is read the first time it is needed). Farms are kept
+// in the same table but belong to the main; they are not accounts to switch to.
+function myGameAccounts(): Row[] {
+  const order = (row: Row) => row.kind === 'main' ? 0 : 1;
+  return (rowsOf('game_accounts') ?? []).filter(one => one.owner_id === person?.userId && one.kind !== 'farm')
+    .sort((left, right) => order(left) - order(right) ||
+      Number(left.sort_order ?? 0) - Number(right.sort_order ?? 0) || Number(left.id) - Number(right.id));
+}
+
+function openGameAccountId(): number | 'new' {
+  if (openGameAccount === 'new') return 'new';
+  const accounts = myGameAccounts();
+  const open = accounts.find(one => one.id === openGameAccount) ?? accounts[0];
+  return open ? Number(open.id) : 'new';
+}
+
+// The open game account's saved row; null for an alt (or a first account) not saved yet.
+function myAccountRow(): Row | null {
+  const openId = openGameAccountId();
+  return openId === 'new' ? null : myGameAccounts().find(one => Number(one.id) === openId) ?? null;
+}
+
+function savedAccountRow(): Row | null {
+  return myAccountRow();
+}
+
+// All the person's accounts for "Your accounts": the main, the alts, then the farms,
+// each in the order they were added.
+function allMyAccounts(): Row[] {
+  const farms = (rowsOf('game_accounts') ?? []).filter(one => one.owner_id === person?.userId && one.kind === 'farm')
+    .sort((left, right) => Number(left.id) - Number(right.id));
+  return myGameAccounts().concat(farms);
+}
+
+function openListedRow(): Row | null {
+  return typeof openListed === 'number' ? allMyAccounts().find(one => Number(one.id) === openListed) ?? null : null;
+}
+
+// The part whose fields are on the page now: an account opened from the row, or the
+// details of the account the player is on.
+function partOnPage(): string {
+  return playerEditing.has('listed') ? 'listed' : 'info';
+}
+
+function draftFor(part: string): Row {
+  return part === 'listed' ? listedDraft : playerDraft;
+}
+
+// A part's saved value. A new account is an alt in the alliance of the account the
+// player is on, until they pick otherwise.
+function savedOf(part: string, column: string): unknown {
+  if (part !== 'listed') return savedValue(column);
+  const row = openListedRow();
+  if (!row && column === 'kind') return 'alt';
+  if (!row && column === 'alliance_id') return myAccountRow()?.alliance_id ?? null;
+  return row?.[column] ?? null;
+}
+
+// Puts the player on one of their game accounts, here and on every other page: its
+// alliance becomes their alliance, and the choice is kept for their next visit.
+function setActiveAccount(id: number | 'new' | null): void {
+  openGameAccount = id;
+  const row = typeof id === 'number' ? myGameAccounts().find(one => Number(one.id) === id) : undefined;
+  if (row?.alliance_id) view.myAllianceId = String(row.alliance_id);
+  rememberChoices();
+}
+
+function setAccountMenu(open: boolean): void {
+  const wrap = document.querySelector<HTMLElement>('.account-menu-wrap');
+  if (!wrap) return;
+  wrap.classList.toggle('open', open);
+  wrap.querySelector('[data-account-menu]')?.setAttribute('aria-expanded', String(open));
+}
+
+function signedOut(): void {
+  person = null;
+  openGameAccount = null;
+  activeAllianceApplied = false;
+  view.openPage = 'calendar';
+  rememberChoices();
+  draw();
+}
+
+// A saved value. Before the player has saved an alliance of their own, the one picked
+// on the calendar stands in.
+function savedValue(column: string): unknown {
+  const row = myAccountRow();
+  if (column === 'alliance_id' && !row && myGameAccounts().length === 0) return person?.account?.allianceId ?? view.myAllianceId ?? null;
+  return row?.[column] ?? null;
+}
+
+function sameValue(left: unknown, right: unknown): boolean {
+  const plain = (value: unknown) => value === null || value === undefined || value === '' ? '' : String(value);
+  return plain(left) === plain(right);
+}
+
+function partHasChanges(part: string): boolean {
+  const draft = draftFor(part);
+  return partColumns(part).some(column => column in draft && !sameValue(draft[column], savedOf(part, column)));
+}
+
+function draftValue(column: string, part = 'info'): unknown {
+  const draft = draftFor(part);
+  return column in draft ? draft[column] : savedOf(part, column);
+}
+
+function dropDraft(part: string): void {
+  const draft = draftFor(part);
+  for (const column of partColumns(part)) delete draft[column];
+}
+
+function showPlayerNote(field: string, message: string): void {
+  const note = document.querySelector<HTMLElement>(`[data-note-for="${field}"]`);
+  if (note) { note.textContent = message; note.classList.toggle('problem', Boolean(message)); }
+  document.querySelector(`[data-player-field="${field}"]`)?.classList.toggle('has-problem', Boolean(message));
+}
+
+// Lights or dims a part's Save button to match whether it has changes, without
+// redrawing the page, so typing keeps its place.
+function refreshSaveButton(part: string): void {
+  const button = document.querySelector<HTMLButtonElement>(`[data-player-save="${part}"]`);
+  if (button) button.disabled = !partHasChanges(part);
+}
+
+// The checks the old forms made, run when the player saves their details. Each problem
+// shows under its field; the part is saved only when there are none.
+function playerInfoProblems(part = 'info'): boolean {
+  const name = String(draftValue('in_game_name', part) ?? '').trim();
+  const id = String(draftValue('in_game_id', part) ?? '').trim();
+  const powerInput = document.querySelector<HTMLInputElement>('[data-player-field="player_power"]');
+  const unit = (powerInput?.dataset.unit ?? 'M') as PowerUnit;
+  const problems: [string, string][] = [
+    ['in_game_name', nameProblem(name)],
+    ['in_game_id', idProblem(id)],
+    ['player_power', powerInput ? powerProblem(powerInput.value.trim(), unit) : '']
+  ];
+  for (const [field, problem] of problems) showPlayerNote(field, problem);
+  return problems.some(([, problem]) => problem !== '');
+}
+
+// Saves a part's changes, then keeps the copy on the page in step and closes the part.
+async function savePlayerPart(part: string): Promise<boolean> {
+  if (!person || !partHasChanges(part)) return true;
+  if ((part === 'info' || part === 'listed') && playerInfoProblems(part)) return false;
+  const draft = draftFor(part);
+  const fields: Row = {};
+  for (const column of partColumns(part)) {
+    if (!(column in draft) || sameValue(draft[column], savedOf(part, column))) continue;
+    fields[column] = draft[column];
+    // A power's date moves only when the power changes, so a stale one shows as stale.
+    if (column === 'player_power' || column === 'foundry_power') fields[column + '_updated_at'] = new Date().toISOString();
+  }
+  const userId = person.userId;
+  const saved = part === 'listed' ? openListedRow() : myAccountRow();
+  const savedKind = saved ? String(saved.kind) : null;
+  // The very first account is the main; a new one from the row starts as an alt.
+  const kind = String(draftValue('kind', part) ?? (saved ? saved.kind : myGameAccounts().length === 0 ? 'main' : 'alt'));
+  if (!saved) {
+    fields.kind = kind;
+    if (!('alliance_id' in fields)) fields.alliance_id = savedOf(part, 'alliance_id');
+  }
+  const rows = tableRows.get('game_accounts');
+  // There is always one main: making another account the main makes the old main an alt,
+  // first, so the two are never both the main.
+  const oldMain = kind === 'main' && saved?.kind !== 'main' ? myGameAccounts().find(one => one.kind === 'main') ?? null : null;
+  let row: Row;
+  try {
+    if (oldMain) Object.assign(oldMain, await saveGameAccount(Number(oldMain.id), userId, 'alt', { kind: 'alt' }));
+    try {
+      row = await saveGameAccount(saved ? Number(saved.id) : null, userId, kind as 'main' | 'alt' | 'farm', fields);
+    } catch (problem) {
+      // The old main goes back to being the main if the new one could not be saved.
+      if (oldMain) Object.assign(oldMain, await saveGameAccount(Number(oldMain.id), userId, 'main', { kind: 'main' }).catch(() => oldMain));
+      throw problem;
+    }
+    // The main's name, id and alliance are kept on the login too, for the parts of the
+    // site that still read them from there.
+    if (kind === 'main' && (oldMain || ['in_game_name', 'in_game_id', 'alliance_id'].some(column => column in fields))) {
+      await saveLoginDetails(userId, { in_game_name: row.in_game_name ?? null, in_game_id: row.in_game_id ?? null, alliance_id: row.alliance_id ?? null });
+      person = await signedInPerson().catch(() => person);
+    }
+  } catch (problem) {
+    showPlayerNote(part === 'info' || part === 'listed' ? 'in_game_id' : 'troops', problem instanceof Error ? problem.message : String(problem));
+    return false;
+  }
+  if (saved) Object.assign(saved, row);
+  else if (rows) rows.push(row);
+  dropDraft(part);
+  playerEditing.delete(part);
+  if (part === 'listed') openListed = null;
+  // Where the player is afterwards: on a main or an alt they just saved (a new one, or a
+  // farm made an alt, so its troops can be filled in); on the main when the account they
+  // were on became a farm; otherwise where they were.
+  if (kind === 'farm') {
+    if (part === 'info') {
+      const main = myGameAccounts().find(one => one.kind === 'main');
+      setActiveAccount(main ? Number(main.id) : null);
+    }
+  } else if (part !== 'listed' || savedKind !== kind) {
+    setActiveAccount(Number(row.id));
+  }
+  return true;
+}
+
+// Leaving parts that have changes asks first: Save stores them, Cancel drops them, and
+// either way the player then goes where they were going.
+function leaveParts(parts: string[], then: () => void): void {
+  const withChanges = parts.filter(partHasChanges);
+  if (withChanges.length === 0) { then(); return; }
+  pendingLeave = { parts: withChanges, then };
+  draw();
+}
+
+async function answerLeave(answer: string): Promise<void> {
+  const leave = pendingLeave;
+  pendingLeave = null;
+  if (!leave || answer === 'stay') { draw(); return; }
+  if (answer === 'save') {
+    for (const part of leave.parts) {
+      if (!(await savePlayerPart(part))) { draw(); return; }
+    }
+  } else {
+    for (const part of leave.parts) dropDraft(part);
+  }
+  leave.then();
+}
+
+function handlePlayerPicks(target: HTMLElement): boolean {
+  const leaveAnswer = target.closest<HTMLElement>('[data-leave-answer]');
+  if (leaveAnswer) {
+    // A tap inside the question but not on a button does nothing.
+    if (leaveAnswer.dataset.leaveAnswer === 'stay' && target.closest('.leave-prompt-box')) return true;
+    void answerLeave(leaveAnswer.dataset.leaveAnswer as string);
+    return true;
+  }
+  const saveButton = target.closest<HTMLButtonElement>('[data-player-save]');
+  if (saveButton) {
+    saveButton.disabled = true;
+    void savePlayerPart(saveButton.dataset.playerSave as string).then(saved => {
+      if (saved) draw(); else refreshSaveButton(saveButton.dataset.playerSave as string);
+    });
+    return true;
+  }
+  const accountButton = target.closest<HTMLElement>('[data-game-account]');
+  if (accountButton) {
+    // Switching accounts, from the menu or from "Your accounts", asks first when there
+    // are changes not saved.
+    const chosen = Number(accountButton.dataset.gameAccount);
+    if (chosen === openGameAccountId()) { setAccountMenu(false); return true; }
+    leaveParts(PLAYER_PARTS, () => {
+      for (const part of PLAYER_PARTS) dropDraft(part);
+      playerEditing.clear();
+      openListed = null;
+      setActiveAccount(chosen);
+      draw();
+    });
+    return true;
+  }
+  const listedButton = target.closest<HTMLElement>('[data-listed-account]');
+  if (listedButton) {
+    // A farm, or Add, opens its details under the row (closing whatever else was open,
+    // asking first if it has changes); tapping the open one again closes it.
+    const chosen = listedButton.dataset.listedAccount === 'new' ? 'new' : Number(listedButton.dataset.listedAccount);
+    const isOpen = playerEditing.has('listed') && openListed === chosen;
+    leaveParts(PLAYER_PARTS, () => {
+      for (const part of PLAYER_PARTS) dropDraft(part);
+      playerEditing.clear();
+      openListed = isOpen ? null : chosen;
+      if (!isOpen) playerEditing.add('listed');
+      draw();
+    });
+    return true;
+  }
+  const kindPick = target.closest<HTMLButtonElement>('[data-kind-pick]');
+  if (kindPick && !kindPick.disabled) {
+    draftFor(partOnPage()).kind = kindPick.dataset.kindPick;
+    draw();
+    return true;
+  }
+  const removeButton = target.closest<HTMLElement>('[data-remove-account]');
+  if (removeButton) {
+    removingPart = removeButton.dataset.removeAccount === 'listed' ? 'listed' : 'info';
+    draw();
+    return true;
+  }
+  const removeAnswer = target.closest<HTMLElement>('[data-remove-answer]');
+  if (removeAnswer) {
+    // A tap inside the question but not on a button does nothing.
+    if (!target.closest('button') && target.closest('.leave-prompt-box')) return true;
+    const part = removingPart;
+    removingPart = null;
+    const row = part === 'listed' ? openListedRow() : myAccountRow();
+    if (removeAnswer.dataset.removeAnswer !== 'remove' || !row || row.kind === 'main') { draw(); return true; }
+    void removeGameAccount(Number(row.id)).then(() => {
+      const rows = tableRows.get('game_accounts');
+      if (rows) rows.splice(rows.indexOf(row), 1);
+      for (const one of PLAYER_PARTS) dropDraft(one);
+      playerEditing.clear();
+      openListed = null;
+      if (part !== 'listed') {
+        const main = myGameAccounts().find(one => one.kind === 'main');
+        setActiveAccount(main ? Number(main.id) : null);
+      }
+      draw();
+    }).catch(problem => {
+      draw();
+      showPlayerNote('in_game_id', problem instanceof Error ? problem.message : String(problem));
+    });
+    return true;
+  }
+  const editButton = target.closest<HTMLElement>('[data-player-edit]');
+  if (editButton) {
+    const part = editButton.dataset.playerEdit as string;
+    if (!playerEditing.has(part)) { playerEditing.add(part); draw(); return true; }
+    leaveParts([part], () => { playerEditing.delete(part); draw(); });
+    return true;
+  }
+  const unitButton = target.closest<HTMLElement>('[data-power-unit]');
+  if (unitButton) {
+    // Switching between millions and billions empties the field for the new unit, as
+    // the old forms did; the power changes only once a value is typed.
+    const [field, unit] = (unitButton.dataset.powerUnit as string).split('|');
+    const input = document.querySelector<HTMLInputElement>(`[data-player-field="${field}"]`);
+    for (const button of Array.from(unitButton.parentElement?.children ?? [])) button.classList.toggle('selected', button === unitButton);
+    if (input) { input.dataset.unit = unit; input.value = ''; input.focus(); }
+    showPlayerNote(field, '');
+    return true;
+  }
+  const alliancePick = target.closest<HTMLElement>('[data-alliance-pick]');
+  if (alliancePick) {
+    const chosen = alliancePick.dataset.alliancePick as string;
+    const part = partOnPage();
+    draftFor(part).alliance_id = draftValue('alliance_id', part) === chosen ? null : chosen;
+    draw();
+    return true;
+  }
+  const troopPick = target.closest<HTMLElement>('[data-troop-pick]');
+  if (troopPick) {
+    const [kind, part, value] = (troopPick.dataset.troopPick as string).split('|') as [TroopKind, string, string];
+    const before = readTier(draftValue(kind + '_tier'), draftValue(kind + '_skill_level'));
+    const after = changeTier(before, part, value);
+    playerDraft[kind + '_tier'] = tierText(after);
+    playerDraft[kind + '_skill_level'] = after.skill;
+    draw();
+    return true;
+  }
+  return false;
+}
+
+function playerInput(event: Event): HTMLInputElement | null {
+  const input = event.target as HTMLElement | null;
+  return input instanceof HTMLInputElement && input.dataset.playerField ? input : null;
+}
+
+// While typing, only what the field can hold gets in, and the change is kept until the
+// player saves.
+function filterPlayerTyping(event: Event): void {
+  const input = playerInput(event);
+  if (!input) return;
+  const field = input.dataset.playerField as string;
+  const unit = (input.dataset.unit ?? 'M') as PowerUnit;
+  const kept = field === 'in_game_name' ? filterName(input.value)
+    : field === 'in_game_id' ? filterId(input.value)
+    : field === 'foundry_power' ? filterFoundryPower(input.value)
+    : filterPower(input.value, unit);
+  if (kept !== input.value) input.value = kept;
+  const value = kept.trim();
+  const part = partOnPage();
+  draftFor(part)[field] = field === 'player_power' ? (value === '' ? null : powerFromText(value, unit))
+    : field === 'foundry_power' ? (value === '' ? null : Number(value))
+    : value;
+  showPlayerNote(field, '');
+  refreshSaveButton(part);
+}
+
+function leavePlayerFieldOnEnter(event: KeyboardEvent): void {
+  if (event.key === 'Enter' && playerInput(event)) (event.target as HTMLInputElement).blur();
 }
 
 // The second tap on Remove or Unlink on a working page.
@@ -1649,8 +2115,11 @@ async function saveWorkingForm(
   const run = currentEventRun();
   const runColumns = run ? { event_type_id: run.eventTypeId, event_date: textFromDay(run.startDay) } : null;
 
+  // Answers are kept per game account: the one picked in the menu under the name.
+  const active = person ? myAccountRow() : null;
   if (formName === 'availability') {
     if (!runColumns) throw new Error('No event is coming up.');
+    if (!active) throw new Error('Fill in your details on your page first.');
     const scores = ['infantry', 'lancer', 'marksmen'].map(kind =>
       troopScore(text(kind + '_tier'), text(kind + '_skill_level')));
     const from = hour('from_hour_utc');
@@ -1658,8 +2127,8 @@ async function saveWorkingForm(
     const isUnavailable = values.get('is_unavailable') === 'on';
     if (!isUnavailable && (from === null || to === null)) throw new Error('Fill in the hours you can play, or tick that you cannot play.');
     const saved = await saveRow('availability', {
-      id: key || undefined, ...runColumns, account_id: userId,
-      alliance_id: view.myAllianceId, playing_for_alliance_id: orNull('playing_for_alliance_id'),
+      id: key || undefined, ...runColumns, account_id: userId, game_account_id: active.id,
+      alliance_id: active.alliance_id ?? view.myAllianceId, playing_for_alliance_id: orNull('playing_for_alliance_id'),
       is_unavailable: isUnavailable,
       infantry_tier: orNull('infantry_tier'), infantry_skill_level: Number(text('infantry_skill_level')) || 0,
       lancer_tier: orNull('lancer_tier'), lancer_skill_level: Number(text('lancer_skill_level')) || 0,
@@ -1668,7 +2137,7 @@ async function saveWorkingForm(
       total_troop_score: scores.some(score => score !== null) ? scores.reduce<number>((total, score) => total + (score ?? 0), 0) : null,
       has_monthly_card: values.get('has_monthly_card') === 'on',
       updated_at: now
-    }, key ? '' : 'event_type_id,event_date,account_id');
+    }, key ? '' : 'event_type_id,event_date,game_account_id');
     await deleteRow('availability_times', 'availability_id', saved.id);
     if (!isUnavailable && from !== null && to !== null) {
       await saveRow('availability_times', { availability_id: saved.id, from_hour_utc: from, to_hour_utc: to });
@@ -1787,23 +2256,6 @@ async function saveWorkingForm(
     });
     await reloadTransfers();
     return ['transfer_windows'];
-  }
-  if (formName === 'player-troops') {
-    const skill = (name: string) => Number(text(name)) || 0;
-    const before = (tableRows.get('accounts') ?? []).find(one => one.id === userId);
-    const power = decimal('player_power');
-    const foundry = decimal('foundry_power');
-    await saveRow('accounts', {
-      id: userId, player_power: power, foundry_power: foundry,
-      // A figure's date moves only when the figure changes, so a stale one shows as stale.
-      ...(power !== Number(before?.player_power ?? NaN) ? { player_power_updated_at: now } : {}),
-      ...(foundry !== Number(before?.foundry_power ?? NaN) ? { foundry_power_updated_at: now } : {}),
-      infantry_tier: orNull('infantry_tier'), infantry_skill_level: skill('infantry_skill_level'),
-      lancer_tier: orNull('lancer_tier'), lancer_skill_level: skill('lancer_skill_level'),
-      marksmen_tier: orNull('marksmen_tier'), marksmen_skill_level: skill('marksmen_skill_level'),
-      updated_at: now
-    });
-    return ['accounts'];
   }
   if (formName === 'candidate') {
     await saveRow('transfer_candidates', {
@@ -1965,10 +2417,11 @@ async function reloadAfterEdit(formName: string): Promise<void> {
 // After a change to the account: read it again, follow its alliance, and redraw.
 async function refreshPerson(): Promise<void> {
   person = await signedInPerson().catch(() => person);
-  // The working pages read accounts and alts again with the change in them.
+  // The working pages read accounts again with the change in them.
   tableRows.delete('accounts');
-  tableRows.delete('account_alt_accounts');
-  if (person?.account?.allianceId) view.myAllianceId = person.account.allianceId;
+  const active = myAccountRow();
+  if (active?.alliance_id) view.myAllianceId = String(active.alliance_id);
+  else if (person?.account?.allianceId) view.myAllianceId = person.account.allianceId;
   draw();
 }
 
@@ -2228,7 +2681,7 @@ function eventKeysOf(category: string): string[] {
 function problemBar(): string {
   return topBar({
     stateNumber: STATE_NUMBER, openPage: view.openPage,
-    eventLabel: PAGES[3].label, isAdmin: false, playerName: null
+    eventLabel: PAGES[3].label, isAdmin: false, playerName: null, accountMenu: null
   });
 }
 
@@ -2314,6 +2767,13 @@ async function start(): Promise<void> {
     if (person?.account?.allianceId) view.myAllianceId = person.account.allianceId;
     document.addEventListener('click', handleClicks);
     document.addEventListener('submit', handleSubmits);
+    document.addEventListener('input', filterPlayerTyping);
+    // Closing or reloading the tab with changes not saved: the browser asks in its own words.
+    window.addEventListener('beforeunload', event => {
+      if (view.openPage === 'player' && PLAYER_PARTS.some(partHasChanges)) event.preventDefault();
+    });
+    document.addEventListener('keydown', leavePlayerFieldOnEnter);
+    document.addEventListener('keydown', event => { if (event.key === 'Escape') setAccountMenu(false); });
     document.addEventListener('touchstart', startSwipe, { passive: true });
     document.addEventListener('touchend', endSwipe, { passive: true });
     document.addEventListener('keydown', stepWithKeys);

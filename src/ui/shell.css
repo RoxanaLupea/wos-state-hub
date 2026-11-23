@@ -24,7 +24,7 @@
   .clock-time { font-size: 14px; }
   .clock-zone { font-size: 10px; }
   .top-bar .icon-button { width: 34px; height: 34px; }
-  .top-bar [data-page="player"] { min-height: 34px; padding: 0 10px; border-radius: 10px; font-size: 14px; }
+  .top-bar [data-page="player"], .top-bar .me-button { min-height: 34px; padding: 0 10px; border-radius: 10px; font-size: 14px; }
   .me-button { max-width: 120px; overflow: hidden; }
   .me-button .me-name { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .top-bar { padding-bottom: 2px; }
@@ -218,3 +218,28 @@
 @media (min-width: 1000px) {
   .section-nav { padding: 0 0 12px; }
 }
+
+/* ---------- The menu under the player's name ---------- */
+/* The person's game accounts (the one they are on lit in its alliance's colour), adding
+   an alt or a farm, their account's settings and signing out. */
+.account-menu-wrap { position: relative; }
+.account-menu { position: absolute; top: calc(100% + 8px); right: 0; z-index: 40; width: 260px; max-width: calc(100vw - 24px);
+  padding: 8px; display: none; flex-direction: column; gap: 2px;
+  /* Glass over the page's own colour, so the page under it does not show through. */
+  background: linear-gradient(var(--glass-strong), var(--glass-strong)), color-mix(in srgb, var(--page-color) 92%, transparent); }
+.account-menu-wrap.open .account-menu { display: flex; }
+.account-menu-line { height: 1px; margin: 6px 4px; background: var(--glass-border); }
+.account-choice, .account-menu-item { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 40px; padding: 6px 10px;
+  border: 1px solid transparent; border-radius: 10px; background: none; color: var(--text); font: inherit; font-size: 15px;
+  font-weight: 700; text-align: left; cursor: pointer; }
+.account-choice:hover, .account-menu-item:hover { background: rgba(255, 255, 255, 0.08); }
+.account-choice { --alliance-colour: var(--accent); }
+.account-choice.open { border-color: var(--alliance-colour); background: color-mix(in srgb, var(--alliance-colour) 20%, transparent); }
+.account-choice-logo { height: 34px; width: 30px; object-fit: contain; flex: none; }
+.account-choice-tag { flex: none; width: 30px; text-align: center; font-family: var(--tag-font); font-size: 12px; font-weight: 800;
+  color: var(--alliance-colour); }
+.account-choice-text { display: flex; flex-direction: column; min-width: 0; }
+.account-choice-kind { font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+.account-choice-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.account-menu-plus { flex: none; width: 30px; text-align: center; font-size: 20px; font-weight: 600; color: var(--text-muted); }
+.account-menu-item.danger { color: var(--danger); }

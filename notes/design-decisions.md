@@ -367,6 +367,53 @@ there before discussing it again.
   Treasure Hunt Drill, Dreamscape Memory (daily missions, list not sent yet) and Wild
   Brawl. More are added as the owner sends them.
 
+### Player page (23 Nov)
+
+- Built from the ideas of the old Tyrant and SvS registration forms, in the site's own
+  look. Not a form and not panels: open sections (Player info, Troop tiers, Your
+  accounts) with a title over each and a thin line between them.
+- Each part shows what is saved. Its pencil (bare, in the part's top right corner, lit
+  in the accent colour while open) opens its choices in place. Only one part is open
+  at a time: while one is open the other pencils are hidden. A part with nothing saved
+  is always open.
+- Save under an open part, lit only while it has changes. Leaving with changes (another
+  page, another account, sign out, closing the part) asks "Save your changes before you
+  leave?" with Cancel and Save.
+- Player info: Name, ID, Power with an M/B switch, Foundry power typed and shown as a
+  full number (around 15,000; it can stay empty). Shown as the alliance's logo and tag,
+  the name with the ID under it, and the two powers. The old forms' checks carry over:
+  name 3-16 characters, ID 9 digits from 1 or 2 or 8 digits from 7, 8 or 9, power
+  100-999 M or 1-99.999 B.
+- Alliance: main alliances on one line, their academies smaller on the line under,
+  each under its own main alliance. A tile shows the logo (once the alliance has one)
+  and the tag, no name: names belong on the alliance's own page. A picked tile glows in
+  the colour only that alliance has (DVL purple, TOP blue, from their logos);
+  academies take their main alliance's colour for now.
+- Troop tiers: Infantry, Lancer and Marksmen side by side with a line between them, on
+  a phone too. Each shows its tier portrait large, its FC badge on the corner, and the
+  tier and skill level under it. Open, a troop shows FC5 to FC10 (FC5 is the lowest
+  accepted, fixed; when the game releases new FC levels the oldest are dropped and the
+  range moves up, in src/data/fc-levels.ts), each with its badge from the game and,
+  once picked, its badge's colour (red FC1-3, blue FC4-5, violet FC6-8, gold FC9-10).
+  Under the levels the tier as portrait tiles from the camp: Tier 10 (X) unless Helios
+  (XI) or Exalted (XII). Exalted only on FC10. Only on Exalted, the skill level as one
+  small toggle: None (the default), Lvl. 1, Lvl. 2, Lvl. 3. On a computer the open
+  troop's column widens and narrows back once saved or closed; on a phone it takes the
+  whole width under the other two.
+- Game accounts: a person has one main and any number of alts and farms. An alt is a
+  full account (own alliance, power, troops, later heroes and results); farms have the
+  same details but no troops and are not accounts to switch to. The account the
+  person is on is picked in the menu under their name in the top bar (main, alts, then
+  Profile and Sign out); it is the one filled in on every page, and its alliance is
+  their alliance. Profile opens this page.
+- Your accounts, on every account's profile: all the person's accounts side by side
+  (alliance logo, Main/Alt/Farm, name, ID, power), the one they are on lit. Tapping a
+  main or an alt switches to it; tapping a farm opens its details under the row; Add
+  opens an empty one. Every account's details have a Main | Alt | Farm toggle. There is
+  always one main: the main's own toggle cannot change, another account picked as Main
+  makes the old main an alt. A new alt, or a farm made an alt, puts the person on it to
+  fill in its troops; the account they are on made a farm puts them on the main.
+
 ## Open
 
 - Roles. Decided: owner; admins, who can edit anything; alliance manager, one role per

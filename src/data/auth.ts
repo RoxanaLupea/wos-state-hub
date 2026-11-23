@@ -13,19 +13,11 @@ export interface Account {
   allianceId: string | null;
 }
 
-export interface AltAccount {
-  id: number;
-  inGameName: string;
-  inGameId: string;
-  kind: 'farm' | 'alt';
-}
-
 export interface SignedInPerson {
   userId: string;
   // The name the login gives (Discord or Google), used until an in-game name is set.
   loginName: string;
   account: Account | null;
-  alts: AltAccount[];
   // Roles such as 'owner', 'admin' or 'r4'; a role tied to one alliance carries it.
   roles: { role: string; allianceId: string | null }[];
 }
@@ -38,9 +30,8 @@ export async function signedInPerson(): Promise<SignedInPerson | null> {
   const meta = (user.user_metadata ?? {}) as Record<string, unknown>;
   const loginName = String(meta.full_name ?? meta.name ?? meta.user_name ?? user.email ?? '');
 
-  const [accountResult, altsResult, rolesResult] = await Promise.all([
+  const [accountResult, rolesResult] = await Promise.all([
     database().from('accounts').select('in_game_name, in_game_id, alliance_id').eq('id', user.id).maybeSingle(),
-    database().from('account_alt_accounts').select('id, in_game_name, in_game_id, kind').eq('account_id', user.id).order('id'),
     database().from('account_roles').select('role, alliance_id').eq('account_id', user.id)
   ]);
   const row = accountResult.data as Record<string, unknown> | null;
@@ -52,12 +43,6 @@ export async function signedInPerson(): Promise<SignedInPerson | null> {
       inGameId: String(row.in_game_id ?? ''),
       allianceId: row.alliance_id ? String(row.alliance_id) : null
     } : null,
-    alts: ((altsResult.data ?? []) as Record<string, unknown>[]).map(alt => ({
-      id: Number(alt.id),
-      inGameName: String(alt.in_game_name ?? ''),
-      inGameId: String(alt.in_game_id ?? ''),
-      kind: alt.kind === 'alt' ? 'alt' : 'farm'
-    })),
     roles: ((rolesResult.data ?? []) as Record<string, unknown>[]).map(one => ({
       role: String(one.role),
       allianceId: one.alliance_id ? String(one.alliance_id) : null
@@ -94,21 +79,6 @@ export async function saveAccount(userId: string, account: Account): Promise<voi
     }
     throw new Error('Could not save your details: ' + error.message);
   }
-}
-
-export async function addAltAccount(userId: string, alt: Omit<AltAccount, 'id'>): Promise<void> {
-  const { error } = await database().from('account_alt_accounts').insert({
-    account_id: userId, in_game_name: alt.inGameName, in_game_id: alt.inGameId || null, kind: alt.kind
-  });
-  if (error) {
-    if (error.code === '23505') throw new Error('That in-game id is already on another account.');
-    throw new Error('Could not add it: ' + error.message);
-  }
-}
-
-export async function removeAltAccount(id: number): Promise<void> {
-  const { error } = await database().from('account_alt_accounts').delete().eq('id', id);
-  if (error) throw new Error('Could not remove it: ' + error.message);
 }
 
 // What the person may do. The owner sets event dates and repeats; admins can edit

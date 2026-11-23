@@ -2,6 +2,7 @@
 // have, in glass sections and tables, with the forms that fill them. Each one is a
 // starting point to design from.
 import { escapeForPage } from './escape.ts';
+import { EXALTED_FC, FC_LEVELS } from '../data/fc-levels.ts';
 import { choiceRow, dataTable, rowButton, rowForm, text, workSection, type Column, type Field } from './data-table.ts';
 import type { Row } from '../data/records.ts';
 import type { Alliance } from '../data/alliances.ts';
@@ -18,6 +19,8 @@ export interface WorkContext {
   myAllianceId: string | null;
   // The signed-in person's account id, or null for a guest.
   userId: string | null;
+  // The game account they are on (picked in the menu under their name), or null.
+  activeAccount: Row | null;
   // The run the event section is about.
   run: { eventTypeId: string; date: string } | null;
   // The form or question open now (see view.editing in main.ts).
@@ -68,11 +71,11 @@ function runTitle(run: { eventTypeId: string; date: string }): string {
 // out at 11.
 export const TIER_POINTS: Record<string, number> = (() => {
   const points: Record<string, number> = {};
-  for (let level = 5; level <= 10; level++) {
+  for (const level of FC_LEVELS) {
     points['FC' + level] = level - 4;
     points[`FC${level} Helios`] = level - 3;
   }
-  points['FC10 Exalted'] = 8;
+  points[`FC${EXALTED_FC} Exalted`] = EXALTED_FC - 2;
   return points;
 })();
 const TIER_CHOICES: [string, string][] = [['', 'Not set'], ...Object.keys(TIER_POINTS).map(tier => [tier, tier] as [string, string])];
@@ -100,7 +103,10 @@ export function availabilityPage(context: WorkContext): string {
   const all = context.rowsOf('availability');
   const allTimes = context.rowsOf('availability_times');
   const accounts = context.rowsOf('accounts');
-  if (!all || !allTimes || !accounts) return page([workSection('Availability', LOADING)]);
+  const gameAccounts = context.rowsOf('game_accounts');
+  if (!all || !allTimes || !accounts || !gameAccounts) return page([workSection('Availability', LOADING)]);
+  // Each answer is for one game account: a main or an alt.
+  const accountOf = (row: Row) => gameAccounts.find(one => one.id === row.game_account_id);
 
   const entries = all.filter(one => one.event_type_id === run.eventTypeId && one.event_date === run.date);
   const timesOf = (entry: Row) => allTimes.filter(one => one.availability_id === entry.id);
@@ -113,7 +119,7 @@ export function availabilityPage(context: WorkContext): string {
   const troop = (prefix: string) => (row: Row) => row[prefix + '_tier']
     ? `${text(row[prefix + '_tier'])}<small>Skill ${text(row[prefix + '_skill_level'])}</small>` : '—';
   const columns: Column[] = [
-    { label: 'Player', cell: row => escapeForPage(nameOfAccount(accounts, row.account_id)) +
+    { label: 'Player', cell: row => escapeForPage(String(accountOf(row)?.in_game_name ?? nameOfAccount(accounts, row.account_id))) +
       `<small>${text(row.alliance_id ? allianceTag(String(row.alliance_id)) : '')}</small>` },
     { label: 'Plays for', cell: row => text(row.playing_for_alliance_id ? allianceTag(String(row.playing_for_alliance_id)) : '') },
     { label: 'Hours (UTC)', cell: row => row.is_unavailable ? '<span class="muted">Cannot play</span>' : escapeForPage(hoursOf(timesOf(row))) },
@@ -125,12 +131,14 @@ export function availabilityPage(context: WorkContext): string {
     { label: 'Answered', cell: row => dayText(String(row.created_at ?? '').slice(0, 10)) }
   ];
 
-  const answer = entries.find(one => one.account_id === context.userId);
-  // With no answer yet, the form starts from the troops kept on the account.
-  const mine = answer ?? accounts.find(one => one.id === context.userId);
+  const active = context.activeAccount;
+  const answer = active ? entries.find(one => one.game_account_id === active.id) : undefined;
+  // With no answer yet, the form starts from the troops kept on the game account.
+  const mine = answer ?? active;
   const myTimes = answer ? timesOf(answer) : [];
-  const form = context.userId
-    ? rowForm({
+  const form = !context.userId ? '<p class="work-line">Sign in to send when you can play.</p>'
+    : !active ? '<p class="work-line">Fill in your details on your page to answer.</p>'
+    : rowForm({
         form: 'availability', key: answer ? String(answer.id) : '',
         title: answer ? 'Your answer' : 'When you can play',
         submitLabel: answer ? 'Save' : 'Send',
@@ -148,8 +156,7 @@ export function availabilityPage(context: WorkContext): string {
           { name: 'has_monthly_card', label: 'I have the monthly card', kind: 'checkbox', value: mine?.has_monthly_card },
           { name: 'is_unavailable', label: 'I cannot play this one', kind: 'checkbox', value: mine?.is_unavailable }
         ]
-      })
-    : '<p class="work-line">Sign in to send when you can play.</p>';
+      });
 
   return page([
     workSection(runTitle(run), form),
@@ -286,26 +293,27 @@ export function membersPage(context: WorkContext, familyIds: string[]): string {
   if (!context.myAllianceId) {
     return page([workSection('Members', '<p class="work-empty">Pick your alliance on your page to see its members.</p>')]);
   }
-  const accounts = context.rowsOf('accounts');
-  const alts = context.rowsOf('account_alt_accounts');
+  // Every game account in the alliance is a member: mains, alts and farms. An alt or a
+  // farm shows whose it is (the owner's main).
+  const gameAccounts = context.rowsOf('game_accounts');
   const roles = context.rowsOf('account_roles');
-  if (!accounts || !alts || !roles) return page([workSection('Members', LOADING)]);
+  if (!gameAccounts || !roles) return page([workSection('Members', LOADING)]);
+  const mainOf = (ownerId: unknown) => gameAccounts.find(one => one.owner_id === ownerId && one.kind === 'main');
 
   const sections = familyIds.map(allianceId => {
-    const people = accounts.filter(one => one.alliance_id === allianceId)
+    const people = gameAccounts.filter(one => one.alliance_id === allianceId)
       .sort((left, right) => (Number(right.player_power) || 0) - (Number(left.player_power) || 0));
     const columns: Column[] = [
       { label: 'Name', cell: row => text(row.in_game_name) + `<small>${text(row.in_game_id)}</small>` },
+      { label: 'Account', cell: row => row.kind === 'main' ? 'Main'
+        : `${row.kind === 'farm' ? 'Farm' : 'Alt'}<small>${text(mainOf(row.owner_id)?.in_game_name)}</small>` },
       { label: 'Power', cell: row => escapeForPage(powerText(row.player_power)) +
         `<small>${dayText(String(row.player_power_updated_at ?? '').slice(0, 10))}</small>`, isNumber: true },
-      { label: 'Foundry power', cell: row => escapeForPage(powerText(row.foundry_power)) +
+      { label: 'Foundry power', cell: row => row.kind === 'farm' ? '—' : escapeForPage(powerText(row.foundry_power)) +
         `<small>${dayText(String(row.foundry_power_updated_at ?? '').slice(0, 10))}</small>`, isNumber: true },
-      { label: 'Farms and alts', cell: row => {
-        const own = alts.filter(one => one.account_id === row.id);
-        return own.length ? own.map(one => escapeForPage(String(one.in_game_name))).join(', ') : '—';
-      } },
       { label: 'Roles', cell: row => {
-        const own = roles.filter(one => one.account_id === row.id);
+        if (row.kind !== 'main') return '—';
+        const own = roles.filter(one => one.account_id === row.owner_id);
         return own.length ? own.map(one => escapeForPage(ROLE_NAMES[String(one.role)] ?? String(one.role))).join(', ') : '—';
       } }
     ];
@@ -580,26 +588,4 @@ export function transferWorkSections(context: WorkContext, date: string): string
       }) : '')));
   }
   return sections.join('');
-}
-
-// ---------------------------------------------------------------------------
-// The player's page: power and troops, kept on their account.
-// ---------------------------------------------------------------------------
-
-export function playerTroopsSection(context: WorkContext): string {
-  if (!context.userId) return '';
-  const accounts = context.rowsOf('accounts');
-  if (!accounts) return workSection('Power and troops', LOADING);
-  const account = accounts.find(one => one.id === context.userId);
-  if (!account) return '';
-  const fields: Field[] = [
-    { name: 'player_power', label: 'Power', kind: 'number', value: account.player_power ?? '' },
-    { name: 'foundry_power', label: 'Foundry power', kind: 'number', value: account.foundry_power ?? '' }
-  ];
-  for (const [kind, label] of [['infantry', 'Infantry'], ['lancer', 'Lancer'], ['marksmen', 'Marksmen']]) {
-    fields.push(
-      { name: kind + '_tier', label: label + ' tier', kind: 'select', value: account[kind + '_tier'] ?? '', choices: TIER_CHOICES },
-      { name: kind + '_skill_level', label: label + ' skill', kind: 'select', value: String(account[kind + '_skill_level'] ?? 0), choices: SKILL_CHOICES });
-  }
-  return workSection('Power and troops', rowForm({ form: 'player-troops', title: 'Yours', fields }));
 }

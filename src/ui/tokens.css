@@ -102,6 +102,17 @@ body {
   --event-ink: #1C1838;
 }
 
+/* The player's own page. A picked FC level takes the colour of its badge in the game:
+   FC1 to FC3 red, FC4 and FC5 blue, FC6 to FC8 violet, FC9 and FC10 gold, and the
+   badges' deep red once the troop is Exalted. */
+.page[data-section="player"] {
+  --fc-red: #E0503A;
+  --fc-blue: #80C0F0;
+  --fc-violet: #D070E0;
+  --fc-gold: #F0C070;
+  --exalted: #D0383A;
+}
+
 /* A button takes the colour of the text around it unless it asks for its own.
    Without this the browser paints its label black. */
 button { color: inherit; }

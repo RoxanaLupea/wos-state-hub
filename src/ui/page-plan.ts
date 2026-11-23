@@ -42,7 +42,7 @@ const PLANS: Record<string, string[]> = {
     'Positions and rallies marked on it'
   ],
   'alliance|members': [
-    'Members with their in-game name and id, and their farms and alts',
+    'Members with their in-game name and id: mains, alts and farms',
     'Player power and foundry power, with a prompt when a figure goes stale',
     'Who is R4, battle planner or alliance manager'
   ],

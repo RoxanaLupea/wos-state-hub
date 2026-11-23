@@ -91,8 +91,10 @@ export interface TopBarOptions {
   // The name of the event running now, used for the event section.
   eventLabel: string;
   isAdmin: boolean;
-  // The player's in-game name once they have signed in.
+  // The player's in-game name once they have signed in (the name of the game account
+  // they are on), and the menu their name opens.
   playerName: string | null;
+  accountMenu: string | null;
 }
 
 export function topBar(options: TopBarOptions): string {
@@ -115,11 +117,12 @@ export function topBar(options: TopBarOptions): string {
       <span class="clock-time" id="clockTime" aria-live="off">${gameClockText(nowMinute())}</span>
     </div>
     ${adminButton}
-    <button type="button" class="ghost-button${options.playerName ? ' me-button' : ''}" data-page="player"
-      ${options.playerName ? `aria-label="${escapeForPage(options.playerName)}"` : ''}>${options.playerName
-        ? `<span class="me-initial" aria-hidden="true">${escapeForPage(Array.from(options.playerName)[0] ?? '')}</span>` +
-          `<span class="me-name">${escapeForPage(options.playerName)}</span>`
-        : 'Sign in'}</button>
+    ${options.playerName
+      ? `<div class="account-menu-wrap"><button type="button" class="ghost-button me-button" data-account-menu` +
+        ` aria-haspopup="menu" aria-expanded="false" aria-label="${escapeForPage(options.playerName)}">` +
+        `<span class="me-initial" aria-hidden="true">${escapeForPage(Array.from(options.playerName)[0] ?? '')}</span>` +
+        `<span class="me-name">${escapeForPage(options.playerName)}</span></button>${options.accountMenu ?? ''}</div>`
+      : '<button type="button" class="ghost-button" data-page="player">Sign in</button>'}
   </header>`;
 }
 

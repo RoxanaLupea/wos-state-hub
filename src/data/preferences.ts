@@ -16,6 +16,8 @@ export interface Preferences {
   openInfoTab?: string;
   // Opponent notes: 'on' hides other alliances' notes, or all of them.
   opponentNotes?: { others: string; all: string };
+  // The game account picked in the menu under the player's name.
+  activeGameAccountId?: number | null;
 }
 
 // Storage can be missing or refuse (private browsing, a full disk), so every read and
@@ -42,6 +44,7 @@ export function readPreferences(): Partial<Preferences> {
       read.myAllianceId = stored.myAllianceId;
     }
     if (typeof stored.openInfoTab === 'string') read.openInfoTab = stored.openInfoTab;
+    if (typeof stored.activeGameAccountId === 'number') read.activeGameAccountId = stored.activeGameAccountId;
     const notes = stored.opponentNotes as Record<string, unknown> | undefined;
     if (notes && typeof notes === 'object') {
       read.opponentNotes = { others: notes.others === 'on' ? 'on' : '', all: notes.all === 'on' ? 'on' : '' };

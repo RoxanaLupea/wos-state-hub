@@ -303,7 +303,7 @@ function buildMatrix(
     const creditedId = creditedAllianceId(one, mainAllianceIdOf);
     const credited = creditedId === SHARED_WITH_STATE
       ? { id: SHARED_WITH_STATE, name: 'Shared with the state', tag: 'State',
-          mainAllianceId: null, baseColor: null, secondColor: null, sortOrder: 999 } as Alliance
+          mainAllianceId: null, baseColor: null, secondColor: null, accentColor: null, logoFile: null, sortOrder: 999 } as Alliance
       : allianceById(creditedId);
     if (!credited) continue;
 

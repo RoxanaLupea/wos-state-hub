@@ -1,20 +1,41 @@
 // The page behind "Sign in". Signed out, it is the sign-in page: a fixed title,
 // signing in with Discord (first, because every alliance already uses it) or Google,
 // and "Continue as a guest". Signed in, it is the player's own page: their in-game
-// name and id, their alliance, and their farms and alts.
+// details (name, id, power, alliance and troop tiers, picked in place as on the old
+// registration forms) for the game account picked in the menu under their name: their
+// main or an alt. Under it, all their accounts, where more are added.
 import './pages.css';
 import './forms.css';
 import { escapeForPage } from './escape.ts';
 import type { Alliance } from '../data/alliances.ts';
 import type { SignedInPerson } from '../data/auth.ts';
+import type { Row } from '../data/records.ts';
+import { accountsSection, playerProfile } from './player-profile.ts';
 
 export interface PlayerPageOptions {
   alliances: Alliance[];
   myAllianceId: string | null;
   person: SignedInPerson | null;
   stateNumber: string;
-  // Power and troop tiers, kept on the account.
-  troopsHtml: string;
+  // The person's row in accounts as saved, and with the changes not saved yet laid
+  // over it; null until it is read.
+  savedRow: Row | null;
+  draftRow: Row | null;
+  // Which parts of the page are open for editing ('info', 'troop-infantry' and so on),
+  // and which of those have changes not saved yet.
+  editing: ReadonlySet<string>;
+  changed: ReadonlySet<string>;
+  // Set while the player is leaving with changes not saved: the question to show.
+  leavePrompt: boolean;
+  // All the person's accounts (main, alts, farms) and the one they are on; the farm (or
+  // new account) open under the row, with its changes laid over it.
+  accounts: Row[];
+  activeId: number | 'new';
+  openListed: number | 'new' | null;
+  listedDraft: Row;
+  listedChanged: boolean;
+  // Set while the player is asked whether to remove an alt or a farm: its name.
+  removePrompt: string | null;
 }
 
 function signInPage(stateNumber: string): string {
@@ -25,50 +46,43 @@ function signInPage(stateNumber: string): string {
     '<p class="form-message" data-sign-in-message></p></section>';
 }
 
-function allianceOptions(alliances: Alliance[], chosen: string | null): string {
-  const mains = alliances.filter(one => !one.mainAllianceId).sort((left, right) => left.sortOrder - right.sortOrder);
-  const ordered = mains.flatMap(main => [main, ...alliances
-    .filter(one => one.mainAllianceId === main.id).sort((left, right) => left.sortOrder - right.sortOrder)]);
-  return '<option value="">None</option>' + ordered.map(one =>
-    `<option value="${escapeForPage(one.id)}"${one.id === chosen ? ' selected' : ''}>` +
-    `${escapeForPage(one.tag + ' · ' + one.name)}</option>`).join('');
-}
-
 export function playerPage(options: PlayerPageOptions): string {
   const person = options.person;
   if (!person) return signInPage(options.stateNumber);
 
-  const account = person.account;
-  const alts = person.alts.map(alt =>
-    '<div class="admin-item"><div class="admin-item-text">' +
-    `<span class="admin-item-title">${escapeForPage(alt.inGameName || alt.inGameId)}</span>` +
-    `<span class="admin-item-meta">${escapeForPage((alt.kind === 'farm' ? 'Farm' : 'Alt') + (alt.inGameId ? ' · ' + alt.inGameId : ''))}</span>` +
-    `</div><button type="button" class="danger-button small-button" data-remove-alt="${alt.id}">Remove</button></div>`).join('');
+  return '<div class="player-page admin-page">' +
+    playerProfile({
+      saved: options.savedRow, draft: options.draftRow, alliances: options.alliances,
+      fallbackAllianceId: options.myAllianceId, editing: options.editing, changed: options.changed,
+      showTroops: options.savedRow !== null
+    }) +
+    (options.savedRow !== null ? accountsSection({
+      accounts: options.accounts, activeId: options.activeId, alliances: options.alliances,
+      openListed: options.openListed, draft: options.listedDraft, changed: options.listedChanged
+    }) : '') +
 
-  return '<section class="admin-section glass"><h2>Your account</h2>' +
-    `<p class="admin-help">Signed in as ${escapeForPage(person.loginName || 'you')}. Every list on the site shows your in-game name.</p>` +
-    '<form class="edit-form" data-form="account">' +
-    '<div class="form-row">' +
-    `<label class="form-field"><span>In-game name</span><input class="text-input" name="inGameName" value="${escapeForPage(account?.inGameName ?? '')}"></label>` +
-    `<label class="form-field"><span>In-game id</span><input class="text-input" name="inGameId" inputmode="numeric" value="${escapeForPage(account?.inGameId ?? '')}"></label>` +
-    '</div>' +
-    `<label class="form-field"><span>Alliance</span><select class="text-input" name="allianceId">${allianceOptions(options.alliances, account?.allianceId ?? options.myAllianceId)}</select></label>` +
-    '<p class="form-message" data-form-message></p>' +
-    '<div class="form-actions"><button type="submit" class="primary-button">Save</button></div></form></section>' +
-
-    '<section class="admin-section glass"><h2>Farms and alts</h2>' +
-    `<div class="admin-list">${alts || '<span class="admin-item-meta">None yet.</span>'}</div>` +
-    '<form class="edit-form" data-form="alt"><div class="form-row">' +
-    '<label class="form-field"><span>In-game name</span><input class="text-input" name="inGameName" required></label>' +
-    '<label class="form-field"><span>In-game id</span><input class="text-input" name="inGameId" inputmode="numeric"></label>' +
-    '</div><label class="form-field"><span>Kind</span><select class="text-input" name="kind">' +
-    '<option value="farm">Farm</option><option value="alt">Alt</option></select></label>' +
-    '<p class="form-message" data-form-message></p>' +
-    '<div class="form-actions"><button type="submit" class="primary-button">Add</button></div></form></section>' +
-
-    options.troopsHtml +
-    '<section class="admin-section glass"><h2>Still to build here</h2><ul class="plan-list">' +
+    '<section class="player-section"><h2 class="player-section-title">Still to build here</h2><ul class="plan-list">' +
     '<li>Your heroes</li>' +
-    '<li>Your own results and statistics</li></ul>' +
-    '<div class="form-actions"><button type="button" class="danger-button small-button" data-sign-out>Sign out</button></div></section>';
+    '<li>Your own results and statistics</li></ul></section></div>' +
+    (options.leavePrompt ? leavePromptHtml() : '') +
+    (options.removePrompt ? removePromptHtml(options.removePrompt) : '');
+}
+
+// Asked when the player leaves a part (or the page) with changes not saved: Save keeps
+// them, Cancel drops them. Tapping beside the question closes it and stays.
+// Removing an alt or a farm asks first, in the same box as leaving with changes.
+function removePromptHtml(name: string): string {
+  return '<div class="leave-prompt" data-remove-answer="cancel"><div class="leave-prompt-box glass" role="dialog" aria-modal="true">' +
+    `<p class="leave-prompt-text">Remove ${escapeForPage(name)}?</p>` +
+    '<div class="leave-prompt-actions">' +
+    '<button type="button" class="ghost-button" data-remove-answer="cancel">Cancel</button>' +
+    '<button type="button" class="danger-button" data-remove-answer="remove">Remove</button></div></div></div>';
+}
+
+function leavePromptHtml(): string {
+  return '<div class="leave-prompt" data-leave-answer="stay"><div class="leave-prompt-box glass" role="dialog" aria-modal="true">' +
+    '<p class="leave-prompt-text">Save your changes before you leave?</p>' +
+    '<div class="leave-prompt-actions">' +
+    '<button type="button" class="ghost-button" data-leave-answer="cancel">Cancel</button>' +
+    '<button type="button" class="primary-button" data-leave-answer="save">Save</button></div></div></div>';
 }

@@ -29,6 +29,9 @@ create table alliances (
   approved_at             timestamptz,
   base_color              text,
   second_color            text,
+  -- The colour only this alliance has, taken from its logo: it tells apart alliances
+  -- whose banners share a colour (DVL and TOP are both gold). Null until set.
+  accent_color            text,
   logo_file               text,
   sort_order              integer not null default 0,
   -- The day an alliance left the state. It then disappears from the calendar, the
