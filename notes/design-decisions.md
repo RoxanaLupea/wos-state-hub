@@ -101,6 +101,49 @@ there before discussing it again.
   With only SvS or only Sunfire ticked, the next transfer is the next one of that
   kind (23 Nov).
 
+### Fortress colours
+- From the event's page in the game: violet for the section's colour (the second
+  word of the title, the open page, the current phase). The site's own background
+  stays as it is; orange in it was tried and dropped (23 Nov).
+
+### Fortress tabs
+- Phase · Season · Rewards (23 Nov). Phase is one phase's cards, Season every phase at
+  once (forts down, phases across), Rewards the season's reward tables. Planning is
+  not a page of its own: planning a season means state managers setting which
+  alliance takes which fort or stronghold, which they do in place: the pencil by the
+  title on Phase or Season turns each card's or cell's alliance into a pick, with a
+  smaller pick under it for who the reward counts for (holder, state, or an
+  alliance). Each pick is saved as soon as it is made; no forms (23 Nov, as the
+  owner asked on 11 Nov). All three tabs stay on the same season and phase.
+
+### Fortress phase
+- The Phase tab shows the phase being played, to look at only: no arrows, no picking,
+  no "for the state". Under the tabs one white line reads "SEASON N • PHASE N"; the
+  title stays "Fortress BATTLES" alone. White, because the section already has
+  enough purple (23 Nov).
+- No panels. Each building, four to a line, close together in the middle rather than
+  spread over the width, with a thin purple line above the forts and another above
+  the strongholds: "Fort 1" or
+  "SH 1" above, the reward in the game's own tile with its amount, and the alliance's
+  label under it. An academy shows as its main alliance (23 Nov).
+- A tile drawn bigger than the game's 44px one scales its frame and its numbers in
+  the same proportion (23 Nov).
+- Never draw anything on a reward tile's border: the tile stays exactly as the game
+  draws it (23 Nov).
+- Hero shard rewards follow the state's generation on the phase's battle day, from the
+  transfer groups (23 Nov, as the old app did).
+
+### Fortress rewards
+- The season tables have alliances down the side and one column per reward. On a
+  phone the columns are headed by the reward only, without its name, so every reward
+  fits across the screen and nothing scrolls sideways. Each reward is drawn in its
+  game tile (orange, purple, blue) with the amount one fort pays. Every reward column
+  has the same width, with the tiles on one line and the names under them. There is
+  no total column (23 Nov).
+- Reward tiles everywhere (fort board, event panel, tables) show their amounts in a
+  normal bold with a soft shadow, smaller than the game's heavy outlined numbers
+  (23 Nov).
+
 ### King of Icefield
 - Its bar shows its seven named days on line 2 on a computer, like SvS preparation
   and Alliance Showdown. Its days repeat names (Basic Skills Up, Combat Training,

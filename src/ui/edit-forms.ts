@@ -6,7 +6,7 @@ import { escapeForPage } from './escape.ts';
 import type { Schedule, DateChange } from '../calendar/occurrences.ts';
 import type { Alliance } from '../data/alliances.ts';
 
-const PENCIL_ICON = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
+export const PENCIL_ICON = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
   ' stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
   '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>';
 
@@ -80,16 +80,26 @@ export function dateChangeForm(
 
 // Who holds a fort in a phase, and when its battle starts on the battle day.
 export function fortForm(
-  key: string, title: string, alliances: Alliance[], allianceId: string, battleTime: string | null
+  key: string, title: string, alliances: Alliance[], allianceId: string, battleTime: string | null,
+  creditedTo: string
 ): string {
-  const options = alliances
-    .slice().sort((left, right) => left.sortOrder - right.sortOrder)
+  const sorted = alliances.slice().sort((left, right) => left.sortOrder - right.sortOrder);
+  const options = sorted
     .map(one => `<option value="${escapeForPage(one.id)}"${one.id === allianceId ? ' selected' : ''}>` +
       `${escapeForPage(one.tag)}</option>`).join('');
+  // A fort can be taken for someone else: its reward then counts for that alliance, or
+  // for the whole state. Left as it is, it counts for the holder.
+  const creditOptions = '<option value="">The holder</option>' +
+    `<option value="shared"${creditedTo === 'shared' ? ' selected' : ''}>The whole state</option>` +
+    sorted.filter(one => !one.mainAllianceId)
+      .map(one => `<option value="${escapeForPage(one.id)}"${one.id === creditedTo ? ' selected' : ''}>` +
+        `${escapeForPage(one.tag)}</option>`).join('');
   return `<form class="edit-form" data-form="edit-fort" data-key="${escapeForPage(key)}">` +
     `<h3>${escapeForPage(title)}</h3><div class="form-row">` +
     `<label class="form-field"><span>Held by</span><select class="text-input" name="allianceId" required>` +
     `<option value="">Pick an alliance</option>${options}</select></label>` +
+    `<label class="form-field"><span>Reward counts for</span><select class="text-input" name="creditedTo">` +
+    `${creditOptions}</select></label>` +
     field('Battle at (UTC)', 'battleTime', battleTime ?? '', ' placeholder="not set"') +
     '</div>' + formEnd();
 }

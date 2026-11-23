@@ -58,3 +58,27 @@ export function fillGeneration(text: string, day: number): string {
     ? text.replace(/Gen \{generation\} /g, '').replace(/\{generation\}/g, '')
     : text.replace(/\{generation\}/g, String(generation));
 }
+
+// Fortress rewards that are hero shards move on with the state's generation. The
+// catalog writes them for one generation (the fortRewardsGeneration setting); a
+// generation later each shard is the next generation's hero from the same source,
+// Lucky Wheel or events: Fred Shards become Blanchette Shards. Anything else stays.
+let fortRewardsGeneration = 0;
+
+export function setFortRewardsGeneration(generation: number): void {
+  fortRewardsGeneration = Number.isFinite(generation) ? generation : 0;
+}
+
+export function heroShardsOnDay(itemId: string, day: number): string {
+  const match = itemId.match(/^([a-z]+)-shards$/);
+  const now = generationOnDay(day);
+  if (!match || !fortRewardsGeneration || now === null || now === fortRewardsGeneration) return itemId;
+  for (const [generation, heroes] of Object.entries(HEROES_BY_GENERATION)) {
+    const source = heroes.luckyWheel.toLowerCase() === match[1] ? 'luckyWheel'
+      : heroes.events.toLowerCase() === match[1] ? 'events' : null;
+    if (!source) continue;
+    const moved = HEROES_BY_GENERATION[Number(generation) + now - fortRewardsGeneration];
+    return moved ? moved[source].toLowerCase() + '-shards' : itemId;
+  }
+  return itemId;
+}

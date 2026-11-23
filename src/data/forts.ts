@@ -24,12 +24,15 @@ function timeOfDayUtc(value: unknown): string | null {
   return String(when.getUTCHours()).padStart(2, '0') + ':' + String(when.getUTCMinutes()).padStart(2, '0');
 }
 
-export async function loadFortAssignments(season: number): Promise<FortAssignment[]> {
+// Every season's holders, so the board can step back and forward between seasons.
+// There are 16 forts a phase and 8 phases a season: a few hundred rows a year.
+export async function loadFortAssignments(): Promise<FortAssignment[]> {
   const { data, error } = await database()
     .from('fort_assignments')
     .select('id, season, phase, fort, alliance_id, credited_to, reserved_for_leads, battle_time_utc')
-    .eq('season', season)
-    .order('phase');
+    .order('season')
+    .order('phase')
+    .order('fort');
 
   if (error) throw new Error('Could not read the fortress board: ' + error.message);
 

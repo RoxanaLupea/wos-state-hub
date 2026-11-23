@@ -5,11 +5,11 @@ import {
   loadFortAssignments, loadRallyLeads, loadBuffAllocations,
   type FortAssignment, type RallyLead, type BuffAllocation
 } from './data/forts.ts';
-import { fortressPlanning } from './ui/fortress-planning.ts';
-import { phaseOf, seasonNumberOf, seasonStartFor, FORT_PHASES } from './calendar/fort-season.ts';
-import { fortressBoard, seasonTotals } from './ui/fortress.ts';
+import { escapeForPage } from './ui/escape.ts';
+import { battleDayOf, phaseOf, seasonNumberOf, seasonStartFor, FORT_PHASES } from './calendar/fort-season.ts';
+import { fortressBoard, seasonTable, seasonTotals, type InPlaceEditing } from './ui/fortress.ts';
 import { loadGenerationsOfState, loadTransferDates, loadTransferGroups } from './data/transfer-groups.ts';
-import { setGenerationSteps } from './data/heroes.ts';
+import { setFortRewardsGeneration, setGenerationSteps } from './data/heroes.ts';
 import {
   loadTransferWindows, loadCandidatesOf,
   type TransferWindow, type TransferCandidate
@@ -51,7 +51,7 @@ import {
 import {
   cleanTime, saveAllianceTime, saveDateChange, saveFortAssignment, saveScheduleRepeat
 } from './data/editing.ts';
-import { allianceTimeForm, dateChangeForm, fortForm, pencilButton, scheduleForm } from './ui/edit-forms.ts';
+import { PENCIL_ICON, allianceTimeForm, dateChangeForm, fortForm, pencilButton, scheduleForm } from './ui/edit-forms.ts';
 import { deleteRow, loadRows, saveRow, type Row } from './data/records.ts';
 import {
   ALLIANCE_RESULT_EVENTS, allianceResultsPage, championshipStars, opponentNotesPage, resultsTab, showdownScoreOf,
@@ -135,6 +135,16 @@ const view = {
   // The form a pencil opened: "schedule|<id>", "alliance|<id>", "date|<id>|<date>" or
   // "fort|<season>|<phase>|<fort>". Null when none is open.
   editing: null as string | null,
+  // The battle day of the fortress phase on the board, when stepped away from the one
+  // being played. Null shows the phase being played.
+  fortressBattleDay: null as number | null,
+  // State managers planning the forts in place: whether the pencil is on, which of the
+  // two ways is drawn, the choice picked in the palette, and the card whose choices are
+  // open.
+  fortressEditing: false,
+  fortressPickStyle: 'paint' as 'paint' | 'chips',
+  fortressBrush: '',
+  fortressOpenPlace: '',
   rewardView: {
     openList: new Map<string, string>(),
     openBand: new Map<string, string>(),
@@ -148,11 +158,10 @@ let schedules: Schedule[] = [];
 // The first fortress battle day ever written down, which every season is counted from.
 let firstFortBattleDay = NaN;
 let fortAssignments: FortAssignment[] = [];
+// Why the last fort choice could not be saved, shown under the board until the next one.
+let fortSaveProblem = '';
 let rallyLeads: RallyLead[] = [];
 let buffAllocations: BuffAllocation[] = [];
-// How many of each buff a lead of that tier collects, from the settings.
-let buffsPerCastleLead = 2;
-let buffsPerTurretLead = 1;
 // Every date the predictions hold, and the groups of the one on screen.
 let transferDates: string[] = [];
 let transferWindows: TransferWindow[] = [];
@@ -514,50 +523,85 @@ function fortBattlesHtmlOf(firstDay: number, lastDay: number, myAllianceIds: str
         const held = fortAssignments.find(one =>
           one.season === fortDay.season && one.phase === battle.phase && one.fort === battle.fort);
         return fortForm(fortKey(battle), fortFullName(battle.fort), alliancesStillHere(alliances),
-          battle.allianceId, held?.battleTimeUtc ?? null);
+          battle.allianceId, held?.battleTimeUtc ?? null, held?.creditedTo ?? '');
       }
     });
   }
   return '';
 }
 
-// The fortress board for the phase on screen. Without the season's first battle day
-// there is nothing to count from, so the plan for the page shows instead.
-function fortressBoardMarkup(): string {
-  if (Number.isNaN(firstFortBattleDay)) return '';
+// The battle day of the fortress phase being played: the first that has not passed.
+function playedFortBattleDay(): number {
   const today = todayNumber();
   const seasonStart = seasonStartFor(today, firstFortBattleDay);
-  // The phase being played is the one whose battle day has not passed.
-  const playedPhase = Math.min(FORT_PHASES, Math.max(1, phaseOf(today + 6, seasonStart)));
+  const phase = Math.min(FORT_PHASES, Math.max(1, phaseOf(today + 6, seasonStart)));
+  return battleDayOf(seasonStart, phase);
+}
 
+// The season and phase of a battle day.
+function fortPlaceOf(battleDay: number): { seasonStart: number; season: number; phase: number } {
+  const seasonStart = seasonStartFor(battleDay, firstFortBattleDay);
+  return {
+    seasonStart,
+    season: seasonNumberOf(seasonStart, firstFortBattleDay, FIRST_FORT_SEASON),
+    phase: phaseOf(battleDay, seasonStart)
+  };
+}
+
+// The fortress board for the phase on screen: the one picked with the arrows, else the
+// one being played. Without the season's first battle day there is nothing to count from.
+function fortressBoardMarkup(): string {
+  if (Number.isNaN(firstFortBattleDay)) return '';
+  const battleDay = playedFortBattleDay();
+  const place = fortPlaceOf(battleDay);
   return fortressBoard({
-    seasonNumber: seasonNumberOf(seasonStart, firstFortBattleDay, FIRST_FORT_SEASON),
-    seasonStart, assignments: fortAssignments, playedPhase
+    season: place.season, phase: place.phase, battleDay,
+    assignments: fortAssignments.filter(one => one.season === place.season && one.phase === place.phase)
   });
 }
 
-function fortressPlanningMarkup(): string {
+function fortProblemLine(): string {
+  return fortSaveProblem ? `<p class="form-message">${escapeForPage(fortSaveProblem)}</p>` : '';
+}
+
+// State managers and admins plan the forts: the pencil switches picking in place on.
+function fortressPencil(): string {
+  return managesState(person)
+    ? `<button type="button" class="pencil-button${view.fortressEditing ? ' on' : ''}" data-fortress-edit` +
+      ` aria-label="Plan the forts" title="Plan the forts">${PENCIL_ICON}</button>`
+    : '';
+}
+
+function fortressInPlace(season: number): InPlaceEditing | null {
+  return managesState(person) && view.fortressEditing
+    ? { season, alliances: alliancesStillHere(alliances), style: view.fortressPickStyle,
+        brush: view.fortressBrush, openPlace: view.fortressOpenPlace }
+    : null;
+}
+
+// The season of the phase on screen, every phase at once. State managers plan it here.
+function fortressSeasonMarkup(): string {
   if (Number.isNaN(firstFortBattleDay)) return '';
-  const today = todayNumber();
-  const seasonStart = seasonStartFor(today, firstFortBattleDay);
-  return fortressPlanning({
-    seasonNumber: seasonNumberOf(seasonStart, firstFortBattleDay, FIRST_FORT_SEASON),
-    // The phase being planned is the one whose battle has not been fought yet.
-    phase: Math.min(FORT_PHASES, Math.max(1, phaseOf(today + 6, seasonStart))),
-    assignments: fortAssignments,
-    leads: rallyLeads,
-    allocations: buffAllocations,
-    buffsPerCastleLead,
-    buffsPerTurretLead
-  });
+  const playedDay = playedFortBattleDay();
+  const place = fortPlaceOf(view.fortressBattleDay ?? playedDay);
+  const played = fortPlaceOf(playedDay);
+  return seasonTable({
+    seasonNumber: place.season,
+    seasonStart: place.seasonStart,
+    assignments: fortAssignments.filter(one => one.season === place.season),
+    playedPhase: played.season === place.season ? played.phase : null,
+    pencil: fortressPencil(),
+    editing: fortressInPlace(place.season)
+  }) + fortProblemLine();
 }
 
 function fortressRewardsMarkup(): string {
   if (Number.isNaN(firstFortBattleDay)) return '';
-  const seasonStart = seasonStartFor(todayNumber(), firstFortBattleDay);
+  const place = fortPlaceOf(view.fortressBattleDay ?? playedFortBattleDay());
   return seasonTotals({
-    seasonNumber: seasonNumberOf(seasonStart, firstFortBattleDay, FIRST_FORT_SEASON),
-    seasonStart, assignments: fortAssignments
+    seasonNumber: place.season,
+    seasonStart: place.seasonStart,
+    assignments: fortAssignments.filter(one => one.season === place.season)
   });
 }
 
@@ -705,6 +749,12 @@ async function rereadTables(...tables: string[]): Promise<void> {
   await Promise.all(tables.map(async table => {
     tableRows.set(table, await loadRows(table).catch(() => tableRows.get(table) ?? []));
   }));
+  // The fortress pages keep their own copies of the forts, the leads and the plan.
+  if (tables.includes('fort_assignments')) fortAssignments = await loadFortAssignments().catch(() => fortAssignments);
+  if (tables.includes('rally_leads')) rallyLeads = await loadRallyLeads().catch(() => rallyLeads);
+  if (tables.some(table => ['rally_leads', 'buff_allocations', 'fort_assignments'].includes(table))) {
+    buffAllocations = await loadBuffAllocations(fortAssignments.map(one => one.id)).catch(() => buffAllocations);
+  }
 }
 
 function workContext(): WorkContext {
@@ -985,8 +1035,8 @@ function drawPage(app: HTMLElement): void {
     const page = pageById(view.openPage);
     const subPage = view.openSubPage || page?.pages[0]?.id || '';
     const built =
-      view.openPage === 'fortress' && subPage === 'board' ? fortressBoardMarkup() :
-      view.openPage === 'fortress' && subPage === 'planning' ? fortressPlanningMarkup() :
+      view.openPage === 'fortress' && subPage === 'phase' ? fortressBoardMarkup() :
+      view.openPage === 'fortress' && subPage === 'season' ? fortressSeasonMarkup() :
       view.openPage === 'fortress' && subPage === 'rewards' ? fortressRewardsMarkup() :
       view.openPage === 'state'
         ? statePage({ stateNumber: STATE_NUMBER, alliances: alliancesStillHere(alliances), schedules }) +
@@ -1171,6 +1221,47 @@ function handleClicks(event: MouseEvent): void {
     return;
   }
 
+  const brushButton = target.closest<HTMLElement>('[data-fort-brush]');
+  if (brushButton) {
+    view.fortressBrush = view.fortressBrush === brushButton.dataset.fortBrush ? '' : brushButton.dataset.fortBrush as string;
+    draw();
+    return;
+  }
+  const chooseButton = target.closest<HTMLElement>('[data-fort-choose]');
+  if (chooseButton && view.fortressOpenPlace) {
+    const choice = chooseButton.dataset.fortChoose as string;
+    const placeText = view.fortressOpenPlace;
+    // An alliance picked closes the card; who the reward is for keeps it open.
+    if (choice.startsWith('holder|')) view.fortressOpenPlace = '';
+    saveFortChoice(placeText, choice);
+    return;
+  }
+  const fortTap = target.closest<HTMLElement>('[data-fort-tap]');
+  if (fortTap) {
+    const placeText = fortTap.dataset.fortTap as string;
+    if (view.fortressPickStyle === 'paint') {
+      if (view.fortressBrush) saveFortChoice(placeText, view.fortressBrush);
+    } else {
+      view.fortressOpenPlace = view.fortressOpenPlace === placeText ? '' : placeText;
+      draw();
+    }
+    return;
+  }
+  if (target.closest('[data-fortress-edit]')) {
+    view.fortressEditing = !view.fortressEditing;
+    view.editing = null;
+    draw();
+    return;
+  }
+  const fortressStep = target.closest<HTMLElement>('[data-fortress-step]');
+  if (fortressStep) {
+    const shown = view.fortressBattleDay ?? playedFortBattleDay();
+    const next = shown + 7 * Number(fortressStep.dataset.fortressStep);
+    view.fortressBattleDay = next === playedFortBattleDay() ? null : next;
+    view.editing = null;
+    draw();
+    return;
+  }
   const subPageButton = target.closest<HTMLElement>('[data-sub-page]');
   if (subPageButton) {
     view.openSubPage = subPageButton.dataset.subPage as string;
@@ -1417,7 +1508,7 @@ function handleClicks(event: MouseEvent): void {
   }
 }
 
-const WORKING_FORMS = ['availability', 'roster', 'roster-member', 'plan', 'academy', 'facility', 'setting', 'role',
+const WORKING_FORMS = ['rally-lead', 'fort-reserve', 'buff-share', 'availability', 'roster', 'roster-member', 'plan', 'academy', 'facility', 'setting', 'role',
   'result', 'personal', 'alliance-records', 'opponent-note', 'transfer-window', 'candidate', 'candidate-status',
   'candidate-flag', 'blacklist', 'player-troops'];
 
@@ -1491,6 +1582,38 @@ async function removeFromWorkingPage(edit: string): Promise<void> {
     rememberAlliances(alliances);
   }
   draw();
+}
+
+// A fort's alliance or who its reward counts for, picked in place on the Phase or
+// Season tab. Saved at once, keeping whatever else the fort already has (its battle
+// time, the buffs kept for leads). Picking no alliance takes the fort off the plan.
+// The choice is "holder|<alliance id or empty>" or "credit|<'', 'shared' or an id>".
+function saveFortChoice(placeText: string, choice: string): void {
+  if (!person) return;
+  const [season, phase, fort] = placeText.split('|');
+  const [field, value] = choice.split('|');
+  const place = { season: Number(season), phase: Number(phase), fort };
+  const held = fortAssignments.find(one => one.season === place.season && one.phase === place.phase && one.fort === fort);
+  const battleDay = fortBattleDayOf(place.season, place.phase);
+  const battleAt = held?.battleTimeUtc && battleDay !== null
+    ? textFromDay(battleDay) + 'T' + held.battleTimeUtc + ':00Z' : null;
+  const userId = person.userId;
+  // Giving a reward to the one it already goes to gives it back to the holder.
+  const creditedTo = field === 'credit' && held?.creditedTo === value ? '' : value;
+  const save = field === 'credit'
+    // Only a held fort has a reward to count for anyone.
+    ? (held ? saveFortAssignment(place, { allianceId: held.allianceId, creditedTo, battleAt }, userId) : Promise.resolve())
+    : value
+      ? saveFortAssignment(place, { allianceId: value, creditedTo: held?.creditedTo ?? '', battleAt }, userId)
+      : held ? deleteRow('fort_assignments', 'id', held.id) : Promise.resolve();
+  save.then(async () => {
+    fortAssignments = await loadFortAssignments().catch(() => fortAssignments);
+    fortSaveProblem = '';
+    draw();
+  }).catch(problem => {
+    fortSaveProblem = problem instanceof Error ? problem.message : String(problem);
+    draw();
+  });
 }
 
 // What a working page's form saves, and the tables to read again after it.
@@ -1703,6 +1826,35 @@ async function saveWorkingForm(
     rememberAlliances(alliances);
     return ['alliances'];
   }
+  if (formName === 'rally-lead') {
+    await saveRow('rally_leads', {
+      alliance_id: text('alliance_id'), in_game_name: text('in_game_name'), in_game_id: orNull('in_game_id'),
+      tier: text('tier') === 'castle' ? 'castle' : 'turret', sort_order: rallyLeads.length,
+      updated_by: userId, updated_at: now
+    });
+    return ['rally_leads'];
+  }
+  if (formName === 'fort-reserve') {
+    const count = decimal('reserved_for_leads') ?? 0;
+    if (!Number.isInteger(count) || count < 0) throw new Error('Write how many as a whole number, 0 or more.');
+    await saveRow('fort_assignments', { id: Number(key), reserved_for_leads: count, updated_by: userId, updated_at: now });
+    return ['fort_assignments'];
+  }
+  if (formName === 'buff-share') {
+    const count = decimal('quantity') ?? 0;
+    if (!Number.isInteger(count) || count < 0) throw new Error('Write how many as a whole number, 0 or more.');
+    const leadId = Number(text('rally_lead_id'));
+    const existing = buffAllocations.find(one => one.fortAssignmentId === Number(key) && one.rallyLeadId === leadId);
+    // Giving a lead 0 takes their share of this fort away.
+    if (count === 0) {
+      if (existing) await deleteRow('buff_allocations', 'id', existing.id);
+    } else {
+      await saveRow('buff_allocations', {
+        fort_assignment_id: Number(key), rally_lead_id: leadId, quantity: count, updated_by: userId, updated_at: now
+      }, 'fort_assignment_id,rally_lead_id');
+    }
+    return ['buff_allocations'];
+  }
   if (formName === 'facility') {
     await saveRow('facilities', { id: Number(key), alliance_id: orNull('alliance_id'), updated_by: userId, updated_at: now });
     return ['facilities'];
@@ -1764,6 +1916,7 @@ function saveEdit(
     const battleDay = fortBattleDayOf(Number(season), Number(phase));
     return saveFortAssignment({ season: Number(season), phase: Number(phase), fort }, {
       allianceId: text('allianceId'),
+      creditedTo: text('creditedTo'),
       // The database keeps the battle's full date and time in UTC.
       battleAt: battleTime && battleDay !== null ? textFromDay(battleDay) + 'T' + battleTime + ':00Z' : null
     }, userId);
@@ -1786,7 +1939,7 @@ function fortBattleDayOf(season: number, phase: number): number | null {
 // After a save: read again what it changed, then redraw.
 async function reloadAfterEdit(formName: string): Promise<void> {
   if (formName === 'edit-fort') {
-    fortAssignments = await loadFortAssignments(FIRST_FORT_SEASON).catch(() => fortAssignments);
+    fortAssignments = await loadFortAssignments().catch(() => fortAssignments);
   } else {
     const [loadedSchedules, changes] = await Promise.all([loadSchedules(), loadDateChanges()]);
     schedules = loadedSchedules;
@@ -2075,9 +2228,8 @@ async function start(): Promise<void> {
     firstFortBattleDay = dayFromText(settings.get('fortressSeasonStart') ?? '');
     // The board is wanted only when that page is opened, but it is small and the
     // page is drawn from one place, so it is read once here.
-    fortAssignments = await loadFortAssignments(FIRST_FORT_SEASON).catch(() => []);
-    buffsPerCastleLead = Number(settings.get('castleLeadBuffs') ?? '2') || 2;
-    buffsPerTurretLead = Number(settings.get('turretLeadBuffs') ?? '1') || 1;
+    fortAssignments = await loadFortAssignments().catch(() => []);
+    setFortRewardsGeneration(Number(settings.get('fortRewardsGeneration') ?? ''));
     rallyLeads = await loadRallyLeads().catch(() => []);
     buffAllocations = await loadBuffAllocations(fortAssignments.map(one => one.id)).catch(() => []);
     transferDates = await loadTransferDates().catch(() => []);

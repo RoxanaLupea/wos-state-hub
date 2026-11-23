@@ -1,6 +1,139 @@
-/* The fortress board, laid out the way the sheet is: every fort down the side, every
-   phase across the top, and the alliance holding it in each cell. */
+/* The fortress board: one phase, as the owner drew it. The season and phase sit in the
+   middle with the arrows at the edges of the cards; the cards fill the screen's height,
+   four to a line on a phone and on a computer, the strongholds on a line of their own. */
+.fort-board {
+  padding: 14px; display: flex; flex-direction: column; gap: 12px;
+  min-height: calc(100dvh - 300px);
+}
+/* The phase is a page, not a calendar, and is drawn the way the game draws its
+   Fortress Rewards: no panels, each building is its reward tile with its name under
+   it, and here the alliance under that. */
+.fort-board:not(.glass) { padding: 0; min-height: 0; gap: 18px; }
+.fort-board:not(.glass) .fort-cards { gap: 22px 10px; flex: none; }
+.fort-board:not(.glass) .fort-card { background: none; box-shadow: none; padding: 0; gap: 6px; justify-content: flex-start; }
+.fort-board:not(.glass) .fort-card .reward-tile { width: 64px; height: 64px; border-radius: 10px; }
+.fort-board:not(.glass) .fort-card .reward-tile .tile-qty { font-size: 10.5px; }
+.fort-board:not(.glass) .fort-card .reward-tile .tile-top { font-size: 8px; }
+.fort-board:not(.glass) .fort-card-name { font-size: 14px; }
+/* Room between it and the tabs above; close to the line under it, which it heads. */
+.fort-phase-title {
+  margin: 16px 0 -10px; text-align: center; font-size: 15px; font-weight: 800;
+  letter-spacing: 0.07em; text-transform: uppercase; color: var(--text);
+}
+.fort-board-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.fort-board-title { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
+.fort-board-title strong { font-size: 20px; font-weight: 800; }
+.fort-board-title span { font-size: 13px; font-weight: 700; color: var(--text-muted); }
+/* The phase being played is written in the section's colour, so stepping back to it
+   is easy to see. */
+.fort-board-title.now strong { color: var(--event-mark); }
+.fort-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-content: stretch; gap: 10px; flex: 3 1 auto; }
+.fort-cards.strongholds { flex: 1 1 auto; }
+.fort-card {
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 5px; padding: 10px 6px; border-radius: var(--radius-small); text-align: center;
+  background: rgba(255, 255, 255, 0.04); box-shadow: inset 0 0 0 1px var(--glass-border);
+}
+.fort-card-name { font-size: 13px; font-weight: 800; color: var(--text); line-height: 1.2; }
+.fort-card.stronghold .fort-card-name { color: var(--text-muted); }
+.fort-card-reward { font-size: 11px; font-weight: 700; line-height: 1.2; color: var(--text-muted); }
+/* The alliance on a glass label in its own colours, as on the calendar's bars, so the
+   names read first. */
+.fort-card-holder {
+  min-width: 54px; padding: 3px 10px; border-radius: 999px;
+  font-size: 15px; font-weight: 800; letter-spacing: 0.04em; color: var(--text-faint);
+  background: rgba(255, 255, 255, 0.05); box-shadow: inset 0 0 0 1px var(--glass-border);
+}
+.fort-card.held .fort-card-holder {
+  color: #FFFFFF; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  background: var(--banner-fill); box-shadow: inset 0 0 0 1px var(--banner-edge);
+}
+.fort-card-credit {
+  font-size: 10px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted);
+}
+.fort-board-title .pencil-button { margin-left: 8px; vertical-align: middle; }
+.fort-board-title .pencil-button.on { color: var(--event-mark); background: rgba(255, 255, 255, 0.1); }
+/* Planning in place. The choices are drawn as the alliances' own labels, so what is
+   picked looks like what it makes; the picked one is ringed. */
+.fort-card.editable, .fort-cell.editable { cursor: pointer; }
+.fort-card.editable:hover, .fort-cell.editable:hover { background-color: rgba(255, 255, 255, 0.08); }
+.fort-choices { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.fort-choices.credits { align-items: center; }
+.fort-choices.credits span { font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-faint); }
+.fort-choice {
+  min-width: 46px; padding: 3px 10px; border-radius: 999px; border: none; cursor: pointer;
+  font: inherit; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.06); box-shadow: inset 0 0 0 1px var(--glass-border);
+}
+.fort-choice.held { color: #FFFFFF; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35); background: var(--banner-fill); box-shadow: inset 0 0 0 1px var(--banner-edge); }
+.fort-choices.credits .fort-choice { min-width: 0; padding: 2px 8px; font-size: 11px; }
+.fort-choice.on { box-shadow: 0 0 0 2px var(--event-mark), inset 0 0 0 1px var(--banner-edge, var(--glass-border)); color: var(--text); }
+/* Paint: the palette sits under the title, the choice picked in it then goes on every
+   card tapped. */
+.fort-palette { display: flex; flex-direction: column; gap: 8px; padding: 10px; border-radius: var(--radius-small); background: rgba(255, 255, 255, 0.04); }
+/* The phase: each building's short name, its reward in the game's own tile, and the
+   alliance under it. The buildings sit close together in the middle rather than
+   spread over the whole width. A thin line in the section's colour sits above the
+   forts and another above the strongholds. */
+.fort-spots {
+  --tile-size: 64px;
+  display: grid; grid-template-columns: repeat(4, max-content); justify-content: center;
+  gap: 20px 22px;
+}
+.fort-spots-line { width: min(100%, calc(4 * var(--tile-size, 64px) + 3 * 22px + 40px)); margin: 4px auto; height: 1px; background: var(--event-mark); border: none; }
+.fort-spot { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: var(--tile-size); }
+.fort-spot-name { font-size: 14px; font-weight: 800; color: var(--text); white-space: nowrap; }
+/* A bigger tile than the game's 44px one: its frame and its numbers grow with it, in
+   the same proportion as the game's. */
+.fort-spot .reward-tile {
+  width: var(--tile-size); height: var(--tile-size);
+  border-width: calc(var(--tile-size) * 1.5 / 44); border-radius: calc(var(--tile-size) * 8 / 44);
+}
+.fort-spot .reward-tile .tile-qty {
+  font-size: calc(var(--tile-size) * 9 / 44); right: calc(var(--tile-size) * 2 / 44); bottom: calc(var(--tile-size) * 1 / 44);
+}
+.fort-spot .reward-tile .tile-top { font-size: calc(var(--tile-size) * 7 / 44); }
+.fort-spot-tag {
+  min-width: 48px; padding: 2px 10px; border-radius: 999px; text-align: center;
+  font-size: 14px; font-weight: 800; letter-spacing: 0.04em; color: var(--text-faint);
+  background: rgba(255, 255, 255, 0.05); box-shadow: inset 0 0 0 1px var(--glass-border);
+}
+.fort-spot.held .fort-spot-tag {
+  color: #FFFFFF; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  background: var(--banner-fill); box-shadow: inset 0 0 0 1px var(--banner-edge);
+}
+@media (max-width: 699px) {
+  .fort-spots { --tile-size: 58px; gap: 18px 16px; }
+  .fort-spots-line { width: calc(4 * 58px + 3 * 16px + 24px); }
+  .fort-spot-name { font-size: 12.5px; }
+  .fort-spot-tag { min-width: 0; font-size: 12.5px; padding: 1px 8px; }
+}
 
+/* Choices on the card: the card grows to hold them. */
+.fort-card-choices { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; width: 100%; }
+.fort-card.choosing { grid-column: span 2; box-shadow: inset 0 0 0 1px var(--event-mark); }
+.fort-cell .fort-card-choices .fort-choice { font-size: 11px; padding: 2px 7px; min-width: 0; }
+@media (max-width: 999px) {
+  .fort-board { padding: 10px; gap: 10px; min-height: calc(100dvh - 260px); }
+  .fort-cards { gap: 6px; }
+  .fort-card { padding: 8px 3px; gap: 4px; }
+  .fort-card-name { font-size: 10.5px; }
+  .fort-card-reward { font-size: 9px; }
+  .fort-card .reward-tile { width: 38px; height: 38px; border-radius: 7px; }
+  .fort-board:not(.glass) .fort-card .reward-tile { width: 54px; height: 54px; border-radius: 9px; }
+  .fort-board:not(.glass) .fort-card .reward-tile .tile-qty { font-size: 9px; }
+  .fort-board:not(.glass) .fort-card .reward-tile .tile-top { font-size: 7px; }
+  .fort-board:not(.glass) .fort-card-name { font-size: 11px; }
+  .fort-card-holder { min-width: 0; padding: 2px 8px; font-size: 12.5px; }
+  .fort-card-credit { font-size: 8.5px; }
+  .fort-choice { font-size: 12px; padding: 2px 8px; min-width: 0; }
+}
+
+/* The season: every fort down the side, every phase across the top. */
+.fort-cell-credit {
+  font-size: 9px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase;
+  padding: 0 5px; border-radius: 999px; background: rgba(0, 0, 0, 0.32); color: #FFFFFF;
+}
 .fort-grid-wrap { overflow-x: auto; padding-bottom: 8px; }
 .fort-grid { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 13.5px; }
 .fort-grid th {
@@ -10,12 +143,12 @@
 }
 .fort-grid th.fort-column { text-align: left; }
 /* The phase being played is marked, so the eye lands on it first. */
-.fort-grid th.now { color: var(--accent); }
+.fort-grid th.now { color: var(--event-mark); }
 .fort-grid td { padding: 3px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
 .fort-grid td.fort-name { font-weight: 800; white-space: nowrap; padding-left: 6px; }
 .fort-grid tr.stronghold td.fort-name { color: var(--text-muted); }
 .fort-grid tr.stronghold { background: rgba(255, 255, 255, 0.04); }
-.fort-grid td.now { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.fort-grid td.now { background: color-mix(in srgb, var(--event-mark) 8%, transparent); }
 
 /* The holder of one fort in one phase: its banner, and the reward under it. */
 .fort-cell {
@@ -35,15 +168,19 @@
 }
 .fort-cell:not(.held) .fort-cell-reward { color: var(--text-faint); }
 
+.fort-cell .reward-tile { width: 34px; height: 34px; border-radius: 6px; }
+.fort-season { min-height: 0; }
+
 /* The reward matrices: alliances down the side, items across the top, counts inside. */
 .reward-matrix-wrap { overflow-x: auto; padding-bottom: 8px; }
-.reward-matrix { border-collapse: collapse; width: 100%; min-width: 700px; font-size: 13.5px; }
+/* Every reward column is the same width, whatever the length of its name. */
+.reward-matrix { border-collapse: collapse; width: 100%; min-width: 700px; font-size: 13.5px; table-layout: fixed; }
 .reward-matrix th {
   padding: 6px 8px; font-size: 11px; font-weight: 800; color: var(--text-faint);
   border-bottom: 1px solid var(--glass-border); vertical-align: bottom; text-align: center;
 }
 .reward-matrix th.alliance-column { text-align: left; width: 140px; }
-.reward-matrix th span {
+.reward-matrix th .reward-name {
   display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
   overflow: hidden; line-height: 1.2;
 }
@@ -51,18 +188,18 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
 .reward-matrix td.alliance-name { text-align: left; font-weight: 800; }
 .reward-matrix td.zero { color: var(--text-faint); }
-.reward-matrix td.total { font-weight: 800; }
-.reward-matrix .matrix-icon { width: 26px; height: 26px; object-fit: contain; display: block; margin: 0 auto 3px; }
-
-/* The reward's own picture inside a board cell, and the mark where that reward is
-   credited to someone other than the alliance holding the fort. */
-.fort-cell .reward-tile { --tile: 34px; width: 34px; height: 34px; border-radius: 5px; }
-.fort-cell .reward-tile img { inset: 5%; width: 90%; height: 90%; }
-.fort-cell .reward-tile .tile-top { top: 2%; padding: 0; background: none; font-size: 7px; }
-.fort-cell .reward-tile .tile-qty { right: 5%; bottom: 2%; font-size: 8.5px; }
-.fort-cell-credit {
-  font-size: 9px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase;
-  padding: 0 5px; border-radius: 999px; background: rgba(0, 0, 0, 0.32); color: #FFFFFF;
+/* The tiles stand in one line, with the names under them, however many lines a
+   name takes. */
+.reward-matrix th:not(.alliance-column) { vertical-align: top; }
+.reward-matrix th .reward-tile { display: block; margin: 0 auto 4px; }
+/* On a phone only the rewards head the columns, without their names, so every
+   reward fits across the screen and nothing scrolls sideways. */
+@media (max-width: 699px) {
+  .reward-matrix { min-width: 0; font-size: 13px; }
+  .reward-matrix th, .reward-matrix td { padding-left: 2px; padding-right: 2px; }
+  .reward-matrix th.alliance-column { width: 48px; }
+  .reward-matrix th .reward-name { display: none; }
+  .reward-matrix th .reward-tile { width: 34px; height: 34px; border-radius: 7px; margin: 0 auto; }
 }
 
 /* Planning a phase: the buff forts on the left, the state's rally leads on the right. */
@@ -76,7 +213,15 @@
   display: flex; flex-direction: column; gap: 8px; padding: 10px;
   border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.05);
 }
-.plan-fort-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+/* A fort being planned takes the whole line, so its two forms sit side by side. */
+.plan-fort.editing { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+.plan-fort.editing > .plan-fort-head, .plan-fort.editing > .plan-fort-reward,
+.plan-fort.editing > .plan-fort-share, .plan-fort.editing > .plan-fort-leads { grid-column: 1 / -1; }
+@media (max-width: 699px) {
+  .plan-fort.editing { grid-template-columns: minmax(0, 1fr); }
+}
+.plan-fort-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.plan-fort-head strong { flex: 1; }
 .plan-fort-head strong { font-size: 13.5px; font-weight: 800; }
 .plan-fort-holder { font-size: 12px; font-weight: 800; color: var(--accent); }
 .plan-fort-reward { display: flex; }
@@ -99,7 +244,7 @@
 
 .lead-list { display: flex; flex-direction: column; }
 .lead-row {
-  display: grid; grid-template-columns: minmax(0, 1fr) 58px 58px; align-items: center;
+  display: grid; grid-template-columns: minmax(0, 1fr) 58px 58px auto; align-items: center;
   gap: 8px; padding: 8px 0; border-top: 1px solid var(--glass-border); font-size: 13.5px;
 }
 .lead-row:first-child { border-top: none; }

@@ -12,7 +12,7 @@ import englishText from '../../data/text/en.json' with { type: 'json' };
 import type { EventPhase } from '../calendar/bars.ts';
 import type { EventStep } from '../calendar/day-timeline.ts';
 import { todayNumber } from '../calendar/days.ts';
-import { fillGeneration, fillHeroNames } from './heroes.ts';
+import { fillGeneration, fillHeroNames, heroShardsOnDay } from './heroes.ts';
 
 export interface EventType {
   id: string;
@@ -411,7 +411,13 @@ export function rewardsOf(eventTypeId: string, list?: string, band?: string): Re
 
 // An item named after the generation carries today's generation, as in the old app.
 export function itemName(itemId: string): string {
-  return fillGeneration(text['item.' + itemId + '.name'] ?? itemId, todayNumber());
+  const written = text['item.' + itemId + '.name'];
+  if (written === undefined) {
+    // A hero's shards without a written name are named after the hero.
+    const shards = itemId.match(/^([a-z]+)-shards$/);
+    if (shards) return shards[1].charAt(0).toUpperCase() + shards[1].slice(1) + ' Shards';
+  }
+  return fillGeneration(written ?? itemId, todayNumber());
 }
 
 // A short word printed across the top of a reward tile, such as a hero generation.
@@ -422,8 +428,12 @@ export function itemLabel(itemId: string): string {
 const itemsById = new Map((itemRows as { id: string; imageFile?: string; kind?: string }[])
   .map(item => [item.id, item]));
 
+// A hero's shards without an item of their own use the hero's shard picture.
 export function itemImageFile(itemId: string): string {
-  return itemsById.get(itemId)?.imageFile ?? '';
+  const file = itemsById.get(itemId)?.imageFile;
+  if (file) return file;
+  const shards = itemId.match(/^([a-z]+)-shards$/);
+  return shards ? `heroes/${shards[1]}-shard.png` : '';
 }
 
 // The three fort rewards that are buffs. A buff fort is the only kind whose reward
@@ -451,6 +461,10 @@ const fortRewards: FortReward[] = (fortRewardRows as Record<string, unknown>[]).
   tile: String(row.tile ?? '')
 }));
 
-export function fortRewardOf(fort: string, phase: number): FortReward | undefined {
-  return fortRewards.find(row => row.fort === fort && row.phase === phase);
+// A fort's reward in a phase. Given the phase's battle day, a hero shard reward is the
+// one for the state's generation on that day.
+export function fortRewardOf(fort: string, phase: number, battleDay?: number): FortReward | undefined {
+  const written = fortRewards.find(row => row.fort === fort && row.phase === phase);
+  if (!written || battleDay === undefined) return written;
+  return { ...written, itemId: heroShardsOnDay(written.itemId, battleDay) };
 }

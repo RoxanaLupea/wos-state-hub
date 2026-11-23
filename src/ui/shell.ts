@@ -24,8 +24,8 @@ export const PAGES: Page[] = [
   { id: 'calendar', label: 'Calendar', pages: [] },
   {
     id: 'fortress', label: 'Fortress', eventTypeId: 'fortress-battles', pages: [
-      { id: 'board', label: 'Board' },
-      { id: 'planning', label: 'Planning' },
+      { id: 'phase', label: 'Phase' },
+      { id: 'season', label: 'Season' },
       { id: 'rewards', label: 'Rewards' }
     ]
   },

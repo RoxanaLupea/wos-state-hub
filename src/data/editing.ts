@@ -89,7 +89,9 @@ export async function saveDateChange(
 // Who holds a fort in a phase, and when its battle starts.
 export async function saveFortAssignment(
   place: { season: number; phase: number; fort: string },
-  holding: { allianceId: string; battleAt: string | null },
+  // creditedTo: who the reward counts for. Empty is the holder (an academy's main
+  // alliance), 'shared' is the whole state, or an alliance's id.
+  holding: { allianceId: string; creditedTo: string; battleAt: string | null },
   userId: string
 ): Promise<void> {
   const { error } = await database().from('fort_assignments').upsert({
@@ -97,6 +99,7 @@ export async function saveFortAssignment(
     phase: place.phase,
     fort: place.fort,
     alliance_id: holding.allianceId,
+    credited_to: holding.creditedTo || null,
     battle_time_utc: holding.battleAt,
     updated_by: userId,
     updated_at: new Date().toISOString()

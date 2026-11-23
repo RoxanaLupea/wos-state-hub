@@ -1,7 +1,7 @@
 // An event's picture, in the two shapes the app uses it: bare on a calendar bar, and
 // inside a badge in the panels and lists. Both come from here so an event looks the
 // same everywhere it appears.
-import { eventTypeById, eventTypeColor, partOfByEventTypeId } from '../data/catalog.ts';
+import { eventTypeById, eventTypeColor, itemImageFile, partOfByEventTypeId } from '../data/catalog.ts';
 import { escapeForPage } from './escape.ts';
 import { ICON_PATHS } from './icon-paths.ts';
 
@@ -35,6 +35,14 @@ export function imageUrl(fileName: string): string {
       fileName.split('/').map(encodeURIComponent).join('/') + '.png';
   }
   return imageBase + encodeURIComponent(fileName) + '.png';
+}
+
+// The picture of a reward item, from the file the catalog names for it. Hero shards
+// live with the heroes and some items share a picture, so the item's id alone is not
+// the file's name.
+export function itemImageUrl(itemId: string): string {
+  const file = itemImageFile(itemId);
+  return file ? imageUrl(file.replace(/\.png$/, '')) : '';
 }
 
 // The drawn shape an event falls back on, in whatever colour it is given.

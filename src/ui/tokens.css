@@ -93,6 +93,15 @@ body {
   --event-ink: #0E3157;
 }
 
+/* Fortress Battles, from its event page in the game: the violet of its sky for the
+   section's colour. The page keeps the site's own background. */
+.page[data-section="fortress"] {
+  --accent: #A39BEB; --accent-ink: #1C1838;
+  --event-mark: #9C94E6;
+  --event-mark-light: #C4BEF5;
+  --event-ink: #1C1838;
+}
+
 /* A button takes the colour of the text around it unless it asks for its own.
    Without this the browser paints its label black. */
 button { color: inherit; }
