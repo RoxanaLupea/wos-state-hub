@@ -54,17 +54,16 @@ begin
     values (player_number, (answer->'player'->>'kid')::integer, answer->'player'->'alliance'->>'abbr', answer, now(), null)
     on conflict (player_id) do update set state_number = coalesce(excluded.state_number, game_players.state_number),
       alliance_tag = excluded.alliance_tag, data = excluded.data, read_at = excluded.read_at,
-      -- A read that came back stale stays asked, so the next minute tries again, for up to
-      -- two hours; after that it waits for its twice-a-day turn.
+      -- A read that came back stale is asked again, so it is read again an hour later.
       refresh_asked_at = case when (answer->>'fresh')::boolean then null
-        when game_players.refresh_asked_at < now() - interval '2 hours' then null
-        else game_players.refresh_asked_at end;
+        else coalesce(game_players.refresh_asked_at, now()) end;
   insert into game_daily_copies (kind, item, day, data)
     values ('player', player_number::text, current_date, answer - 'heroes' - 'chief_gear')
     on conflict (kind, item, day) do update set data = excluded.data;
 end $$;
 
--- Reads one alliance's roster, keeps it, and adds members not yet known so the player job reads them.
+-- Reads one alliance's roster, keeps it, and adds members not yet known so the player job
+-- reads them. They count as last read over an hour ago, because they were never read alone.
 create or replace function admin_tools.refresh_alliance(state_to_read integer, alliance_tag text) returns integer
 language plpgsql set search_path = public, admin_tools as $$
 declare
@@ -75,7 +74,7 @@ begin
   insert into game_daily_copies (kind, item, day, data) values ('alliance', state_to_read || '/' || alliance_tag, current_date, answer)
     on conflict (kind, item, day) do update set data = excluded.data;
   insert into game_players (player_id, state_number, alliance_tag, data, read_at, refresh_asked_at)
-    select (member->>'chief_id')::bigint, state_to_read, alliance_tag, jsonb_build_object('player', member), now(), now()
+    select (member->>'chief_id')::bigint, state_to_read, alliance_tag, jsonb_build_object('player', member), now() - interval '61 minutes', now()
     from jsonb_array_elements(answer->'members') member
     where member->>'chief_id' is not null
     on conflict (player_id) do nothing;
@@ -113,9 +112,10 @@ begin
 end $$;
 
 -- The minute job: reads players one at a time, those asked for first, then any not read in
--- 12 hours. Players count when they are in the home state, in one of its stored rosters, or
--- added by someone on the site. Stops after 45 seconds, so runs never overlap, and sleeps a
--- second between players to stay under 60 requests a minute.
+-- 12 hours. No player is read again within an hour of its last read. Players count when
+-- they are in the home state, in one of its stored rosters, or added by someone on the site.
+-- Stops after 45 seconds and never runs twice at once, and sleeps a second between players
+-- to stay under 60 requests a minute.
 create or replace function admin_tools.refresh_players() returns integer
 language plpgsql set search_path = public, admin_tools as $$
 declare
@@ -126,7 +126,8 @@ begin
   if not pg_try_advisory_lock(hashtext('refresh_players')) then return 0; end if;
   for player_number in
       select player.player_id from game_players player
-      where (player.refresh_asked_at is not null or player.read_at < now() - interval '12 hours')
+      where player.read_at < now() - interval '1 hour'
+        and (player.refresh_asked_at is not null or player.read_at < now() - interval '12 hours')
         and (player.state_number = admin_tools.home_state()
           or player.player_id::text in (select in_game_id from game_accounts where in_game_id is not null)
           or player.player_id::text in (select member->>'chief_id' from game_alliances, jsonb_array_elements(data->'members') member))
