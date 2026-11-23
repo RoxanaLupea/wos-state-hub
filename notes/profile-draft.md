@@ -1,6 +1,8 @@
 # Player profile draft (branch profile-draft)
 
-This branch holds everything done after commit c146c03 on main. None of it is approved as a whole. Roxa is very unhappy with the profile design on this branch: the options were built literally from her words instead of designed, faults were left for her to find, and she could not push any of it.
+Read notes/handoff-23-nov.md first: it says how to restore this branch and where the work stands.
+
+This branch holds everything done after commit c146c03 on main. None of it is approved as a whole. Roxanne is very unhappy with the profile design on this branch: the options were built literally from her words instead of designed, faults were left for her to find, and she could not push any of it.
 
 ## Start here
 
@@ -9,7 +11,7 @@ This branch holds everything done after commit c146c03 on main. None of it is ap
 3. To see the profile: follow tools/render/README.md, including `add-test-player.py`. The database query does not fetch accounts, so the profile needs the made-up test player. Then use `shoot-player.py` for screenshots.
 4. Before showing anything, check it against the faults listed below.
 
-## Asked for by Roxa (fine to keep)
+## Asked for by Roxanne (fine to keep)
 
 - Images come only from wos-state-hub public/images. The database setting imageBaseUrl is already fixed live; seed.sql, seed/settings.json and design/elements.html are fixed on this branch.
 - Admin is in the menu under the name, and the gear is gone from the top bar.
@@ -71,7 +73,7 @@ This branch holds everything done after commit c146c03 on main. None of it is ap
 - A new account opens all three troops at once and looks cramped.
 - notes/design-decisions.md does not describe this draft yet.
 
-## How Roxa wants design work done
+## How Roxanne wants design work done
 
 - Design first, then build: bring real designed options, not a literal reading of her words.
 - No big boxes around things, and no control dumped in its own row in the middle of the page.
