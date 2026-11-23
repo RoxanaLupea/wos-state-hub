@@ -435,6 +435,9 @@ there before discussing it again.
 
 ## Open
 
+- State page leaderboards: which of the 26 lead. The owner named The Labyrinth (total),
+  Total Pet Power, Total Expert Power and Exploration Stage as needed; the rest is to be
+  worked out later.
 - Storing the Whiteout Stats key as a project secret for the site, and the server function
   that calls the API with it: waits for the owner's yes.
 - Roles. Decided: owner; admins, who can edit anything; alliance manager, one role per
