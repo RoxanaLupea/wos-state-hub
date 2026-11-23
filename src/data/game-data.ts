@@ -1,0 +1,47 @@
+// What the game says about a player's accounts, read by the database from the Whiteout
+// Stats API (supabase/game-data.sql and game-refresh.sql). The site only reads it, looks
+// up a typed in-game ID, and asks for a fresh read.
+import { database } from './database.ts';
+import type { Row } from './records.ts';
+
+// The rows of the given in-game IDs, as the database keeps them.
+export async function readGamePlayers(ids: string[]): Promise<Row[]> {
+  const numbers = ids.filter(id => /^\d+$/.test(id)).map(Number);
+  if (numbers.length === 0) return [];
+  const { data, error } = await database().from('game_players')
+    .select('player_id, state_number, alliance_tag, data, read_at, refresh_asked_at').in('player_id', numbers);
+  if (error) throw new Error(error.message);
+  return (data ?? []) as Row[];
+}
+
+// What a typed ID is in the game, so the player sees it is the right account before
+// adding it. Null when the game has no such player.
+export interface LookedUp { name: string; avatar: string | null; power: number | null; state: number | null; alliance: string | null; furnace: number | null }
+
+export async function lookUpGameAccount(id: string): Promise<LookedUp | null> {
+  const { data, error } = await database().rpc('look_up_game_account', { player_number: Number(id) });
+  if (error) throw new Error(error.message);
+  return data && (data as LookedUp).name ? data as LookedUp : null;
+}
+
+// Asks for a fresh read of one account. The database allows it once the last read is
+// an hour old; within the hour it only answers when the last read was.
+export async function askGameRefresh(id: string): Promise<void> {
+  const { error } = await database().rpc('ask_game_refresh', { player_number: Number(id) });
+  if (error) throw new Error(error.message);
+}
+
+// The skill levels of Exalted troops, kept per in-game ID (supabase/exalted-skill-levels.sql).
+export async function readSkillLevels(ids: string[]): Promise<Row[]> {
+  const numbers = ids.filter(id => /^\d+$/.test(id)).map(Number);
+  if (numbers.length === 0) return [];
+  const { data, error } = await database().from('exalted_skill_levels').select('*').in('player_id', numbers);
+  if (error) throw new Error(error.message);
+  return (data ?? []) as Row[];
+}
+
+// Sets one troop type's level: 0 for None, 1 to 3, or null to clear it.
+export async function setSkillLevel(id: string, troop: string, level: number | null): Promise<void> {
+  const { error } = await database().rpc('set_skill_level', { player_number: Number(id), troop, level });
+  if (error) throw new Error(error.message);
+}

@@ -201,7 +201,7 @@ begin
       on conflict (player_id) do update set data = excluded.data, refresh_asked_at = now();
     stored := answer->'player';
   end if;
-  return jsonb_build_object('name', stored->>'nick_name', 'avatar', stored->>'avatar_url',
+  return jsonb_build_object('name', stored->>'nick_name', 'avatar', stored->>'avatar_url', 'power', (stored->>'power')::bigint,
     'state', (stored->>'kid')::integer, 'alliance', stored->'alliance'->>'abbr', 'furnace', (stored->>'furnace_level')::integer);
 end $$;
 

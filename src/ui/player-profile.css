@@ -1,8 +1,5 @@
-/* The player's own details, in the site's glass look with the ideas of the old
-   registration forms: every choice a tile picked in place, the picked FC level in its
-   badge's colour and filled more as the troop goes from base to Helios to Exalted,
-   Helios and Exalted as the troop's portrait from the game, and the alliance tile in
-   the alliance's colour. */
+/* The player's own page: each account as the game shows its chief, its troops as the
+   game has them, and the few values typed here, in the site's own glass fields. */
 
 .player-page { width: 100%; max-width: 560px; margin: 0 auto; padding: 0 16px 24px; gap: 0; box-sizing: border-box; }
 @media (min-width: 900px) { .player-page { max-width: 1200px; padding: 0 28px 28px; } }
@@ -23,200 +20,153 @@
 .player-page .pencil-button.on { color: var(--accent); background: none; border: none; }
 .player-page .troop-block .pencil-button { top: -2px; right: 8px; }
 
-/* The player's details, drawn like the troops: one row of columns, each with its name
-   on top and its value under it, a thin line between them. Every column's value sits in
-   the same room, so the row reads straight across. */
-.info-columns { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: 18px; }
-.info-col { display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 0; padding: 0 10px; }
-.info-col + .info-col { border-left: 1px solid var(--glass-border); }
-.info-body { width: 100%; min-height: 112px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
-.info-logo { height: 64px; width: auto; }
-.info-tag { font-family: var(--tag-font); font-size: 15px; font-weight: 800; letter-spacing: 0.08em; color: var(--alliance-colour, var(--text-muted)); }
-.info-name { max-width: 100%; font-size: 24px; font-weight: 800; line-height: 1.15; text-align: center; overflow-wrap: anywhere; }
-.info-id { font-size: 15px; font-weight: 600; color: var(--text-muted); font-variant-numeric: tabular-nums; }
-.info-value { font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; }
-.info-value.empty { color: var(--text-faint); }
-@media (min-width: 900px) {
-  .info-col { padding: 0 22px; }
-  .info-col:first-child { padding-left: 0; }
-  .info-col:last-child { padding-right: 0; }
-}
-/* On a phone the four columns are two by two, the line only between the two of a row. */
+/* The chief, as the game shows them: the picture, the name large with the id under it
+   and the alliance's logo and tag; then power and foundry power side by side, a thin
+   line between them, like the troops. */
+/* On a computer the chief and the two powers are one group in the middle, like the
+   titles and the troops, a line between the chief and the powers. */
+.chief { display: flex; justify-content: center; align-items: center; }
+.chief-who { display: flex; align-items: center; gap: 20px; min-width: 0; max-width: 520px; padding-right: 36px; }
+.chief-avatar { flex: none; width: 96px; height: 96px; border-radius: 22px; object-fit: cover;
+  box-shadow: 0 0 0 1px var(--glass-border), 0 8px 22px rgba(0, 0, 0, 0.45); }
+.chief-avatar.no-picture { display: flex; align-items: center; justify-content: center; background: var(--glass-strong);
+  font-size: 40px; font-weight: 800; color: var(--text-muted); }
+.chief-text { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-width: 0; }
+.chief-name { max-width: 100%; font-size: 30px; font-weight: 800; line-height: 1.12; overflow-wrap: anywhere; }
+.chief-id { font-size: 15px; font-weight: 600; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.chief-alliance { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.chief-logo { height: 34px; width: auto; }
+.chief-tag { font-family: var(--tag-font); font-size: 16px; font-weight: 800; letter-spacing: 0.08em; color: var(--alliance-colour, var(--text-muted)); }
+.chief-state { font-size: 13px; font-weight: 700; color: var(--text-muted); }
+.chief-stats { display: flex; }
+.chief-stat { display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 150px; padding: 0 28px; }
+.chief-stat { border-left: 1px solid var(--glass-border); }
+.chief-value { min-height: 44px; display: flex; align-items: center; font-size: 30px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.chief-value.empty { color: var(--text-faint); }
+
+/* Under the chief: when the game was last read, and the refresh once it is allowed. */
+.chief-read { display: flex; justify-content: center; align-items: center; gap: 12px; min-height: 28px;
+  font-size: 13px; font-weight: 600; color: var(--text-faint); }
+.chief-read svg { flex: none; }
+.chief-read.waiting { gap: 6px; color: var(--text-muted); }
+.chief-read.waiting svg { color: var(--accent); animation: chief-reading 1.4s linear infinite; }
+@keyframes chief-reading { to { transform: rotate(360deg); } }
+.chief-refresh { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 7px;
+  border: 1px solid var(--glass-border); background: none; color: var(--text-muted); font: inherit; font-size: 13px; font-weight: 800; cursor: pointer; }
+.chief-refresh svg { color: var(--accent); }
+.chief-refresh:hover { color: var(--text); border-color: color-mix(in srgb, var(--text) 35%, transparent); }
+.chief-refresh:disabled { opacity: 0.5; cursor: default; }
+
 @media (max-width: 899px) {
-  .info-columns { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .info-col { padding: 0 6px; }
-  .info-col:nth-child(3) { border-left: none; }
-  .info-body { min-height: 96px; }
-  .info-name { font-size: 21px; }
-  .info-value { font-size: 24px; }
+  .chief { flex-direction: column; align-items: stretch; gap: 18px; }
+  .chief-who { gap: 16px; max-width: none; padding-right: 0; }
+  .chief-stat:first-child { border-left: none; }
+  .chief-avatar { width: 76px; height: 76px; border-radius: 18px; }
+  .chief-avatar.no-picture { font-size: 32px; }
+  .chief-name { font-size: 23px; }
+  .chief-stats { justify-content: center; }
+  .chief-stat { flex: 1 1 0; min-width: 0; padding: 0 10px; }
+    .chief-value { font-size: 25px; }
+  .chief-read { justify-content: center; }
 }
 
-/* Open for editing: the same columns, each value in the site's own glass field (the
-   height of a control, its corner a quarter of that), the fields of every column on one
-   line from the top, the id's field under the name's. */
-.info-columns.editing .info-body { justify-content: flex-start; gap: 8px; }
+/* The site's own glass field (the height of a control, its corner a quarter of that),
+   for foundry power in its place and the id of an account being added. */
 .info-field { box-sizing: border-box; width: 100%; max-width: 220px; height: 44px; padding: 0 12px; border-radius: 11px;
   border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.06); color: var(--text);
   font: inherit; font-size: 18px; font-weight: 800; text-align: center; font-variant-numeric: tabular-nums; outline: none; }
 .info-field:hover { border-color: color-mix(in srgb, var(--text) 35%, transparent); }
-.info-field:focus, .power-field:focus-within { border-color: var(--accent); background: rgba(255, 255, 255, 0.09); }
-.info-field::placeholder, .power-field input::placeholder { color: var(--text-faint); font-weight: 600; }
-.info-field.has-problem, .power-field:has(.has-problem) { border-color: var(--danger); }
-.info-field.id-field { font-size: 15px; font-weight: 600; }
+.info-field:focus { border-color: var(--accent); background: rgba(255, 255, 255, 0.09); }
+.info-field::placeholder { color: var(--text-faint); font-weight: 600; }
+.info-field.has-problem { border-color: var(--danger); }
+.foundry-field { max-width: 150px; font-size: 22px; }
 .player-note { font-size: 12px; line-height: 1.35; color: var(--text-faint); text-align: center; }
 .player-note.problem { color: var(--danger); }
 .player-note:empty { display: none; }
 
-/* Power: the number, then M | B inside the same field at its end, a small switch nested
-   in the field, the picked one lit. */
-.power-field { display: flex; align-items: center; gap: 6px; padding: 0 4px 0 10px; }
-.power-field input { flex: 1; min-width: 0; width: 100%; padding: 0; border: none; background: none; color: var(--text);
-  font: inherit; font-size: 18px; font-weight: 800; text-align: center; font-variant-numeric: tabular-nums; outline: none; }
-.unit-picks { flex: none; display: flex; padding: 2px; gap: 2px; border-radius: 8px; background: rgba(255, 255, 255, 0.06); }
-.unit-pick { width: 28px; height: 28px; padding: 0; border: none; border-radius: 7px; background: none;
-  color: var(--text-faint); font: inherit; font-size: 13px; font-weight: 800; line-height: 1; cursor: pointer; }
-.unit-pick:hover { color: var(--text); }
-.unit-pick.selected { color: var(--text); background: var(--glass-strong); }
-
-/* What the account is, above the name while open when it can change: Main | Alt | Farm as
-   one switch, the picked one lit. Every other column keeps the same room above its field. */
-.kind-slot { height: 32px; display: flex; align-items: center; justify-content: center; }
+/* Open: what the account is (Main | Alt | Farm, the picked one lit), then Cancel and Save,
+   then Remove apart under them. */
+.chief-edit { display: flex; flex-direction: column; align-items: center; gap: 14px; }
 .kind-words { display: flex; padding: 2px; gap: 2px; border-radius: 8px; background: rgba(255, 255, 255, 0.06); }
-.kind-word { height: 28px; padding: 0 10px; border: none; border-radius: 7px; background: none; cursor: pointer;
+.kind-word { height: 30px; padding: 0 14px; border: none; border-radius: 7px; background: none; cursor: pointer;
   font: inherit; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); }
 .kind-word:hover { color: var(--text); }
 .kind-word.selected { color: var(--text); background: var(--glass-strong); }
 
-/* The alliance while open: a glass field like the others, the logo small, the tag in the
-   alliance's colour and an arrow. The list opens under it, over the page. */
-.alliance-picker { position: relative; width: 100%; max-width: 220px; }
-.alliance-picker > summary { list-style: none; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; }
-.alliance-picker > summary::-webkit-details-marker { display: none; }
-.picker-logo { height: 30px; width: auto; }
-.picker-tag { font-family: var(--tag-font); font-size: 15px; font-weight: 800; letter-spacing: 0.08em; color: var(--alliance-colour, var(--text-muted)); }
-.picker-chevron { flex: none; color: var(--text-muted); }
-.alliance-picker[open] > summary { border-color: var(--accent); }
-.alliance-picker[open] .picker-chevron { transform: rotate(180deg); color: var(--accent); }
-.alliance-list { position: absolute; z-index: 30; top: calc(100% + 6px); left: 50%; transform: translateX(-50%); width: 260px; max-height: 340px; overflow-y: auto;
-  padding: 6px; display: flex; flex-direction: column; gap: 2px; border: 1px solid var(--glass-border); border-radius: 14px;
-  background: linear-gradient(var(--glass-strong), var(--glass-strong)), var(--page-color);
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.45); }
-.alliance-choice { --alliance-colour: var(--accent); display: flex; align-items: center; gap: 10px; width: 100%; min-height: 40px; padding: 4px 10px;
-  border: none; border-radius: 10px; background: none; color: var(--text); font: inherit; text-align: left; cursor: pointer; }
-.alliance-choice:hover { background: rgba(255, 255, 255, 0.08); }
-.alliance-choice.selected { background: color-mix(in srgb, var(--alliance-colour) 20%, transparent); }
-.alliance-choice-logo { flex: none; width: 30px; display: flex; justify-content: center; }
-.alliance-choice-img { height: 32px; width: auto; }
-.alliance-choice-tag { flex: none; min-width: 40px; font-family: var(--tag-font); font-size: 14px; font-weight: 800; color: var(--alliance-colour); }
-.alliance-choice-name { min-width: 0; font-size: 13px; font-weight: 600; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.alliance-choice.academy { min-height: 32px; padding-left: 26px; }
-.alliance-choice.academy .alliance-choice-tag { font-size: 12px; }
-
-/* Troop tiers: the three troop types side by side with a line between them. Each shows
-   what it is now; its pencil opens its choices in place. On a phone a troop open for
-   editing takes the whole width, under the other two. */
+/* Troop tiers: the three troop types side by side with a line between them, as the game
+   has them. */
 .troop-columns { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 0; }
 .troop-block { display: flex; flex-direction: column; gap: 10px; min-width: 0; padding: 0 10px; }
 .troop-block + .troop-block { border-left: 1px solid var(--glass-border); }
 .troop-name { margin: 0; font-size: 15px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; text-align: center; }
 @media (max-width: 899px) {
-  /* Three columns are narrow on a phone: smaller names and pencils, the name kept
-     clear of the pencil. */
+  /* Three columns are narrow on a phone: smaller names and pencils, the name kept clear
+     of the pencil. */
   .troop-block { padding: 0 4px; }
   .troop-name { font-size: 12px; letter-spacing: 0.02em; }
   .troop-block .player-title-row { padding-right: 18px; }
   .player-page .troop-block .pencil-button { top: -3px; right: 0; }
   .player-page .troop-block .pencil-button svg { width: 14px; height: 14px; }
-  .troop-block.editing { grid-column: 1 / -1; order: 1; padding: 0; border-left: none; }
-  /* While one troop is open the other two share the line above it. */
-  .troop-columns:has(.editing) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .troop-block.editing .troop-name { font-size: 15px; letter-spacing: 0.08em; }
-  .troop-block.editing .player-title-row { padding-right: 0; }
-  .player-page .troop-block.editing .pencil-button svg { width: 18px; height: 18px; }
-  .troop-block:first-child, .troop-block.editing + .troop-block { border-left: none; }
+  .chief-stat .troop-name { font-size: 12px; }
 }
 @media (min-width: 900px) {
   .troop-block { padding: 0 22px; }
   .troop-block:first-child { padding-left: 0; }
   .troop-block:last-child { padding-right: 0; }
-  /* The troop open for editing widens to fit its choices, and narrows back once it is
-     saved or closed. */
-  .troop-columns:has(> .editing:nth-child(1)) { grid-template-columns: 1.6fr 1fr 1fr; }
-  .troop-columns:has(> .editing:nth-child(2)) { grid-template-columns: 1fr 1.6fr 1fr; }
-  .troop-columns:has(> .editing:nth-child(3)) { grid-template-columns: 1fr 1fr 1.6fr; }
 }
 
-/* A troop type as it is: its tier portrait large and centred, the FC badge on its
-   top left corner as in the game's camp, and the tier and skill level under it. */
+/* A troop type as it is: its tier portrait large and centred, the FC badge on its top
+   left corner as in the game's camp, and the tier and skill level under it. */
 .troop-summary { --tier: var(--accent); display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .troop-summary-pictures { position: relative; }
 .troop-summary-portrait { display: block; height: clamp(84px, 24vw, 120px); width: auto; }
-/* On a computer the portrait is about as tall as the alliance logo, not bigger than everything else. */
-@media (min-width: 900px) { .troop-summary-portrait { height: 88px; } }
+@media (min-width: 900px) { .troop-summary-portrait { height: 96px; } }
 .troop-summary-badge { position: absolute; top: -4%; left: -22%; height: 42%; width: auto;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.55)); }
 .troop-summary-text { font-size: clamp(12px, 3.3vw, 15px); font-weight: 800; text-align: center; color: var(--tier); }
-.troop-summary.empty { color: var(--text-faint); font-size: 14px; font-weight: 600; padding: 12px 0; }
-
-.fc-group { display: flex; gap: 6px; min-width: 0; }
-.tier-controls { display: flex; flex-direction: column; gap: 10px; }
-.gen-row { display: flex; gap: 6px; }
-
-/* The tile colour: the picked level's badge colour (the accent before a level is picked). */
-.fc-square, .gen-row { --tier: var(--accent); }
+.troop-summary.empty, .troop-summary.low .troop-summary-text { color: var(--text-muted); font-size: 15px; font-weight: 700; }
+.troop-summary.empty { padding: 12px 0; }
 .troop-summary.fc1, .troop-summary.fc2, .troop-summary.fc3 { --tier: var(--fc-red); }
 .troop-summary.fc4, .troop-summary.fc5 { --tier: var(--fc-blue); }
 .troop-summary.fc6, .troop-summary.fc7, .troop-summary.fc8 { --tier: var(--fc-violet); }
 .troop-summary.fc9, .troop-summary.fc10 { --tier: var(--fc-gold); }
 .troop-summary.exalted { --tier: var(--exalted); }
-.fc1, .fc2, .fc3 { --tier: var(--fc-red); }
-.fc4, .fc5 { --tier: var(--fc-blue); }
-.fc6, .fc7, .fc8 { --tier: var(--fc-violet); }
-.fc9, .fc10 { --tier: var(--fc-gold); }
-.gen-row.exalted { --tier: var(--exalted); }
 
-.fc-square, .gen-check {
-  min-width: 0; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--glass);
-  color: var(--text); font: inherit; font-weight: 800; cursor: pointer; }
-.fc-square { flex: 1 1 0; min-height: 60px; padding: 6px 1px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
-  font-size: clamp(12px, 3.3vw, 15px); white-space: nowrap; }
-.fc-square img { width: clamp(22px, 6.5vw, 28px); height: clamp(22px, 6.5vw, 28px); object-fit: contain; }
-.fc-square:hover { border-color: color-mix(in srgb, var(--tier) 70%, transparent); }
-.fc-square.current { border-color: var(--tier); box-shadow: 0 0 0 1px var(--tier), 0 0 16px color-mix(in srgb, var(--tier) 30%, transparent);
-  background: color-mix(in srgb, var(--tier) 16%, transparent); }
-.fc-square.current.helios { background: color-mix(in srgb, var(--tier) 32%, transparent); }
-.fc-square.current.exalted { --tier: var(--exalted); background: color-mix(in srgb, var(--exalted) 32%, transparent); }
+/* An Exalted troop whose skill level was never set asks for it, under its tier. */
+.skill-ask { height: 30px; padding: 0 12px; border-radius: 8px; border: 1px solid color-mix(in srgb, var(--accent) 60%, transparent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent); font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
+.skill-ask:hover { background: color-mix(in srgb, var(--accent) 20%, transparent); }
+/* Before SvS and Tyrant, the reminder over the troops. */
+.skill-note { margin: -4px auto 4px; max-width: 560px; text-align: center; font-size: 14px; font-weight: 600; line-height: 1.45; color: var(--text); }
 
-.gen-check { flex: 1 1 0; min-height: 84px; padding: 6px 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
-  font-size: 13px; font-weight: 700; white-space: nowrap; }
-.gen-check img { height: 52px; width: auto; flex: none; }
-.gen-check:hover:not(:disabled) { border-color: color-mix(in srgb, var(--tier) 60%, transparent); }
-.gen-check.checked { border-color: var(--tier); background: color-mix(in srgb, var(--tier) 22%, transparent);
-  box-shadow: 0 0 0 1px var(--tier), 0 0 14px color-mix(in srgb, var(--tier) 30%, transparent); }
-
-.gen-check:disabled { opacity: 0.35; cursor: default; }
-
-/* The skill level: one small toggle under the tiers, shown only on Exalted. None or one
-   level is lit. */
+/* The skill level: one small toggle under the troop, None or one level lit. */
 .lvl-toggle { align-self: center; display: flex; padding: 3px; gap: 2px; border-radius: 999px;
   border: 1px solid var(--glass-border); background: var(--glass); }
-.lvl-check { min-width: 58px; height: 28px; padding: 0 10px; border: none; border-radius: 999px; background: none;
-  color: var(--text-muted); font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
+.lvl-check { min-width: 52px; height: 28px; padding: 0 8px; border: none; border-radius: 999px; background: none;
+  color: var(--text-muted); font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; white-space: nowrap; }
 .lvl-check:hover { color: var(--text); }
 .lvl-check.selected { color: var(--text); background: color-mix(in srgb, var(--exalted) 55%, transparent);
   box-shadow: 0 0 10px color-mix(in srgb, var(--exalted) 35%, transparent); }
 .lvl-check.none.selected { background: color-mix(in srgb, var(--text) 14%, transparent); box-shadow: none; }
+@media (max-width: 899px) {
+  /* A troop open for its skill level takes the whole width, under the other two. */
+  .troop-columns:has(.editing) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .troop-block.editing { grid-column: 1 / -1; order: 1; padding: 0; border-left: none; }
+  .troop-block:first-child, .troop-block.editing + .troop-block { border-left: none; }
+  .troop-block.editing .troop-name { font-size: 15px; letter-spacing: 0.08em; }
+  .troop-block.editing .player-title-row { padding-right: 0; }
+}
 
-/* Save under a part open for editing, lit only while it has changes. */
-/* Cancel and Save are one pair: same size. Until something changes, Save looks like Cancel with faint text, then fills with the accent. */
-.player-save-row { display: flex; justify-content: center; gap: 10px; margin-top: 4px; }
+/* Cancel and Save are one pair: same size. Until something changes, Save looks like
+   Cancel with faint text, then fills with the accent. */
+.player-save-row { display: flex; justify-content: center; gap: 10px; }
 .player-save-row button { min-width: 110px; }
+.player-save:disabled { background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-faint); cursor: default; }
 /* Removing an alt or a farm: a quiet line of its own under Cancel and Save, never one of
    the pair. It still asks before anything is removed. */
-.player-remove { align-self: center; margin-top: -4px; padding: 4px 8px; border: none; background: none; cursor: pointer;
+.player-remove { margin-top: -6px; padding: 4px 8px; border: none; background: none; cursor: pointer;
   font: inherit; font-size: 13px; font-weight: 700; color: color-mix(in srgb, var(--danger) 80%, transparent); }
 .player-remove:hover { color: var(--danger); text-decoration: underline; }
-.player-save:disabled { background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-faint); cursor: default; }
 
 /* The question asked when leaving with changes not saved. */
 .leave-prompt { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center;
@@ -227,17 +177,14 @@
 .leave-prompt-actions button { flex: 1; min-height: 44px; }
 
 /* Your accounts side by side like the troops, a line between them: the alliance's logo,
-   what the account is, its name, id and power. The one the player is on, or the farm
-   open under the row, is lit in its alliance's colour. The last tile adds one more. */
+   what the account is, its name, id and power. The one open under the row has its name
+   in the accent colour with a line right under it. The last tile adds one more. */
 .account-row { display: flex; flex-wrap: wrap; justify-content: center; row-gap: 14px; }
 .account-tile { --alliance-colour: var(--accent); position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px;
   width: 150px; min-width: 0; padding: 8px 12px 10px; border: none; border-radius: 14px; background: none; color: var(--text);
   font: inherit; cursor: pointer; }
 .account-tile + .account-tile::before { content: ''; position: absolute; left: 0; top: 10px; bottom: 10px; border-left: 1px solid var(--glass-border); }
-/* Pointed at, its name brightens; no box is drawn around it. */
 .account-tile:hover .account-tile-name { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
-/* The open one: its name in the accent colour with a line right under it, like the open
-   section in the top bar. */
 .account-tile.open .account-tile-name, .account-tile.open .account-tile-plus { color: var(--accent); }
 .account-tile.open .account-tile-name { box-shadow: inset 0 -2px 0 var(--accent); padding-bottom: 2px; text-decoration: none; }
 .account-tile-logo { height: 48px; width: auto; margin-bottom: 2px; }
@@ -250,15 +197,20 @@
 .account-tile-power { font-size: 14px; font-weight: 800; color: var(--text-muted); }
 .account-add .account-tile-name { color: var(--text-muted); }
 .account-add:hover .account-tile-name, .account-add:hover .account-tile-plus { color: var(--text); }
-.account-form { position: relative; display: flex; flex-direction: column; gap: 16px; }
-.player-page .account-form.showing > .pencil-button { top: 0; }
+.account-form { position: relative; display: flex; flex-direction: column; gap: 18px; padding-top: 8px; }
+.player-page .account-form > .pencil-button { top: 0; }
 @media (max-width: 899px) {
   .account-tile { width: 33.33%; padding: 8px 6px 10px; }
   .account-tile-logo, .account-tile-tag, .account-tile-plus { height: 40px; }
-  /* Three to a line on a phone: the first of each line has no line before it. */
   .account-tile:nth-child(3n+1)::before { display: none; }
 }
 
+/* Adding an account: the id in the site's glass field, centred, and once it is a whole
+   id, the chief it belongs to under it. */
+.add-id { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.id-entry { max-width: 240px; letter-spacing: 0.04em; }
+.add-answer { margin: 0; text-align: center; font-size: 14px; font-weight: 600; color: var(--text-muted); }
+.add-answer.problem { color: var(--danger); }
 
 /* The title's left corner, opposite the pencil: on a computer, the One | Both switch. */
 .title-left-corner { position: absolute; left: 0; top: 14px; display: flex; align-items: center; gap: 14px; }
@@ -275,49 +227,45 @@
 .swap { display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 10px; border-radius: 7px; border: 1px solid var(--glass-border);
   background: none; color: var(--text-muted); font: inherit; font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; }
 .swap:hover { color: var(--text); border-color: color-mix(in srgb, var(--text) 35%, transparent); }
-.swap svg { color: var(--accent); }
+.swap svg { flex: none; color: var(--accent); }
+.swap span { max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* With more than one alt, each swap carries the alt's name, as written in the game. */
+.swap.named span { text-transform: none; letter-spacing: 0; }
+.swap-to-menu { display: none; }
+@media (max-width: 899px) {
+  /* On a phone the corner holds only the swap, so it stays clear of the title. */
+  .title-left-corner .account-now { display: none; }
+  .account-switch.several .swap { display: none; }
+  .account-switch.several .swap-to-menu { display: inline-flex; }
+  .skill-ask { height: 28px; padding: 0 8px; font-size: 11px; white-space: nowrap; max-width: 100%; }
+}
 
 /* Side by side: one title per section, the section split between the accounts with a
-   line between them; each half has its own pencils. */
+   line between them; each half has its own pencils, and its chief stacked as on a phone. */
 .split-row { display: grid; grid-template-columns: repeat(var(--account-count), minmax(0, 1fr)); }
 .split-half { position: relative; min-width: 0; padding: 0 36px; }
 .split-half:first-child { padding-left: 0; }
 .split-half:last-child { padding-right: 0; }
-/* The line between the accounts is stronger than the lines between the troops, so each
-   account's three troops read as one group. */
 .split-half + .split-half { border-left: 1px solid color-mix(in srgb, var(--text) 32%, transparent); }
 .player-page .split-half > .pencil-button { top: 0; }
-/* Each half: what the account is in its top left corner, its pencil in the top right. */
 .half-corner { min-height: 28px; display: flex; align-items: center; margin-bottom: 8px; }
-.split-half .info-col { padding: 0 10px; }
-.split-half .info-col:first-child { padding-left: 0; }
-.split-half .info-col:last-child { padding-right: 0; }
-.split-half .info-name { font-size: 20px; }
-.split-half .info-value { font-size: 22px; }
-
-/* A troop open for editing takes its half's whole width, under the other two. */
+.split-half .chief { flex-direction: column; align-items: stretch; gap: 18px; }
+.split-half .chief-who { max-width: none; padding-right: 0; }
+.split-half .chief-stat:first-child { border-left: none; }
+.split-half .chief-stats { justify-content: center; }
+.split-half .chief-stat { flex: 1 1 0; min-width: 0; padding: 0 10px; }
+.split-half .chief-name { font-size: 24px; }
+.split-half .chief-value { font-size: 25px; }
+.split-half .chief-read { justify-content: center; margin-top: 12px; }
 .split-half .troop-columns:has(.editing) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .split-half .troop-block.editing { grid-column: 1 / -1; order: 1; padding: 0; border-left: none; }
 .split-half .troop-block:first-child, .split-half .troop-block.editing + .troop-block { padding-left: 0; border-left: none; }
-
-
-/* Side by side, the open half's buttons keep clear of the fields. */
-.split-half .player-save-row { margin-top: 14px; }
-
-@media (max-width: 899px) {
-  /* On a phone the corner holds only the swap, so it stays clear of the title. */
-  .title-left-corner .account-now { display: none; }
-  /* The space for Main | Alt | Farm is needed only beside the name, on the first line. */
-  .info-columns.editing .info-col:nth-child(n+3) .kind-slot { display: none; }
-  .info-columns.editing .info-col:nth-child(n+3) .info-body { min-height: 0; }
-}
-
-/* Side by side, each half has the room of a phone: its columns two by two. */
-.split-half .info-columns { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.split-half .info-col:nth-child(3) { border-left: none; padding-left: 0; }
-.split-half .info-col:nth-child(2) { padding-right: 0; }
-.split-half .info-columns.editing .info-col:nth-child(n+3) .kind-slot { display: none; }
-.split-half .info-columns.editing .info-col:nth-child(n+3) .info-body { min-height: 0; }
-.split-half .info-body { min-height: 96px; }
-/* Side by side the troop columns are narrow: each troop's name keeps clear of its pencil. */
-.split-half .troop-block .player-title-row { padding-right: 24px; }
+.split-half .troop-block { padding: 0 6px; }
+.split-half .troop-block .player-title-row { padding-right: 18px; }
+.split-half .troop-name, .split-half .chief-stat .troop-name { font-size: 12px; letter-spacing: 0.02em; white-space: nowrap; }
+.player-page .split-half .troop-block .pencil-button { top: -3px; right: 0; }
+.player-page .split-half .troop-block .pencil-button svg { width: 14px; height: 14px; }
+.split-half .troop-summary-portrait { height: 84px; }
+.split-half .troop-summary-text { font-size: 12px; white-space: nowrap; }
+.split-half .skill-ask { height: 28px; padding: 0 6px; font-size: 10.5px; white-space: nowrap; max-width: 100%; }
+.split-half .chief-who { align-items: flex-start; }

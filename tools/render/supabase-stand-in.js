@@ -107,6 +107,30 @@ const auth = {
   }
 };
 
+// The database functions the site calls, answered from the same copy of the tables.
+async function rpc(name, args) {
+  const players = tables.game_players ?? [];
+  if (name === 'look_up_game_account') {
+    const row = players.find(one => one.player_id === args.player_number);
+    const player = row?.data?.player;
+    return { data: player ? { name: player.nick_name, avatar: player.avatar_url ?? null, power: player.power ?? null, state: player.kid ?? null,
+      alliance: player.alliance?.abbr ?? null, furnace: player.furnace_level ?? null } : null, error: null };
+  }
+  if (name === 'ask_game_refresh') {
+    const row = players.find(one => one.player_id === args.player_number);
+    if (row) row.refresh_asked_at = new Date().toISOString();
+    return { data: row?.read_at ?? null, error: null };
+  }
+  if (name === 'set_skill_level') {
+    tables.exalted_skill_levels = tables.exalted_skill_levels ?? [];
+    let row = tables.exalted_skill_levels.find(one => one.player_id === args.player_number);
+    if (!row) { row = { player_id: args.player_number }; tables.exalted_skill_levels.push(row); }
+    row[args.troop] = args.level;
+    return { data: null, error: null };
+  }
+  return { data: null, error: { message: 'The stand-in has no function ' + name } };
+}
+
 export function createClient() {
-  return { from: query, auth };
+  return { from: query, auth, rpc };
 }

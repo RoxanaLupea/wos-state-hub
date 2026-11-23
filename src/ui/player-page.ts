@@ -10,13 +10,24 @@ import { escapeForPage } from './escape.ts';
 import type { Alliance } from '../data/alliances.ts';
 import type { SignedInPerson } from '../data/auth.ts';
 import type { Row } from '../data/records.ts';
-import { accountViewToggle, accountsSection, partPencil, playerProfile, profileParts, sectionTitle } from './player-profile.ts';
+import {
+  accountViewToggle, accountsSection, partPencil, playerProfile, profileParts, sectionTitle, type GameRead, type LookUpState, type TroopKind
+} from './player-profile.ts';
 
 export interface PlayerPageOptions {
   alliances: Alliance[];
   myAllianceId: string | null;
   person: SignedInPerson | null;
   stateNumber: string;
+  homeState: number;
+  now: number;
+  // What the game says about each account, by in-game id; the skill levels of an id's
+  // Exalted troops (null where never set); and what a typed id is in the game.
+  games: ReadonlyMap<string, GameRead>;
+  skills: (id: string) => Partial<Record<TroopKind, number | null>>;
+  lookUp: LookUpState;
+  // The reminder over the troops before SvS and Tyrant, or empty.
+  skillNote: string;
   // The person's row in accounts as saved, and with the changes not saved yet laid
   // over it; null until it is read.
   savedRow: Row | null;
@@ -66,21 +77,25 @@ export function playerPage(options: PlayerPageOptions): string {
   const kindOf = (row: Row | null) => hasAlt && row ? (row.kind === 'main' ? 'Main' : 'Alt') : '';
   // The One | Both switch sits in the Player info title's left corner.
   const toggle = hasAlt && options.accountView ? accountViewToggle(options.accountView) : '';
+  const gameOf = (row: Row | null) => row ? options.games.get(String(row.in_game_id ?? '')) ?? null : null;
+  const common = { alliances: options.alliances, homeState: options.homeState, now: options.now };
   const activeOptions = {
-    saved: options.savedRow, draft: options.draftRow, alliances: options.alliances,
-    fallbackAllianceId: options.myAllianceId, editing: options.editing, changed: options.changed,
-    showTroops: options.savedRow !== null, kindLabel: kindOf(options.savedRow),
+    ...common, saved: options.savedRow, draft: options.draftRow, game: gameOf(options.savedRow),
+    skills: options.skills(String(options.savedRow?.in_game_id ?? '')),
+    editing: options.editing, changed: options.changed, kindLabel: kindOf(options.savedRow), skillNote: options.skillNote,
     swapTo: sideBySide ? [] : switchable.filter(row => row.id !== options.activeId), viewToggle: toggle
   };
   const otherOptions = (row: Row) => ({
-    saved: row, draft: row, alliances: options.alliances, fallbackAllianceId: null,
-    editing: options.editing.size > 0 ? new Set(['elsewhere']) : new Set<string>(), changed: new Set<string>(), showTroops: true,
+    ...common, saved: row, draft: row, game: gameOf(row), skills: options.skills(String(row.in_game_id ?? '')),
+    editing: options.editing.size > 0 ? new Set(['elsewhere']) : new Set<string>(), changed: new Set<string>(),
     kindLabel: kindOf(row), swapTo: [], viewToggle: ''
   });
   // Side by side: one Player info title and one Troop tiers title, each section split
   // between the accounts; each half has its own pencils.
+  // Before the first account, the page is the way to add it.
   let accounts = '';
-  if (!sideBySide) accounts = playerProfile(activeOptions);
+  if (options.savedRow === null) accounts = '';
+  else if (!sideBySide) accounts = playerProfile(activeOptions);
   else {
     const halves = switchable.map(row => {
       const isActive = row.id === options.activeId;
@@ -93,15 +108,16 @@ export function playerPage(options: PlayerPageOptions): string {
       row(halves.map(one => half(one, `<div class="half-corner">${one.parts.corner}</div>` +
         (one.parts.infoPencil ? partPencil('info', 'Player info', one.parts.infoEditing) : '') + one.parts.info)).join('')) +
       '</section><section class="player-section"><h2 class="player-section-title">Troop tiers</h2>' +
-      row(halves.map(one => half(one, one.parts.troops ?? '')).join('')) + '</section>';
+      row(halves.map(one => half(one, one.parts.troops)).join('')) + '</section>';
   }
 
   return '<div class="player-page admin-page">' + accounts +
-    (options.savedRow !== null ? accountsSection({
-      accounts: options.accounts, activeId: options.activeId, alliances: options.alliances,
-      openListed: options.openListed, editing: options.editingListed, draft: options.listedDraft, changed: options.listedChanged,
+    accountsSection({
+      accounts: options.accounts, games: options.games, alliances: options.alliances, homeState: options.homeState, now: options.now,
+      openListed: options.savedRow === null ? 'new' : options.openListed, editing: options.editingListed,
+      draft: options.listedDraft, changed: options.listedChanged, lookUp: options.lookUp,
       pencil: options.editingListed || options.editing.size === 0
-    }) : '') +
+    }) +
 
     '<section class="player-section"><h2 class="player-section-title">Still to build here</h2><ul class="plan-list">' +
     '<li>Your heroes</li>' +

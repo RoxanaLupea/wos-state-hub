@@ -11,6 +11,13 @@ from playwright.sync_api import sync_playwright
 shoot.serve(sys.argv[1], shoot.PORT)
 session = json.dumps({"user": {"id": "00000000-0000-0000-0000-00000000aaaa", "user_metadata": {"full_name": "Roxa"}}})
 steps = json.loads(sys.argv[2])
+# Game pictures cannot be fetched here: those saved in data/avatars (by the file name in
+# the picture's address, as .jpg) are answered from there.
+avatars = pathlib.Path(__file__).parent / 'data' / 'avatars'
+def answer_avatar(route):
+    saved = avatars / (route.request.url.rsplit('/', 1)[-1].rsplit('.', 1)[0] + '.jpg')
+    if saved.exists(): route.fulfill(status=200, content_type='image/jpeg', body=saved.read_bytes())
+    else: route.fulfill(status=404, body=b'')
 with sync_playwright() as p:
     b = p.chromium.launch(executable_path='/usr/bin/google-chrome', args=['--no-sandbox'])
     for s in steps:
@@ -18,6 +25,7 @@ with sync_playwright() as p:
         pg.add_init_script(f"window.localStorage.setItem('standInSession', {json.dumps(session)})")
         pg.route('**/fonts.googleapis.com/**', lambda r: r.abort()); pg.route('**/fonts.gstatic.com/**', lambda r: r.abort())
         pg.route('**/raw.githubusercontent.com/**', shoot.answer_image)
+        pg.route('**/gof-formal-avatar.akamaized.net/**', answer_avatar)
         errors = []; pg.on('pageerror', lambda e: errors.append(str(e)))
         pg.goto(f'http://127.0.0.1:{shoot.PORT}/'); pg.wait_for_selector('.calendar-panel', timeout=15000); pg.wait_for_timeout(600)
         if s.get('start', 'player') == 'player':
