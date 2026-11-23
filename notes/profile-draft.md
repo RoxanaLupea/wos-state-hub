@@ -51,6 +51,18 @@ This branch holds everything done after commit c146c03 on main. None of it is ap
 - On a phone the swap sits in the Player info title's left corner, not on its own row.
 - A farm opens showing its saved details with its own pencil; the pencil opens editing.
 
+## Player info as columns (23 Nov), not yet seen by Roxanne
+
+- Player info is drawn like the troops: Alliance, Name, Power and Foundry power as
+  columns with the name on top and a thin line between. Two by two on a phone and in
+  each half side by side.
+- Editing turns each value into the site's own glass field (44px, corner a quarter of
+  that) in the same column, the fields on one line; M | B inside the power field;
+  Main | Alt | Farm above the name field; the alliance as a field with its logo, tag and
+  arrow. An open farm or a new account uses the same columns.
+- The title's left corner holds what the account is and the swap ("Main ⇄ Alt"); only
+  the swap on a phone.
+
 ## Still open
 
 - Where the swap to the other account sits.

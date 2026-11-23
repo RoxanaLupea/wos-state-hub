@@ -90,7 +90,8 @@ export function playerPage(options: PlayerPageOptions): string {
       `<div class="split-half${one.isActive ? ' active' : ''}" data-account-column="${escapeForPage(String(one.row.id))}">${body}</div>`;
     const row = (bodies: string) => `<div class="split-row" style="--account-count: ${halves.length}">${bodies}</div>`;
     accounts = '<section class="player-section">' + sectionTitle('Player info', 'info', false, false, 'h2', toggle) +
-      row(halves.map(one => half(one, (one.parts.infoPencil ? partPencil('info', 'Player info', one.parts.infoEditing) : '') + one.parts.info)).join('')) +
+      row(halves.map(one => half(one, `<div class="half-corner">${one.parts.corner}</div>` +
+        (one.parts.infoPencil ? partPencil('info', 'Player info', one.parts.infoEditing) : '') + one.parts.info)).join('')) +
       '</section><section class="player-section"><h2 class="player-section-title">Troop tiers</h2>' +
       row(halves.map(one => half(one, one.parts.troops ?? '')).join('')) + '</section>';
   }

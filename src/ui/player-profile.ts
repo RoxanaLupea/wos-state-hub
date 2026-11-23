@@ -136,24 +136,25 @@ export function idProblem(id: string): string {
 // The page
 // ---------------------------------------------------------------------------
 
-// While open, the player's details keep the shape they have when shown: the alliance's
-// logo, the kind and the name with the id under it, then the two powers. Each value
-// becomes a field in its own place, the logo opens the list of alliances, and nothing
-// else is added to the page.
-function inlineInput(field: string, value: string, inputMode: string, label: string, size: string, placeholder = label): string {
-  return `<input class="inline-input ${size}" id="player-${field}" data-player-field="${field}" inputmode="${inputMode}"` +
+// The player's details are drawn like the troops: one row of columns, each with its
+// name on top and its value under it, a thin line between them. Open for editing, each
+// value becomes the site's own glass field in the same place, and the fields of every
+// column line up on one line.
+function infoField(field: string, value: string, inputMode: string, label: string, extraClass = '', placeholder = '—'): string {
+  return `<input class="info-field ${extraClass}" id="player-${field}" data-player-field="${field}" inputmode="${inputMode}"` +
     ` autocomplete="off" placeholder="${placeholder}" aria-label="${label}" value="${escapeForPage(value)}">` +
     `<small class="player-note" data-note-for="${field}"></small>`;
 }
 
-function powerInput(field: string, value: unknown): string {
+// Power: the number and, inside the same field at its end, M | B.
+function powerField(field: string, value: unknown): string {
   const unit = powerUnitFor(value);
   const units = (['M', 'B'] as PowerUnit[]).map(one =>
     `<button type="button" class="unit-pick${one === unit ? ' selected' : ''}" data-power-unit="${field}|${one}"` +
     ` aria-pressed="${one === unit}" aria-label="${one === 'M' ? 'Millions' : 'Billions'}">${one}</button>`).join('');
-  return `<div class="power-edit"><input class="inline-input inline-fact" id="player-${field}" data-player-field="${field}" data-unit="${unit}"` +
+  return `<div class="info-field power-field"><input id="player-${field}" data-player-field="${field}" data-unit="${unit}"` +
     ` inputmode="decimal" autocomplete="off" aria-label="Power" placeholder="—" value="${escapeForPage(powerShown(value, unit))}">` +
-    `<div class="unit-picks">${units}</div></div><small class="player-note" data-note-for="${field}"></small>`;
+    `<span class="unit-picks">${units}</span></div><small class="player-note" data-note-for="${field}"></small>`;
 }
 
 const CHEVRON = '<svg class="picker-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
@@ -163,24 +164,28 @@ function logoOf(alliance: Alliance, className: string): string {
   return alliance.logoFile ? `<img class="${className}" src="${imageUrl('alliances/' + alliance.logoFile.replace(/\.png$/, ''))}" alt="">` : '';
 }
 
-// The alliance: its logo (or tag) with a small arrow; tapped, a list opens under it with
-// each main alliance and its academies under it, the picked one marked.
+function allianceColour(alliance: Alliance | undefined): string | null {
+  return alliance ? (alliance.accentColor ?? alliance.baseColor) : null;
+}
+
+// The alliance while open: a glass field like the others, with the logo small, the tag
+// and an arrow; tapped, the list opens under it with each main alliance and its
+// academies under it, the picked one marked.
 function alliancePicker(alliances: Alliance[], chosen: string | null): string {
   const bySort = (left: Alliance, right: Alliance) => left.sortOrder - right.sortOrder;
   const mains = alliances.filter(one => !one.mainAllianceId).sort(bySort);
-  const colourOf = (main: Alliance) => main.accentColor ?? main.baseColor;
   const choice = (alliance: Alliance, colour: string | null, academy: boolean) =>
     `<button type="button" class="alliance-choice${academy ? ' academy' : ''}${alliance.id === chosen ? ' selected' : ''}"` +
     ` data-alliance-pick="${escapeForPage(alliance.id)}"` + (colour ? ` style="--alliance-colour: ${escapeForPage(colour)}"` : '') + '>' +
     `<span class="alliance-choice-logo">${logoOf(alliance, 'alliance-choice-img')}</span>` +
     `<span class="alliance-choice-tag">${escapeForPage(alliance.tag)}</span>` +
     `<span class="alliance-choice-name">${escapeForPage(alliance.name)}</span></button>`;
-  const list = mains.map(main => choice(main, colourOf(main), false) +
-    alliances.filter(one => one.mainAllianceId === main.id).sort(bySort).map(academy => choice(academy, colourOf(main), true)).join('')).join('');
+  const list = mains.map(main => choice(main, allianceColour(main), false) +
+    alliances.filter(one => one.mainAllianceId === main.id).sort(bySort).map(academy => choice(academy, allianceColour(main), true)).join('')).join('');
   const current = alliances.find(one => one.id === chosen);
-  const logo = current?.logoFile ? logoOf(current, 'player-alliance-logo') : '<span class="picker-no-logo"></span>';
-  const face = `${logo}<span class="picker-pill">${escapeForPage(current?.tag ?? 'Alliance')}${CHEVRON}</span>`;
-  return `<details class="alliance-picker"><summary aria-label="Alliance">${face}</summary>` +
+  const face = (current ? logoOf(current, 'picker-logo') : '') +
+    `<span class="picker-tag">${escapeForPage(current?.tag ?? 'Pick')}</span>${CHEVRON}`;
+  return `<details class="alliance-picker"><summary class="info-field picker-field" aria-label="Alliance">${face}</summary>` +
     `<div class="alliance-list">${list}</div></details>`;
 }
 
@@ -268,47 +273,55 @@ function powerText(value: unknown): string {
   return powerShown(value, unit) + unit;
 }
 
-// The player's details as they are now: the alliance's logo, the name with the id
-// under it, and the two powers.
 // The swap mark: two arrows going opposite ways.
-const SWAP_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
-  ' stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/>' +
+const SWAP_ICON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
+  ' stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/>' +
   '<path d="m17 20 4-4-4-4"/><path d="M21 16H7"/></svg>';
 
-// Where the swap to the other account sits in the summary row (being compared): beside
-// the alliance logo, or at the opposite end of the row, after the powers.
-const SWAP_SIDE: 'beside' | 'opposite' = 'beside';
-
-// The other account to swap to: its alliance's logo, small, and under it the swap mark
-// with Main or Alt. Tapped, it swaps that account in.
-function swapButton(other: Row, alliances: Alliance[]): string {
-  const alliance = alliances.find(one => one.id === other.alliance_id);
-  const colour = alliance ? (alliance.accentColor ?? alliance.baseColor) : null;
-  const logo = alliance?.logoFile ? `<img class="swap-logo" src="${imageUrl('alliances/' + alliance.logoFile.replace(/\.png$/, ''))}" alt="">`
-    : `<span class="swap-tag">${escapeForPage(alliance?.tag ?? '')}</span>`;
-  const name = escapeForPage(String(other.in_game_name ?? ''));
-  return `<button type="button" class="swap" data-game-account="${escapeForPage(String(other.id))}"` +
-    (colour ? ` style="--alliance-colour: ${escapeForPage(colour)}"` : '') + ` aria-label="Swap to ${name}" title="Swap to ${name}">` +
-    `${logo}<span class="swap-line">${SWAP_ICON}<span class="swap-kind">${other.kind === 'main' ? 'Main' : 'Alt'}</span></span></button>`;
+// In the Player info title's left corner: what this account is, and the way to the
+// other one ("Main ⇄ Alt"), tapped to swap it in.
+function accountSwitch(kindLabel: string, others: Row[]): string {
+  if (!kindLabel) return '';
+  const swaps = others.map(other => {
+    const name = escapeForPage(String(other.in_game_name ?? ''));
+    return `<button type="button" class="swap" data-game-account="${escapeForPage(String(other.id))}" aria-label="Swap to ${name}" title="Swap to ${name}">` +
+      `${SWAP_ICON}<span>${other.kind === 'main' ? 'Main' : 'Alt'}</span></button>`;
+  }).join('');
+  return `<div class="account-switch"><span class="account-now">${escapeForPage(kindLabel)}</span>${swaps}</div>`;
 }
 
-function playerSummary(account: Row | null, alliance: Alliance | undefined, kindLabel = '', swaps = ''): string {
-  const fact = (label: string, value: string) =>
-    `<div class="player-fact"><span class="player-label">${label}</span><span class="player-fact-value">${escapeForPage(value)}</span></div>`;
-  const colour = alliance ? (alliance.accentColor ?? alliance.baseColor) : null;
-  return '<div class="player-summary">' + (SWAP_SIDE === 'beside' ? swaps : '') +
-    `<div class="player-identity"${colour ? ` style="--alliance-colour: ${escapeForPage(colour)}"` : ''}>` +
-    (alliance?.logoFile ? `<img class="player-alliance-logo" src="${imageUrl('alliances/' + alliance.logoFile.replace(/\.png$/, ''))}" alt="">` : '') +
-    '<div class="player-identity-text">' +
-    ((alliance || kindLabel) ? '<span class="player-tag-line">' +
-      (alliance ? `<span class="player-alliance-tag">${escapeForPage(alliance.tag)}</span>` : '') +
-      (alliance && kindLabel ? '<span class="player-kind-dot">·</span>' : '') +
-      (kindLabel ? `<span class="player-kind">${escapeForPage(kindLabel)}</span>` : '') + '</span>' : '') +
-    `<span class="player-name">${escapeForPage(String(account?.in_game_name ?? ''))}</span>` +
-    `<span class="player-id">${escapeForPage(String(account?.in_game_id ?? ''))}</span></div></div>` +
-    '<div class="player-facts">' + fact('Power', powerText(account?.player_power)) +
-    fact('Foundry power', foundryText(account?.foundry_power) || '—') +
-    '</div>' + (SWAP_SIDE === 'opposite' ? swaps : '') + '</div>';
+// One column: its name on top, like a troop's, and its value under it.
+function infoColumn(label: string, body: string, extraClass = ''): string {
+  return `<div class="info-col${extraClass}"><h3 class="troop-name">${escapeForPage(label)}</h3><div class="info-body">${body}</div></div>`;
+}
+
+// The account's details as columns: alliance, name with the id under it, power and
+// foundry power. Shown, each is its value; open, each is its field. While open, what the
+// account is (Main, Alt, Farm) sits above the name when it can change, and every other
+// column keeps the same room, so all the fields stay on one line.
+function infoColumns(account: Row | null, alliances: Alliance[], allianceId: string | null, editing: boolean, toggle = ''): string {
+  const alliance = alliances.find(one => one.id === allianceId);
+  const colour = allianceColour(alliance);
+  const style = colour ? ` style="--alliance-colour: ${escapeForPage(colour)}"` : '';
+  if (!editing) {
+    const value = (text: string) => `<span class="info-value${text === '—' ? ' empty' : ''}">${escapeForPage(text)}</span>`;
+    return `<div class="info-columns"${style}>` +
+      infoColumn('Alliance', alliance
+        ? (alliance.logoFile ? logoOf(alliance, 'info-logo') : '') + `<span class="info-tag">${escapeForPage(alliance.tag)}</span>`
+        : value('—')) +
+      infoColumn('Name', `<span class="info-name">${escapeForPage(String(account?.in_game_name ?? ''))}</span>` +
+        `<span class="info-id">${escapeForPage(String(account?.in_game_id ?? ''))}</span>`) +
+      infoColumn('Power', value(powerText(account?.player_power))) +
+      infoColumn('Foundry power', value(foundryText(account?.foundry_power) || '—')) + '</div>';
+  }
+  const slot = (inner: string) => toggle ? `<div class="kind-slot">${inner}</div>` : '';
+  const text = (column: string) => String(account?.[column] ?? '');
+  return `<div class="info-columns editing"${style}>` +
+    infoColumn('Alliance', slot('') + alliancePicker(alliances, allianceId) + '<small class="player-note" data-note-for="alliance_id"></small>') +
+    infoColumn('Name', slot(toggle) + infoField('in_game_name', text('in_game_name'), 'text', 'Name', 'name-field', 'Name') +
+      infoField('in_game_id', text('in_game_id'), 'numeric', 'ID', 'id-field', 'ID')) +
+    infoColumn('Power', slot('') + powerField('player_power', account?.player_power)) +
+    infoColumn('Foundry power', slot('') + infoField('foundry_power', foundryText(account?.foundry_power), 'numeric', 'Foundry power')) + '</div>';
 }
 
 export interface PlayerProfileOptions {
@@ -335,37 +348,17 @@ export interface PlayerProfileOptions {
 const ACCOUNT_KINDS: [string, string][] = [['main', 'Main'], ['alt', 'Alt'], ['farm', 'Farm']];
 
 function kindToggle(chosen: string, isMain: boolean): string {
-  if (isMain) return '<span class="player-kind">Main</span>';
+  if (isMain) return '<span class="account-now">Main</span>';
   return '<div class="kind-words" role="group" aria-label="Account">' + ACCOUNT_KINDS.map(([kind, label]) =>
     `<button type="button" class="kind-word${chosen === kind ? ' selected' : ''}" data-kind-pick="${kind}"` +
     ` aria-pressed="${chosen === kind}">${label}</button>`).join('') + '</div>';
-}
-
-// The details every account has, main, alt or farm alike: name, id, power, foundry power
-// (it can stay empty) and alliance; above the name, what the account is, when it can change.
-function accountFields(draft: Row | null, alliances: Alliance[], allianceId: string | null, toggle: string): string {
-  const value = (column: string) => String(draft?.[column] ?? '');
-  const alliance = alliances.find(one => one.id === allianceId);
-  const colour = alliance ? (alliance.accentColor ?? alliance.baseColor) : null;
-  return '<div class="player-summary player-editor">' +
-    `<div class="player-identity"${colour ? ` style="--alliance-colour: ${escapeForPage(colour)}"` : ''}>` +
-    '<div class="picker-cell">' + alliancePicker(alliances, allianceId) + '<small class="player-note" data-note-for="alliance_id"></small></div>' +
-    '<div class="player-identity-text">' +
-    (toggle ? `<div class="kind-line">${toggle}</div>` : '') +
-    inlineInput('in_game_name', value('in_game_name'), 'text', 'Name', 'inline-name') +
-    inlineInput('in_game_id', value('in_game_id'), 'numeric', 'ID', 'inline-id') + '</div></div>' +
-    '<div class="player-facts">' +
-    '<div class="player-fact"><label class="player-label" for="player-player_power">Power</label>' + powerInput('player_power', draft?.player_power) + '</div>' +
-    '<div class="player-fact"><label class="player-label" for="player-foundry_power">Foundry power</label>' +
-    inlineInput('foundry_power', foundryText(draft?.foundry_power), 'numeric', 'Foundry power', 'inline-fact inline-foundry', '—') +
-    '</div></div></div>';
 }
 
 // A part with nothing saved yet is always open, so a new player can fill it in.
 export function playerProfile(options: PlayerProfileOptions): string {
   const parts = profileParts(options);
   const player = '<section class="player-section">' +
-    sectionTitle('Player info', 'info', parts.infoEditing, parts.infoPencil, 'h2', options.viewToggle ?? '') + parts.info + '</section>';
+    sectionTitle('Player info', 'info', parts.infoEditing, parts.infoPencil, 'h2', parts.corner + (options.viewToggle ?? '')) + parts.info + '</section>';
   if (parts.troops === null) return player;
   return player + '<section class="player-section"><h2 class="player-section-title">Troop tiers</h2>' + parts.troops + '</section>';
 }
@@ -379,7 +372,9 @@ export function partPencil(editKey: string, title: string, editing: boolean): st
 
 // One account's profile in its parts: the player info (and whether it is open and has
 // a pencil) and the troop tiers, so they can also be laid out side by side.
-export interface ProfileParts { info: string; infoEditing: boolean; infoPencil: boolean; troops: string | null }
+// corner is what goes in the Player info title's left corner: what the account is and
+// the swap to the other one, or while open, the Main | Alt | Farm switch when it can change.
+export interface ProfileParts { info: string; infoEditing: boolean; infoPencil: boolean; corner: string; troops: string | null }
 
 export function profileParts(options: PlayerProfileOptions): ProfileParts {
   const { saved, alliances, editing, changed } = options;
@@ -394,11 +389,11 @@ export function profileParts(options: PlayerProfileOptions): ProfileParts {
   const toggle = saved === null || (saved.kind === 'main' && !options.kindLabel) ? ''
     : kindToggle(String(account?.kind ?? saved.kind), saved.kind === 'main');
   const infoBody = !infoEditing
-    ? playerSummary(saved, alliances.find(one => one.id === allianceIdOf(saved)), options.kindLabel ?? '',
-        (options.swapTo ?? []).map(other => swapButton(other, alliances)).join(''))
-    : accountFields(account, alliances, allianceId, toggle) +
+    ? infoColumns(saved, alliances, allianceIdOf(saved), false)
+    : infoColumns(account, alliances, allianceId, true, toggle) +
       saveButton('info', changed.has('info'), removable ? 'Remove this alt' : '', !infoMissing);
-  const info = { info: infoBody, infoEditing, infoPencil: pencilShown('info', !infoMissing, editing) };
+  const corner = infoEditing ? '' : accountSwitch(options.kindLabel ?? '', options.swapTo ?? []);
+  const info = { info: infoBody, infoEditing, infoPencil: pencilShown('info', !infoMissing, editing), corner };
   if (!options.showTroops) return { ...info, troops: null };
   const troops = '<div class="troop-columns">' + TROOP_KINDS.map(([kind, label]) => {
       const savedTier = readTier(saved?.[kind + '_tier'], saved?.[kind + '_skill_level']);
@@ -506,12 +501,12 @@ export function accountsSection(options: AccountsSectionOptions): string {
   if (open === 'new' || (openRow && options.editing)) {
     const draft = options.draft;
     form = '<div class="account-form">' +
-      accountFields(draft, alliances, draft.alliance_id ? String(draft.alliance_id) : null, kindToggle(String(draft.kind ?? 'alt'), false)) +
+      infoColumns(draft, alliances, draft.alliance_id ? String(draft.alliance_id) : null, true, kindToggle(String(draft.kind ?? 'alt'), false)) +
       saveButton('listed', options.changed, open === 'new' ? '' : 'Remove this farm') + '</div>';
   } else if (openRow) {
-    // A farm as it is saved, shown like the player's own details, with its pencil.
+    // A farm as it is saved, in the same columns as the player's own details, with its pencil.
     form = '<div class="account-form showing">' + (options.pencil ? partPencil('listed', 'Farm', false) : '') +
-      playerSummary(openRow, alliances.find(one => one.id === openRow.alliance_id), 'Farm') + '</div>';
+      infoColumns(openRow, alliances, openRow.alliance_id ? String(openRow.alliance_id) : null, false) + '</div>';
   }
   return '<section class="player-section"><h2 class="player-section-title">Your accounts</h2>' +
     `<div class="account-row">${accounts.filter(one => one.kind === 'farm').map(tile).join('')}${adding}</div>${form}</section>`;
