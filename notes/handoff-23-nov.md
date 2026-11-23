@@ -176,34 +176,74 @@ given that evening. What they show:
 - In the mockups, text is lined up with the picture's edges by trimming each line to its
   letters (CSS text-box: trim-both cap alphabetic, works in the installed Chrome).
 
-## 7. How badly the 23 Nov chat went
+## 7. What happened in the chat of 23 Nov, in order
 
-- Her references were ignored. Claude built layouts from nothing, then at the end
-  searched the web for "the best profile pages", brought Discord, Steam and stat
-  trackers that are nothing like this page, described pictures it could not see, and
-  asked her for screenshots she had already sent.
-- Her decisions in the notes were ignored. The mockups dropped Your accounts and put
-  the swap back as a control in its own row, both against settled decisions.
-- Patches instead of design. Every round fixed one thing and broke another, and she
-  found the faults: separator lines everywhere; text not lined up with the picture's
-  edges; R4 on the alliance, then on the picture, then after the name; the alliance too
-  big and too far; the tag in a mismatched purple; "in 1458" repeated; The Labyrinth
-  shown twice; a list of ranks she never asked for; troops bigger than heroes; a
-  computer header that made no sense; empty space; guide lines left in screenshots.
-- Things she had not asked to change were changed, and versions that were decent in
-  some way were lost.
-- Mockup data contradicted the game (Exalted troops on an FC8 chief).
-- Claude rated its own work 5/10 only when asked, and the faults it listed were faults
-  it should have fixed before showing anything.
-- Things said that were not true: the first version of this handoff said nothing from
-  23 Nov was pushed (main had been pushed at 16:48), that the work existed only in a
-  bundle file (profile-draft was already on GitHub) and that profile-draft must never be
-  pushed; Claude described exalted-skill-levels.sql as where skill levels would be
-  stored (they already were); said the long name no longer rose above the picture when
-  its own check showed it still did; and described Discord, Steam and Xbox profiles from
-  memory as research.
-- Result: a full day on one layout, nothing approved, and the profile, transfer invites
-  and alliance pages all still without a layout, though the data for them exists.
+Read this so it does not happen again. Roxanne's words are quoted as she wrote them.
+
+The day started well. The game data from the Whiteout Stats API was pulled, the
+database refresh was built and installed with her yes, and the rule for wrongly claimed
+accounts was recorded. Then she asked to fix the player info now that the game supplies
+the data, with a note asking for Exalted skill levels and R4s able to set them.
+
+1. Claude changed the real code of the profile draft and showed it. She rejected it:
+   "terrible again because you're thinking so small, we have a lot of info and you only
+   wanna show power ... you gave those sites 7/10 and 8.5/10 but you're still building a
+   sad 3/10, stop changing the code and work with mockups ... it took forever, like
+   everything else today."
+2. Mockups followed. She gave the direction: on a phone the picture on the left with
+   name, ID and power, the alliance on the right, then troops, arena team, leaderboards;
+   on a computer the same layout, troops and heroes on one line, troop pictures small.
+3. Each round fixed one thing and broke or added another, and she found every fault:
+   "did I ask for a list of ranks? did i tell you to change that? there's so much empty
+   space for no reason, lazy!"; "why are troops that much bigger than the heroes";
+   "on pc, how does that header make sense?"; "stop drawing separator lines
+   everywhere"; "absolutely not, there's a lot to fix"; "stop, you're just making it
+   worse".
+4. She had to write the header rules herself, with a screenshot (section 4). Claude
+   still put things above the picture ("absolutely nothing is higher than the pic and
+   name, ok?"), moved R4 from the alliance to the picture to after the name, all
+   rejected ("since when does the alliance have the rank and not the person?").
+5. Asked for a suggestion, Claude proposed dropping the alliance tag. She called it a
+   way to do less work ("we're not dropping it ... come up with real suggestions").
+6. Claude sent screenshots with its own guide lines on them ("i don't need those lines,
+   you do!"), and missed misalignments she could see by eye ("i see it with my eyes and
+   you can't?").
+7. She said the alliance was too big and too far, said she was crying from frustration,
+   and that Claude put no thought into design, alignment, composition or what stands
+   out, so she had to chase and fix every mistake. She asked Claude to design like a
+   designer.
+8. The next full page still had the faults Claude itself listed when she asked it to
+   rate the work (5/10): empty hero tiles, a control alone in its own row, every number
+   the same weight, unbalanced computer layout. "We're never gonna finish this." "Just
+   stop." "One full day of trying to do a page layout."
+9. She asked for research on the best profile pages. Claude searched stat-tracker
+   sites, then Discord, Steam and Xbox, described pictures it could not see, and
+   presented it as research ("All of those are trash ... PROFILE!", "Are they even
+   remotely like what we need?"). Then it asked her for screenshots of the game's
+   profile that she had sent at 17:31 ("I already did ... what the hell do you want
+   from me?").
+10. Only then were her references and the notes used, giving version 2 (section 3). It
+   also showed that the earlier mockups had dropped Your accounts and broken her rule
+   against a control in its own row.
+11. Asked for a handoff, Claude made a zip and a bundle file instead of using CLAUDE.md
+   and the profile-draft branch ("Don't you have claude.md? And a draft branch?"). The
+   handoff it wrote had three false statements about what was pushed, and it described
+   a database file wrongly ("We had skill level even before").
+12. She asked how many things were missed and how many things said were untrue: at
+   least 9 missed and 7 untrue. She said she is overwhelmed because she cannot check
+   everything Claude does, and asked for no more lists.
+
+Why it went wrong:
+- Claude did not read notes/profile-draft.md, her references or the decisions before
+  designing, though CLAUDE.md says to.
+- It treated each complaint as a patch and never re-checked the whole page.
+- It showed work it had not checked against the review checklist and her rules.
+- It said things were fixed, pushed or stored without checking.
+- It answered nearby questions instead of hers, and handed choices back to her.
+- It kept sending long lists to someone exhausted.
+
+The cost: a full day on one layout, nothing approved, and the profile, transfer invites
+and alliance pages all still without a layout, though the data for them exists.
 
 ## 8. How to work so this does not repeat
 
