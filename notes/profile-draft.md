@@ -37,6 +37,20 @@ This branch holds everything done after commit c146c03 on main. None of it is ap
 - In split view the left half is cramped and its pencil touches "Foundry power".
 - The open Add tile has its line far below "Add".
 
+## Fixes made on 23 Nov, not yet seen by Roxanne
+
+- Above the name, the tag (alliance colour) and Main, Alt or Farm (quiet text colour) are
+  separate. While open, Main | Alt | Farm is one switch with the picked one lit.
+- M | B is one switch beside the power, the same size as the other switches.
+- An empty power or foundry power shows a dash, shown and while typed.
+- Foundry power is written 15,230 while typed too.
+- While open, the alliance logo has its tag with an arrow in a pill under it.
+- Remove this alt or farm is a quiet line under Cancel and Save.
+- Side by side, the open half wraps its powers under the name and keeps clear of its pencil.
+- The open farm or Add has its line right under its name. Pointing at a tile draws no box.
+- On a phone the swap sits in the Player info title's left corner, not on its own row.
+- A farm opens showing its saved details with its own pencil; the pencil opens editing.
+
 ## Still open
 
 - Where the swap to the other account sits.

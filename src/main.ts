@@ -55,7 +55,7 @@ import { PENCIL_ICON, allianceTimeForm, dateChangeForm, fortForm, pencilButton, 
 import { deleteRow, loadRows, saveRow, type Row } from './data/records.ts';
 import { removeGameAccount, saveGameAccount, saveLoginDetails } from './data/player-profile.ts';
 import {
-  changeTier, filterFoundryPower, filterId, filterName, filterPower, idProblem, nameProblem, powerFromText, powerProblem, readTier, tierText,
+  changeTier, filterFoundryPower, foundryText, filterId, filterName, filterPower, idProblem, nameProblem, powerFromText, powerProblem, readTier, tierText,
   type PowerUnit, type TroopKind
 } from './ui/player-profile.ts';
 import {
@@ -1077,7 +1077,8 @@ function drawPage(app: HTMLElement): void {
         leavePrompt: pendingLeave !== null,
         accounts: person ? allMyAccounts() : [],
         activeId: openGameAccountId(),
-        openListed: playerEditing.has('listed') ? openListed : null,
+        openListed,
+        editingListed: playerEditing.has('listed') || openListed === 'new',
         listedDraft: { ...(openListedRow() ?? { kind: 'alt', alliance_id: savedOf('listed', 'alliance_id') }), ...listedDraft },
         listedChanged: partHasChanges('listed'),
         accountView: WIDE_SCREEN.matches ? accountView : null,
@@ -1870,7 +1871,8 @@ async function savePlayerPart(part: string): Promise<boolean> {
   else if (rows) rows.push(row);
   dropDraft(part);
   playerEditing.delete(part);
-  if (part === 'listed') openListed = null;
+  // A farm saved as a farm stays open under the row, showing what was saved.
+  if (part === 'listed' && !(saved && kind === 'farm')) openListed = null;
   // Where the player is afterwards: on a main or an alt they just saved (a new one, or a
   // farm made an alt, so its troops can be filled in); on the main when the account they
   // were on became a farm; otherwise where they were.
@@ -1941,15 +1943,16 @@ function handlePlayerPicks(target: HTMLElement): boolean {
   }
   const listedButton = target.closest<HTMLElement>('[data-listed-account]');
   if (listedButton) {
-    // A farm, or Add, opens its details under the row (closing whatever else was open,
-    // asking first if it has changes); tapping the open one again closes it.
+    // A farm opens its details under the row as they are saved, with its own pencil;
+    // Add opens an empty one to fill in. Whatever else was open closes (asking first if
+    // it has changes); tapping the open one again closes it.
     const chosen = listedButton.dataset.listedAccount === 'new' ? 'new' : Number(listedButton.dataset.listedAccount);
-    const isOpen = playerEditing.has('listed') && openListed === chosen;
+    const isOpen = openListed === chosen;
     leaveParts(PLAYER_PARTS, () => {
       for (const part of PLAYER_PARTS) dropDraft(part);
       playerEditing.clear();
       openListed = isOpen ? null : chosen;
-      if (!isOpen) playerEditing.add('listed');
+      if (openListed === 'new') playerEditing.add('listed');
       draw();
     });
     return true;
@@ -1966,7 +1969,8 @@ function handlePlayerPicks(target: HTMLElement): boolean {
     const part = cancelButton.dataset.cancelPart as string;
     dropDraft(part);
     playerEditing.delete(part);
-    if (part === 'listed') openListed = null;
+    // A new account closes; a farm already saved goes back to showing what is saved.
+    if (part === 'listed' && openListed === 'new') openListed = null;
     draw();
     return true;
   }
@@ -2073,7 +2077,9 @@ function filterPlayerTyping(event: Event): void {
     : field === 'in_game_id' ? filterId(input.value)
     : field === 'foundry_power' ? filterFoundryPower(input.value)
     : filterPower(input.value, unit);
-  if (kept !== input.value) input.value = kept;
+  // Foundry power is written with its thousands marked while it is typed, as it is shown.
+  const shown = field === 'foundry_power' ? foundryText(kept) : kept;
+  if (shown !== input.value) input.value = shown;
   const value = kept.trim();
   const part = partOnPage();
   draftFor(part)[field] = field === 'player_power' ? (value === '' ? null : powerFromText(value, unit))

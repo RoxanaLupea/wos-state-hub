@@ -140,18 +140,19 @@ export function idProblem(id: string): string {
 // logo, the kind and the name with the id under it, then the two powers. Each value
 // becomes a field in its own place, the logo opens the list of alliances, and nothing
 // else is added to the page.
-function inlineInput(field: string, value: string, inputMode: string, placeholder: string, size: string): string {
+function inlineInput(field: string, value: string, inputMode: string, label: string, size: string, placeholder = label): string {
   return `<input class="inline-input ${size}" id="player-${field}" data-player-field="${field}" inputmode="${inputMode}"` +
-    ` autocomplete="off" placeholder="${placeholder}" aria-label="${placeholder}" value="${escapeForPage(value)}">` +
+    ` autocomplete="off" placeholder="${placeholder}" aria-label="${label}" value="${escapeForPage(value)}">` +
     `<small class="player-note" data-note-for="${field}"></small>`;
 }
 
 function powerInput(field: string, value: unknown): string {
   const unit = powerUnitFor(value);
   const units = (['M', 'B'] as PowerUnit[]).map(one =>
-    `<button type="button" class="unit-pick${one === unit ? ' selected' : ''}" data-power-unit="${field}|${one}">${one}</button>`).join('');
+    `<button type="button" class="unit-pick${one === unit ? ' selected' : ''}" data-power-unit="${field}|${one}"` +
+    ` aria-pressed="${one === unit}" aria-label="${one === 'M' ? 'Millions' : 'Billions'}">${one}</button>`).join('');
   return `<div class="power-edit"><input class="inline-input inline-fact" id="player-${field}" data-player-field="${field}" data-unit="${unit}"` +
-    ` inputmode="decimal" autocomplete="off" aria-label="Power" value="${escapeForPage(powerShown(value, unit))}">` +
+    ` inputmode="decimal" autocomplete="off" aria-label="Power" placeholder="—" value="${escapeForPage(powerShown(value, unit))}">` +
     `<div class="unit-picks">${units}</div></div><small class="player-note" data-note-for="${field}"></small>`;
 }
 
@@ -177,9 +178,9 @@ function alliancePicker(alliances: Alliance[], chosen: string | null): string {
   const list = mains.map(main => choice(main, colourOf(main), false) +
     alliances.filter(one => one.mainAllianceId === main.id).sort(bySort).map(academy => choice(academy, colourOf(main), true)).join('')).join('');
   const current = alliances.find(one => one.id === chosen);
-  const face = current?.logoFile ? logoOf(current, 'player-alliance-logo')
-    : `<span class="picker-tag">${escapeForPage(current?.tag ?? 'Alliance')}</span>`;
-  return `<details class="alliance-picker"><summary aria-label="Alliance">${face}${CHEVRON}</summary>` +
+  const logo = current?.logoFile ? logoOf(current, 'player-alliance-logo') : '<span class="picker-no-logo"></span>';
+  const face = `${logo}<span class="picker-pill">${escapeForPage(current?.tag ?? 'Alliance')}${CHEVRON}</span>`;
+  return `<details class="alliance-picker"><summary aria-label="Alliance">${face}</summary>` +
     `<div class="alliance-list">${list}</div></details>`;
 }
 
@@ -221,10 +222,10 @@ function troopSummary(kind: TroopKind, tier: TroopTier): string {
 // nothing saved yet has no Cancel: there is nothing to go back to.
 function saveButton(part: string, changed: boolean, removeLabel = '', canCancel = true): string {
   return '<div class="player-save-row">' +
-    (removeLabel ? `<button type="button" class="danger-button player-remove" data-remove-account="${part}">${removeLabel}</button>` : '') +
     (canCancel ? `<button type="button" class="ghost-button player-cancel" data-cancel-part="${part}">Cancel</button>` : '') +
     `<button type="button" class="primary-button player-save" data-player-save="${part}"` +
-    `${changed ? '' : ' disabled'}>Save</button></div>`;
+    `${changed ? '' : ' disabled'}>Save</button></div>` +
+    (removeLabel ? `<button type="button" class="player-remove" data-remove-account="${part}">${removeLabel}</button>` : '');
 }
 
 // A troop type's levels: its summary, or while it is open for editing, its choices.
@@ -254,6 +255,11 @@ function troopBlock(kind: TroopKind, label: string, saved: TroopTier, tier: Troo
   return `<div class="troop-block editing">${head}<div class="fc-group">${levels}</div>` +
     `<div class="tier-controls"><div class="gen-row${groupClass}">${tierTiles}</div>` +
     `${skills}</div>${saveButton('troop-' + kind, changed, '', saved.fc !== null)}</div>`;
+}
+
+// Foundry power written in full with its thousands marked, the same while typed and shown.
+export function foundryText(value: unknown): string {
+  return value ? Math.round(Number(value)).toLocaleString('en-US') : '';
 }
 
 function powerText(value: unknown): string {
@@ -294,11 +300,14 @@ function playerSummary(account: Row | null, alliance: Alliance | undefined, kind
     `<div class="player-identity"${colour ? ` style="--alliance-colour: ${escapeForPage(colour)}"` : ''}>` +
     (alliance?.logoFile ? `<img class="player-alliance-logo" src="${imageUrl('alliances/' + alliance.logoFile.replace(/\.png$/, ''))}" alt="">` : '') +
     '<div class="player-identity-text">' +
-    ((alliance || kindLabel) ? `<span class="player-alliance-tag">${escapeForPage([alliance?.tag, kindLabel.toUpperCase()].filter(Boolean).join(' · '))}</span>` : '') +
+    ((alliance || kindLabel) ? '<span class="player-tag-line">' +
+      (alliance ? `<span class="player-alliance-tag">${escapeForPage(alliance.tag)}</span>` : '') +
+      (alliance && kindLabel ? '<span class="player-kind-dot">·</span>' : '') +
+      (kindLabel ? `<span class="player-kind">${escapeForPage(kindLabel)}</span>` : '') + '</span>' : '') +
     `<span class="player-name">${escapeForPage(String(account?.in_game_name ?? ''))}</span>` +
     `<span class="player-id">${escapeForPage(String(account?.in_game_id ?? ''))}</span></div></div>` +
     '<div class="player-facts">' + fact('Power', powerText(account?.player_power)) +
-    fact('Foundry power', account?.foundry_power ? Math.round(Number(account.foundry_power)).toLocaleString('en-US') : '—') +
+    fact('Foundry power', foundryText(account?.foundry_power) || '—') +
     '</div>' + (SWAP_SIDE === 'opposite' ? swaps : '') + '</div>';
 }
 
@@ -326,8 +335,8 @@ export interface PlayerProfileOptions {
 const ACCOUNT_KINDS: [string, string][] = [['main', 'Main'], ['alt', 'Alt'], ['farm', 'Farm']];
 
 function kindToggle(chosen: string, isMain: boolean): string {
-  if (isMain) return '<span class="kind-word selected fixed">Main</span>';
-  return '<div class="kind-words">' + ACCOUNT_KINDS.map(([kind, label]) =>
+  if (isMain) return '<span class="player-kind">Main</span>';
+  return '<div class="kind-words" role="group" aria-label="Account">' + ACCOUNT_KINDS.map(([kind, label]) =>
     `<button type="button" class="kind-word${chosen === kind ? ' selected' : ''}" data-kind-pick="${kind}"` +
     ` aria-pressed="${chosen === kind}">${label}</button>`).join('') + '</div>';
 }
@@ -342,14 +351,13 @@ function accountFields(draft: Row | null, alliances: Alliance[], allianceId: str
     `<div class="player-identity"${colour ? ` style="--alliance-colour: ${escapeForPage(colour)}"` : ''}>` +
     '<div class="picker-cell">' + alliancePicker(alliances, allianceId) + '<small class="player-note" data-note-for="alliance_id"></small></div>' +
     '<div class="player-identity-text">' +
-    ((alliance || toggle) ? '<div class="kind-line">' + (alliance ? `<span class="player-alliance-tag">${escapeForPage(alliance.tag)}</span>` : '') +
-      (alliance && toggle ? '<span class="kind-dot">·</span>' : '') + toggle + '</div>' : '') +
+    (toggle ? `<div class="kind-line">${toggle}</div>` : '') +
     inlineInput('in_game_name', value('in_game_name'), 'text', 'Name', 'inline-name') +
     inlineInput('in_game_id', value('in_game_id'), 'numeric', 'ID', 'inline-id') + '</div></div>' +
     '<div class="player-facts">' +
     '<div class="player-fact"><label class="player-label" for="player-player_power">Power</label>' + powerInput('player_power', draft?.player_power) + '</div>' +
     '<div class="player-fact"><label class="player-label" for="player-foundry_power">Foundry power</label>' +
-    inlineInput('foundry_power', draft?.foundry_power ? String(Math.round(Number(draft.foundry_power))) : '', 'numeric', '', 'inline-fact inline-foundry') +
+    inlineInput('foundry_power', foundryText(draft?.foundry_power), 'numeric', 'Foundry power', 'inline-fact inline-foundry', '—') +
     '</div></div></div>';
 }
 
@@ -383,7 +391,8 @@ export function profileParts(options: PlayerProfileOptions): ProfileParts {
   // An alt already saved can be removed while its details are open. The very first
   // account is the main and has no toggle.
   const removable = saved !== null && saved.kind === 'alt';
-  const toggle = saved === null ? '' : kindToggle(String(account?.kind ?? saved.kind), saved.kind === 'main');
+  const toggle = saved === null || (saved.kind === 'main' && !options.kindLabel) ? ''
+    : kindToggle(String(account?.kind ?? saved.kind), saved.kind === 'main');
   const infoBody = !infoEditing
     ? playerSummary(saved, alliances.find(one => one.id === allianceIdOf(saved)), options.kindLabel ?? '',
         (options.swapTo ?? []).map(other => swapButton(other, alliances)).join(''))
@@ -464,6 +473,10 @@ export interface AccountsSectionOptions {
   // The farm open from the row, or 'new' for one being added, or null; and that
   // account as saved with its changes laid over it.
   openListed: number | 'new' | null;
+  // Whether it is open for editing or only shown, and whether its pencil shows (not
+  // while another part of the page is open).
+  editing: boolean;
+  pencil: boolean;
   draft: Row;
   changed: boolean;
 }
@@ -489,12 +502,16 @@ export function accountsSection(options: AccountsSectionOptions): string {
   const adding = `<button type="button" class="account-tile account-add${open === 'new' ? ' open' : ''}" data-listed-account="new">` +
     '<span class="account-tile-plus">+</span><span class="account-tile-name">Add</span></button>';
   let form = '';
-  if (open !== null) {
+  const openRow = typeof open === 'number' ? accounts.find(one => one.id === open) ?? null : null;
+  if (open === 'new' || (openRow && options.editing)) {
     const draft = options.draft;
-    const savedKind = open === 'new' ? '' : String(accounts.find(one => one.id === open)?.kind ?? '');
     form = '<div class="account-form">' +
-      accountFields(draft, alliances, draft.alliance_id ? String(draft.alliance_id) : null, kindToggle(String(draft.kind ?? 'alt'), savedKind === 'main')) +
+      accountFields(draft, alliances, draft.alliance_id ? String(draft.alliance_id) : null, kindToggle(String(draft.kind ?? 'alt'), false)) +
       saveButton('listed', options.changed, open === 'new' ? '' : 'Remove this farm') + '</div>';
+  } else if (openRow) {
+    // A farm as it is saved, shown like the player's own details, with its pencil.
+    form = '<div class="account-form showing">' + (options.pencil ? partPencil('listed', 'Farm', false) : '') +
+      playerSummary(openRow, alliances.find(one => one.id === openRow.alliance_id), 'Farm') + '</div>';
   }
   return '<section class="player-section"><h2 class="player-section-title">Your accounts</h2>' +
     `<div class="account-row">${accounts.filter(one => one.kind === 'farm').map(tile).join('')}${adding}</div>${form}</section>`;

@@ -32,6 +32,8 @@ export interface PlayerPageOptions {
   accounts: Row[];
   activeId: number | 'new';
   openListed: number | 'new' | null;
+  // Whether that account is open for editing (a new one always is) or only shown.
+  editingListed: boolean;
   listedDraft: Row;
   listedChanged: boolean;
   // The main and the alts shown one at a time, or side by side; null on a phone, where
@@ -96,7 +98,8 @@ export function playerPage(options: PlayerPageOptions): string {
   return '<div class="player-page admin-page">' + accounts +
     (options.savedRow !== null ? accountsSection({
       accounts: options.accounts, activeId: options.activeId, alliances: options.alliances,
-      openListed: options.openListed, draft: options.listedDraft, changed: options.listedChanged
+      openListed: options.openListed, editing: options.editingListed, draft: options.listedDraft, changed: options.listedChanged,
+      pencil: options.editingListed || options.editing.size === 0
     }) : '') +
 
     '<section class="player-section"><h2 class="player-section-title">Still to build here</h2><ul class="plan-list">' +

@@ -30,6 +30,11 @@
 .player-alliance-logo { height: 76px; width: auto; }
 .player-identity-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .player-alliance-tag { font-family: var(--tag-font); font-size: 14px; font-weight: 800; letter-spacing: 0.08em; color: var(--alliance-colour, var(--text-muted)); }
+/* What the account is (Main, Alt, Farm) follows the tag in the quiet text colour, so it
+   never takes the alliance's colour. */
+.player-tag-line { display: flex; align-items: baseline; gap: 6px; }
+.player-kind-dot { font-weight: 800; color: var(--text-faint); }
+.player-kind { font-family: var(--tag-font); font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
 .player-name { font-size: 26px; font-weight: 800; line-height: 1.15; overflow-wrap: anywhere; }
 .player-id { font-size: 14px; font-weight: 600; color: var(--text-muted); font-variant-numeric: tabular-nums; }
 .player-facts { display: flex; gap: 36px; justify-content: center; }
@@ -60,36 +65,41 @@
 .player-note.problem { color: var(--danger); }
 .player-note:empty { display: none; }
 
-/* Power: the number, then M or B as two small letters beside it. */
-.power-edit { display: flex; align-items: center; gap: 4px; }
-.unit-picks { display: flex; flex-direction: column; gap: 1px; }
-.unit-pick { width: 22px; height: 18px; padding: 0; border: none; border-radius: 5px; background: none;
-  color: var(--text-faint); font: inherit; font-size: 11px; font-weight: 800; line-height: 1; cursor: pointer; }
+/* Power: the number, then a small two-part switch, M | B, the picked one lit, like the
+   other switches on the page. */
+.power-edit { display: flex; align-items: center; gap: 8px; }
+.unit-picks { display: flex; padding: 2px; gap: 2px; border-radius: 999px; border: 1px solid var(--glass-border); }
+.unit-pick { min-width: 28px; height: 26px; padding: 0 6px; border: none; border-radius: 999px; background: none;
+  color: var(--text-faint); font: inherit; font-size: 13px; font-weight: 800; line-height: 1; cursor: pointer; }
 .unit-pick:hover { color: var(--text); }
-.unit-pick.selected { color: var(--accent-ink); background: var(--accent); }
+.unit-pick.selected { color: var(--text); background: var(--glass-strong); }
 
-/* What the account is, in the place of the alliance line: three small words, the
-   picked one in the alliance's colour. */
-.kind-line { display: flex; align-items: center; gap: 2px; }
-.kind-dot { padding: 0 2px; font-weight: 800; color: var(--alliance-colour, var(--text-muted)); }
-.kind-words { display: flex; gap: 2px; }
-.kind-word { padding: 1px 6px; border: none; border-radius: 6px; background: none; cursor: pointer;
-  font-family: var(--tag-font); font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+/* What the account is, above the name while open: Main | Alt | Farm as one switch, the
+   picked one lit like the M | B switch. The main's own shows as a plain word: it cannot
+   change, another account is made the main instead. */
+.kind-line { display: flex; align-items: center; margin-bottom: 4px; }
+.kind-words { display: flex; padding: 2px; gap: 2px; border-radius: 999px; border: 1px solid var(--glass-border); }
+.kind-word { height: 26px; padding: 0 10px; border: none; border-radius: 999px; background: none; cursor: pointer;
+  font-family: var(--tag-font); font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
 .kind-word:hover { color: var(--text); }
-.kind-word.selected { color: var(--alliance-colour, var(--accent)); }
-.kind-word.fixed { cursor: default; padding-left: 2px; }
+.kind-word.selected { color: var(--text); background: var(--glass-strong); }
 
-/* The alliance: its logo with a small arrow; the list opens under it, over the page. */
+/* The alliance while open: its logo, and under it the tag with an arrow in a small pill,
+   so it reads as something to tap. The list opens under it, over the page. */
 .picker-cell { display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .alliance-picker { position: relative; }
-.alliance-picker > summary { list-style: none; display: flex; align-items: center; gap: 2px; padding: 2px 4px; border-radius: 12px; cursor: pointer; }
+.alliance-picker > summary { list-style: none; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; }
 .alliance-picker > summary::-webkit-details-marker { display: none; }
-.alliance-picker > summary:hover { background: rgba(255, 255, 255, 0.05); }
+.alliance-picker .player-alliance-logo { height: 64px; }
+.picker-no-logo { display: none; }
+.picker-pill { display: flex; align-items: center; gap: 4px; height: 28px; padding: 0 8px 0 12px; border-radius: 999px;
+  border: 1px solid var(--glass-border); font-family: var(--tag-font); font-size: 13px; font-weight: 800; letter-spacing: 0.08em;
+  color: var(--alliance-colour, var(--text-muted)); }
+.alliance-picker > summary:hover .picker-pill { border-color: color-mix(in srgb, var(--text) 40%, transparent); }
 .picker-chevron { flex: none; color: var(--text-muted); }
 .alliance-picker[open] .picker-chevron { transform: rotate(180deg); color: var(--accent); }
-.picker-tag { min-width: 76px; height: 76px; display: flex; align-items: center; justify-content: center;
-  font-family: var(--tag-font); font-size: 18px; font-weight: 800; color: var(--alliance-colour, var(--text-muted)); }
-.alliance-list { position: absolute; z-index: 30; top: calc(100% + 6px); left: 0; width: 260px; max-height: 340px; overflow-y: auto;
+.alliance-picker[open] .picker-pill { border-color: var(--accent); }
+.alliance-list { position: absolute; z-index: 30; top: calc(100% + 6px); left: 50%; transform: translateX(-50%); width: 260px; max-height: 340px; overflow-y: auto;
   padding: 6px; display: flex; flex-direction: column; gap: 2px; border: 1px solid var(--glass-border); border-radius: 14px;
   background: linear-gradient(var(--glass-strong), var(--glass-strong)), var(--page-color);
   box-shadow: 0 14px 36px rgba(0, 0, 0, 0.45); }
@@ -203,6 +213,11 @@
 /* Cancel and Save are one pair: same size. Until something changes, Save looks like Cancel with faint text, then fills with the accent. */
 .player-save-row { display: flex; justify-content: center; gap: 10px; margin-top: 4px; }
 .player-save-row button { min-width: 110px; }
+/* Removing an alt or a farm: a quiet line of its own under Cancel and Save, never one of
+   the pair. It still asks before anything is removed. */
+.player-remove { align-self: center; margin-top: -4px; padding: 4px 8px; border: none; background: none; cursor: pointer;
+  font: inherit; font-size: 13px; font-weight: 700; color: color-mix(in srgb, var(--danger) 80%, transparent); }
+.player-remove:hover { color: var(--danger); text-decoration: underline; }
 .player-save:disabled { background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-faint); cursor: default; }
 
 /* The question asked when leaving with changes not saved. */
@@ -221,10 +236,12 @@
   width: 150px; min-width: 0; padding: 8px 12px 10px; border: none; border-radius: 14px; background: none; color: var(--text);
   font: inherit; cursor: pointer; }
 .account-tile + .account-tile::before { content: ''; position: absolute; left: 0; top: 10px; bottom: 10px; border-left: 1px solid var(--glass-border); }
-.account-tile:hover { background: rgba(255, 255, 255, 0.05); }
-/* The open one: its name in the accent colour with a line under the tile, like the open tab. */
-.account-tile.open { box-shadow: inset 0 -2px 0 var(--accent); border-radius: 0; }
+/* Pointed at, its name brightens; no box is drawn around it. */
+.account-tile:hover .account-tile-name { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+/* The open one: its name in the accent colour with a line right under it, like the open
+   section in the top bar. */
 .account-tile.open .account-tile-name, .account-tile.open .account-tile-plus { color: var(--accent); }
+.account-tile.open .account-tile-name { box-shadow: inset 0 -2px 0 var(--accent); padding-bottom: 2px; text-decoration: none; }
 .account-tile-logo { height: 48px; width: auto; margin-bottom: 2px; }
 .account-tile-tag, .account-tile-plus { height: 48px; margin-bottom: 2px; display: flex; align-items: center; font-family: var(--tag-font); font-weight: 800; }
 .account-tile-tag { font-size: 15px; color: var(--alliance-colour); }
@@ -235,7 +252,8 @@
 .account-tile-power { font-size: 14px; font-weight: 800; color: var(--text-muted); }
 .account-add .account-tile-name { color: var(--text-muted); }
 .account-add:hover .account-tile-name, .account-add:hover .account-tile-plus { color: var(--text); }
-.account-form { display: flex; flex-direction: column; gap: 16px; }
+.account-form { position: relative; display: flex; flex-direction: column; gap: 16px; }
+.player-page .account-form.showing > .pencil-button { top: 0; }
 @media (max-width: 899px) {
   .account-tile { width: 33.33%; padding: 8px 6px 10px; }
   .account-tile-logo, .account-tile-tag, .account-tile-plus { height: 40px; }
@@ -253,17 +271,21 @@
 .view-choice.selected { color: var(--text); background: var(--glass-strong); }
 
 /* The other account to swap to, in the summary row with room around it: its alliance's
-   logo, small, and under it the swap mark with Main or Alt, quiet until pointed at. */
+   logo, small, and under it the swap mark with Main or Alt. */
 .swap { --alliance-colour: var(--accent); flex: none; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 4px;
-  border: none; background: none; color: var(--text-faint); font: inherit; cursor: pointer; opacity: 0.8; }
-.swap:hover { opacity: 1; color: var(--text); }
+  border: none; border-radius: 12px; background: none; color: var(--text-muted); font: inherit; cursor: pointer; }
+.swap:hover { color: var(--text); }
 .swap-logo { height: 46px; width: auto; }
 .swap-tag { height: 46px; display: flex; align-items: center; font-family: var(--tag-font); font-size: 14px; font-weight: 800; color: var(--alliance-colour); }
 .swap-line { display: flex; align-items: center; gap: 4px; }
 .swap-line svg { width: 14px; height: 14px; color: var(--alliance-colour); }
 .swap-kind { font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
-/* On a phone the summary is stacked, so the swap always comes last, under the powers. */
-@media (max-width: 899px) { .player-summary > .swap { order: 3; } }
+/* On a phone the swap sits in the title's left corner, opposite the pencil, instead of
+   on a row of its own. */
+@media (max-width: 899px) {
+  .player-summary > .swap { position: absolute; left: -4px; top: 12px; gap: 2px; }
+  .player-summary > .swap .swap-logo, .player-summary > .swap .swap-tag { height: 34px; }
+}
 
 /* Side by side: one title per section, the section split between the accounts with a
    line between them; each half has its own pencils. */
@@ -275,6 +297,8 @@
    account's three troops read as one group. */
 .split-half + .split-half { border-left: 1px solid color-mix(in srgb, var(--text) 32%, transparent); }
 .player-page .split-half > .pencil-button { top: 0; }
+/* Each half keeps clear of its pencil. */
+.split-half > .player-summary { padding-right: 30px; }
 .split-half .troop-name { font-size: 13px; letter-spacing: 0.05em; }
 /* A troop open for editing takes its half's whole width, under the other two. */
 .split-half .troop-columns:has(.editing) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -283,7 +307,9 @@
 
 
 /* Open in one half of the split view, the details sit closer together so they fit the half. */
-.split-half .player-editor { gap: 28px; }
+.split-half .player-editor { gap: 16px 28px; flex-wrap: wrap; }
 .split-half .player-editor .player-facts { gap: 20px; }
 .split-half .player-editor .player-label { white-space: nowrap; }
 .split-half .player-editor .player-alliance-logo { height: 76px; }
+/* Side by side, the open half's buttons keep clear of the line under the powers. */
+.split-half .player-save-row { margin-top: 14px; }
