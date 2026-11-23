@@ -108,7 +108,7 @@ const view = {
   predictionShowsSvs: true,
   predictionShowsSunfire: true,
   // 'all' or 'mine': the whole list, or our own group.
-  predictionScope: 'mine',
+  predictionScope: 'all',
   // What is typed in the state box, kept as written.
   // True to show each group as one row rather than its subgroups.
   predictionMergesGroups: false,

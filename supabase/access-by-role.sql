@@ -143,6 +143,8 @@ create policy "each changes their own availability_times" on availability_times 
   with check (exists (select 1 from availability a where a.id = availability_id and (a.account_id = auth.uid() or public.manages_battles())));
 create policy "each changes their own personal_entries" on personal_entries for all to authenticated
   using (account_id = auth.uid()) with check (account_id = auth.uid());
+create policy "each reads and changes their own schedule_picks" on schedule_picks for all to authenticated
+  using (account_id = auth.uid()) with check (account_id = auth.uid());
 
 -- Roles: admins give and take them; only the owner gives or takes owner and admin.
 create policy "admins change roles" on account_roles for all to authenticated

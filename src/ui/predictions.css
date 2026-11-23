@@ -109,16 +109,27 @@
 }
 
 .prediction-dates {
-  display: flex; align-items: flex-start; gap: var(--date-gap); padding-bottom: 10px;
-  /* The dates move as one sheet, like a spreadsheet: one scroll across and one down,
-     for every column together. */
-  overflow: auto; overscroll-behavior: contain; flex: 1 1 auto; min-height: 0;
+  /* Two scrollers, one inside the other, so that a finger moves the sheet one way at a
+     time: this one goes across, the sheet inside it goes up and down. One scroller
+     for both let a slanted swipe move it both ways at once. */
+  position: relative; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain;
+  flex: 1 1 auto; min-height: 0; container-type: inline-size;
   /* Whole columns only: the next date shows as a sliver at the edge, the scroll
      snaps a peek in from the left, and the fade covers exactly that sliver. */
   scroll-snap-type: x mandatory; scroll-padding-left: var(--date-peek);
-  scroll-behavior: smooth; scrollbar-width: none;
   scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--accent) 35%, transparent) transparent;
 }
+/* The dates move as one sheet, like a spreadsheet: one scroll down for every column
+   together. */
+.prediction-sheet {
+  display: flex; align-items: flex-start; gap: var(--date-gap);
+  width: max-content; height: 100%; box-sizing: border-box; padding-bottom: 10px;
+  overflow-x: hidden; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-width: none;
+}
+.prediction-sheet::-webkit-scrollbar { display: none; }
+/* The places the strip settles on, one at the left edge of every date. The dates sit
+   inside the sheet, so the strip cannot use them for this itself. */
+.snap-mark { position: absolute; top: 0; width: 1px; height: 1px; scroll-snap-align: start; pointer-events: none; }
 .prediction-dates::-webkit-scrollbar { width: 8px; height: 8px; }
 .prediction-dates::-webkit-scrollbar-corner { background: transparent; }
 .prediction-dates.can-left {
@@ -143,8 +154,8 @@
      leaving a gap down the right. */
   /* A column is as tall as its groups, up to the height there is. A short list ends
      where it ends instead of leaving dead space under it; a long one scrolls. */
-  flex: 0 0 calc((100% - 2 * var(--date-peek) - 5 * var(--date-gap)) / 6);
-  min-width: 190px; scroll-snap-align: start;
+  flex: 0 0 calc((100cqw - 2 * var(--date-peek) - 5 * var(--date-gap)) / 6);
+  min-width: 190px;
   display: flex; flex-direction: column;
   border-radius: 8px;
   background: var(--glass); border: 1px solid var(--glass-border);
@@ -168,7 +179,7 @@
 
 /* A column's rows scroll with the whole sheet. Each column starts lower or higher by
    the space set above its rows, so this state's group lines up across the dates. */
-.date-block-scroll { flex: none; }
+.date-block-scroll { flex: none; --empty-line: 24px; --empty-space: 0px; }
 .date-block-rows { flex: 1 1 auto; }
 .date-block-rows .group-row:last-child { border-bottom: none; border-radius: 0 0 7px 7px; }
 .date-block-head {
@@ -226,8 +237,16 @@
 .group-row.is-us .range-dash {
   color: color-mix(in srgb, var(--event-mark-light) 55%, transparent);
 }
-/* The first row of a big group gets a line above it. */
-.group-row.starts { border-top: 1px solid var(--glass-border); }
+/* The first row of a big group gets a line above it. It is drawn inside the row, so
+   it adds no height and every line stays level with the same line in the next date. */
+.group-row.starts { box-shadow: inset 0 1px 0 var(--glass-border); }
+/* A column that starts lower is filled above its rows with empty lines, like the
+   empty cells of a sheet, rather than a blank gap. */
+.date-block-scroll.starts-lower {
+  background: repeating-linear-gradient(to top, transparent 0, transparent calc(var(--empty-line) - 1px),
+    var(--glass-border) calc(var(--empty-line) - 1px), var(--glass-border) var(--empty-line));
+  background-size: 100% var(--empty-space); background-repeat: no-repeat; background-position: top;
+}
 
 .predictions-empty { padding: 16px; font-size: 14px; color: var(--text-muted); }
 
@@ -248,7 +267,7 @@
   .predictions-head .prediction-back { margin: 0 auto; }
   .predictions-head .prediction-back::before { display: none; }
   .predictions-page { --date-peek: 20px; --date-gap: 6px; }
-  .date-block { flex-basis: calc((100% - 2 * var(--date-peek) - var(--date-gap)) / 2); min-width: 0; }
+  .date-block { flex-basis: calc((100cqw - 2 * var(--date-peek) - var(--date-gap)) / 2); min-width: 0; }
   .date-block-head { font-size: 12px; padding: 6px 6px 2px; }
   .date-block-labels { grid-template-columns: 1fr 9px 1fr 24px 42px; padding: 0 5px 5px; font-size: 8.5px; }
   .group-row { grid-template-columns: 1fr 9px 1fr 24px 42px; padding: 3px 5px; font-size: 11px; }
@@ -276,3 +295,9 @@
   transform: rotate(45deg); margin-left: 2px;
 }
 .next-transfer-tab.on-right .tab-arrow { transform: rotate(-135deg); margin: 0 2px 0 0; }
+/* The way back to our range: in the middle, at the top of the sheet when the range
+   went off the top and at the bottom when it went off the bottom. */
+.next-transfer-tab.to-group { left: 50%; transform: translateX(-50%); }
+.next-transfer-tab.to-group.on-top { bottom: auto; }
+.next-transfer-tab.to-group .tab-arrow { transform: rotate(-45deg); margin: 0 0 3px 0; }
+.next-transfer-tab.to-group.on-top .tab-arrow { transform: rotate(135deg); margin: 3px 0 0 0; }

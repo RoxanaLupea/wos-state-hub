@@ -1,7 +1,8 @@
 // The dates scroll as one sheet, like a spreadsheet: one scroll down moves every
-// column together, under date heads that stay at the top. This state's group sits at
-// a different depth on each date, so each column gets space above its rows that lines
-// the groups up across the dates, and the sheet opens with the group in view.
+// column together, under date heads that stay at the top. Across and down are two
+// scrollers, so a swipe moves the sheet one way at a time. The range this state is in
+// sits on the same line in every column, as in the sheet, and the sheet opens with
+// our group in view.
 
 // How many ranges stay visible above the group this state is in. Near the top,
 // where it is easy to read, but not pinned to the edge.
@@ -9,7 +10,8 @@ const ROWS_ABOVE = 2;
 
 export function layoutPredictions(root: ParentNode): void {
   const strip = root.querySelector<HTMLElement>('.prediction-dates');
-  if (!strip) return;
+  const sheet = strip?.querySelector<HTMLElement>('.prediction-sheet');
+  if (!strip || !sheet) return;
   // On a phone the page itself is not a fixed height, so the sheet is given the rest
   // of the screen; it then scrolls on its own, both ways, like on a computer.
   // The visible height is taken, not the window's: a phone browser's bar at the bottom
@@ -21,30 +23,86 @@ export function layoutPredictions(root: ParentNode): void {
     const below = pageSpaceBelow(strip);
     strip.style.height = Math.max(240, visibleHeight - top - below) + 'px';
   }
+  placeSnapMarks(strip);
   const openAt = layoutStrip(strip, root);
 
-  const columns = Array.from(strip.querySelectorAll<HTMLElement>('.date-block-scroll'));
-  // Both moves at once and without the strip's smooth scrolling: a smooth move down
-  // would cancel the one across, and the strip would stay on the oldest dates.
-  const openOn = (top: number) => strip.scrollTo({ left: openAt, top, behavior: 'instant' });
+  const columns = Array.from(sheet.querySelectorAll<HTMLElement>('.date-block-scroll'));
+  const openOn = (top: number) => {
+    strip.scrollLeft = openAt;
+    sheet.scrollTop = top;
+  };
   if (!columns.length) {
     openOn(0);
     return;
   }
 
-  // How far down its own rows each column's opening place is.
-  const heads = strip.querySelector<HTMLElement>('.date-block-top');
-  const roomBelowHeads = strip.clientHeight - (heads?.offsetHeight ?? 0);
-  const openingOf = new Map<HTMLElement, number>();
+  // Where our range is in each column, measured from the column's top.
+  for (const column of columns) column.style.paddingTop = '0px';
+  const ourRangeTop = new Map<HTMLElement, number>();
   for (const column of columns) {
-    column.style.paddingTop = '0px';
-    openingOf.set(column, openingPlace(column, roomBelowHeads));
+    const ourRange = column.querySelector<HTMLElement>('.group-row.is-us');
+    if (ourRange) ourRangeTop.set(column, ourRange.getBoundingClientRect().top - column.getBoundingClientRect().top);
   }
-  const deepest = Math.max(...Array.from(openingOf.values()));
+  if (!ourRangeTop.size) {
+    openOn(0);
+    return;
+  }
+
+  // A column with fewer lines above our range starts lower, by empty lines, so our
+  // range is on the same line in every column. When every date has the same ranges
+  // above it, as it does now, nothing is added.
+  const lowest = Math.max(...Array.from(ourRangeTop.values()));
+  const rowHeight = columns[0].querySelector<HTMLElement>('.group-row:not(.is-us)')?.offsetHeight ?? 0;
   for (const column of columns) {
-    column.style.paddingTop = (deepest - (openingOf.get(column) ?? 0)) + 'px';
+    const top = ourRangeTop.get(column);
+    const space = top === undefined ? 0 : Math.round(lowest - top);
+    column.style.paddingTop = space + 'px';
+    column.classList.toggle('starts-lower', space > 0);
+    column.style.setProperty('--empty-space', space + 'px');
+    if (rowHeight) column.style.setProperty('--empty-line', rowHeight + 'px');
   }
-  openOn(deepest);
+
+  // Opens with a couple of ranges above our group, in the column that needs the most
+  // room for that, as long as our range itself stays in view.
+  const headsHeight = sheet.querySelector<HTMLElement>('.date-block-top')?.offsetHeight ?? 0;
+  const roomBelowHeads = sheet.clientHeight - headsHeight;
+  let openingTop = lowest;
+  for (const column of columns) {
+    const space = parseFloat(column.style.paddingTop) || 0;
+    openingTop = Math.min(openingTop, space + openingPlace(column, roomBelowHeads));
+  }
+  const ourRangeHeight = sheet.querySelector<HTMLElement>('.group-row.is-us')?.offsetHeight ?? 0;
+  const groupTop = Math.max(0, openingTop, lowest + ourRangeHeight - roomBelowHeads);
+  openOn(groupTop);
+
+  // The way back to our range: shown while it is out of sight above or below, at that
+  // edge, and it brings the sheet back to where it opened.
+  const toGroup = root.querySelector<HTMLElement>('[data-prediction-group]');
+  if (toGroup) {
+    toGroup.addEventListener('click', () => sheet.scrollTo({ top: groupTop, behavior: 'smooth' }));
+    const place = () => {
+      const isAbove = lowest + ourRangeHeight <= sheet.scrollTop + 4;
+      const isBelow = lowest >= sheet.scrollTop + roomBelowHeads - 4;
+      toGroup.hidden = !isAbove && !isBelow;
+      toGroup.classList.toggle('on-top', isAbove);
+      // Just under the date heads, when it sits at the top.
+      toGroup.style.top = isAbove ? (strip.offsetTop + headsHeight + 10) + 'px' : '';
+    };
+    sheet.addEventListener('scroll', place, { passive: true });
+    place();
+  }
+}
+
+// The places the strip settles on: one at the left edge of every date. The dates sit
+// inside the sheet, which scrolls up and down, so the strip gets marks of its own.
+function placeSnapMarks(strip: HTMLElement): void {
+  for (const mark of Array.from(strip.querySelectorAll('.snap-mark'))) mark.remove();
+  for (const column of Array.from(strip.querySelectorAll<HTMLElement>('.date-block'))) {
+    const mark = document.createElement('div');
+    mark.className = 'snap-mark';
+    mark.style.left = column.offsetLeft + 'px';
+    strip.appendChild(mark);
+  }
 }
 
 // How far down a column's rows its opening place is: the whole group this state is
@@ -60,9 +118,9 @@ function openingPlace(column: HTMLElement, room: number): number {
   let lastIndex = firstIndex;
   while (lastIndex + 1 < rows.length && inOurGroup(rows[lastIndex + 1])) lastIndex += 1;
 
-  // Measured against the column's own top, whichever element a row is placed from.
-  const columnTop = column.getBoundingClientRect().top;
-  const topOf = (row: HTMLElement) => row.getBoundingClientRect().top - columnTop;
+  // Measured from where the rows start, below any empty lines added above them.
+  const rowsTop = rows[0].getBoundingClientRect().top;
+  const topOf = (row: HTMLElement) => row.getBoundingClientRect().top - rowsTop;
   const groupTop = topOf(rows[firstIndex]);
   const groupBottom = topOf(rows[lastIndex]) + rows[lastIndex].offsetHeight;
 

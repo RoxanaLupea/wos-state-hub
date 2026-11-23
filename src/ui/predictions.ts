@@ -138,11 +138,11 @@ export function predictionsControls(options: PredictionsOptions): string {
     checkBox('svs', 'svs-battle', 'SvS', options.showsSvs) +
     checkBox('sunfire', 'sunfire', 'Sunfire', options.showsSunfire) + '</div>';
 
-  // Two choices each, the chosen one lit, as UTC | Mine is on the calendar: only the
-  // group 1458 is in, or every state; and each transfer group as one row, or cut into
-  // the ranges it is made of.
-  const scope = choicePair('scope', 'Which states', ['Ours', 'All'], options.scope === 'mine');
-  const rows = choicePair('rows', 'How groups show', ['Groups', 'Ranges'], options.mergesGroups);
+  // Two choices each, the chosen one lit, as UTC | Mine is on the calendar: every
+  // state, or only the group 1458 is in; and every range on its own row, or each group
+  // as one row, a group being the ranges that share a furnace cap and a generation.
+  const scope = choicePair('scope', 'Which states', ['All', 'Ours'], options.scope === 'all');
+  const rows = choicePair('rows', 'How groups show', ['Ranges', 'Groups'], !options.mergesGroups);
 
   return '<div class="predictions-head">' + follows +
     `<div class="prediction-views">${scope}${rows}</div></div>`;
@@ -176,7 +176,13 @@ export function predictionsPage(options: PredictionsOptions): string {
     ? '<button type="button" class="next-transfer-tab" data-prediction-back hidden>' +
       `<span class="tab-arrow" aria-hidden="true"></span>${escapeForPage(shortDateText(options.nextDate))}</button>`
     : '';
-  return '<div class="predictions-page"><div class="prediction-dates">' +
+  // The way back to our own range, named by the state, shown once it is scrolled out
+  // of sight above or below.
+  const backToGroup = options.watchedState !== null
+    ? '<button type="button" class="next-transfer-tab to-group" data-prediction-group hidden>' +
+      `<span class="tab-arrow" aria-hidden="true"></span>${escapeForPage(String(options.watchedState))}</button>`
+    : '';
+  return '<div class="predictions-page"><div class="prediction-dates"><div class="prediction-sheet">' +
     options.dates.map(one => dateBlock(one.date, one.groups, one.follows, options)).join('') +
-    '</div>' + backToNext + '</div>';
+    '</div></div>' + backToNext + backToGroup + '</div>';
 }

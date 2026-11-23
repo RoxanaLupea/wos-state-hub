@@ -84,11 +84,22 @@ there before discussing it again.
 - The way back to the next transfer is a small glass tab with its date at the bottom
   of the dates, on the side the next transfer is on (left or right, arrow pointing
   that way), shown only while the next transfer is out of sight (23 Nov). The
-  controls are "Ours | All" and "Groups | Ranges", each showing both choices with the
-  chosen one lit in the page's parchment colour, like the ticked boxes (23 Nov).
+  controls are "All | Ours" and "Ranges | Groups", All and Ranges first and chosen
+  by default, each showing both choices with the chosen one lit in the page's
+  parchment colour, like the ticked boxes (23 Nov). A group is made of the ranges
+  that share a furnace cap and a generation.
 - The date columns scroll as one sheet, like a spreadsheet: no scrollbar per column,
-  one scroll down for all of them under date heads that stay at the top. Each column
-  starts lower or higher so our group lines up across the dates (23 Nov).
+  one scroll down for all of them under date heads that stay at the top. The lines
+  are as in the sheet: our range is on the same line in every date, from the first
+  to the last. Where a column has fewer lines above it (Ours, or Groups), it starts
+  lower with empty lines, like empty cells, never a blank gap (23 Nov).
+- Up and down and across are two deliberate moves: a swipe moves the sheet one way
+  only (23 Nov).
+- Two ways back. The next transfer: a tab with its date at the bottom, on the side
+  it went off. Our range: a tab with the state number in the middle, at the top or
+  the bottom, the side it went off. Each shows only while that place is out of sight.
+  With only SvS or only Sunfire ticked, the next transfer is the next one of that
+  kind (23 Nov).
 
 ### King of Icefield
 - Its bar shows its seven named days on line 2 on a computer, like SvS preparation
