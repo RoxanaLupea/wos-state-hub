@@ -43,9 +43,14 @@ read the notes file it names (for profile-draft: notes/profile-draft.md).
 Roxanne gives the direction. The design quality is Claude's job, and it stays on when
 she asks for a change.
 
-- Brief first. Before any code, write in the chat what the page or part is for, who uses
-  it, what they do there and what matters most on it. Build from the brief once she
-  agrees with it.
+- Whatever Roxanne has said once is decided: she thought it through days before, then
+  added or removed while building. Never hand her decisions back to her to check, sum
+  up or re-approve. Gather them from the notes and past work and design from them. Ask
+  her only about what is genuinely open, one thing at a time, and only when design
+  cannot settle it.
+- Brief first. Before any code, write in the chat, in a few lines, what the page or
+  part is for, who uses it and what matters most on it. The brief adds to her
+  decisions; it never restates or replaces them.
 - Read a request as a goal, not a spec. "Swap between main and alt" means a player
   reaches their other account easily. Where the control goes and how it looks is a
   design decision, made for the whole page and the way a player moves through it.
