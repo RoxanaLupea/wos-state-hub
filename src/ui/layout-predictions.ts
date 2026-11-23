@@ -12,10 +12,14 @@ export function layoutPredictions(root: ParentNode): void {
   if (!strip) return;
   // On a phone the page itself is not a fixed height, so the sheet is given the rest
   // of the screen; it then scrolls on its own, both ways, like on a computer.
+  // The visible height is taken, not the window's: a phone browser's bar at the bottom
+  // can sit over part of the window, and the sheet and its button would end under it.
   if (window.innerWidth < 1000) {
     strip.style.height = '';
     const top = strip.getBoundingClientRect().top + window.scrollY;
-    strip.style.height = Math.max(240, window.innerHeight - top - 8) + 'px';
+    const visibleHeight = Math.min(window.innerHeight, window.visualViewport?.height ?? window.innerHeight);
+    const below = pageSpaceBelow(strip);
+    strip.style.height = Math.max(240, visibleHeight - top - below) + 'px';
   }
   const openAt = layoutStrip(strip, root);
 
@@ -70,6 +74,13 @@ function openingPlace(column: HTMLElement, room: number): number {
   return Math.max(0, groupTop);
 }
 
+// How much of the page lies under the strip, its padding included, so the page ends
+// at the bottom of the screen instead of scrolling a little past it.
+function pageSpaceBelow(strip: HTMLElement): number {
+  const stripBottom = strip.getBoundingClientRect().bottom + window.scrollY;
+  return Math.max(8, document.documentElement.scrollHeight - stripBottom);
+}
+
 // The strip of dates moves sideways: dragged with the mouse, scrolled with a
 // trackpad or Shift and the wheel, or with the arrow keys. It is the only way across
 // without a mouse that scrolls both ways, so it does not rely on one.
@@ -88,8 +99,10 @@ function layoutStrip(strip: HTMLElement, root: ParentNode): number {
   let scrollAtPress = 0;
   let isDragging = false;
 
+  // Only a mouse is followed here. A finger already scrolls the strip by itself, and
+  // moving it from here too made the two fight and the scroll slow and jumpy.
   strip.addEventListener('pointerdown', event => {
-    if (event.button !== 0) return;
+    if (event.pointerType !== 'mouse' || event.button !== 0) return;
     pressedAt = event.clientX;
     scrollAtPress = strip.scrollLeft;
     isDragging = false;

@@ -19,22 +19,23 @@ function query(table) {
   let payload = null;
   let single = '';
   let conflictColumns = ['id'];
+  const orders = [];
+  let firstRow = 0;
+  let rowCount = Infinity;
+  let wantsCount = false;
 
   const matches = row => filters.every(test => test(row));
   const builder = {
-    select() { return builder; },
+    select(columns, options = {}) { wantsCount = options.count === 'exact'; return builder; },
     eq(column, value) { filters.push(row => row[column] === value); rows = rows.filter(row => row[column] === value); return builder; },
     neq(column, value) { filters.push(row => row[column] !== value); rows = rows.filter(row => row[column] !== value); return builder; },
     in(column, values) { filters.push(row => values.includes(row[column])); rows = rows.filter(row => values.includes(row[column])); return builder; },
     gte(column, value) { filters.push(row => row[column] >= value); rows = rows.filter(row => row[column] >= value); return builder; },
     lte(column, value) { filters.push(row => row[column] <= value); rows = rows.filter(row => row[column] <= value); return builder; },
     is(column, value) { filters.push(row => row[column] === value); rows = rows.filter(row => row[column] === value); return builder; },
-    order(column, options = {}) {
-      const direction = options.ascending === false ? -1 : 1;
-      rows.sort((left, right) => (left[column] > right[column] ? 1 : left[column] < right[column] ? -1 : 0) * direction);
-      return builder;
-    },
-    limit(count) { rows = rows.slice(0, count); return builder; },
+    order(column, options = {}) { orders.push({ column, direction: options.ascending === false ? -1 : 1 }); return builder; },
+    limit(count) { rowCount = count; return builder; },
+    range(first, last) { firstRow = first; rowCount = last - first + 1; return builder; },
     single() { single = 'single'; return builder; },
     maybeSingle() { single = 'maybe'; return builder; },
     insert(values) { action = 'insert'; payload = values; return builder; },
@@ -46,7 +47,17 @@ function query(table) {
     update(values) { action = 'update'; payload = values; return builder; },
     delete() { action = 'delete'; return builder; },
     then(resolve, reject) {
-      let data = rows;
+      // Sorted by the first order given, then the next, as the database does.
+      rows.sort((left, right) => {
+        for (const { column, direction } of orders) {
+          if (left[column] > right[column]) return direction;
+          if (left[column] < right[column]) return -direction;
+        }
+        return 0;
+      });
+      const count = rows.length;
+      // Like the real project, one request hands back at most 1000 rows.
+      let data = rows.slice(firstRow, firstRow + Math.min(rowCount, 1000));
       if (action === 'insert' || action === 'upsert') {
         const list = Array.isArray(payload) ? payload : [payload];
         data = list.map(values => {
@@ -65,7 +76,7 @@ function query(table) {
         for (const row of data) all.splice(all.indexOf(row), 1);
       }
       if (single) data = data[0] ?? null;
-      return Promise.resolve({ data, error: null }).then(resolve, reject);
+      return Promise.resolve({ data, error: null, count: wantsCount ? count : null }).then(resolve, reject);
     }
   };
   return builder;
