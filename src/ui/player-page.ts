@@ -10,7 +10,7 @@ import { escapeForPage } from './escape.ts';
 import type { Alliance } from '../data/alliances.ts';
 import type { SignedInPerson } from '../data/auth.ts';
 import type { Row } from '../data/records.ts';
-import { accountsSection, playerProfile } from './player-profile.ts';
+import { accountViewToggle, accountsSection, partPencil, playerProfile, profileParts, sectionTitle } from './player-profile.ts';
 
 export interface PlayerPageOptions {
   alliances: Alliance[];
@@ -34,6 +34,9 @@ export interface PlayerPageOptions {
   openListed: number | 'new' | null;
   listedDraft: Row;
   listedChanged: boolean;
+  // The main and the alts shown one at a time, or side by side; null on a phone, where
+  // there is only one at a time and no choice.
+  accountView: 'one' | 'both' | null;
   // Set while the player is asked whether to remove an alt or a farm: its name.
   removePrompt: string | null;
 }
@@ -50,12 +53,47 @@ export function playerPage(options: PlayerPageOptions): string {
   const person = options.person;
   if (!person) return signInPage(options.stateNumber);
 
-  return '<div class="player-page admin-page">' +
-    playerProfile({
-      saved: options.savedRow, draft: options.draftRow, alliances: options.alliances,
-      fallbackAllianceId: options.myAllianceId, editing: options.editing, changed: options.changed,
-      showTroops: options.savedRow !== null
-    }) +
+  // The main and the alts: with more than one, a switch on a computer chooses between one
+  // at a time (tapping another swaps it in) and all side by side, each with its info and
+  // troops. A phone shows one at a time.
+  // Side by side, only the account the player is on can have a part open; a pencil in
+  // another column puts them on that account first.
+  const switchable = options.accounts.filter(one => one.kind !== 'farm');
+  const hasAlt = switchable.length > 1;
+  const sideBySide = options.accountView === 'both' && hasAlt;
+  const kindOf = (row: Row | null) => hasAlt && row ? (row.kind === 'main' ? 'Main' : 'Alt') : '';
+  // The One | Both switch sits in the Player info title's left corner.
+  const toggle = hasAlt && options.accountView ? accountViewToggle(options.accountView) : '';
+  const activeOptions = {
+    saved: options.savedRow, draft: options.draftRow, alliances: options.alliances,
+    fallbackAllianceId: options.myAllianceId, editing: options.editing, changed: options.changed,
+    showTroops: options.savedRow !== null, kindLabel: kindOf(options.savedRow),
+    swapTo: sideBySide ? [] : switchable.filter(row => row.id !== options.activeId), viewToggle: toggle
+  };
+  const otherOptions = (row: Row) => ({
+    saved: row, draft: row, alliances: options.alliances, fallbackAllianceId: null,
+    editing: options.editing.size > 0 ? new Set(['elsewhere']) : new Set<string>(), changed: new Set<string>(), showTroops: true,
+    kindLabel: kindOf(row), swapTo: [], viewToggle: ''
+  });
+  // Side by side: one Player info title and one Troop tiers title, each section split
+  // between the accounts; each half has its own pencils.
+  let accounts = '';
+  if (!sideBySide) accounts = playerProfile(activeOptions);
+  else {
+    const halves = switchable.map(row => {
+      const isActive = row.id === options.activeId;
+      return { row, isActive, parts: profileParts(isActive ? activeOptions : otherOptions(row)) };
+    });
+    const half = (one: typeof halves[number], body: string) =>
+      `<div class="split-half${one.isActive ? ' active' : ''}" data-account-column="${escapeForPage(String(one.row.id))}">${body}</div>`;
+    const row = (bodies: string) => `<div class="split-row" style="--account-count: ${halves.length}">${bodies}</div>`;
+    accounts = '<section class="player-section">' + sectionTitle('Player info', 'info', false, false, 'h2', toggle) +
+      row(halves.map(one => half(one, (one.parts.infoPencil ? partPencil('info', 'Player info', one.parts.infoEditing) : '') + one.parts.info)).join('')) +
+      '</section><section class="player-section"><h2 class="player-section-title">Troop tiers</h2>' +
+      row(halves.map(one => half(one, one.parts.troops ?? '')).join('')) + '</section>';
+  }
+
+  return '<div class="player-page admin-page">' + accounts +
     (options.savedRow !== null ? accountsSection({
       accounts: options.accounts, activeId: options.activeId, alliances: options.alliances,
       openListed: options.openListed, draft: options.listedDraft, changed: options.listedChanged

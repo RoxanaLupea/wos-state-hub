@@ -75,7 +75,8 @@ export function pageById(id: string): Page | undefined {
   return id === ADMIN_PAGE.id ? ADMIN_PAGE : PAGES.find(page => page.id === id);
 }
 
-const GEAR = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
+// The gear: the cue for the admin pages, in the menu under an admin's name.
+export const GEAR = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
   ' stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
   '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06' +
   'a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33' +
@@ -90,7 +91,6 @@ export interface TopBarOptions {
   openPage: string;
   // The name of the event running now, used for the event section.
   eventLabel: string;
-  isAdmin: boolean;
   // The player's in-game name once they have signed in (the name of the game account
   // they are on), and the menu their name opens.
   playerName: string | null;
@@ -104,11 +104,6 @@ export function topBar(options: TopBarOptions): string {
       `${page.id === options.openPage ? ' aria-current="page"' : ''}>${escapeForPage(label)}</button>`;
   }).join('');
 
-  const adminButton = options.isAdmin
-    ? `<button type="button" class="icon-button" data-page="admin" aria-label="Admin"` +
-      `${options.openPage === 'admin' ? ' aria-current="page"' : ''}>${GEAR}</button>`
-    : '';
-
   return `<header class="top-bar">
     <div class="brand">${logoSvg(options.stateNumber, 34)}</div>
     <nav class="main-nav" aria-label="Main">${tabs}</nav>
@@ -116,7 +111,6 @@ export function topBar(options: TopBarOptions): string {
       <span class="clock-zone">UTC</span>
       <span class="clock-time" id="clockTime" aria-live="off">${gameClockText(nowMinute())}</span>
     </div>
-    ${adminButton}
     ${options.playerName
       ? `<div class="account-menu-wrap"><button type="button" class="ghost-button me-button" data-account-menu` +
         ` aria-haspopup="menu" aria-expanded="false" aria-label="${escapeForPage(options.playerName)}">` +

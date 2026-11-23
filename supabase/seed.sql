@@ -250,7 +250,7 @@ on conflict (position_x, position_y) do update set
 insert into settings (setting_key, event_type_id, setting_value, setting_kind) values
   ('stateNumber', null, '1458', 'state_choice'),
   ('transferFollows', null, 'svs', 'state_choice'),
-  ('imageBaseUrl', null, 'https://raw.githubusercontent.com/RoxanaLupea/form_assets/main/events/', 'state_choice'),
+  ('imageBaseUrl', null, 'https://raw.githubusercontent.com/RoxanaLupea/wos-state-hub/main/public/images/events/', 'state_choice'),
   ('fortressSeasonStart', null, '2026-10-30', 'state_choice'),
   ('fortRewardsGeneration', null, '11', 'state_choice'),
   ('bearCooldownHours', 'bear', '47.5', 'game_rule'),

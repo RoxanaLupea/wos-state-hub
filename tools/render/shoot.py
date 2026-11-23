@@ -6,7 +6,9 @@
 # Actions: ["click", selector], ["click-top", selector] (clicks near the top left, past
 # the white lines), ["scroll", selector, pixels], ["window-scroll", pixels].
 # The site's fonts cannot load here, so a stand-in font is used; pictures are served
-# from public/images.
+# from public/images, and only for the address the live site uses (this repo's
+# public/images on GitHub), so a picture missing there is missing here too. Every
+# picture the page asked for and did not get is listed after the shots.
 import re, sys, json, threading, functools, http.server
 from pathlib import Path
 from playwright.sync_api import sync_playwright
@@ -24,12 +26,16 @@ def serve(folder, port):
     server = http.server.ThreadingHTTPServer(('127.0.0.1', port), handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
 
+# Pictures the page asked for and did not get.
+missing_pictures = set()
+
 def answer_image(route):
-    match = re.search(r'/(?:form_assets|wos-state-hub)/main/(?:public/)?(?:images/)?(.+)$', route.request.url)
+    match = re.search(r'/RoxanaLupea/wos-state-hub/main/public/images/(.+)$', route.request.url)
     path = IMAGES / match.group(1) if match else None
     if path and path.exists():
         route.fulfill(path=str(path), content_type='image/png')
     else:
+        missing_pictures.add(route.request.url)
         route.fulfill(status=404, body='')
 
 def open_page(browser, url, width, height):
@@ -66,3 +72,6 @@ if __name__ == '__main__':
             print(step['file'], 'errors:', errors)
             page.close()
         browser.close()
+    print('missing pictures:', len(missing_pictures))
+    for url in sorted(missing_pictures):
+        print('  ', url)

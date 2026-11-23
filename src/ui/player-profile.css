@@ -40,52 +40,69 @@
   .player-alliance-logo { height: 92px; }
 }
 
-/* Name on its own line and id beside power on a phone; on a computer name, id, power
-   and foundry power share one line. */
-.player-grid { display: grid; grid-template-columns: 1fr; gap: 12px 14px; }
-.row-idpower { display: grid; grid-template-columns: 0.85fr 1fr; gap: 12px; }
-@media (min-width: 900px) {
-  .player-grid { grid-template-columns: 1.2fr 0.9fr 1fr 1fr; align-items: start; gap: 12px 20px; }
-  .row-idpower { display: contents; }
-  .alliance-field { grid-column: 1 / -1; }
-}
-
-.player-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+/* Open for editing, the details keep the shape they have when shown: each value is a
+   field in its own place, sized like the value, with only a faint line under it. */
+.player-editor .player-identity-text { align-items: flex-start; }
+.inline-input { box-sizing: border-box; min-width: 0; padding: 2px 6px; border: none; border-radius: 6px 6px 0 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--text) 30%, transparent); background: none;
+  color: var(--text); font: inherit; outline: none; }
+.inline-input:hover { border-bottom-color: color-mix(in srgb, var(--text) 50%, transparent); }
+.inline-input:focus { border-bottom-color: var(--accent); background: color-mix(in srgb, var(--text) 5%, transparent); }
+.inline-input.has-problem { border-bottom-color: var(--danger); }
+.inline-input::placeholder { color: var(--text-faint); }
+.inline-name { width: 9ch; font-size: 26px; font-weight: 800; line-height: 1.15; }
+.inline-id { width: 11ch; margin-top: 2px; font-size: 14px; font-weight: 600; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.inline-fact { width: 5ch; font-size: 22px; font-weight: 800; text-align: center; font-variant-numeric: tabular-nums; }
+.inline-foundry { width: 6ch; }
 .player-label { font-size: 13px; font-weight: 800; color: var(--text-muted);
   letter-spacing: 0.08em; text-transform: uppercase; text-align: center; }
-.player-input { text-align: center; font-size: 17px; font-weight: 600; }
-.player-input.has-problem { border-color: var(--danger); box-shadow: 0 0 0 1px var(--danger); }
-.player-note { font-size: 12px; line-height: 1.35; text-align: center; color: var(--text-faint); }
+.player-note { font-size: 12px; line-height: 1.35; color: var(--text-faint); }
 .player-note.problem { color: var(--danger); }
 .player-note:empty { display: none; }
 
-/* Power: the number, then millions or billions. */
-.power-row { display: flex; gap: 6px; align-items: center; }
-.power-row .player-input { flex: 1; min-width: 0; padding-left: 6px; padding-right: 6px; }
-.unit-picks { display: flex; flex: none; padding: 3px; gap: 2px; border-radius: 999px;
-  border: 1px solid var(--glass-border); background: var(--glass); }
-.unit-pick { min-width: 32px; min-height: 34px; padding: 0 9px; border: none; border-radius: 999px;
-  background: transparent; color: var(--text-muted); font: inherit; font-weight: 800; cursor: pointer; }
-.unit-pick.selected { background: var(--accent); color: var(--accent-ink); }
+/* Power: the number, then M or B as two small letters beside it. */
+.power-edit { display: flex; align-items: center; gap: 4px; }
+.unit-picks { display: flex; flex-direction: column; gap: 1px; }
+.unit-pick { width: 22px; height: 18px; padding: 0; border: none; border-radius: 5px; background: none;
+  color: var(--text-faint); font: inherit; font-size: 11px; font-weight: 800; line-height: 1; cursor: pointer; }
+.unit-pick:hover { color: var(--text); }
+.unit-pick.selected { color: var(--accent-ink); background: var(--accent); }
 
-/* Alliances: the main alliances on one line, their academies smaller on the line under
-   them, each under its own main alliance: logo and tag. A tile glows in its
-   alliance's own colour once picked. */
-.alliance-rows { display: flex; flex-direction: column; gap: 8px; }
-.alliance-row { display: grid; grid-template-columns: repeat(var(--alliance-count), minmax(0, 170px)); justify-content: center; gap: 10px; }
-.academy-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
-.alliance-tile { --alliance-colour: var(--accent);
-  min-width: 0; min-height: 64px; padding: 8px 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
-  border-radius: 14px; border: 1px solid var(--glass-border); background: var(--glass); color: var(--text); font: inherit; cursor: pointer; }
-.alliance-tile:hover { border-color: color-mix(in srgb, var(--alliance-colour) 70%, transparent); }
-.alliance-tile.selected { border-color: var(--alliance-colour); background: color-mix(in srgb, var(--alliance-colour) 20%, transparent);
-  box-shadow: 0 0 0 1px var(--alliance-colour), 0 0 18px color-mix(in srgb, var(--alliance-colour) 35%, transparent); }
-.alliance-logo { height: clamp(52px, 14vw, 84px); width: auto; margin-bottom: 2px; }
-.alliance-banner { font-family: var(--tag-font); font-size: clamp(14px, 3.8vw, 17px); font-weight: 800; letter-spacing: 0.06em; }
-/* Academies: smaller tiles, two thirds of the column's width. */
-.alliance-tile.academy { width: 72%; min-height: 48px; padding: 6px 4px; border-radius: 12px; }
-.alliance-tile.academy .alliance-banner { font-size: clamp(12px, 3.2vw, 14px); }
-.alliance-tile.academy .alliance-logo { height: clamp(28px, 8vw, 38px); }
+/* What the account is, in the place of the alliance line: three small words, the
+   picked one in the alliance's colour. */
+.kind-line { display: flex; align-items: center; gap: 2px; }
+.kind-dot { padding: 0 2px; font-weight: 800; color: var(--alliance-colour, var(--text-muted)); }
+.kind-words { display: flex; gap: 2px; }
+.kind-word { padding: 1px 6px; border: none; border-radius: 6px; background: none; cursor: pointer;
+  font-family: var(--tag-font); font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+.kind-word:hover { color: var(--text); }
+.kind-word.selected { color: var(--alliance-colour, var(--accent)); }
+.kind-word.fixed { cursor: default; padding-left: 2px; }
+
+/* The alliance: its logo with a small arrow; the list opens under it, over the page. */
+.picker-cell { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.alliance-picker { position: relative; }
+.alliance-picker > summary { list-style: none; display: flex; align-items: center; gap: 2px; padding: 2px 4px; border-radius: 12px; cursor: pointer; }
+.alliance-picker > summary::-webkit-details-marker { display: none; }
+.alliance-picker > summary:hover { background: rgba(255, 255, 255, 0.05); }
+.picker-chevron { flex: none; color: var(--text-muted); }
+.alliance-picker[open] .picker-chevron { transform: rotate(180deg); color: var(--accent); }
+.picker-tag { min-width: 76px; height: 76px; display: flex; align-items: center; justify-content: center;
+  font-family: var(--tag-font); font-size: 18px; font-weight: 800; color: var(--alliance-colour, var(--text-muted)); }
+.alliance-list { position: absolute; z-index: 30; top: calc(100% + 6px); left: 0; width: 260px; max-height: 340px; overflow-y: auto;
+  padding: 6px; display: flex; flex-direction: column; gap: 2px; border: 1px solid var(--glass-border); border-radius: 14px;
+  background: linear-gradient(var(--glass-strong), var(--glass-strong)), var(--page-color);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.45); }
+.alliance-choice { --alliance-colour: var(--accent); display: flex; align-items: center; gap: 10px; width: 100%; min-height: 40px; padding: 4px 10px;
+  border: none; border-radius: 10px; background: none; color: var(--text); font: inherit; text-align: left; cursor: pointer; }
+.alliance-choice:hover { background: rgba(255, 255, 255, 0.08); }
+.alliance-choice.selected { background: color-mix(in srgb, var(--alliance-colour) 20%, transparent); }
+.alliance-choice-logo { flex: none; width: 30px; display: flex; justify-content: center; }
+.alliance-choice-img { height: 32px; width: auto; }
+.alliance-choice-tag { flex: none; min-width: 40px; font-family: var(--tag-font); font-size: 14px; font-weight: 800; color: var(--alliance-colour); }
+.alliance-choice-name { min-width: 0; font-size: 13px; font-weight: 600; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.alliance-choice.academy { min-height: 32px; padding-left: 26px; }
+.alliance-choice.academy .alliance-choice-tag { font-size: 12px; }
 
 /* Troop tiers: the three troop types side by side with a line between them. Each shows
    what it is now; its pencil opens its choices in place. On a phone a troop open for
@@ -126,6 +143,8 @@
 .troop-summary { --tier: var(--accent); display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .troop-summary-pictures { position: relative; }
 .troop-summary-portrait { display: block; height: clamp(84px, 24vw, 120px); width: auto; }
+/* On a computer the portrait is about as tall as the alliance logo, not bigger than everything else. */
+@media (min-width: 900px) { .troop-summary-portrait { height: 88px; } }
 .troop-summary-badge { position: absolute; top: -4%; left: -22%; height: 42%; width: auto;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.55)); }
 .troop-summary-text { font-size: clamp(12px, 3.3vw, 15px); font-weight: 800; text-align: center; color: var(--tier); }
@@ -181,9 +200,10 @@
 .lvl-check.none.selected { background: color-mix(in srgb, var(--text) 14%, transparent); box-shadow: none; }
 
 /* Save under a part open for editing, lit only while it has changes. */
+/* Cancel and Save are one pair: same size. Until something changes, Save looks like Cancel with faint text, then fills with the accent. */
 .player-save-row { display: flex; justify-content: center; gap: 10px; margin-top: 4px; }
-.player-save { min-width: 140px; }
-.player-save:disabled { opacity: 0.35; cursor: default; }
+.player-save-row button { min-width: 110px; }
+.player-save:disabled { background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-faint); cursor: default; }
 
 /* The question asked when leaving with changes not saved. */
 .leave-prompt { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center;
@@ -202,8 +222,9 @@
   font: inherit; cursor: pointer; }
 .account-tile + .account-tile::before { content: ''; position: absolute; left: 0; top: 10px; bottom: 10px; border-left: 1px solid var(--glass-border); }
 .account-tile:hover { background: rgba(255, 255, 255, 0.05); }
-.account-tile.open { background: color-mix(in srgb, var(--alliance-colour) 16%, transparent); box-shadow: inset 0 0 0 1px var(--alliance-colour); }
-.account-tile.open::before, .account-tile.open + .account-tile::before { display: none; }
+/* The open one: its name in the accent colour with a line under the tile, like the open tab. */
+.account-tile.open { box-shadow: inset 0 -2px 0 var(--accent); border-radius: 0; }
+.account-tile.open .account-tile-name, .account-tile.open .account-tile-plus { color: var(--accent); }
 .account-tile-logo { height: 48px; width: auto; margin-bottom: 2px; }
 .account-tile-tag, .account-tile-plus { height: 48px; margin-bottom: 2px; display: flex; align-items: center; font-family: var(--tag-font); font-weight: 800; }
 .account-tile-tag { font-size: 15px; color: var(--alliance-colour); }
@@ -215,13 +236,54 @@
 .account-add .account-tile-name { color: var(--text-muted); }
 .account-add:hover .account-tile-name, .account-add:hover .account-tile-plus { color: var(--text); }
 .account-form { display: flex; flex-direction: column; gap: 16px; }
-@media (max-width: 899px) { .account-tile { width: 33.33%; padding: 8px 6px 10px; } .account-tile-logo, .account-tile-tag, .account-tile-plus { height: 40px; } }
+@media (max-width: 899px) {
+  .account-tile { width: 33.33%; padding: 8px 6px 10px; }
+  .account-tile-logo, .account-tile-tag, .account-tile-plus { height: 40px; }
+  /* Three to a line on a phone: the first of each line has no line before it. */
+  .account-tile:nth-child(3n+1)::before { display: none; }
+}
 
-/* What an account is: Main, Alt or Farm, one small toggle above its details. */
-.kind-toggle { align-self: center; display: flex; padding: 3px; gap: 2px; border-radius: 999px;
-  border: 1px solid var(--glass-border); background: var(--glass); }
-.kind-choice { min-width: 68px; height: 30px; padding: 0 12px; border: none; border-radius: 999px; background: none;
-  color: var(--text-muted); font: inherit; font-size: 13px; font-weight: 800; cursor: pointer; }
-.kind-choice:hover:not(:disabled) { color: var(--text); }
-.kind-choice.selected { color: var(--accent-ink); background: var(--accent); }
-.kind-choice:disabled { opacity: 0.4; cursor: default; }
+
+/* The title's left corner, opposite the pencil: on a computer, the One | Both switch. */
+.title-left-corner { position: absolute; left: 0; top: 14px; display: flex; align-items: center; gap: 14px; }
+.view-toggle { display: flex; padding: 2px; gap: 2px; border-radius: 999px; border: 1px solid var(--glass-border); }
+.view-choice { width: 30px; height: 24px; display: flex; align-items: center; justify-content: center; border: none; border-radius: 999px;
+  background: none; color: var(--text-faint); cursor: pointer; }
+.view-choice:hover { color: var(--text); }
+.view-choice.selected { color: var(--text); background: var(--glass-strong); }
+
+/* The other account to swap to, in the summary row with room around it: its alliance's
+   logo, small, and under it the swap mark with Main or Alt, quiet until pointed at. */
+.swap { --alliance-colour: var(--accent); flex: none; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 4px;
+  border: none; background: none; color: var(--text-faint); font: inherit; cursor: pointer; opacity: 0.8; }
+.swap:hover { opacity: 1; color: var(--text); }
+.swap-logo { height: 46px; width: auto; }
+.swap-tag { height: 46px; display: flex; align-items: center; font-family: var(--tag-font); font-size: 14px; font-weight: 800; color: var(--alliance-colour); }
+.swap-line { display: flex; align-items: center; gap: 4px; }
+.swap-line svg { width: 14px; height: 14px; color: var(--alliance-colour); }
+.swap-kind { font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+/* On a phone the summary is stacked, so the swap always comes last, under the powers. */
+@media (max-width: 899px) { .player-summary > .swap { order: 3; } }
+
+/* Side by side: one title per section, the section split between the accounts with a
+   line between them; each half has its own pencils. */
+.split-row { display: grid; grid-template-columns: repeat(var(--account-count), minmax(0, 1fr)); }
+.split-half { position: relative; min-width: 0; padding: 0 36px; }
+.split-half:first-child { padding-left: 0; }
+.split-half:last-child { padding-right: 0; }
+/* The line between the accounts is stronger than the lines between the troops, so each
+   account's three troops read as one group. */
+.split-half + .split-half { border-left: 1px solid color-mix(in srgb, var(--text) 32%, transparent); }
+.player-page .split-half > .pencil-button { top: 0; }
+.split-half .troop-name { font-size: 13px; letter-spacing: 0.05em; }
+/* A troop open for editing takes its half's whole width, under the other two. */
+.split-half .troop-columns:has(.editing) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.split-half .troop-block.editing { grid-column: 1 / -1; order: 1; padding: 0; border-left: none; }
+.split-half .troop-block:first-child, .split-half .troop-block.editing + .troop-block { padding-left: 0; border-left: none; }
+
+
+/* Open in one half of the split view, the details sit closer together so they fit the half. */
+.split-half .player-editor { gap: 28px; }
+.split-half .player-editor .player-facts { gap: 20px; }
+.split-half .player-editor .player-label { white-space: nowrap; }
+.split-half .player-editor .player-alliance-logo { height: 76px; }

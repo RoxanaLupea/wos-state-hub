@@ -194,6 +194,10 @@ let openGameAccount: number | 'new' | null = null;
 // The account open under "Your accounts" (a farm, or 'new' for one being added) and its
 // changes not saved yet. Only one part of the page is open at a time.
 let openListed: number | 'new' | null = null;
+// The main and the alts on the profile: one at a time, or side by side. Side by side is
+// only offered on a computer; a phone always shows one account.
+let accountView: 'one' | 'both' = 'one';
+const WIDE_SCREEN = window.matchMedia('(min-width: 900px)');
 const listedDraft: Row = {};
 // Set while the player is asked whether to remove the open alt ('info') or farm ('listed').
 let removingPart: string | null = null;
@@ -948,7 +952,8 @@ function rememberChoices(): void {
     myAllianceId: view.myAllianceId,
     openInfoTab: view.openInfoTab,
     opponentNotes: { others: workChoices.get('opponents-others') ?? '', all: workChoices.get('opponents-all') ?? '' },
-    activeGameAccountId: typeof openGameAccount === 'number' ? openGameAccount : null
+    activeGameAccountId: typeof openGameAccount === 'number' ? openGameAccount : null,
+    accountView
   });
 }
 
@@ -958,6 +963,7 @@ function applyKeptChoices(): void {
   const kept = readPreferences();
   if (kept.openInfoTab) view.openInfoTab = kept.openInfoTab;
   if (typeof kept.activeGameAccountId === 'number') openGameAccount = kept.activeGameAccountId;
+  if (kept.accountView) accountView = kept.accountView;
   if (kept.opponentNotes) {
     workChoices.set('opponents-others', kept.opponentNotes.others);
     workChoices.set('opponents-all', kept.opponentNotes.all);
@@ -1055,10 +1061,9 @@ function drawPage(app: HTMLElement): void {
     stateNumber: STATE_NUMBER,
     openPage: view.openPage,
     eventLabel: currentEventLabel(),
-    isAdmin: isAdmin(person),
     // Signed in: the name of the game account they are on, otherwise "Me".
     playerName: person ? String(myAccountRow()?.in_game_name ?? '') || person.account?.inGameName || 'Me' : null,
-    accountMenu: person ? accountMenu(myGameAccounts(), openGameAccountId(), alliancesStillHere(alliances)) : null
+    accountMenu: person ? accountMenu(myGameAccounts(), openGameAccountId(), alliancesStillHere(alliances), isAdmin(person)) : null
   });
 
   if (view.openPage === 'player') {
@@ -1075,6 +1080,7 @@ function drawPage(app: HTMLElement): void {
         openListed: playerEditing.has('listed') ? openListed : null,
         listedDraft: { ...(openListedRow() ?? { kind: 'alt', alliance_id: savedOf('listed', 'alliance_id') }), ...listedDraft },
         listedChanged: partHasChanges('listed'),
+        accountView: WIDE_SCREEN.matches ? accountView : null,
         removePrompt: removingPart ? String((removingPart === 'listed' ? openListedRow() : myAccountRow())?.in_game_name ?? '') : null
       })}</main>`;
     return;
@@ -1192,6 +1198,11 @@ function step(direction: number): void {
 function handleClicks(event: MouseEvent): void {
   const target = event.target as HTMLElement | null;
   if (!target) return;
+
+  // The list of alliances under the logo closes on a tap anywhere outside it.
+  for (const picker of Array.from(document.querySelectorAll<HTMLDetailsElement>('.alliance-picker[open]'))) {
+    if (!picker.contains(target)) picker.open = false;
+  }
 
   // The menu under the player's name opens and closes in place; a tap anywhere else
   // while it is open only closes it.
@@ -1779,8 +1790,10 @@ function dropDraft(part: string): void {
   for (const column of partColumns(part)) delete draft[column];
 }
 
+// Side by side, the notes are looked for in the halves of the account being edited.
 function showPlayerNote(field: string, message: string): void {
-  const note = document.querySelector<HTMLElement>(`[data-note-for="${field}"]`);
+  const note = document.querySelector<HTMLElement>(`.split-half.active [data-note-for="${field}"]`) ??
+    document.querySelector<HTMLElement>(`[data-note-for="${field}"]`);
   if (note) { note.textContent = message; note.classList.toggle('problem', Boolean(message)); }
   document.querySelector(`[data-player-field="${field}"]`)?.classList.toggle('has-problem', Boolean(message));
 }
@@ -1947,6 +1960,16 @@ function handlePlayerPicks(target: HTMLElement): boolean {
     draw();
     return true;
   }
+  const cancelButton = target.closest<HTMLElement>('[data-cancel-part]');
+  if (cancelButton) {
+    // Cancel drops the part's changes and closes it, without asking: that is what it is for.
+    const part = cancelButton.dataset.cancelPart as string;
+    dropDraft(part);
+    playerEditing.delete(part);
+    if (part === 'listed') openListed = null;
+    draw();
+    return true;
+  }
   const removeButton = target.closest<HTMLElement>('[data-remove-account]');
   if (removeButton) {
     removingPart = removeButton.dataset.removeAccount === 'listed' ? 'listed' : 'info';
@@ -1978,9 +2001,26 @@ function handlePlayerPicks(target: HTMLElement): boolean {
     });
     return true;
   }
+  const viewButton = target.closest<HTMLElement>('[data-account-view]');
+  if (viewButton) {
+    accountView = viewButton.dataset.accountView === 'both' ? 'both' : 'one';
+    rememberChoices();
+    draw();
+    return true;
+  }
   const editButton = target.closest<HTMLElement>('[data-player-edit]');
   if (editButton) {
     const part = editButton.dataset.playerEdit as string;
+    // Side by side, a pencil in another account's column puts the player on that
+    // account first (nothing else is open then: the other pencils are hidden).
+    const column = editButton.closest<HTMLElement>('[data-account-column]');
+    if (column && Number(column.dataset.accountColumn) !== openGameAccountId()) {
+      setActiveAccount(Number(column.dataset.accountColumn));
+      playerEditing.clear();
+      playerEditing.add(part);
+      draw();
+      return true;
+    }
     if (!playerEditing.has(part)) { playerEditing.add(part); draw(); return true; }
     leaveParts([part], () => { playerEditing.delete(part); draw(); });
     return true;
@@ -2000,7 +2040,7 @@ function handlePlayerPicks(target: HTMLElement): boolean {
   if (alliancePick) {
     const chosen = alliancePick.dataset.alliancePick as string;
     const part = partOnPage();
-    draftFor(part).alliance_id = draftValue('alliance_id', part) === chosen ? null : chosen;
+    draftFor(part).alliance_id = chosen;
     draw();
     return true;
   }
@@ -2681,7 +2721,7 @@ function eventKeysOf(category: string): string[] {
 function problemBar(): string {
   return topBar({
     stateNumber: STATE_NUMBER, openPage: view.openPage,
-    eventLabel: PAGES[3].label, isAdmin: false, playerName: null, accountMenu: null
+    eventLabel: PAGES[3].label, playerName: null, accountMenu: null
   });
 }
 
@@ -2773,7 +2813,14 @@ async function start(): Promise<void> {
       if (view.openPage === 'player' && PLAYER_PARTS.some(partHasChanges)) event.preventDefault();
     });
     document.addEventListener('keydown', leavePlayerFieldOnEnter);
-    document.addEventListener('keydown', event => { if (event.key === 'Escape') setAccountMenu(false); });
+    document.addEventListener('keydown', event => {
+      if (event.key !== 'Escape') return;
+      setAccountMenu(false);
+      for (const picker of Array.from(document.querySelectorAll<HTMLDetailsElement>('.alliance-picker[open]'))) picker.open = false;
+    });
+    // Turning a tablet or resizing past a computer's width redraws the profile, which
+    // offers side by side only on a computer.
+    WIDE_SCREEN.addEventListener('change', () => { if (view.openPage === 'player') draw(); });
     document.addEventListener('touchstart', startSwipe, { passive: true });
     document.addEventListener('touchend', endSwipe, { passive: true });
     document.addEventListener('keydown', stepWithKeys);
