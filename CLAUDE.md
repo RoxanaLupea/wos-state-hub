@@ -30,9 +30,6 @@ read the notes file it names (for profile-draft: notes/profile-draft.md).
 
 - Design work happens on a draft in this workspace. Her approved files stay untouched
   until she says yes.
-- Show the real page: render it with the real data and send full-screen screenshots,
-  never crops. Check every screenshot critically before sending it, so she never has to
-  point out the faults.
 - Nothing counts as settled until she says so. Settled decisions go into
   notes/design-decisions.md first and into the code second.
 - A commit message is one short sentence, with no body.
@@ -40,3 +37,25 @@ read the notes file it names (for profile-draft: notes/profile-draft.md).
   Array.from(...), never over a NodeList.
 - tools/render/data/ holds a copy of the database and is never committed. The repo is
   public.
+
+## Design judgment
+
+Roxanne gives the direction. The design quality is Claude's job, and it stays on when
+she asks for a change.
+
+- Brief first. Before any code, write in the chat what the page or part is for, who uses
+  it, what they do there and what matters most on it. Build from the brief once she
+  agrees with it.
+- Read a request as a goal, not a spec. "Swap between main and alt" means a player
+  reaches their other account easily. Where the control goes and how it looks is a
+  design decision, made for the whole page and the way a player moves through it.
+- Never build something that is clearly bad. When doing exactly what was said would
+  hurt how the page works, say so in one or two sentences before building, and build
+  the version that reaches her goal. She still gets the literal version if she wants
+  it after hearing why, but never silently.
+- A change is finished only when the whole flow still works: what a player sees first,
+  what they tap, and what happens when a value is empty or long.
+- Render every state, not only the easy one: empty, filled, editing, long names,
+  errors, every kind of item (main, alt, farm), on a phone and on a computer.
+- Before sending any screenshot, check it against notes/review-checklist.md and fix
+  what fails. Send full-screen screenshots, never crops.
