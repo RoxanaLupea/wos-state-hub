@@ -436,6 +436,9 @@ there before discussing it again.
   the site gives the answer from the last call.
 - The key is kept in the database's Vault and the refreshes run in the database
   (supabase/game-refresh.sql), set up on 23 Nov.
+- Anyone signed in can add any in-game ID as their account, so an ID can be claimed by
+  someone it does not belong to. Members can report a wrongly claimed account, and admins
+  deal with the reports.
 - Storage while the pages are being designed: the latest full answer for every player,
   alliance and state, plus one copy a day of the basic data for the last 30 days (about
   150 MB; heroes and chief gear only as the latest copy). Once the design shows what is
@@ -446,8 +449,6 @@ there before discussing it again.
 - State page leaderboards: which of the 26 lead. The owner named The Labyrinth (total),
   Total Pet Power, Total Expert Power and Exploration Stage as needed; the rest is to be
   worked out later.
-- Anyone signed in can type any in-game ID as their own account, so someone outside the
-  state could add a 1458 player's ID and count as a member.
 - Roles. Decided: owner; admins, who can edit anything; alliance manager, one role per
   alliance, held the same by its R4s and R5s; state managers, for the state's planning
   except battles; battle managers, for the battles. Open: exactly which pages and
