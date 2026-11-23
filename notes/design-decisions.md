@@ -414,8 +414,25 @@ there before discussing it again.
   makes the old main an alt. A new alt, or a farm made an alt, puts the person on it to
   fill in its troops; the account they are on made a farm puts them on the main.
 
+### Player data from the game (23 Nov)
+
+- Players' game data comes from the Whiteout Stats API (api.whiteoutstats.com), looked up
+  by in-game ID: name, state, alliance and rank in it, power, furnace level, kills,
+  avatar, and each troop type's tier and FC level. Tested on 23 Nov with the owner's
+  account; it matched the game.
+- A player adds the ID of every account they have and marks each as main, alt or farm.
+  When an ID is typed, its name and picture appear, so the player sees it is the right
+  account.
+- Every known account is refreshed twice a day, as a slow background pass (the API allows
+  60 requests a minute and 5,000 a day on the free key).
+- Players can refresh their own accounts, and R4s and admins their alliance. The API reads
+  an account from the game at most once an hour, so the refresh waits an hour after the
+  last update, and the page shows when the data was last read.
+
 ## Open
 
+- Storing the Whiteout Stats key as a project secret for the site, and the server function
+  that calls the API with it: waits for the owner's yes.
 - Roles. Decided: owner; admins, who can edit anything; alliance manager, one role per
   alliance, held the same by its R4s and R5s; state managers, for the state's planning
   except battles; battle managers, for the battles. Open: exactly which pages and
