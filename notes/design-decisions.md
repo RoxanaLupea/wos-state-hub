@@ -432,6 +432,10 @@ there before discussing it again.
   hour, each call waiting for the API to read the game, so a roster is never more than an
   hour old. A whole roster is one request.
 - The academies' rosters (dvl, top, abc) are read twice a day, with the player pass.
+- Storage while the pages are being designed: the latest full answer for every player,
+  alliance and state, plus one copy a day of the basic data for the last 30 days (about
+  150 MB; heroes and chief gear only as the latest copy). Once the design shows what is
+  used, only that is kept, with a longer history.
 
 ## Open
 
