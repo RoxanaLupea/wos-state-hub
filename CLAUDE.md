@@ -18,6 +18,8 @@ work again.
 6. Rendering: follow tools/render/README.md. npm packages cannot be installed here, so
    the real build only runs on GitHub after a push.
 
+On profile-draft, read notes/handoff-23-nov.md before anything else.
+
 Then read, in full: notes/what-this-is.md, notes/design-decisions.md,
 notes/visual-language.md and notes/rules-and-open-items.md. On a draft branch, also
 read the notes file it names (for profile-draft: notes/profile-draft.md).
