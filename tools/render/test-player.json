@@ -1,0 +1,87 @@
+{
+ "accounts": [
+  {
+   "id": "00000000-0000-0000-0000-00000000aaaa",
+   "in_game_name": "Roxa",
+   "in_game_id": "123456789",
+   "alliance_id": "dvl",
+   "language": "en",
+   "player_power": 1250000000,
+   "player_power_updated_at": "2026-11-20T10:00:00Z",
+   "foundry_power": 15230,
+   "foundry_power_updated_at": null,
+   "infantry_tier": "FC10 Exalted",
+   "infantry_skill_level": 3,
+   "lancer_tier": "FC10 Helios",
+   "lancer_skill_level": 0,
+   "marksmen_tier": "FC9 Helios",
+   "marksmen_skill_level": 0
+  }
+ ],
+ "game_accounts": [
+  {
+   "id": 1,
+   "in_game_name": "Roxa",
+   "in_game_id": "123456789",
+   "alliance_id": "dvl",
+   "player_power": 1250000000,
+   "player_power_updated_at": "2026-11-20T10:00:00Z",
+   "foundry_power": 15230,
+   "foundry_power_updated_at": null,
+   "infantry_tier": "FC10 Exalted",
+   "infantry_skill_level": 3,
+   "lancer_tier": "FC10 Helios",
+   "lancer_skill_level": 0,
+   "marksmen_tier": "FC9 Helios",
+   "marksmen_skill_level": 0,
+   "owner_id": "00000000-0000-0000-0000-00000000aaaa",
+   "kind": "main",
+   "sort_order": 0
+  },
+  {
+   "id": 2,
+   "owner_id": "00000000-0000-0000-0000-00000000aaaa",
+   "kind": "alt",
+   "in_game_name": "Roxa2",
+   "in_game_id": "87654321",
+   "alliance_id": "top",
+   "player_power": 640000000,
+   "foundry_power": 9800,
+   "infantry_tier": "FC8 Helios",
+   "infantry_skill_level": 0,
+   "lancer_tier": "FC8",
+   "lancer_skill_level": 0,
+   "marksmen_tier": "FC7",
+   "marksmen_skill_level": 0,
+   "sort_order": 0
+  },
+  {
+   "id": 11,
+   "owner_id": "00000000-0000-0000-0000-00000000aaaa",
+   "kind": "farm",
+   "in_game_name": "RoxaFarm",
+   "in_game_id": "234567891",
+   "alliance_id": "dvl",
+   "player_power": 48000000,
+   "sort_order": 1
+  },
+  {
+   "id": 13,
+   "owner_id": "00000000-0000-0000-0000-00000000aaaa",
+   "kind": "farm",
+   "in_game_name": "RoxaFarm2",
+   "in_game_id": "245678912",
+   "alliance_id": "top",
+   "player_power": 31000000,
+   "sort_order": 3
+  }
+ ],
+ "account_roles": [
+  {
+   "id": 1,
+   "account_id": "00000000-0000-0000-0000-00000000aaaa",
+   "role": "owner",
+   "alliance_id": null
+  }
+ ]
+}

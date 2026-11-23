@@ -6,8 +6,15 @@ screenshots, with what the workspace already has: esbuild, Chrome and Playwright
 
 1. Get the data: run fetch-data.sql with the Supabase tool and save the value it returns
    as tools/render/data/main.json. That folder is never committed; the repo is public.
+   For the player profile, also run `python3 tools/render/add-test-player.py`: the
+   database query does not fetch accounts, so this adds a made-up signed-in player
+   (main, alt, two farms, owner role) from test-player.json.
 2. Build: `tools/render/build.sh /tmp/render-build`
 3. Screenshot: `python3 tools/render/shoot.py /tmp/render-build '[{"width":1440,"height":900,"file":"/tmp/pc.png"},{"width":390,"height":844,"file":"/tmp/phone.png"}]'`
+
+   For the profile, signed in as the test player: `python3 tools/render/shoot-player.py
+   /tmp/render-build '[{"width":1440,"height":900,"file":"/tmp/profile.png"}]'` (steps can
+   click, fill and scroll; see the top of the script).
 
 What this does not prove: the workspace's TypeScript is newer than the build's
 TypeScript 5, so a clean check here can still fail on GitHub. Check the GitHub build

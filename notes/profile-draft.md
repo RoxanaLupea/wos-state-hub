@@ -2,6 +2,13 @@
 
 This branch holds everything done after commit c146c03 on main. None of it is approved as a whole. Roxa is very unhappy with the profile design on this branch: the options were built literally from her words instead of designed, faults were left for her to find, and she could not push any of it.
 
+## Start here
+
+1. Work on this branch: `git checkout profile-draft`. Main is the last approved state.
+2. Read this file, then notes/design-decisions.md and notes/rules-and-open-items.md. design-decisions.md does not describe this draft yet.
+3. To see the profile: follow tools/render/README.md, including `add-test-player.py`. The database query does not fetch accounts, so the profile needs the made-up test player. Then use `shoot-player.py` for screenshots.
+4. Before showing anything, check it against the faults listed below.
+
 ## Asked for by Roxa (fine to keep)
 
 - Images come only from wos-state-hub public/images. The database setting imageBaseUrl is already fixed live; seed.sql, seed/settings.json and design/elements.html are fixed on this branch.
