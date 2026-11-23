@@ -2,46 +2,52 @@
 
 Written at the end of the chat of 23 Nov. That chat went very badly. Roxanne spent the
 whole day on one page layout, it is still not approved, and she ended it in tears.
-Read the whole file, then CLAUDE.md's setup, then notes/profile-draft.md.
+Read the whole file, then do CLAUDE.md's setup, then read notes/profile-draft.md.
 
-## 1. Restore the work first: it is not on GitHub
+## 1. Where the work is
 
-Nothing from 23 Nov was pushed. GitHub's main is still at 59da789. Everything below
-exists only in the bundle file Roxanne was given (wos-state-hub-23nov.bundle):
-
-- main: 13 commits on top of GitHub's main (b8664d9 to 82a74ff). The review checklist,
-  the design judgment rules, the notes about the game data, and the database files
-  game-data.sql and game-refresh.sql.
-- profile-draft: main plus 7 commits (8ec5f60 to 8a99c87, then this handoff). The
-  profile draft, exalted-skill-levels.sql, game-accounts-from-game.sql, the render
-  tools and the latest mockup (tools/mockups/player-page-v2).
-
-To restore, after cloning as CLAUDE.md says:
+All of the work is on GitHub, on the branch profile-draft (pushed with Roxanne's yes on
+23 Nov at 21:30). Check it out after cloning:
 
     cd /home/claude/wos-state-hub
-    git fetch /path/to/wos-state-hub-23nov.bundle main:refs/remotes/bundle/main profile-draft:profile-draft
-    git merge --ff-only bundle/main
+    git fetch origin profile-draft:profile-draft
     git checkout profile-draft
 
-profile-draft must never be pushed: Roxanne wants no draft branches on GitHub. main is
-pushed only with her yes, after walking her through it and listing the open items.
+- GitHub's main is at 59da789 (CLAUDE.md, pushed 23 Nov at 16:48) and is the live site.
+- profile-draft holds main plus 13 commits that are not on GitHub's main yet (b8664d9 to
+  82a74ff: the review checklist, the design judgment rules, the notes about the game
+  data, admin-tools.sql, game-data.sql and game-refresh.sql), then the profile draft,
+  exalted-skill-levels.sql, game-accounts-from-game.sql, the render tools, the mockup
+  in tools/mockups/player-page-v2 and these notes.
+- The site's build runs only for main, so nothing on profile-draft is on the live site.
+  Pushing to main needs her yes, after walking her through it and listing the open items.
+- Roxanne wants the work carried between chats through CLAUDE.md and this branch, not
+  through zip or bundle files.
 
-## 2. What is in the database already, and what waits for her yes
+## 2. What is in the database, and what waits for her yes
 
-Installed with her yes on 23 Nov (from game-data.sql and game-refresh.sql):
-- The game data tables and their access rules, the Whiteout Stats API key in the Vault
-  (whiteout_stats_api_key), and the refresh that runs in the database with pg_cron:
-  main alliance rosters every hour, academy rosters and every player twice a day,
-  never the same account twice within an hour, the stored answer given instead.
-- On 23 Nov at 18:06 UTC: 368 of 527 players fully read, no failed runs.
+Checked in the database on 23 Nov at 21:35:
+- admin-tools.sql: the admin_tools schema with the web-call tool is there.
+- game-data.sql: the tables game_players, game_alliances and game_states, with row
+  access rules on. 527 players are stored.
+- game-refresh.sql: the Whiteout Stats API key is in the Vault (whiteout_stats_api_key).
+  Five pg_cron jobs are active: game-players every minute (reads up to 40 players that
+  are due: asked for, or last read over 12 hours ago, so each player twice a day, never
+  within an hour of the last read), game-state at :05 every hour, game-main-rosters at
+  :10 every hour, game-academy-rosters at 04:20 and 16:20 UTC, game-copies-cleanup at
+  03:30 UTC. The last 20 runs all succeeded.
 
 Not run, each needs her clear yes to that exact action:
-- supabase/exalted-skill-levels.sql (profile-draft): the Exalted skill level per troop
-  type, set by the owner, or by an R4 or admin when the account has no site account.
-- supabase/game-accounts-from-game.sql (profile-draft): name, power and alliance copied
-  from the game data into the site's accounts.
-- The look_up_game_account change in game-refresh.sql (profile-draft) that also returns
-  power.
+- exalted-skill-levels.sql. Skill levels already exist on every site account
+  (game_accounts columns infantry_skill_level, lancer_skill_level, marksmen_skill_level).
+  This file keeps them per in-game ID instead, so members with no site account can have
+  them: R4s of the member's alliance and admins set them, a level set by an R4 stays when
+  the player links the account later, and the levels already typed move over once.
+- game-accounts-from-game.sql. Copies name, power and alliance from the game data into
+  the site accounts of that ID whenever the game data is read, and fills them when an
+  account is added.
+- The change in game-refresh.sql that makes look_up_game_account also return power. The
+  function in the database does not return it yet.
 
 ## 3. Starting point: the player page mockup, version 2
 
@@ -122,14 +128,21 @@ Faults Claude sees in it, to fix or raise before showing it again:
 
 ## 6. Her references: use these first
 
-In the attachments (references/), not in the repo because the repo is public:
-- game-chief-profile.png: the game's Chief Profile (picture, name with tag, ID, power,
-  kills, alliance, state, furnace badge).
-- wosoracle-overview-phone.png: wosoracle's player page. Header, chips for state and
-  furnace, then a strip of key figures with their rank in the state under them, then
-  tabs (Overview, Prep, Heroes & Gear, History).
-- wosoracle-history-phone.png: wosoracle's history rows.
-She sent these at 17:31 on 23 Nov. They were ignored for the rest of the day.
+Roxanne sent three screenshots at 17:31 on 23 Nov. They were ignored for the rest of the
+day. They are not in the repo because it is public; she has them in the zip she was
+given that evening. What they show:
+- The game's Chief Profile: the picture in its frame on the left; on the right the name
+  with the alliance tag in brackets, "ID:" with a copy button, the power with a fist
+  icon, Kills, Alliance, State, and the furnace badge (FC10).
+- wosoracle.com's player page on a phone, Overview tab: picture in its frame on the left;
+  name, the ID under it, then the alliance tag in a pill, the alliance name and R4 in a
+  small pill; a rank emblem on the right. Under that, pills for the state and the
+  furnace (F 80 (FC10)). Then one strip of key figures: Power, Labyrinth (with "#7 in
+  S1252" under it), Passes ("#8 in S1252"), Kills. Then tabs: Overview, Prep, Heroes &
+  Gear, History. Then the alliance as a row (tag tile, name, "Alliance · R4") and a list
+  of Chief ID, State, Furnace, Power.
+- wosoracle's History tab: one row per date, each with the picture, the name, pills for
+  furnace, state, power, Labyrinth, kills and passes, and the date on the right.
 
 ## 7. How badly the 23 Nov chat went
 
@@ -150,6 +163,13 @@ She sent these at 17:31 on 23 Nov. They were ignored for the rest of the day.
 - Mockup data contradicted the game (Exalted troops on an FC8 chief).
 - Claude rated its own work 5/10 only when asked, and the faults it listed were faults
   it should have fixed before showing anything.
+- Things said that were not true: the first version of this handoff said nothing from
+  23 Nov was pushed (main had been pushed at 16:48), that the work existed only in a
+  bundle file (profile-draft was already on GitHub) and that profile-draft must never be
+  pushed; Claude described exalted-skill-levels.sql as where skill levels would be
+  stored (they already were); said the long name no longer rose above the picture when
+  its own check showed it still did; and described Discord, Steam and Xbox profiles from
+  memory as research.
 - Result: a full day on one layout, nothing approved, and the profile, transfer invites
   and alliance pages all still without a layout, though the data for them exists.
 
