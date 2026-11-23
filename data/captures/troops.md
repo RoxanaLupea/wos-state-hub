@@ -11,6 +11,19 @@
   infantry-t10.png, infantry-helios.png, infantry-exalted.png, and the same for lancer
   and marksmen, cut from these screenshots.
 
+## Marksman Camp, tiers I to X (sent 24 Nov 2026, from the owner's account)
+
+- Two screenshots of the Marksman Camp showing Exalted Marksman (FC10 badge), the tier
+  portraits I to V and VI to X (each with 0 troops), and 1581 Exalted Marksman in
+  training.
+- The portraits I to IX are saved in public/images/troops/ as marksmen-t1.png to
+  marksmen-t9.png, cut to the same size and shape as marksmen-t10.png. Infantry and
+  Lancer tiers I to IX are still to come.
+- The camp tabs at the bottom carry the game's class icons: a shield (Infantry Camp), a
+  spear head (Lancer Camp) and a bow with an arrow (Marksman Camp). They are saved as
+  white icons in public/images/troops/ as infantry-class.png, lancer-class.png and
+  marksmen-class.png.
+
 ## Fire Crystal levels (sent 23 Nov 2026, from the owner's account)
 
 A building's "Building Details" table, the only place the owner can see every FC badge.
