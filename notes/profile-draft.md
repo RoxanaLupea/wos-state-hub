@@ -33,7 +33,7 @@ This branch holds everything done after commit c146c03 on main. None of it is ap
 ## Still open
 
 - Where the swap to the other account sits.
-- Troop tier colours: the current ones are too bright and hard to read. Two softer sets were tried and are not in the code.
+- Troop tier colours: the current ones are too bright and hard to read. Two sets were tried and rejected: tier names in plain grey text, and the same colours made lighter. Neither is in the code; start the colours fresh.
 - The Tyrant roster picking from accounts, to be settled with Tyrant.
 - A new account opens all three troops at once and looks cramped.
 - notes/design-decisions.md does not describe this draft yet.
