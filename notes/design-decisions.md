@@ -428,9 +428,13 @@ there before discussing it again.
 - Players can refresh their own accounts, and R4s and admins their alliance. The API reads
   an account from the game at most once an hour, so the refresh waits an hour after the
   last update, and the page shows when the data was last read.
+- The rosters of the main alliances still in the state (DVL, TOP, SKY, RUU) are read every
+  hour, each call waiting for the API to read the game, so a roster is never more than an
+  hour old. A whole roster is one request.
 
 ## Open
 
+- Whether the academies' rosters are read at all, and how often.
 - Storing the Whiteout Stats key as a project secret for the site, and the server function
   that calls the API with it: waits for the owner's yes.
 - Roles. Decided: owner; admins, who can edit anything; alliance manager, one role per
