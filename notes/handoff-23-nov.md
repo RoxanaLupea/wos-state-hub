@@ -75,9 +75,13 @@ What it shows, top to bottom:
    numbers because nothing maps the numbers to names yet.
 5. The Labyrinth: the six areas, the stage and the rank, in the key figures' style. The
    total is only in the key figures.
-6. Your accounts (a decided part of the page): every account side by side with the
-   alliance logo, Main/Alt/Farm, name, ID and power, the one the person is on lit, and
-   Add. Tapping one switches to it, so the page has no separate swap control.
+6. Your accounts: every account side by side with the alliance logo, Main/Alt/Farm,
+   name, ID and power, the one the person is on lit, and Add. Tapping one switches to
+   it, so the page has no separate swap control. This follows notes/design-decisions.md
+   (Player page, 23 Nov), but it conflicts with what Roxanne said later the same day:
+   main and alt are swapped on the profile itself, one account shown at a time, a side
+   by side view only on a computer, and Your accounts holds only farms. Ask her which
+   stands before building this part; it is one question.
 7. "Updated 12 min ago" at the bottom.
 Computer: under the header, troops over the Labyrinth on the left (three columns each,
 lined up), the arena team over Your accounts on the right.
@@ -143,6 +147,34 @@ given that evening. What they show:
   of Chief ID, State, Furnace, Power.
 - wosoracle's History tab: one row per date, each with the picture, the name, pills for
   furnace, state, power, Labyrinth, kills and passes, and the date on the right.
+
+## 6a. Other things the next chat needs
+
+- Roxanne and Tif are in state 1252 until they transfer to 1458 (about two weeks after
+  23 Nov). Players not in 1458 must not see leaderboards, planning or alliance info.
+  Tif is on the list of players who count as 1458 members (state_member_exceptions,
+  one row, checked in the database); admins keep that list.
+- The Transfers section's pages are Timeline, Invites and Records
+  (notes/design-decisions.md). "Transfer invites" means the Invites page.
+- The profile draft's code (commit 8a99c87) already reads the game data, looks an ID up,
+  asks for a refresh, reads and sets skill levels, shows the skill note before SvS and
+  Tyrant (SKILL_CHECK_EVENT_IDS, SKILL_CHECK_DAYS_BEFORE = 3) and marks the name in the
+  top bar. Its data code can be kept; its layout was rejected.
+- Whiteout Stats API (api.whiteoutstats.com/v1, header X-Api-Key, the key only in the
+  Vault): 60 requests a minute and 5,000 a day on the free key; it reads an account from
+  the game at most once an hour. A player answer has player (name, ID, power, furnace
+  level, kills, alliance with tag, rank and rank label), troops (tier 8 to 12, type, FC
+  level), ranks (the state leaderboards, The Labyrinth areas as stage values like
+  "57-4") and heroes (the arena team as numbers like 50041, with level, stars, skills and
+  exclusive gear level). It has no hero names, no Exalted skill level and no foundry
+  power.
+- The site cannot wait for the API: requests from the site time out after 8 seconds, so
+  the site asks for a refresh and the minute job does the read. execute_sql calls stop
+  after 2 minutes.
+- This workspace cannot load pictures from the game or the API, and pasting base64 by
+  hand corrupts them; the mockups use the picture's first letter instead.
+- In the mockups, text is lined up with the picture's edges by trimming each line to its
+  letters (CSS text-box: trim-both cap alphabetic, works in the installed Chrome).
 
 ## 7. How badly the 23 Nov chat went
 
