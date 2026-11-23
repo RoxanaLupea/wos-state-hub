@@ -1,6 +1,7 @@
 # The player page, version 15, phone only: an experiment she may throw out (24 Nov, 00:14).
 # Every leaderboard the account has a rank on, grouped by kind, The Labyrinth on the bottom
-# line; boards with no rank are left out. Shown for JumpMstr and for a farm.
+# line, always on the left so its stages line sits under it (00:18); boards with no rank
+# are left out. Shown for JumpMstr and for a farm.
 # Troop tiers are written T10, T6 (her note, 00:15).
 # Version 14: Version 13 with the account's picture instead of
 # the alliance logo in the top bar and in the menu under the name, each with the account's
@@ -206,12 +207,17 @@ def page(c, mode='', changed_to=None, leave=False, lab_open=False):
     cells = ''
     total, total_rank = c['lab_total']
     # The experiment: every board with a rank. Otherwise her nine, as in version 14.
+    # The experiment: every board with a rank, and The Labyrinth always starting the last row
+    # on the left, with Exploration and Island beside it. Otherwise her nine, as in version 14.
     shown = [n for n in ALL if n == 'The Labyrinth' and total_rank or c['boards'].get(n, (None, None))[1]] if c.get('all') else GRID
-    lab_column = shown.index('The Labyrinth') % 3 + 1 if 'The Labyrinth' in shown else 1
+    if c.get('all') and 'The Labyrinth' in shown:
+        last = [n for n in ('The Labyrinth', 'Exploration Stage', 'Island Prosperity') if n in shown]
+        shown = [n for n in shown if n not in last] + last
+    lab_column = 1
     for name in shown:
         if name == 'The Labyrinth':
             total, total_rank = c['lab_total']
-            cells += '<div class="board">' + board('The Labyrinth', f'{total:,}', total_rank) + '</div>'
+            cells += '<div class="board" style="grid-column: 1">' + board('The Labyrinth', f'{total:,}', total_rank) + '</div>'
         else:
             value, rank = c['boards'].get(name, (None, None))
             cells += '<div class="board">' + board(name, value, rank) + '</div>'
