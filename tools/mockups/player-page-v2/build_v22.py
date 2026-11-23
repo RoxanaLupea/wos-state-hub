@@ -1,6 +1,7 @@
 # The player page, version 22, phone only. Look d made softer (her note of 24 Nov, 01:57):
 # the titles take the alliance's colour mixed with the quiet text colour, and the two text
-# buttons a lighter mix with the text colour, so they read apart from the titles.
+# buttons a lighter mix with the text colour, so they read apart from the titles. The rank
+# (R4) takes the titles' colour (01:58).
 # Version 21: Look d (her note of 24 Nov, 01:55): the section
 # titles and the "Update troops" and "Labyrinth stages" lines in the alliance's colour.
 # Version 20: three ways to bring the alliance's colour onto the
@@ -291,7 +292,7 @@ CSS = """
 .acc-b .name .rank, .acc-b .power .pr, .acc-b .board .r { color: var(--ally); }
 .acc-b .ph.on { box-shadow: 0 0 0 2px var(--ally), 0 0 12px color-mix(in srgb, var(--ally) 40%, transparent); }
 .pp.acc-c h2, .pp.acc-c .name .rank { color: var(--ally); }
-.pp.acc-d h2 { color: color-mix(in srgb, var(--ally) 55%, var(--text-muted)); }
+.pp.acc-d h2, .pp.acc-d .name .rank { color: color-mix(in srgb, var(--ally) 55%, var(--text-muted)); }
 .pp.acc-d .more { color: color-mix(in srgb, var(--ally) 50%, var(--text)); }
 .pp { --edge: 16px; --pic: 100px; width: 100%; margin: 0 auto; padding: 22px var(--edge) 28px; box-sizing: border-box; color: var(--text); }
 .pp h2 { display: flex; align-items: center; margin: -1px 0 10px; font-size: 14px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted); }
