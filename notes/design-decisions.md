@@ -414,8 +414,41 @@ there before discussing it again.
   makes the old main an alt. A new alt, or a farm made an alt, puts the person on it to
   fill in its troops; the account they are on made a farm puts them on the main.
 
+### Player data from the game (23 Nov)
+
+- Players' game data comes from the Whiteout Stats API (api.whiteoutstats.com), looked up
+  by in-game ID: name, state, alliance and rank in it, power, furnace level, kills,
+  avatar, and each troop type's tier and FC level. Tested on 23 Nov with the owner's
+  account; it matched the game.
+- A player adds the ID of every account they have and marks each as main, alt or farm.
+  When an ID is typed, its name and picture appear, so the player sees it is the right
+  account.
+- Every known account is refreshed twice a day, as a slow background pass (the API allows
+  60 requests a minute and 5,000 a day on the free key).
+- Players can refresh their own accounts, and R4s and admins their alliance. The API reads
+  an account from the game at most once an hour, so the refresh waits an hour after the
+  last update, and the page shows when the data was last read.
+- The rosters of the main alliances still in the state (DVL, TOP, SKY, RUU) are read every
+  hour, each call waiting for the API to read the game, so a roster is never more than an
+  hour old. A whole roster is one request.
+- The academies' rosters (dvl, top, abc) are read twice a day, with the player pass.
+- The same account is never requested twice within an hour. Asked again within the hour,
+  the site gives the answer from the last call.
+- The key is kept in the database's Vault and the refreshes run in the database
+  (supabase/game-refresh.sql), set up on 23 Nov.
+- Anyone signed in can add any in-game ID as their account, so an ID can be claimed by
+  someone it does not belong to. Members can report a wrongly claimed account, and admins
+  deal with the reports.
+- Storage while the pages are being designed: the latest full answer for every player,
+  alliance and state, plus one copy a day of the basic data for the last 30 days (about
+  150 MB; heroes and chief gear only as the latest copy). Once the design shows what is
+  used, only that is kept, with a longer history.
+
 ## Open
 
+- State page leaderboards: which of the 26 lead. The owner named The Labyrinth (total),
+  Total Pet Power, Total Expert Power and Exploration Stage as needed; the rest is to be
+  worked out later.
 - Roles. Decided: owner; admins, who can edit anything; alliance manager, one role per
   alliance, held the same by its R4s and R5s; state managers, for the state's planning
   except battles; battle managers, for the battles. Open: exactly which pages and
