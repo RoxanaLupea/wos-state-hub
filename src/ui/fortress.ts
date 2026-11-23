@@ -7,7 +7,7 @@ import type { FortReward } from '../data/catalog.ts';
 import { allianceById } from '../data/alliances.ts';
 import {
   FORT_NAMES, FORT_PHASES, SHARED_WITH_STATE, battleDayOf, creditedAllianceId,
-  fortFullName, isStronghold
+  isStronghold
 } from '../calendar/fort-season.ts';
 import { shortDayText } from './day-names.ts';
 import { escapeForPage } from './escape.ts';
@@ -62,6 +62,9 @@ export interface FortressBoardOptions {
   battleDay: number;
   // This phase's holders only.
   assignments: FortAssignment[];
+  // The phase before's holders, to show which buildings changed hands; empty when
+  // there is no phase before to compare with.
+  previousAssignments: FortAssignment[];
 }
 
 const STEP_LEFT = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
@@ -144,24 +147,37 @@ export function phaseHead(
 // name on two lines, and the alliance its reward counts for. Academies are not shown:
 // a fort an academy holds counts for its main alliance.
 export function fortressBoard(options: FortressBoardOptions): string {
-  const held = new Map<string, FortAssignment>();
-  for (const one of options.assignments) held.set(one.fort, one);
+  const mainHolderOf = (assignments: FortAssignment[]) => {
+    const holders = new Map<string, Alliance>();
+    for (const one of assignments) {
+      const holder = allianceById(one.allianceId);
+      const main = holder?.mainAllianceId ? allianceById(holder.mainAllianceId) ?? holder : holder;
+      if (main) holders.set(one.fort, main);
+    }
+    return holders;
+  };
+  const holders = mainHolderOf(options.assignments);
+  const previousHolders = mainHolderOf(options.previousAssignments);
+  const comparing = options.previousAssignments.length > 0;
 
   // A building: its short name above ("Fort 1", "SH 1"), its reward in the game's own
-  // tile, and the alliance that takes it under. The tile is drawn exactly as the game
-  // draws it.
+  // tile, and the alliance that takes it under. When the building changed hands since
+  // the phase before, the alliance that held it then sits before the one now.
   const spot = (fort: string) => {
-    const one = held.get(fort);
-    const holder = one ? allianceById(one.allianceId) : undefined;
-    const main = holder?.mainAllianceId ? allianceById(holder.mainAllianceId) ?? holder : holder;
+    const main = holders.get(fort);
+    const before = previousHolders.get(fort);
+    const changed = comparing && before?.id !== main?.id;
     const reward = fortRewardOf(fort, options.phase, options.battleDay);
     const shortName = (isStronghold(fort) ? 'SH ' : 'Fort ') + fort.replace(/^\D+/, '');
-    return `<article class="fort-spot${main ? ' held' : ''}"` +
-      (reward ? ` title="${escapeForPage(itemName(reward.itemId))}"` : '') +
-      (main ? ` style="${bannerStyle(main)}"` : '') + '>' +
+    const tag = `<span class="fort-spot-tag${main ? ' held' : ''}"` +
+      (main ? ` style="${bannerStyle(main)}"` : '') + `>${escapeForPage(main ? main.tag : '—')}</span>`;
+    const was = `<span class="fort-spot-tag was${before ? ' held' : ''}"` +
+      (before ? ` style="${bannerStyle(before)}"` : '') + `>${escapeForPage(before ? before.tag : '—')}</span>`;
+    return `<article class="fort-spot${changed ? ' changed' : ''}"` +
+      (reward ? ` title="${escapeForPage(itemName(reward.itemId))}"` : '') + '>' +
       `<span class="fort-spot-name">${escapeForPage(shortName)}</span>` +
-      (reward ? drawnReward(reward) : '') +
-      `<span class="fort-spot-tag">${escapeForPage(main ? main.tag : '—')}</span>` +
+      (reward ? drawnReward(reward) + `<span class="fort-spot-reward">${escapeForPage(itemName(reward.itemId))}</span>` : '') +
+      (changed ? `<span class="fort-spot-holders">${was}<span class="fort-spot-arrow">›</span>${tag}</span>` : tag) +
       '</article>';
   };
 
@@ -192,54 +208,67 @@ export interface SeasonTableOptions {
 // every phase across the top, and in each cell the reward and the alliance it counts
 // for. This is where a season is planned: with the pencil on, a state manager picks in
 // each cell who takes that fort in that phase.
+// "Fri 30 Oct" with the weekday apart, so a phone can leave it out of a narrow column.
+function weekdayAndDate(dayText: string): string {
+  const space = dayText.indexOf(' ');
+  return `<i>${escapeForPage(dayText.slice(0, space + 1))}</i>${escapeForPage(dayText.slice(space + 1))}`;
+}
+
 export function seasonTable(options: SeasonTableOptions): string {
   const held = new Map<string, FortAssignment>();
   for (const one of options.assignments) held.set(one.fort + '|' + one.phase, one);
   const phases = Array.from({ length: FORT_PHASES }, (_, index) => index + 1);
   const isNow = (phase: number) => phase === options.playedPhase;
 
+  // Each phase opens on the Phase page when tapped.
   const headings = phases.map(phase =>
-    `<th class="${isNow(phase) ? 'now' : ''}">Phase ${phase}` +
-    `<br><span>${escapeForPage(shortDayText(battleDayOf(options.seasonStart, phase)))}</span></th>`).join('');
+    `<th class="${isNow(phase) ? 'now' : ''}">` +
+    `<button type="button" class="fort-phase-open" data-fortress-phase-day="${battleDayOf(options.seasonStart, phase)}">` +
+    `<span>Phase</span> ${phase}` +
+    `<small>${weekdayAndDate(shortDayText(battleDayOf(options.seasonStart, phase)))}</small></button></th>`).join('');
 
-  const rows = FORT_NAMES.map(fort => {
-    const cells = phases.map(phase => {
-      const one = held.get(fort + '|' + phase);
-      const holder = one ? allianceById(one.allianceId) : undefined;
-      // Academies are not shown: a fort an academy holds counts for its main alliance.
-      const main = holder?.mainAllianceId ? allianceById(holder.mainAllianceId) ?? holder : holder;
-      const reward = fortRewardOf(fort, phase, battleDayOf(options.seasonStart, phase));
-      const credited = one ? creditedAllianceId(one, mainAllianceIdOf) : '';
-      const creditNote = one && main && credited !== main.id
-        ? `<span class="fort-cell-credit">for ${escapeForPage(credited === SHARED_WITH_STATE
-            ? 'the state' : allianceById(credited)?.tag ?? credited)}</span>`
-        : '';
-      return `<td class="${isNow(phase) ? 'now' : ''}">` +
-        `<span class="fort-cell${main ? ' held' : ''}${options.editing ? ' editable' : ''}"` +
-        editingAttributes(options.editing, phase, fort) +
-        (main ? ` style="${bannerStyle(main)}"` : '') + '>' +
-        (reward ? drawnReward(reward) : '') +
-        `<span class="fort-cell-tag">${escapeForPage(main ? main.tag : '—')}</span>` + creditNote +
-        (reward ? `<span class="fort-cell-reward">${escapeForPage(itemName(reward.itemId))}</span>` : '') +
-        openChoices(options.editing, phase, fort, one) +
-        '</span></td>';
-    }).join('');
-    return `<tr${isStronghold(fort) ? ' class="stronghold"' : ''}>` +
-      `<td class="fort-name">${escapeForPage(fortFullName(fort))}</td>${cells}</tr>`;
-  }).join('');
+  // One building in one phase, drawn as on the Phase page: its reward tile, the
+  // reward's name on a computer, and the alliance under it. A reward that counts for
+  // someone other than the holder says so under the alliance.
+  const cell = (fort: string, phase: number) => {
+    const one = held.get(fort + '|' + phase);
+    const holder = one ? allianceById(one.allianceId) : undefined;
+    // Academies are not shown: a fort an academy holds counts for its main alliance.
+    const main = holder?.mainAllianceId ? allianceById(holder.mainAllianceId) ?? holder : holder;
+    const reward = fortRewardOf(fort, phase, battleDayOf(options.seasonStart, phase));
+    const credited = one ? creditedAllianceId(one, mainAllianceIdOf) : '';
+    const creditNote = one && main && credited !== main.id
+      ? `<span class="fort-spot-credit">for ${escapeForPage(credited === SHARED_WITH_STATE
+          ? 'the state' : allianceById(credited)?.tag ?? credited)}</span>`
+      : '';
+    return `<td class="${isNow(phase) ? 'now' : ''}">` +
+      `<div class="fort-spot${options.editing ? ' editable' : ''}"` + editingAttributes(options.editing, phase, fort) +
+      (reward ? ` title="${escapeForPage(itemName(reward.itemId))}"` : '') + '>' +
+      (reward ? drawnReward(reward) + `<span class="fort-spot-reward">${escapeForPage(itemName(reward.itemId))}</span>` : '') +
+      `<span class="fort-spot-tag${main ? ' held' : ''}"` + (main ? ` style="${bannerStyle(main)}"` : '') +
+      `>${escapeForPage(main ? main.tag : '—')}</span>` + creditNote +
+      openChoices(options.editing, phase, fort, one) +
+      '</div></td>';
+  };
+  const row = (fort: string) =>
+    `<tr><th class="fort-row-name">${escapeForPage((isStronghold(fort) ? 'SH ' : 'Fort ') + fort.replace(/^\D+/, ''))}</th>` +
+    phases.map(phase => cell(fort, phase)).join('') + '</tr>';
+  // The purple line of the Phase page, across the whole table.
+  const line = `<tr class="fort-grid-line"><td colspan="${FORT_PHASES + 1}"><hr class="fort-spots-line"></td></tr>`;
 
   const lastBattleDay = battleDayOf(options.seasonStart, FORT_PHASES);
-  return '<section class="fort-board glass fort-season">' +
-    '<div class="fort-board-head">' +
+  return '<section class="fort-board fort-season">' +
+    '<div class="fort-season-head">' +
     `<button type="button" class="icon-button fort-step" data-fortress-step="-${FORT_PHASES}" aria-label="Previous season">${STEP_LEFT}</button>` +
-    `<div class="fort-board-title${options.playedPhase ? ' now' : ''}">` +
-    `<strong>Season ${options.seasonNumber}${options.pencil}</strong>` +
+    `<div class="fort-season-title${options.playedPhase ? ' now' : ''}">` +
+    `<h2 class="fort-phase-title">Season ${options.seasonNumber}${options.pencil}</h2>` +
     `<span>${escapeForPage(shortDayText(options.seasonStart) + ' – ' + shortDayText(lastBattleDay))}</span></div>` +
     `<button type="button" class="icon-button fort-step" data-fortress-step="${FORT_PHASES}" aria-label="Next season">${STEP_RIGHT}</button>` +
     '</div>' + paintPalette(options.editing) +
-    '<div class="fort-grid-wrap"><table class="fort-grid">' +
-    `<thead><tr><th class="fort-column">Fort</th>${headings}</tr></thead>` +
-    `<tbody>${rows}</tbody></table></div></section>`;
+    '<table class="fort-grid">' +
+    `<thead><tr><th></th>${headings}</tr></thead>` +
+    '<tbody>' + line + FORT_NAMES.filter(fort => !isStronghold(fort)).map(row).join('') +
+    line + FORT_NAMES.filter(isStronghold).map(row).join('') + '</tbody></table></section>';
 }
 
 // How many of each reward item an alliance wins across the season. Academies count

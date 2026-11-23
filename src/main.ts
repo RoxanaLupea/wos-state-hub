@@ -548,15 +548,19 @@ function fortPlaceOf(battleDay: number): { seasonStart: number; season: number; 
   };
 }
 
-// The fortress board for the phase on screen: the one picked with the arrows, else the
-// one being played. Without the season's first battle day there is nothing to count from.
+// The fortress board for the phase on screen: the one moved to (by swiping, the arrow
+// keys or a phase in the Season table), else the one being played. Without the
+// season's first battle day there is nothing to count from.
 function fortressBoardMarkup(): string {
   if (Number.isNaN(firstFortBattleDay)) return '';
-  const battleDay = playedFortBattleDay();
+  const battleDay = view.fortressBattleDay ?? playedFortBattleDay();
   const place = fortPlaceOf(battleDay);
   return fortressBoard({
     season: place.season, phase: place.phase, battleDay,
-    assignments: fortAssignments.filter(one => one.season === place.season && one.phase === place.phase)
+    assignments: fortAssignments.filter(one => one.season === place.season && one.phase === place.phase),
+    previousAssignments: place.phase > 1
+      ? fortAssignments.filter(one => one.season === place.season && one.phase === place.phase - 1)
+      : []
   });
 }
 
@@ -1255,10 +1259,18 @@ function handleClicks(event: MouseEvent): void {
   }
   const fortressStep = target.closest<HTMLElement>('[data-fortress-step]');
   if (fortressStep) {
-    const shown = view.fortressBattleDay ?? playedFortBattleDay();
-    const next = shown + 7 * Number(fortressStep.dataset.fortressStep);
-    view.fortressBattleDay = next === playedFortBattleDay() ? null : next;
+    stepFortressPhases(Number(fortressStep.dataset.fortressStep));
     view.editing = null;
+    draw();
+    return;
+  }
+  // A phase in the Season table opens it on the Phase page.
+  const phaseHeading = target.closest<HTMLElement>('[data-fortress-phase-day]');
+  if (phaseHeading) {
+    const battleDay = Number(phaseHeading.dataset.fortressPhaseDay);
+    view.fortressBattleDay = battleDay === playedFortBattleDay() ? null : battleDay;
+    view.openSubPage = 'phase';
+    startAtTop.wholePage = true;
     draw();
     return;
   }
@@ -2001,25 +2013,58 @@ function openEventFrom(button: HTMLElement, target: HTMLElement): void {
 // scrolling and is left alone.
 const PHONE_WIDTH = 1000;
 const SWIPE_DISTANCE = 60;
-let swipeStart: { x: number; y: number } | null = null;
+let swipeStart: { x: number; y: number; onFortressPhase: boolean } | null = null;
+
+// The Phase page of the fortress is open.
+function isOnFortressPhase(): boolean {
+  return view.openPage === 'fortress' && (view.openSubPage || 'phase') === 'phase';
+}
+
+// Moves the fortress pages by a number of phases; back on the phase being played,
+// they follow it again as the weeks go by.
+function stepFortressPhases(phases: number): void {
+  const next = (view.fortressBattleDay ?? playedFortBattleDay()) + 7 * phases;
+  view.fortressBattleDay = next === playedFortBattleDay() ? null : next;
+}
 
 function startSwipe(event: TouchEvent): void {
   const target = event.target as HTMLElement | null;
   swipeStart = null;
+  if (event.touches.length !== 1) return;
+  const touch = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+  // The fortress phase moves on any screen a finger can swipe.
+  if (isOnFortressPhase() && target?.closest('.fort-board')) {
+    swipeStart = { ...touch, onFortressPhase: true };
+    return;
+  }
   if (window.innerWidth >= PHONE_WIDTH || view.openPage !== 'calendar' || view.isPanelOpen) return;
-  if (!target?.closest('.calendar-panel') || event.touches.length !== 1) return;
-  swipeStart = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+  if (!target?.closest('.calendar-panel')) return;
+  swipeStart = { ...touch, onFortressPhase: false };
 }
 
 function endSwipe(event: TouchEvent): void {
   if (!swipeStart) return;
   const across = event.changedTouches[0].clientX - swipeStart.x;
   const down = event.changedTouches[0].clientY - swipeStart.y;
+  const onFortressPhase = swipeStart.onFortressPhase;
   swipeStart = null;
   if (Math.abs(across) < SWIPE_DISTANCE || Math.abs(across) < Math.abs(down) * 1.5) return;
   // Swiping to the left brings in what comes next, as turning a page does.
-  step(across < 0 ? 1 : -1);
-  startAtTop.calendar = true;
+  if (onFortressPhase) {
+    stepFortressPhases(across < 0 ? 1 : -1);
+  } else {
+    step(across < 0 ? 1 : -1);
+    startAtTop.calendar = true;
+  }
+  draw();
+}
+
+// On a computer the arrow keys move the Phase page, as a swipe does on a phone.
+function stepWithKeys(event: KeyboardEvent): void {
+  if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+  if (!isOnFortressPhase() || event.altKey || event.ctrlKey || event.metaKey) return;
+  if ((event.target as HTMLElement | null)?.closest('input, select, textarea')) return;
+  stepFortressPhases(event.key === 'ArrowRight' ? 1 : -1);
   draw();
 }
 
@@ -2271,6 +2316,7 @@ async function start(): Promise<void> {
     document.addEventListener('submit', handleSubmits);
     document.addEventListener('touchstart', startSwipe, { passive: true });
     document.addEventListener('touchend', endSwipe, { passive: true });
+    document.addEventListener('keydown', stepWithKeys);
     window.addEventListener('popstate', returnToPlace);
     // The site puts every scroll back itself; the browser's own would jump to the top
     // whenever the history steps back.

@@ -177,6 +177,14 @@ Exalted only on FC10 (confirmed 22 Nov). Not confirmed: skill levels 0 to 3.
 - data/catalog/fort-locations.json holds the 1458 fortress and stronghold coordinates
   (from the game, season 16). They are for the map only, not the Fortress page.
 
+## Test data to remove
+
+- Season 16 phases 1, 3, 5, 6, 7 and 8 in fort_assignments are made up, to test the
+  Fortress pages (95 rows, written 23 Nov). Phases 2 and 4 are real. Every made-up row
+  has updated_at 2026-11-23 05:00:00+00; remove them with
+  `delete from fort_assignments where updated_at = '2026-11-23 05:00:00+00';`
+  A row edited on the site since then has a new updated_at and is missed by that.
+
 ## Still to design
 
 - The look of every page: Fortress, State and alliances, the calendar port, the map.

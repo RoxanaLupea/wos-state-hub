@@ -111,14 +111,16 @@ there before discussing it again.
   once (forts down, phases across), Rewards the season's reward tables. Planning is
   not a page of its own: planning a season means state managers setting which
   alliance takes which fort or stronghold, which they do in place: the pencil by the
-  title on Phase or Season turns each card's or cell's alliance into a pick, with a
+  title on Season turns each cell's alliance into a pick, with a
   smaller pick under it for who the reward counts for (holder, state, or an
   alliance). Each pick is saved as soon as it is made; no forms (23 Nov, as the
   owner asked on 11 Nov). All three tabs stay on the same season and phase.
 
 ### Fortress phase
-- The Phase tab shows the phase being played, to look at only: no arrows, no picking,
-  no "for the state". Under the tabs one white line reads "SEASON N • PHASE N"; the
+- The Phase tab opens on the phase being played, to look at only: no arrows, no
+  picking, no "for the state". Swiping moves to the phase before or after (into the
+  season before or after too), the arrow keys do the same on a computer, and tapping
+  a phase heading in the Season table opens that phase (23 Nov). Under the tabs one white line reads "SEASON N • PHASE N"; the
   title stays "Fortress BATTLES" alone. White, because the section already has
   enough purple (23 Nov).
 - No panels. Each building, four to a line, close together in the middle rather than
@@ -132,6 +134,23 @@ there before discussing it again.
   draws it (23 Nov).
 - Hero shard rewards follow the state's generation on the phase's battle day, from the
   transfer groups (23 Nov, as the old app did).
+- A building that changed hands since the phase before shows both alliances, the one
+  before dimmed, then an arrow, then the one now. Two neighbours that both changed
+  must still fit side by side on a phone (23 Nov).
+- Every alliance pill has the same size, alone or in a pair. The buildings stretch
+  as wide as the purple lines, with a little room between a line's pills and the
+  next line of names (23 Nov).
+- On a computer the reward's name sits under its tile. Every name has room for two
+  lines, so all the pills sit at the same height (23 Nov).
+
+### Fortress season
+- Drawn like the Phase page, with no panels and no change-of-hands pairs: buildings
+  down the side ("Fort 1", "SH 1"), phases across, each cell the reward tile and the
+  alliance pill under it, the purple lines above the forts and above the strongholds.
+  Reward names on a computer only, with room for two lines. A reward counted for
+  someone other than the holder says so under the pill (23 Nov).
+- On a phone the whole season fits the screen: smaller tiles, quieter pills, and the
+  columns headed by the phase only, the dates being under the season's title (23 Nov).
 
 ### Fortress rewards
 - The season tables have alliances down the side and one column per reward. On a
