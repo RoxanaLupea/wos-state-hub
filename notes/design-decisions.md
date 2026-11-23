@@ -431,10 +431,10 @@ there before discussing it again.
 - The rosters of the main alliances still in the state (DVL, TOP, SKY, RUU) are read every
   hour, each call waiting for the API to read the game, so a roster is never more than an
   hour old. A whole roster is one request.
+- The academies' rosters (dvl, top, abc) are read twice a day, with the player pass.
 
 ## Open
 
-- Whether the academies' rosters are read at all, and how often.
 - Storing the Whiteout Stats key as a project secret for the site, and the server function
   that calls the API with it: waits for the owner's yes.
 - Roles. Decided: owner; admins, who can edit anything; alliance manager, one role per
