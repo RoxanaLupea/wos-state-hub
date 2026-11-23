@@ -137,6 +137,8 @@ there before discussing it again.
 - A building that changed hands since the phase before shows both alliances, the one
   before dimmed, then an arrow, then the one now. Two neighbours that both changed
   must still fit side by side on a phone (23 Nov).
+- Phase 1 is not compared with the season before: it shows no changes of hands
+  (23 Nov).
 - Every alliance pill has the same size, alone or in a pair. The buildings stretch
   as wide as the purple lines, with a little room between a line's pills and the
   next line of names (23 Nov).
