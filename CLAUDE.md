@@ -51,10 +51,10 @@ read the notes file it names, if any.
 
 ## How the work is done
 
-- Each piece of design work gets its own branch, named for what it is (for example
-  design/calendar-controls), made from main when the work starts. It is merged into main
-  when Roxanne accepts it and then deleted, so a branch always shows what is still being
-  worked on and main what is done. No long-lived draft branch (24 Nov).
+- New design work starts on a fresh branch made from main, named for what it is (for
+  example design/calendar-controls), never on an old draft that still holds earlier
+  designs, so Roxanne only sees what she is fixing now. It is merged into main when she
+  accepts it and then deleted (24 Nov).
 - Only UI and design work goes on a design branch. Fixes to data, the database and
   how things work are done on main and pushed straight to main, still after walking
   her through them and her yes (24 Nov).
