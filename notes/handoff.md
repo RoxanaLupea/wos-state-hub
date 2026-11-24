@@ -21,6 +21,10 @@ file, then the notes CLAUDE.md lists.
   table); the open page name "AVAILABILITY" is clipped at its left on a computer (was so
   before).
 
+- Same chat, later: the SvS history now has every opponent (WoS Oracle's free Matchup
+  timeline matched all 28 SvS; 1480, 1433, 1385 filled). Next: design the SvS results
+  after WoS Oracle's SvS screens (design-decisions.md, Open), phone first.
+
 ## 1. Where things stand
 
 - main is the live site, built and checked on GitHub.

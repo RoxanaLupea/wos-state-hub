@@ -681,6 +681,15 @@ Game accounts (from 23 Nov, still holds)
 - The Fortress rewards view needs work and a redesign.
 - How results are shown (SvS, Sunfire presidents, TAL ranks and MVPs). A working
   version is built: a Results tab on the event, and My alliance · Results.
+- SvS results follow WoS Oracle's SvS screens (Roxanne, 24 Nov; her screenshots and the
+  read-out are in data/captures/svs.md): what they show and how it is ordered, drawn in
+  the site's own style and colours (notes/page-style.md), never theirs. From them: the
+  history as a timeline, one line per SvS (date, attack or defence, opponent, Conquered /
+  Defended / Repelled / Castle lost, the chief); the state's totals (preps won and lost,
+  castles taken and lost, prep win rate); one SvS opened shows the prep totals with the
+  share of each side, the five prep days with who led each, and the castle holds per
+  alliance against the time needed to win. Their MMR and ratings are their own model and
+  are not taken.
 - Pop-ups: their design (24 Nov). Until then they stay as they are: "Save for which
   accounts?" as approved (ticked rows outlined, Cancel and Save under them) and the leave
   question.
