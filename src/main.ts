@@ -2291,14 +2291,25 @@ function filterPlayerTyping(event: Event): void {
   refreshSaveButton(part);
 }
 
-// What a typed id is in the game. Looked up once it has all its digits; an id already
-// among the person's accounts is not looked up.
+// What a typed id is in the game. Looked up once typing pauses with at least 8 digits
+// (an 8-digit start can be part of a longer id); an id already among the person's
+// accounts is not looked up. The game's answer is the check: no player, no Save.
 let lookUpFor = '';
+let lookUpTimer = 0;
 function lookUpTypedId(id: string): void {
+  window.clearTimeout(lookUpTimer);
   if (idProblem(id) !== '') {
     if (lookUp.kind !== 'none') { lookUp = { kind: 'none' }; lookUpFor = ''; draw(); }
     return;
   }
+  if (id === lookUpFor) return;
+  // The answer shown was for another id: it goes at once, so Save never pairs the new id
+  // with the old answer.
+  if (lookUp.kind !== 'none') { lookUp = { kind: 'none' }; lookUpFor = ''; draw(); }
+  lookUpTimer = window.setTimeout(() => lookUpNow(id), 600);
+}
+
+function lookUpNow(id: string): void {
   if (id === lookUpFor) return;
   lookUpFor = id;
   if (allMyAccounts().some(one => String(one.in_game_id) === id)) { lookUp = { kind: 'taken' }; draw(); return; }

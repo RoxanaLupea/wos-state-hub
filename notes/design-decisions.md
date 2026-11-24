@@ -477,6 +477,11 @@ Game accounts (from 23 Nov, still holds)
 - A player adds the ID of every account they have and marks each as main, alt or farm.
   When an ID is typed, its name and picture appear, so the player sees it is the right
   account.
+- The ID is not judged by its digits (24 Nov): IDs grow as accounts are made, so a new
+  farm or alt can start with any digit. The field takes digits only, and the check is the
+  game itself: an ID the game has a player for can be saved, a made-up number gets "The
+  game has no player with this ID." It is looked up once typing pauses with 8 digits or
+  more, since an 8-digit start can be part of a longer ID.
 - Every known account is refreshed twice a day, as a slow background pass (the API allows
   60 requests a minute and 5,000 a day on the free key).
 - Players can refresh their own accounts, and R4s and admins their alliance. The API reads

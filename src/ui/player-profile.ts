@@ -29,15 +29,16 @@ export function foundryText(value: unknown): string {
   return value ? Math.round(Number(value)).toLocaleString('en-US') : '';
 }
 
-// 9 digits when the ID starts with 1 or 2, 8 when it starts with 7, 8 or 9.
+// IDs grow as accounts are made (the oldest have 8 digits, new ones start with any
+// digit), so the field keeps only digits, 10 at most, and does not judge the number
+// itself: whether it is a real account is checked in the game (owner, 24 Nov).
 export function filterId(raw: string): string {
-  const digits = raw.replace(/[^0-9]/g, '');
-  return digits.slice(0, /^[789]/.test(digits) ? 8 : 9);
+  return raw.replace(/[^0-9]/g, '').slice(0, 10);
 }
 
+// Long enough to be an ID, so it is looked up in the game.
 export function idProblem(id: string): string {
-  const valid = (id.length === 9 && /^[12]/.test(id)) || (id.length === 8 && /^[789]/.test(id));
-  return valid ? '' : 'Please enter a valid ID.';
+  return /^[0-9]{8,10}$/.test(id) ? '' : 'Please enter a valid ID.';
 }
 
 // ---------------------------------------------------------------------------
