@@ -30,9 +30,9 @@
 - The portraits I to IX are saved as infantry-t1.png to infantry-t9.png and lancer-t1.png
   to lancer-t9.png. Marksmen T10 was cut again from the Marksman screenshot, as the
   saved one had a dark square on the mask.
-- Every troop portrait (all 36) now has one clean shape: the hexagon and the tier badge,
-  without the camp background that showed below the hexagon's lower edges
-  (tools/mockups/player-page-v2/clean_troop_shape.py).
+- All 36 portraits are rebuilt at 336 x 412 with a crisp frame drawn to the game's
+  outline, the soldier taken from the screenshots, and heads kept where they cross the
+  frame (tools/troop-portraits/).
 
 ## Fire Crystal levels (sent 23 Nov 2026, from the owner's account)
 

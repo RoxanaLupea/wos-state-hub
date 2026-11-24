@@ -1,0 +1,193 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="main.css"><style>
+/* The alliance's colour, three ways. */
+.pp { position: relative; }
+/* The glow is centred on the picture and fades out on every side, so it has no edge. */
+.pp.acc-a { background: radial-gradient(circle 240px at 70px 120px, color-mix(in srgb, var(--ally) 30%, transparent), transparent) no-repeat; }
+.acc-a .pic { box-shadow: 0 0 0 2px var(--ally), 0 0 22px color-mix(in srgb, var(--ally) 45%, transparent), 0 8px 20px rgba(0,0,0,.4); }
+.acc-b .name .rank, .acc-b .power .pr, .acc-b .board .r { color: var(--ally); }
+.acc-b .ph.on { box-shadow: 0 0 0 2px var(--ally), 0 0 12px color-mix(in srgb, var(--ally) 40%, transparent); }
+.pp.acc-c h2, .pp.acc-c .name .rank { color: var(--ally); }
+.pp.acc-d h2 { color: color-mix(in srgb, var(--ally) 55%, var(--text-muted)); }
+/* The rank as a small label: a soft tint of the alliance's colour behind its letters. */
+.pp.acc-d .name .rank { display: inline-block; margin-left: 8px; padding: 3px 5px 2px; border-radius: 5px; font-size: 11px; line-height: 1;
+  color: color-mix(in srgb, var(--ally) 50%, var(--text)); background: color-mix(in srgb, var(--ally) 22%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ally) 35%, transparent); top: 4px; }
+.pp.acc-d .more { color: color-mix(in srgb, var(--ally) 50%, var(--text)); }
+.pp { --edge: 16px; --pic: 100px; width: 100%; margin: 0 auto; padding: 22px var(--edge) 28px; box-sizing: border-box; color: var(--text); }
+.pp h2 { display: flex; align-items: center; margin: -1px 0 10px; font-size: 14px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted); }
+.pp h2 .end { margin-left: auto; display: flex; align-items: center; }
+
+/* Header. The picture a little taller than the text, the text centred on it; the alliance
+   a small badge in the top right. */
+.chief { display: grid; grid-template-columns: var(--pic) minmax(0, 1fr) auto; column-gap: 14px; align-items: center; }
+.pic { position: relative; width: var(--pic); height: var(--pic); border-radius: 20px; background: var(--glass-strong); display: flex; align-items: center; justify-content: center;
+  font-size: 36px; font-weight: 800; color: var(--text-muted); box-shadow: 0 0 0 1px var(--glass-border), 0 8px 20px rgba(0,0,0,.4); }
+/* Name, ID, power and foundry power, evenly spaced, centred on the picture. */
+.who { min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+.name, .id, .power, .tag, .fig .cap, .fig .v { text-box: trim-both cap alphabetic; }
+.name { font-size: 24px; font-weight: 800; line-height: 1.1; white-space: nowrap; }
+.id { font-size: 14px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.id .k { color: var(--text-faint); font-weight: 800; letter-spacing: .06em; }
+/* The rank is the person's: a small label beside the name, level with the top of its capitals. */
+.name .rank { margin-left: 7px; font-size: 12px; color: var(--accent); font-weight: 800; letter-spacing: .04em; vertical-align: top; position: relative; top: 0; }
+.power { font-size: 26px; font-weight: 800; line-height: 1.1; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.power .pr { margin-left: 6px; font-size: 13px; color: var(--accent); }
+/* The Foundry logo centred on the number's capitals, taking no more height than the number. */
+.foundry { display: flex; align-items: center; gap: 5px; font-size: 14px; font-weight: 700; line-height: 1.1; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.foundry span { text-box: trim-both cap alphabetic; }
+.foundry img { height: 18px; margin: -4px 0; }
+.badge { align-self: start; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.badge .logo { height: 36px; display: block; }
+.badge .logo.none { width: 32px; height: 32px; border-radius: 9px; font-size: 15px; }
+.logo.none { background: var(--glass-strong); box-shadow: 0 0 0 1px var(--glass-border); display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--text-muted); }
+.tag { font-family: var(--tag-font); font-size: 11px; font-weight: 800; letter-spacing: .08em; line-height: 1.1; }
+
+/* The account's photos; the one shown is ringed, tapping another swaps to it. */
+/* The account's picture in the top bar and in the menu under the name. */
+.me-button { display: inline-flex; align-items: center; gap: 8px; padding-left: 4px !important; }
+.top-bar .me-button { max-width: 120px; }
+.me-button .me-name { min-width: 0; }
+.me-pic, .choice-pic { flex: none; display: flex; align-items: center; justify-content: center; background: var(--glass-strong);
+  box-shadow: 0 0 0 1px var(--glass-border); font-weight: 800; color: var(--text-muted); }
+.me-pic { width: 26px; height: 26px; border-radius: 7px; font-size: 13px; }
+.choice-pic { width: 36px; height: 36px; border-radius: 10px; font-size: 16px; }
+.account-choice.open .choice-pic { color: var(--text); box-shadow: 0 0 0 2px var(--accent); }
+
+/* Seven photos fill the line from edge to edge; fewer keep the same size. */
+.accbar { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; margin-top: 18px; }
+.ph { width: 100%; aspect-ratio: 1; padding: 0; border: none; border-radius: 11px; background: var(--glass-strong); box-shadow: 0 0 0 1px var(--glass-border);
+  font: inherit; font-size: 17px; font-weight: 800; color: var(--text-muted); cursor: pointer; }
+.ph.on { color: var(--text); box-shadow: 0 0 0 2px var(--accent), 0 0 12px color-mix(in srgb, var(--accent) 40%, transparent); }
+
+.body { margin-top: 26px; display: flex; flex-direction: column; gap: 26px; }
+.items { display: grid; column-gap: 8px; }
+.items.three { grid-template-columns: repeat(3, minmax(0, 1fr)); } .items.five { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.item { display: flex; flex-direction: column; align-items: center; gap: 7px; min-width: 0; }
+.art { width: 60px; height: 60px; position: relative; display: flex; align-items: center; justify-content: center; flex: none; }
+.art.troop .p { height: 60px; }
+.art.troop .fc { position: absolute; top: 1px; left: -3px; height: 24px; filter: drop-shadow(0 2px 3px rgba(0,0,0,.5)); }
+/* Troop names in capitals, all at one size: the widest is as wide as the picture. */
+.tname { display: block; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; line-height: 1; white-space: nowrap; color: var(--text); }
+.detail { font-size: 11px; font-weight: 700; white-space: nowrap; line-height: 1.2; }
+.detail .q { color: var(--text-faint); } .detail .s { color: var(--text); }
+.detail .q + .s::before { content: ' · '; color: var(--text-faint); }
+.detail .empty { color: var(--text-faint); }
+.nodata { margin: 0; font-size: 13px; font-weight: 600; color: var(--text-faint); }
+
+/* The game's hero card: a tall card, light orange at the top to deeper orange at the
+   bottom, the portrait filling it, a thin dark edge. */
+.art.hero { width: 100%; height: auto; aspect-ratio: 232 / 408; border-radius: 7px; background: linear-gradient(#F4B77C, #EB935A);
+  box-shadow: 0 0 0 1px rgba(60, 25, 10, .55), inset 0 0 0 1px rgba(255, 220, 170, .35), 0 4px 10px rgba(0,0,0,.35); overflow: hidden; }
+.art.hero .hp { position: absolute; inset: 0; width: 100%; height: 100%; }
+.art.hero .sil { position: absolute; left: 50%; bottom: 10px; width: 52px; height: 52px; transform: translateX(-50%); fill: #9A5A2E; opacity: .35; }
+/* The class icon on the game's blue badge. */
+.art.hero .cm-badge { position: absolute; top: 3px; left: 3px; z-index: 1; width: 16px; height: 16px; border-radius: 5px; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(#78BCD8, #3F84A8); box-shadow: 0 0 0 1px rgba(20, 50, 80, .6), 0 1px 2px rgba(0,0,0,.4); }
+.art.hero .cm { height: 11px; filter: drop-shadow(0 1px 1px rgba(0,0,0,.5)); }
+/* The level on the card, as in the game: white, bold, with a dark outline, over the stars. */
+.art.hero .hlv { position: absolute; left: 7%; bottom: 17px; z-index: 1; font-size: 10px; font-weight: 900; line-height: 1; color: #FFF8EC;
+  -webkit-text-stroke: 2px #3A2418; paint-order: stroke fill; letter-spacing: .01em; }
+.art.hero .stars { position: absolute; bottom: 5px; left: 0; right: 0; z-index: 1; display: flex; justify-content: center; gap: 0;  }
+.art.hero .stars svg { width: 11px; height: 11px; }
+.art.hero .stars .on { fill: #6FD9F6; stroke: #1F4D7A; stroke-width: .8; }
+.art.hero .stars .off { fill: #A8683A; }
+.arena .detail { font-size: 10px; }
+.detail .wg { width: 10px; height: 10px; margin-right: 2px; vertical-align: -1px; color: var(--text-muted); }
+
+/* Under the troops: a note when skill levels are needed, then the line that opens them. */
+.note { margin: 16px 0 0; text-align: left; font-size: 13px; font-weight: 600; line-height: 1.45; color: var(--text); }
+.more.update { margin-top: 14px; }
+
+/* Setting the skill levels: each Exalted troop with its toggle, lit like the site's other switches. */
+.erows { display: flex; flex-direction: column; gap: 12px; }
+.erow { display: flex; align-items: center; gap: 12px; }
+.art.troop.small { width: 44px; height: 44px; margin-left: 8px; } .art.troop.small .p { height: 44px; } .art.troop.small .fc { height: 19px; top: 0; left: -3px; }
+.erow .tname { flex: 1; min-width: 0; font-size: 11px; }
+.lvls { flex: none; display: flex; padding: 3px; gap: 2px; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--glass); }
+.lvl { min-width: 47px; height: 30px; padding: 0 6px; border: none; border-radius: 9px; background: none; color: var(--text-muted); font: inherit; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.lvl.on { background: var(--accent); color: var(--accent-ink); font-weight: 800; box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 40%, transparent); }
+.saverow { display: flex; justify-content: center; gap: 10px; margin-top: 18px; }
+.saverow button { min-width: 110px; }
+.save:disabled { background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-faint); }
+
+/* Leaderboards: three rows of three, by kind: two rows of power, then The Labyrinth with
+   Exploration Stage beside it and Island Prosperity. Each board is centred in its column:
+   its short name, then its value with its rank after it. The Labyrinth opens its areas under
+   the grid, drawn the same way, smaller. */
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 12px; }
+.board { display: flex; flex-direction: column; align-items: center; text-align: center; min-width: 0; }
+.board .cap { font-size: 11.5px; font-weight: 700; line-height: 1.25; color: var(--text-muted); white-space: nowrap; }
+.board .v { margin-top: 6px; font-size: 19px; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.board .r { margin-left: 4px; font-size: 11px; font-weight: 800; color: var(--accent); }
+.board .empty { color: var(--text-faint); }
+.labmore { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 12px; margin-top: 12px; }
+.more { justify-self: start; display: flex; align-items: center; gap: 3px; padding: 0; border: none; background: none; font: inherit; font-size: 11.5px; font-weight: 800; color: var(--accent); white-space: nowrap; cursor: pointer; }
+.more .chev { width: 13px; height: 13px; }
+.more[aria-expanded=true] .chev { transform: rotate(180deg); }
+.areas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px 12px; margin-top: 30px; }
+.board.area .cap { font-size: 10.5px; }
+.board.area .v { font-size: 16px; }
+
+.fresh { margin: 32px 0 0; font-size: 13px; font-weight: 600; color: var(--text-faint); line-height: 1; }
+.refresh { margin-left: 12px; padding: 0; border: none; background: none; font: inherit; font-weight: 800; color: var(--text-faint); }
+.refresh svg { width: 13px; height: 13px; margin-right: 5px; vertical-align: -1px; }
+.refresh.on { color: var(--accent); cursor: pointer; }
+
+.leave { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(5, 8, 16, 0.55); }
+.leave-box { background: color-mix(in srgb, var(--page-color) 90%, transparent); width: min(380px, 100%); padding: 22px 20px 18px; display: flex; flex-direction: column; gap: 18px; }
+.leave-box p { margin: 0; text-align: center; font-size: 17px; font-weight: 700; }
+.leave-actions { display: flex; gap: 10px; } .leave-actions button { flex: 1; min-height: 44px; }
+</style></head><body><div id="app" class="app"><header class="top-bar">
+    <div class="brand"><svg class="logo" viewBox="0 -1.5 388 75.1" height="34" role="img" aria-label="1458 State Hub">
+    <text x="0" y="72" font-size="100" textLength="256" lengthAdjust="spacing" fill="var(--accent)">1458</text>
+    <text x="270" y="26.5608" font-size="36.89" textLength="118" lengthAdjust="spacingAndGlyphs" fill="var(--text)">STATE</text>
+    <text x="270" y="72" font-size="51.11" textLength="118" lengthAdjust="spacingAndGlyphs" fill="var(--text)">HUB</text>
+  </svg></div>
+    <nav class="main-nav" aria-label="Main"><button type="button" class="nav-tab" data-page="calendar">Calendar</button><button type="button" class="nav-tab" data-page="fortress">Fortress</button><button type="button" class="nav-tab" data-page="transfers">Transfers</button><button type="button" class="nav-tab" data-page="event">Tyrant</button><button type="button" class="nav-tab" data-page="state">State</button><button type="button" class="nav-tab" data-page="alliance">My alliance</button><button type="button" class="nav-tab" data-page="map">Map</button></nav>
+    <div class="clock" title="Game time">
+      <span class="clock-zone">UTC</span>
+      <span class="clock-time" id="clockTime" aria-live="off">18:03</span>
+    </div>
+    <div class="account-menu-wrap"><button type="button" class="ghost-button me-button" data-account-menu="" aria-haspopup="menu" aria-expanded="false" aria-label="Innocent_Terry_"><span class="me-initial" aria-hidden="true">I</span><span class="me-pic">I</span><span class="me-name">Innocent_Terry_</span><span class="me-mark" aria-hidden="true"></span></button><div class="account-menu glass" role="menu"><button type="button" class="account-choice open" role="menuitem" data-game-account="1" style="--alliance-colour: #A57BD8"><img class="account-choice-logo" src="https://raw.githubusercontent.com/RoxanaLupea/wos-state-hub/main/public/images/alliances/dvl.png" alt=""><span class="account-choice-text"><span class="account-choice-kind">Main</span><span class="account-choice-name">Innocent_Terry_</span></span></button><button type="button" class="account-choice" role="menuitem" data-game-account="2" style="--alliance-colour: #4A78D8"><img class="account-choice-logo" src="https://raw.githubusercontent.com/RoxanaLupea/wos-state-hub/main/public/images/alliances/top.png" alt=""><span class="account-choice-text"><span class="account-choice-kind">Alt</span><span class="account-choice-name">༺ Riikou༻</span></span></button><button type="button" class="account-choice" role="menuitem" data-game-account="3" style="--alliance-colour: #A57BD8"><img class="account-choice-logo" src="https://raw.githubusercontent.com/RoxanaLupea/wos-state-hub/main/public/images/alliances/dvl.png" alt=""><span class="account-choice-text"><span class="account-choice-kind">Alt</span><span class="account-choice-name">༺TAGERMXY 2༻ᴵᴿᴬᵟ</span></span></button><div class="account-menu-line"></div><button type="button" class="account-menu-item" role="menuitem" data-page="player"><span class="account-menu-plus"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"></path></svg></span>Profile</button><button type="button" class="account-menu-item" role="menuitem" data-page="admin"><span class="account-menu-plus"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></span>Admin</button><button type="button" class="account-menu-item danger" role="menuitem" data-sign-out=""><span class="account-menu-plus"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg></span>Sign out</button></div></div>
+  </header><main class="page" data-section="player"><div class="pp acc-a" style="--ally: #E8603A">
+ <header class="chief">
+  <div class="pic"><span>L</span></div>
+  <div class="who">
+   <div class="name">little bit DT<span class="rank">R2</span></div>
+   <div class="id"><span class="k">ID</span> 888769623</div>
+   <div class="power"><b>1.93M</b><span class="pr">#4645</span></div>
+   
+  </div>
+  <div class="badge"><span class="logo none">R</span><span class="tag">RUU</span></div>
+ </header>
+ <div class="body">
+  <section class="troops"><h2>Troops</h2><div class="items three"><div class="item"><span class="tname">Infantry</span><span class="detail"><span class="q">T6</span></span></div><div class="item"><span class="tname">Lancer</span><span class="detail"><span class="q">T6</span></span></div><div class="item"><span class="tname">Marksmen</span><span class="detail"><span class="q">T6</span></span></div></div></section>
+  <section class="arena"><h2>Arena team</h2><div class="items five"><div class="item"><div class="art hero"><svg class="sil" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="15" r="7"/><path d="M6 38c1-9 7-14 14-14s13 5 14 14z"/></svg><span class="cm-badge"><img class="cm" src="images/troops/infantry-class.png" alt="Infantry"></span><span class="hlv">Lv. 21</span><span class="stars" title="0-Star (5 of 6)"><svg viewBox="-11 -11 22 22" aria-hidden="true"><path class="on" transform="rotate(0)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="on" transform="rotate(-60)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="on" transform="rotate(-120)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="on" transform="rotate(-180)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="on" transform="rotate(-240)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-300)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/></svg><svg viewBox="-11 -11 22 22" aria-hidden="true"><path class="off" transform="rotate(0)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-60)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-120)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-180)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-240)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-300)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/></svg><svg viewBox="-11 -11 22 22" aria-hidden="true"><path class="off" transform="rotate(0)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-60)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-120)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-180)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-240)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-300)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/></svg><svg viewBox="-11 -11 22 22" aria-hidden="true"><path class="off" transform="rotate(0)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-60)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-120)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-180)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-240)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-300)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/></svg><svg viewBox="-11 -11 22 22" aria-hidden="true"><path class="off" transform="rotate(0)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-60)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-120)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-180)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-240)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-300)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/></svg></span></div><span class="detail"><span class=q>–</span></span></div><div class="item"><div class="art hero"><svg class="sil" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="15" r="7"/><path d="M6 38c1-9 7-14 14-14s13 5 14 14z"/></svg><span class="cm-badge"><img class="cm" src="images/troops/marksmen-class.png" alt="Marksman"></span><span class="hlv">Lv. 20</span><span class="stars" title="1-Star (2 of 6)"><svg viewBox="-11 -11 22 22" aria-hidden="true"><path class="on" transform="rotate(0)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="on" transform="rotate(-60)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="on" transform="rotate(-120)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="on" transform="rotate(-180)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="on" transform="rotate(-240)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="on" transform="rotate(-300)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/></svg><svg viewBox="-11 -11 22 22" aria-hidden="true"><path class="on" transform="rotate(0)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="on" transform="rotate(-60)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-120)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-180)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-240)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-300)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/></svg><svg viewBox="-11 -11 22 22" aria-hidden="true"><path class="off" transform="rotate(0)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-60)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-120)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-180)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-240)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-300)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/></svg><svg viewBox="-11 -11 22 22" aria-hidden="true"><path class="off" transform="rotate(0)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-60)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-120)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-180)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-240)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-300)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/></svg><svg viewBox="-11 -11 22 22" aria-hidden="true"><path class="off" transform="rotate(0)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-60)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-120)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-180)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-240)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/><path class="off" transform="rotate(-300)" d="M0 -1.2 L2.3 -5.4 L0 -10 L-2.3 -5.4 Z"/></svg></span></div><span class="detail"><span class=q>–</span></span></div></div></section>
+  <section class="boards"><h2>Leaderboards</h2><div class="grid"><div class="board"><span class="cap">Furnace</span><span class="v">19<span class="r">#3153</span></span></div><div class="board"><span class="cap">Kill Count</span><span class="v">1.08K<span class="r">#5078</span></span></div><div class="board"><span class="cap">Migrant</span><span class="v">7.23K<span class="r">#575</span></span></div><div class="board" style="grid-column: 1"><span class="cap">Labyrinth</span><span class="v">37<span class="r">#1716</span></span></div></div><div class="labmore"><button type="button" class="more" style="grid-column: 1" aria-expanded="false">Labyrinth stages<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></section>
+ </div>
+ <p class="fresh">Updated 53 min ago<button type="button" class="refresh" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Refresh at 18:10</button></p>
+</div></main></div><script>
+for (const name of Array.from(document.querySelectorAll('.name'))) {
+  let size = parseFloat(getComputedStyle(name).fontSize);
+  while (name.scrollWidth > name.clientWidth + 0.5 && size > 9) { size -= 0.25; name.style.fontSize = size + 'px'; }
+}
+// The troop names share one size, set so the widest is exactly as wide as the picture.
+const names = Array.from(document.querySelectorAll('.items.three .tname'));
+if (names.length) {
+  // Below Tier 10 there is no portrait; the names keep the size they have beside one (60px).
+  const pic = document.querySelector('.items.three .art');
+  const art = pic ? pic.getBoundingClientRect().width : 60;
+  for (const one of names) one.style.fontSize = '20px';
+  const widest = Math.max(...names.map(one => one.getBoundingClientRect().width));
+  for (const one of names) one.style.fontSize = (20 * art / widest) + 'px';
+}
+// Board names stay on one line: if the widest is wider than its column, every name in the
+// grid gets the same smaller size until it fits (the site's real font is a little wider).
+const caps = Array.from(document.querySelectorAll('.grid .board .cap'));
+if (caps.length) {
+  const room = caps[0].parentElement.getBoundingClientRect().width - 4;
+  const widthOf = (one) => { const range = document.createRange(); range.selectNodeContents(one); return range.getBoundingClientRect().width; };
+  let size = parseFloat(getComputedStyle(caps[0]).fontSize);
+  while (Math.max(...caps.map(widthOf)) > room && size > 9) { size -= 0.25; for (const one of caps) one.style.fontSize = size + 'px'; }
+}
+</script></body></html>

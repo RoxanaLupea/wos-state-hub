@@ -1,0 +1,166 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="main.css"><style>
+.pp { --edge: 16px; --pic: 80px; width: 100%; max-width: 1280px; margin: 0 auto; padding: 22px var(--edge) 28px; box-sizing: border-box; color: var(--text); }
+.pp h2 { display: flex; align-items: center; min-height: 32px; margin: 0 0 12px; font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted); }
+.pp h2 .end { margin-left: auto; display: flex; align-items: center; }
+.pen { width: 32px; height: 32px; margin-right: -7px; padding: 0; display: flex; align-items: center; justify-content: center; border: none; background: none; color: var(--text-muted); cursor: pointer; }
+.pen svg { width: 18px; height: 18px; }
+.pen.on { color: var(--accent); }
+
+/* Header: the owner's rules. Picture | name, ID, power | alliance. */
+.chief { display: grid; grid-template-columns: var(--pic) minmax(0, 1fr) auto; column-gap: 14px; }
+.pic { width: var(--pic); height: var(--pic); border-radius: 18px; background: var(--glass-strong); display: flex; align-items: center; justify-content: center;
+  font-size: 34px; font-weight: 800; color: var(--text-muted); box-shadow: 0 0 0 1px var(--glass-border), 0 8px 20px rgba(0,0,0,.4); }
+.who { min-width: 0; height: var(--pic); display: flex; flex-direction: column; justify-content: space-between; }
+.name, .id, .power, .tag, .fig .cap, .fig .v { text-box: trim-both cap alphabetic; }
+.name { font-size: 24px; font-weight: 800; line-height: 1.1; white-space: nowrap; }
+.id { font-size: 14px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.id .k { color: var(--text-faint); font-weight: 800; letter-spacing: .06em; }
+.id .rank { margin-left: 10px; color: var(--accent); font-weight: 800; letter-spacing: .04em; }
+.power { font-size: 30px; font-weight: 800; line-height: 1.1; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.power .pr { margin-left: 6px; font-size: 13px; color: var(--accent); }
+.foundry { margin-left: 14px; font-size: 15px; color: var(--text-muted); }
+.foundry img { height: 19px; vertical-align: -3px; margin-right: 4px; }
+.badge { width: 50px; height: var(--pic); display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
+.badge .logo { height: 52px; display: block; }
+.logo.none, .alogo.none { border-radius: 12px; background: var(--glass-strong); box-shadow: 0 0 0 1px var(--glass-border);
+  display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--text-muted); }
+.badge .logo.none { width: 46px; height: 46px; font-size: 20px; }
+.tag { font-family: var(--tag-font); font-size: 13px; font-weight: 800; letter-spacing: .08em; line-height: 1.1; }
+
+/* When the game data was read, and Refresh: lit when it can be used, otherwise the time it
+   can be used again (the game is read at most once an hour). */
+.fresh { display: block; text-box: trim-both cap alphabetic; line-height: 1; font-size: 13px; font-weight: 600; color: var(--text-faint); white-space: nowrap; }
+.fresh.top { display: none; }
+.fresh .refresh { margin-left: 12px; }
+.fresh.end { margin-top: 32px; }
+.refresh { display: inline; padding: 0; border: none; background: none; font: inherit; font-weight: 800; color: var(--text-faint); }
+.refresh svg { width: 13px; height: 13px; margin-right: 5px; vertical-align: -1px; }
+.refresh.on { color: var(--accent); cursor: pointer; }
+
+/* The sections, in her order: troops, arena team, leaderboards. */
+.body { margin-top: 32px; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "troops" "arena" "boards" "lab" "accounts"; row-gap: 30px; }
+.troops { grid-area: troops; } .arena { grid-area: arena; } .boards { grid-area: boards; } .lab { grid-area: lab; } .accounts { grid-area: accounts; }
+.items { display: grid; column-gap: 8px; }
+.items.three { grid-template-columns: repeat(3, minmax(0, 1fr)); } .items.five { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.item { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-width: 0; }
+.art { width: 60px; height: 60px; position: relative; display: flex; align-items: center; justify-content: center; flex: none; }
+.art.troop { margin-left: 4px; } .art.troop .p { height: 60px; }
+.art.troop .fc { position: absolute; top: -3px; left: -4px; height: 24px; filter: drop-shadow(0 2px 3px rgba(0,0,0,.5)); }
+.art .eg { position: absolute; top: 4px; left: 4px; font-size: 10px; font-weight: 800; line-height: 1; padding: 3px 4px; border-radius: 5px; background: rgba(0,0,0,.45); color: var(--fc-gold); }
+.art.hero { border-radius: 14px; background: var(--glass-strong); box-shadow: 0 0 0 1px var(--glass-border); align-items: flex-end; overflow: hidden; }
+.art.hero .sil { position: absolute; left: 50%; bottom: 0; width: 46px; height: 46px; transform: translateX(-50%); fill: var(--text-faint); opacity: .28; }
+.art.hero .stars { position: relative; font-size: 9px; letter-spacing: 1px; color: var(--fc-gold); margin-bottom: 5px; }
+.art.hero .stars i { font-style: normal; color: var(--text-faint); opacity: .45; }
+.l1 { font-size: 12px; font-weight: 800; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.l2 { font-size: 11px; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
+.l2.ex { color: var(--exalted); }
+.nodata { margin: 0; font-size: 13px; font-weight: 600; color: var(--text-faint); }
+
+/* A skill level never set: one ask under the troops, which opens the same as the pencil.
+   Before SvS and Tyrant: the note in the same place. */
+.ask, .note { display: block; margin: 16px 0 0; padding: 0; border: none; background: none; text-align: left; font: inherit; font-size: 13px; font-weight: 700; line-height: 1.45; color: var(--accent); }
+.ask { cursor: pointer; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+
+/* Setting the skill levels: each Exalted troop as a row with its toggle, None or one level lit. */
+.erows { display: flex; flex-direction: column; gap: 12px; }
+.erow { display: flex; align-items: center; gap: 12px; }
+.art.troop.small { width: 44px; height: 44px; margin-left: 4px; } .art.troop.small .p { height: 44px; } .art.troop.small .fc { height: 19px; top: -3px; left: -5px; }
+.et { display: flex; flex-direction: column; gap: 5px; min-width: 0; flex: 1; }
+.lvls { display: flex; padding: 3px; gap: 2px; border-radius: 999px; border: 1px solid var(--glass-border); background: var(--glass); }
+.lvl { min-width: 50px; height: 28px; padding: 0 7px; border: none; border-radius: 999px; background: none; color: var(--text-muted); font: inherit; font-size: 12px; font-weight: 800; white-space: nowrap; }
+.lvl.on { color: var(--text); background: color-mix(in srgb, var(--exalted) 55%, transparent); box-shadow: 0 0 10px color-mix(in srgb, var(--exalted) 35%, transparent); }
+.lvl.none.on { background: color-mix(in srgb, var(--text) 14%, transparent); box-shadow: none; }
+.saverow { display: flex; justify-content: center; gap: 10px; margin-top: 18px; }
+.saverow button { min-width: 110px; }
+.save:disabled { background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-faint); }
+
+/* Leaderboards: the label, then the value with its rank small after it, as the power. */
+.figs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.fig { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.fig .cap { font-size: 12px; font-weight: 700; color: var(--text-muted); line-height: 1.2; white-space: nowrap; }
+.fig .v { font-size: 20px; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.fig .r, .total .r { margin-left: 5px; font-size: 12px; color: var(--accent); }
+.fig .empty { color: var(--text-faint); }
+.total { font-size: 16px; font-weight: 800; letter-spacing: 0; text-transform: none; color: var(--text); font-variant-numeric: tabular-nums; }
+.areas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px 8px; }
+.fig.area .v { font-size: 18px; }
+
+/* Your accounts: as in version 2, until the open question is answered. */
+.accs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 12px; }
+.acc { display: flex; gap: 10px; align-items: flex-start; min-width: 0; color: var(--text-muted); }
+.acc .alogo { height: 34px; width: 34px; object-fit: contain; flex: none; }
+.acc .alogo.none { font-size: 15px; border-radius: 9px; }
+.acc .at { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.acc .kind { font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--text-faint); }
+.acc .an { font-size: 14px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.acc .ai, .acc .ap { font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.acc.on { color: var(--text); } .acc.on .kind { color: var(--accent); }
+.acc.add { align-items: center; }
+.acc .plus { width: 34px; height: 34px; border-radius: 9px; box-shadow: 0 0 0 1px var(--glass-border); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; }
+
+/* Leaving with changes not saved. */
+.leave { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(5, 8, 16, 0.55); }
+.leave-box { background: color-mix(in srgb, var(--page-color) 90%, transparent); width: min(380px, 100%); padding: 22px 20px 18px; display: flex; flex-direction: column; gap: 18px; }
+.leave-box p { margin: 0; text-align: center; font-size: 17px; font-weight: 700; }
+.leave-actions { display: flex; gap: 10px; } .leave-actions button { flex: 1; min-height: 44px; }
+
+@media (min-width: 900px) {
+  .pp { --edge: 28px; --pic: 104px; padding-top: 34px; }
+  .chief { grid-template-columns: var(--pic) auto auto minmax(0, 1fr); column-gap: 22px; }
+  .badge { margin-left: 26px; }
+  .fresh.top { display: block; justify-self: end; align-self: start; }
+  .fresh.end { display: none; }
+  .name { font-size: 34px; } .id { font-size: 16px; } .power { font-size: 42px; } .power .pr { font-size: 15px; } .foundry { font-size: 19px; } .foundry img { height: 24px; vertical-align: -4px; }
+  .pic { font-size: 46px; border-radius: 22px; }
+  .badge { width: 64px; } .badge .logo { height: 68px; } .badge .logo.none { width: 58px; height: 58px; font-size: 24px; border-radius: 14px; } .tag { font-size: 15px; }
+  /* Troops and the arena team on one line, their columns the same width, so three troops
+     never take the room of five heroes; under each, its leaderboards. */
+  .body { margin-top: 46px; grid-template-columns: minmax(0, 3fr) minmax(0, 5fr);
+    grid-template-areas: "troops arena" "boards lab" "accounts accounts"; column-gap: 56px; row-gap: 44px; }
+  .art { width: 72px; height: 72px; } .art.troop .p { height: 72px; } .art.troop .fc { height: 30px; }
+  .art.hero .sil { width: 56px; height: 56px; }
+  .l1 { font-size: 13px; } .l2 { font-size: 12px; }
+  .fig .v { font-size: 22px; }
+  .areas { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .fig.area .v { font-size: 20px; }
+  .accs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .saverow { justify-content: flex-start; }
+}
+</style></head><body><div id="app" class="app"><header class="top-bar">
+    <div class="brand"><svg class="logo" viewBox="0 -1.5 388 75.1" height="34" role="img" aria-label="1458 State Hub">
+    <text x="0" y="72" font-size="100" textLength="256" lengthAdjust="spacing" fill="var(--accent)">1458</text>
+    <text x="270" y="26.5608" font-size="36.89" textLength="118" lengthAdjust="spacingAndGlyphs" fill="var(--text)">STATE</text>
+    <text x="270" y="72" font-size="51.11" textLength="118" lengthAdjust="spacingAndGlyphs" fill="var(--text)">HUB</text>
+  </svg></div>
+    <nav class="main-nav" aria-label="Main"><button type="button" class="nav-tab" data-page="calendar">Calendar</button><button type="button" class="nav-tab" data-page="fortress">Fortress</button><button type="button" class="nav-tab" data-page="transfers">Transfers</button><button type="button" class="nav-tab" data-page="event">Tyrant</button><button type="button" class="nav-tab" data-page="state">State</button><button type="button" class="nav-tab" data-page="alliance">My alliance</button><button type="button" class="nav-tab" data-page="map">Map</button></nav>
+    <div class="clock" title="Game time">
+      <span class="clock-zone">UTC</span>
+      <span class="clock-time" id="clockTime" aria-live="off">18:03</span>
+    </div>
+    <div class="account-menu-wrap"><button type="button" class="ghost-button me-button" data-account-menu="" aria-haspopup="menu" aria-expanded="false" aria-label="Innocent_Terry_"><span class="me-initial" aria-hidden="true">I</span><span class="me-name">Ҟ Ⱥ ꓅ˢ ᵇᵃᵇʸᴰᵒᵐ¹</span><span class="me-mark" aria-hidden="true"></span></button><div class="account-menu glass" role="menu"><button type="button" class="account-choice open" role="menuitem" data-game-account="1" style="--alliance-colour: #A57BD8"><img class="account-choice-logo" src="https://raw.githubusercontent.com/RoxanaLupea/wos-state-hub/main/public/images/alliances/dvl.png" alt=""><span class="account-choice-text"><span class="account-choice-kind">Main</span><span class="account-choice-name">Innocent_Terry_</span></span></button><button type="button" class="account-choice" role="menuitem" data-game-account="2" style="--alliance-colour: #4A78D8"><img class="account-choice-logo" src="https://raw.githubusercontent.com/RoxanaLupea/wos-state-hub/main/public/images/alliances/top.png" alt=""><span class="account-choice-text"><span class="account-choice-kind">Alt</span><span class="account-choice-name">༺ Riikou༻</span></span></button><button type="button" class="account-choice" role="menuitem" data-game-account="3" style="--alliance-colour: #A57BD8"><img class="account-choice-logo" src="https://raw.githubusercontent.com/RoxanaLupea/wos-state-hub/main/public/images/alliances/dvl.png" alt=""><span class="account-choice-text"><span class="account-choice-kind">Alt</span><span class="account-choice-name">༺TAGERMXY 2༻ᴵᴿᴬᵟ</span></span></button><div class="account-menu-line"></div><button type="button" class="account-menu-item" role="menuitem" data-page="player"><span class="account-menu-plus"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"></path></svg></span>Profile</button><button type="button" class="account-menu-item" role="menuitem" data-page="admin"><span class="account-menu-plus"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></span>Admin</button><button type="button" class="account-menu-item danger" role="menuitem" data-sign-out=""><span class="account-menu-plus"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg></span>Sign out</button></div></div>
+  </header><main class="page" data-section="player"><div class="pp">
+ <header class="chief">
+  <div class="pic">Ҟ</div>
+  <div class="who">
+   <div class="name">Ҟ Ⱥ ꓅ˢ ᵇᵃᵇʸᴰᵒᵐ¹</div>
+   <div class="id"><span class="k">ID</span> 604609180<span class="rank">R3</span></div>
+   <div class="power"><b>203M</b><span class="pr">#498</span></div>
+  </div>
+  <div class="badge"><span class="logo none">D</span><span class="tag">dvl</span></div>
+  <div class="fresh top"><span>Updated 2 h ago</span><button type="button" class="refresh on"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Refresh</button></div>
+ </header>
+ <div class="body">
+  <section class="troops"><h2>Troops</h2><div class="items three"><div class="item"><div class="art troop"><img class="p" src="images/troops/infantry-t10.png" alt=""><img class="fc" src="images/troops/fc4.png" alt=""></div><div class="l1">Infantry</div><div class="l2">Tier 10</div></div><div class="item"><div class="art troop"><img class="p" src="images/troops/lancer-t10.png" alt=""><img class="fc" src="images/troops/fc4.png" alt=""></div><div class="l1">Lancer</div><div class="l2">Tier 10</div></div><div class="item"><div class="art troop"><img class="p" src="images/troops/marksmen-t10.png" alt=""><img class="fc" src="images/troops/fc4.png" alt=""></div><div class="l1">Marksmen</div><div class="l2">Tier 10</div></div></div></section>
+  <section class="arena"><h2>Arena team</h2><div class="items five"><div class="item"><div class="art hero"><svg class="sil" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="15" r="7"/><path d="M6 38c1-9 7-14 14-14s13 5 14 14z"/></svg><span class="eg">EG 2</span><span class="stars">★★★★<i>★</i></span></div><div class="l1">Infantry</div><div class="l2">Lv. 80</div></div><div class="item"><div class="art hero"><svg class="sil" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="15" r="7"/><path d="M6 38c1-9 7-14 14-14s13 5 14 14z"/></svg><span class="eg">EG 4</span><span class="stars">★★★★<i>★</i></span></div><div class="l1">Infantry</div><div class="l2">Lv. 78</div></div><div class="item"><div class="art hero"><svg class="sil" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="15" r="7"/><path d="M6 38c1-9 7-14 14-14s13 5 14 14z"/></svg><span class="eg">EG 4</span><span class="stars">★★★★★<i></i></span></div><div class="l1">Marksman</div><div class="l2">Lv. 78</div></div><div class="item"><div class="art hero"><svg class="sil" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="15" r="7"/><path d="M6 38c1-9 7-14 14-14s13 5 14 14z"/></svg><span class="eg">EG 3</span><span class="stars">★★★★<i>★</i></span></div><div class="l1">Lancer</div><div class="l2">Lv. 78</div></div><div class="item"><div class="art hero"><svg class="sil" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="15" r="7"/><path d="M6 38c1-9 7-14 14-14s13 5 14 14z"/></svg><span class="eg">EG 3</span><span class="stars">★★★★<i>★</i></span></div><div class="l1">Marksman</div><div class="l2">Lv. 78</div></div></div></section>
+  <section class="boards"><h2>Leaderboards</h2><div class="figs"><div class="fig"><span class="cap">Kill Count</span><span class="v"><b>30.3K</b><span class="r">#2200</span></span></div><div class="fig"><span class="cap">Furnace Level</span><span class="v"><b>FC5</b><span class="r">#678</span></span></div><div class="fig"><span class="cap">Migrant Score</span><span class="v"><b>670K</b><span class="r">#376</span></span></div></div></section>
+  <section class="lab"><h2>The Labyrinth<span class="end total"><b>1,217</b><span class="r">#382</span></span></h2><div class="areas"><div class="fig area"><span class="cap">Land of Heroes</span><span class="v"><b>43-3</b></span></div><div class="fig area"><span class="cap">Cave of Monsters</span><span class="v"><b>12-5</b></span></div><div class="fig area"><span class="cap">Charm Mine</span><span class="v"><b>12-8</b></span></div><div class="fig area"><span class="cap">Research Center</span><span class="v"><b>10-3</b></span></div><div class="fig area"><span class="cap">Gear Forge</span><span class="v"><b>16-9</b></span></div><div class="fig area"><span class="cap">Gaia Heart</span><span class="v"><b>31-9</b></span></div></div></section>
+  <section class="accounts"><h2>Your accounts</h2><div class="accs"><div class="acc"><img class="alogo" src="images/alliances/dvl.png" alt=""><div class="at"><span class="kind">Main</span><span class="an">Kaps</span><span class="ai">188420716</span><span class="ap">1.04B</span></div></div><div class="acc on"><span class="alogo none">D</span><div class="at"><span class="kind">Alt</span><span class="an">Ҟ Ⱥ ꓅ˢ ᵇᵃᵇʸᴰᵒᵐ¹</span><span class="ai">604609180</span><span class="ap">203M</span></div></div><div class="acc add"><span class="plus">+</span><div class="at"><span class="an">Add</span></div></div></div></section>
+ </div>
+ <div class="fresh end"><span>Updated 2 h ago</span><button type="button" class="refresh on"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Refresh</button></div>
+</div></main></div><script>
+// A long name (up to 16 characters) gets smaller until it fits.
+for (const name of Array.from(document.querySelectorAll('.name'))) {
+  let size = parseFloat(getComputedStyle(name).fontSize);
+  while (name.scrollWidth > name.clientWidth + 0.5 && size > 9) { size -= 0.25; name.style.fontSize = size + 'px'; }
+}
+</script></body></html>
