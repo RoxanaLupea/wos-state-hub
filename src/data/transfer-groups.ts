@@ -41,21 +41,11 @@ export async function loadTransferGroups(dates: string[]): Promise<TransferGroup
   return rows.map(toGroup);
 }
 
-// Every date that has groups, newest last.
+// Every date that has groups, newest last: one row per date (supabase/transfer-dates.sql).
 export async function loadTransferDates(): Promise<string[]> {
-  const rows = await readEveryRow((first, last) => database()
-    .from('transfer_groups')
-    .select('transfer_date', { count: 'exact' })
-    .order('transfer_date')
-    .order('id')
-    .range(first, last)
-  ).catch(error => { throw new Error('Could not read the transfer dates: ' + error.message); });
-  const dates: string[] = [];
-  for (const row of rows) {
-    const date = String(row.transfer_date);
-    if (!dates.includes(date)) dates.push(date);
-  }
-  return dates;
+  const { data, error } = await database().rpc('transfer_dates');
+  if (error) throw new Error('Could not read the transfer dates: ' + error.message);
+  return ((data ?? []) as unknown[]).map(one => String(typeof one === 'object' && one !== null ? Object.values(one)[0] : one));
 }
 
 function toGroup(row: Record<string, unknown>): TransferGroup {

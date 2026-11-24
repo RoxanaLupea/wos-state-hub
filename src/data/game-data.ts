@@ -28,7 +28,8 @@ export async function readStateRanks(ids: string[]): Promise<Row[]> {
 // academies twice a day. Each member carries name, picture, power, furnace level, kills
 // and rank, often newer than the player's own read (twice a day).
 export async function readGameRosters(): Promise<Row[]> {
-  const { data, error } = await database().from('game_alliances').select('state_number, tag, data, read_at, game_read_at');
+  // Only what the pages use of each member (supabase/roster-members.sql).
+  const { data, error } = await database().rpc('game_rosters');
   if (error) throw new Error(error.message);
   return (data ?? []) as Row[];
 }

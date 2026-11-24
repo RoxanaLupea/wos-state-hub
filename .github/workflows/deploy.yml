@@ -29,6 +29,20 @@ jobs:
         env:
           VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      # The pictures the site shows: a small WebP of every PNG in public/images
+      # (tools/images/make-webp.py). Kept between builds, so only new or changed
+      # pictures are made again.
+      - uses: actions/cache@v4
+        with:
+          path: .webp-cache
+          key: webp-${{ hashFiles('public/images/**/*.png', 'tools/images/make-webp.py') }}
+          restore-keys: webp-
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pillow
+      - run: python3 tools/images/make-webp.py public/images .webp-cache
+      - run: cp -r .webp-cache/. dist/images/ && rm -f dist/images/.made-from.json
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

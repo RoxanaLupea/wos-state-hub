@@ -92,4 +92,9 @@ would disagree, the later one won and the earlier is gone.
 - All picture file names are lowercase.
 - Event icons, items, heroes and experts live in the repo under their own folders.
 - An oversized picture is resized to the standard size without asking.
+- The PNGs in public/images are the source and are added as before. The build makes a
+  WebP of each at no more than twice the size the site shows it at
+  (tools/images/make-webp.py, sizes per folder there), and the site shows those from its
+  own address (24 Nov): 34 MB of pictures became 2.7 MB. The imageBaseUrl setting is no
+  longer used.
 - An item with no picture of its own is drawn by the app rather than stored as one.

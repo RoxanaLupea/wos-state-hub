@@ -131,6 +131,14 @@ async function rpc(name, args) {
     if (row?.moving_since) row.dismissed_until = new Date(Date.now() + 3 * 86400000).toISOString();
     return { data: null, error: null };
   }
+  if (name === 'game_rosters') {
+    return { data: (tables.game_alliances ?? []).map(one => ({ state_number: one.state_number, tag: one.tag, read_at: one.read_at,
+      game_read_at: one.game_read_at ?? null, data: { members: one.data?.members ?? [] } })), error: null };
+  }
+  if (name === 'transfer_dates') {
+    const dates = [...new Set((tables.transfer_groups ?? []).map(one => one.transfer_date))].sort();
+    return { data: dates, error: null };
+  }
   if (name === 'game_state_ranks') {
     const rows = [];
     for (const state of tables.game_states ?? []) {

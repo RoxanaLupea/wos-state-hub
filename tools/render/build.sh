@@ -13,6 +13,7 @@ cd "$repo_root"
   --outfile="$output_folder/main.js" \
   --alias:@supabase/supabase-js="$repo_root/tools/render/supabase-stand-in.js" \
   --define:import.meta.env.VITE_SUPABASE_URL='""' --define:import.meta.env.VITE_SUPABASE_ANON_KEY='""' \
+  --define:import.meta.env.BASE_URL='"./"' \
   --loader:.png=file --log-level=warning
 cat > "$output_folder/index.html" <<'PAGE'
 <!DOCTYPE html>
@@ -20,4 +21,7 @@ cat > "$output_folder/index.html" <<'PAGE'
 <title>1458 State Hub</title><link rel="stylesheet" href="main.css"></head>
 <body><div id="app"></div><script type="module" src="main.js"></script></body></html>
 PAGE
+# The pictures, as the site's build makes them (kept in /tmp/webp-cache between renders).
+python3 tools/images/make-webp.py public/images /tmp/webp-cache > /dev/null
+mkdir -p "$output_folder/images" && cp -r /tmp/webp-cache/. "$output_folder/images/"
 echo "built into $output_folder"

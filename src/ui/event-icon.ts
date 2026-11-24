@@ -5,13 +5,11 @@ import { eventTypeById, eventTypeColor, itemImageFile, partOfByEventTypeId } fro
 import { escapeForPage } from './escape.ts';
 import { ICON_PATHS } from './icon-paths.ts';
 
-// The folder the pictures live in. It is a setting rather than a fixed address, so
-// the folder can be moved without changing the code.
-let imageBase = '';
-
-export function setImageBase(url: string): void {
-  imageBase = url;
-}
+// The pictures come from the site itself: the build makes a small WebP of every PNG in
+// public/images (tools/images/make-webp.py), at no more than twice the size it is shown
+// at, so pages load fast. The PNGs in the repo stay the source.
+// (import.meta.env exists only in the built site, not when the tests run the code.)
+const imageBase = (import.meta.env?.BASE_URL ?? './') + 'images/events/';
 
 export type BadgeSize = 'large' | 'small' | 'list' | '';
 
@@ -28,13 +26,13 @@ export function eventImageFile(eventTypeId: string): string {
 // A name with a folder in front of it is counted from the repository's root, so an
 // event can borrow a picture from outside the events folder.
 export function imageUrl(fileName: string): string {
-  if (!imageBase || !fileName) return '';
-  if (fileName.includes('/')) {
+  if (!fileName) return '';
+  const name = fileName.replace(/\.png$/, '');
+  if (name.includes('/')) {
     const root = imageBase.replace(/events\/?$/, '');
-    return root + (root.endsWith('/') ? '' : '/') +
-      fileName.split('/').map(encodeURIComponent).join('/') + '.png';
+    return root + name.split('/').map(encodeURIComponent).join('/') + '.webp';
   }
-  return imageBase + encodeURIComponent(fileName) + '.png';
+  return imageBase + encodeURIComponent(name) + '.webp';
 }
 
 // The picture of a reward item, from the file the catalog names for it. Hero shards

@@ -83,7 +83,7 @@ import { eventPanel, groupPanel, type RewardViewState, setOpenPointRows } from '
 import { partOpenings } from './ui/bar.ts';
 import { nextUpTiles } from './ui/next-up.ts';
 import { problemPanel } from './ui/problem-panel.ts';
-import { installIconFallback, setImageBase } from './ui/event-icon.ts';
+import { installIconFallback } from './ui/event-icon.ts';
 import { fitBarLabels, layoutBars, sizeLanes } from './ui/layout-bars.ts';
 
 const STATE_NUMBER = '1458';
@@ -1858,27 +1858,40 @@ function watchRefresh(id: string): void {
 
 // withRosters false skips the rosters (all of them, the largest read), for the minute
 // checks while a refresh is on its way, which only wait for the player's own read.
+// The rosters come on their own, in the background: the page is drawn as soon as the
+// players' own reads are in, and again when the rosters arrive, so nothing waits on them.
 async function rereadGameData(ids: string[], withState = false, withRosters = true): Promise<void> {
-  const [players, skills, kept, states, rosters] = await Promise.all([
+  if (withRosters || !rostersRead) {
+    void readGameRosters().then(rosters => {
+      rosterEntries = rosterEntriesOf(rosters);
+      rostersRead = true;
+      layRostersOver(ids);
+      draw();
+    }).catch(() => undefined);
+  }
+  const [players, skills, kept, states] = await Promise.all([
     readGamePlayers(ids).catch(() => [] as Row[]),
     readSkillLevels(ids).catch(() => [] as Row[]),
     readPlayerAlliances(ids).catch(() => [] as Row[]),
-    withState ? readStateRanks(ids).catch(() => null) : Promise.resolve(null),
-    withRosters || !rostersRead ? readGameRosters().catch(() => null) : Promise.resolve(null)
+    withState ? readStateRanks(ids).catch(() => null) : Promise.resolve(null)
   ]);
-  if (rosters) { rosterEntries = rosterEntriesOf(rosters); rostersRead = true; }
-  // Each player as shown: their own read, with what the newer roster says laid over it.
-  const ownReads = new Map(players.map(row => [String(row.player_id), gameReadOf(row)] as const));
-  for (const id of ids) {
-    const game = withRoster(ownReads.get(id) ?? null, rosterEntries.get(id));
-    if (game) gameReads.set(id, game);
-  }
+  for (const row of players) ownReads.set(String(row.player_id), gameReadOf(row));
+  layRostersOver(ids);
   for (const row of skills) skillLevels.set(String(row.player_id), row);
   for (const row of kept) playerAlliances.set(String(row.player_id), row);
   // Each player's boards are replaced as a whole, so a board they dropped off goes.
   if (states) for (const [id, boards] of stateBoardsOf(states)) stateBoards.set(id, boards);
   draw();
   for (const id of ids) if (gameReads.get(id)?.asked) watchRefresh(id);
+}
+
+// Each player as shown: their own read, with what the newer roster says laid over it.
+const ownReads = new Map<string, GameRead | null>();
+function layRostersOver(ids: string[]): void {
+  for (const id of ids) {
+    const game = withRoster(ownReads.get(id) ?? null, rosterEntries.get(id));
+    if (game) gameReads.set(id, game);
+  }
 }
 
 // An account's skill levels as saved: null for a troop type never set.
@@ -3172,7 +3185,6 @@ async function start(): Promise<void> {
 
     schedules = loadedSchedules;
     transferFollows = settings.get('transferFollows') === 'sunfire' ? 'sunfire' : 'svs';
-    setImageBase(settings.get('imageBaseUrl') ?? '');
     firstFortBattleDay = dayFromText(settings.get('fortressSeasonStart') ?? '');
     fortAssignments = loadedForts;
     setFortRewardsGeneration(Number(settings.get('fortRewardsGeneration') ?? ''));
