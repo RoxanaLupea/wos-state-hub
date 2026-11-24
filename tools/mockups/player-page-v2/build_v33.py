@@ -230,6 +230,9 @@ def troops_part(c, mode, changed_to=None):
     items = ''
     for i, (n, k, tier, fcl) in enumerate(c['troops']):
         key, word = TIER.get(tier, (None, f'T{tier}'))
+        # Below T10: the tier's portrait where the repo has it (Marksmen T1 to T9 so far).
+        if key is None and (here / f'images/troops/{k}-t{tier}.png').exists():
+            key = f't{tier}'
         detail = f'<span class="q">{word}</span>'
         if tier == 12 and skills[i]:
             detail += f'<span class="s">Lvl. {skills[i]}</span>'
