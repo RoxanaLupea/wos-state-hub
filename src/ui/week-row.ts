@@ -10,11 +10,11 @@ import { yearAndMonthOf } from '../calendar/days.ts';
 import type { Bar } from '../calendar/bars.ts';
 
 // The days' names over the columns, in capitals: MON, TUE... on a phone, the full name on
-// a computer (24 Nov). The row stays at the top while the weeks scroll under it.
+// a computer (24 Nov). They sit above the weeks' own box, so only the weeks scroll.
 export function weekdayNamesRow(): string {
-  return '<div class="weekday-bar"><div class="grid7 weekday-names">' + WEEKDAY_SHORT.map((name, index) =>
+  return '<div class="grid7 weekday-names">' + WEEKDAY_SHORT.map((name, index) =>
     `<div class="weekday-name${index > 4 ? ' weekend' : ''}">${name}` +
-    `<span class="desktop-only-text">${WEEKDAY_NAMES[index].slice(name.length)}</span></div>`).join('') + '</div></div>';
+    `<span class="desktop-only-text">${WEEKDAY_NAMES[index].slice(name.length)}</span></div>`).join('') + '</div>';
 }
 
 export interface WeekRowOptions {

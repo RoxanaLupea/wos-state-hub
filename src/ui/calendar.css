@@ -5,20 +5,7 @@
 
 /* Month grid: 5 weekdays and 2 slightly wider weekend days */
 .grid7 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) repeat(2, minmax(0, var(--weekend-width))); column-gap: 2px; }
-/* The days' names stay at the top while the weeks scroll under them. They get a backing
-   only once they are stuck, so at rest the row looks as it always did. */
-/* It reaches up over the panel's 10px top padding, so nothing scrolls by above it. */
-.weekday-bar { position: sticky; top: -10px; margin-top: -10px; z-index: 4; container-type: scroll-state; }
-.weekday-names { padding: 16px 0 6px; border-radius: 0 0 var(--radius-small) var(--radius-small); }
-@container scroll-state(stuck: top) {
-  .weekday-names { background: color-mix(in srgb, var(--page-color) 94%, transparent);
-    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
-}
-/* Browsers that cannot tell when it is stuck keep the backing all the time. */
-@supports not (container-type: scroll-state) {
-  .weekday-names { background: color-mix(in srgb, var(--page-color) 94%, transparent);
-    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
-}
+.weekday-names { padding-bottom: 6px; }
 .weekday-name { text-align: center; font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
   color: var(--text-muted); }
 .weekday-name.weekend { color: color-mix(in srgb, var(--text-muted) 50%, var(--text)); }
@@ -27,7 +14,7 @@
 
 /* Each week: a row of full-height day boxes behind, the event bars on top. */
 .week-row { position: relative; min-height: 58px; padding: 27px 0 6px; border-top: 1px solid var(--glass-border); }
-.weekday-bar + .week-row { border-top: none; }
+.weeks > .week-row:first-child { border-top: none; }
 .day-boxes { position: absolute; inset: 3px 0; }
 .day-box {
   position: relative; display: flex; justify-content: center; align-items: flex-start; padding: 2px 0 0; border: none; background: transparent;

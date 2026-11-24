@@ -17,7 +17,8 @@ export function monthView(
   for (let weekStart = gridStart; weekStart <= gridEnd; weekStart += 7) {
     weeks += weekRow(weekStart, bars, { ...options, firstOfMonth, lastOfMonth });
   }
-  return weekdayNamesRow() + weeks;
+  // The weeks in their own box: on a computer only they scroll, under the day names.
+  return weekdayNamesRow() + `<div class="weeks">${weeks}</div>`;
 }
 
 // The first and last day a month's grid needs, including the days either side that

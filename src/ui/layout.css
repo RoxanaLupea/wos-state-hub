@@ -15,6 +15,7 @@
   /* The month fills the screen height, so day boxes are about as tall as they are wide. */
   .calendar-panel.month-mode { display: flex; flex-direction: column; min-height: calc(100vh - 230px); }
   /* Every week gets the same height; a week grows only when its bars do not fit. */
+  .calendar-panel.month-mode .weeks { display: flex; flex-direction: column; flex: 1 1 auto; }
   .calendar-panel.month-mode .week-row { flex: 1 1 0; min-height: min-content; }
   .side-column { flex: 0 0 440px; max-width: 440px; }
 }
@@ -30,6 +31,11 @@
   .calendar-layout { flex: 1 1 auto; min-height: 0; align-items: stretch; }
   .calendar-panel { overflow-y: auto; }
   .calendar-panel.month-mode { min-height: 0; }
+  /* Month and week: the day names stay put and only the weeks scroll, in their own box. */
+  .calendar-panel.month-mode, .calendar-panel.week-mode { display: flex; flex-direction: column; overflow: hidden; }
+  .calendar-panel .weeks { min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--accent) 35%, transparent) transparent; }
+  .calendar-panel .weekday-names { scrollbar-gutter: stable; overflow-y: hidden; }
   .side-column { min-height: 0; }
   .next-up { flex: none; }
   /* Its scrollbar sits in the page's margin, so the panel lines up with the tiles above it. */

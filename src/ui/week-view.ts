@@ -7,7 +7,7 @@ import { yearAndMonthOf } from '../calendar/days.ts';
 import type { Bar } from '../calendar/bars.ts';
 
 export function weekView(weekStart: number, bars: Bar[], options: WeekRowOptions): string {
-  return weekdayNamesRow() + weekRow(weekStart, bars, options);
+  return weekdayNamesRow() + `<div class="weeks">${weekRow(weekStart, bars, options)}</div>`;
 }
 
 // "2 – 8 Nov 2026", or "30 Nov – 6 Dec 2026" when the week crosses a month.

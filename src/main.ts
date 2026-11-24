@@ -966,6 +966,8 @@ function putBackScrollPlaces(app: HTMLElement, places: ScrollPlaces): void {
   if (startAtTop.wholePage) {
     window.scrollTo(0, 0);
     if (calendar) calendar.scrollTop = 0;
+    const weeks = calendar?.querySelector<HTMLElement>('.weeks');
+    if (weeks) weeks.scrollTop = 0;
     if (panel) panel.scrollTop = 0;
     if (eventBody) eventBody.scrollTop = 0;
   } else {
@@ -1112,7 +1114,7 @@ function showOpenTab(app: HTMLElement): void {
 
 // The boxes that scroll on their own. Each fades at an edge while there is more to
 // scroll past it, instead of cutting the rows off.
-const FADING_BOXES = '.event-page-body, .day-panel, .calendar-panel, .admin-page';
+const FADING_BOXES = '.event-page-body, .day-panel, .calendar-panel, .calendar-panel .weeks, .admin-page';
 
 function watchScrollEdges(app: HTMLElement): void {
   for (const box of Array.from(app.querySelectorAll<HTMLElement>(FADING_BOXES))) {
