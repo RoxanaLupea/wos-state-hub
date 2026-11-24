@@ -1,5 +1,7 @@
-// The filter chips above the calendar. A chip ticks a whole category on or off, and
-// its arrow opens a list where single events can be unticked inside that category.
+// The calendar's filters: "Show on the calendar". Each category has a switch, and under
+// it its events, each tapped on or off. On a phone it is a sheet from the bottom of the
+// screen; on a computer a panel under the Filters button. It uses the page's two colours:
+// the first for the category names, the switches and Done, the second for its text.
 import './category-chips.css';
 import { eventTypeName, sortedEventTypes } from '../data/catalog.ts';
 import { escapeForPage } from './escape.ts';
@@ -29,44 +31,36 @@ export function filterListEvents(category: string, eventTypeIdsWithAllianceTimes
     .sort((left, right) => eventTypeName(left).localeCompare(eventTypeName(right)));
 }
 
-export interface ChipOptions {
+export interface FilterOptions {
   shownCategories: Set<string>;
   hiddenEvents: Set<string>;
-  // The category whose list is open, if any.
-  openList: string | null;
   eventTypeIdsWithAllianceTimes: Set<string>;
 }
 
-export function categoryChips(options: ChipOptions): string {
-  return CATEGORIES.map(category => {
+export function filtersSheet(options: FilterOptions): string {
+  const categories = CATEGORIES.map(category => {
     const events = filterListEvents(category.id, options.eventTypeIdsWithAllianceTimes);
+    if (events.length === 0) return '';
     const isOn = options.shownCategories.has(category.id);
     const shownCount = events.filter(id => !options.hiddenEvents.has(category.id + '|' + id)).length;
-    const isOpen = options.openList === category.id;
-
-    let html = `<span class="filter-group${isOpen ? ' open' : ''}">` +
-      `<span class="chip filter-chip" aria-pressed="${isOn}">` +
-      `<button type="button" class="filter-name" data-category="${category.id}">` +
-      (isOn ? '<span class="chip-check" aria-hidden="true">&#10003;</span>' : '') +
-      `${escapeForPage(category.label)} <span class="filter-count">${shownCount}/${events.length}</span></button>` +
-      `<button type="button" class="filter-arrow" data-filter-list="${category.id}"` +
-      ` aria-expanded="${isOpen}" aria-label="Choose ${escapeForPage(category.label)} events">&#9662;</button></span>`;
-
-    if (isOpen) {
-      const allShown = shownCount === events.length;
-      html += `<div class="filter-list" role="group" aria-label="${escapeForPage(category.label)} events">` +
-        `<div class="filter-list-head"><span>${escapeForPage(category.label)} events</span>` +
-        `<button type="button" class="filter-all" data-filter-all="${category.id}">` +
-        `${allShown ? 'Untick all' : 'Tick all'}</button></div>` +
-        events.map(id => {
-          const key = category.id + '|' + id;
-          const isShown = !options.hiddenEvents.has(key);
-          return `<button type="button" class="filter-item${isShown ? '' : ' off'}"` +
-            ` data-filter-event="${escapeForPage(key)}" aria-pressed="${isShown}">` +
-            `<span class="filter-box${isShown ? ' on' : ''}" aria-hidden="true">${isShown ? '&#10003;' : ''}</span>` +
-            `${eventIcon(id)}<span>${escapeForPage(eventTypeName(id))}</span></button>`;
-        }).join('') + '</div>';
-    }
-    return html + '</span>';
+    const eventButtons = events.map(id => {
+      const key = category.id + '|' + id;
+      const isShown = !options.hiddenEvents.has(key);
+      return `<button type="button" class="filter-event${isShown ? '' : ' off'}" data-filter-event="${escapeForPage(key)}"` +
+        ` aria-pressed="${isShown}">${eventIcon(id)}<span>${escapeForPage(eventTypeName(id))}</span></button>`;
+    }).join('');
+    return `<section class="filter-category${isOn ? '' : ' off'}">` +
+      `<div class="filter-category-head"><span class="filter-category-name">${escapeForPage(category.label)}` +
+      `<small>${shownCount} of ${events.length}</small></span>` +
+      `<button type="button" class="filter-switch${isOn ? ' on' : ''}" data-category="${category.id}" role="switch"` +
+      ` aria-checked="${isOn}" aria-label="Show ${escapeForPage(category.label)} events"></button></div>` +
+      `<div class="filter-events">${eventButtons}</div></section>`;
   }).join('');
+
+  return '<div class="filters-shade" data-filters-close></div>' +
+    '<div class="filters-sheet" role="dialog" aria-label="Show on the calendar">' +
+    '<div class="filters-grab" aria-hidden="true"></div>' +
+    '<div class="filters-head"><h2>Show on the calendar</h2>' +
+    '<button type="button" class="filters-done" data-filters-close>Done</button></div>' +
+    categories + '</div>';
 }

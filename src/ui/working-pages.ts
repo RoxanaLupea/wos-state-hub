@@ -68,8 +68,10 @@ function nameOfPerson(context: WorkContext, gameAccounts: Row[], accountId: unkn
   return main ? context.gameOf(String(main.in_game_id ?? ''))?.name || String(main.in_game_id ?? '') : 'Not set';
 }
 
+// The run's day. The event's name and logo are in the band above, so the title does
+// not repeat them.
 function runTitle(run: { eventTypeId: string; date: string }): string {
-  return `${eventTypeName(run.eventTypeId)} · ${longDayText(dayFromText(run.date))}`;
+  return longDayText(dayFromText(run.date));
 }
 
 // ---------------------------------------------------------------------------

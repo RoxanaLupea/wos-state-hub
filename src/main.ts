@@ -73,7 +73,7 @@ import { PAGES, calendarToolbar, pageById, sectionNav, topBar, type CalendarView
 import { pagePlan } from './ui/page-plan.ts';
 import { playerPage } from './ui/player-page.ts';
 import type { AddOptions, ProfileOptions } from './ui/player-profile.ts';
-import { CATEGORY_ORDER, DEFAULT_CATEGORIES, categoryChips, filterListEvents } from './ui/category-chips.ts';
+import { CATEGORY_ORDER, DEFAULT_CATEGORIES, filtersSheet } from './ui/category-chips.ts';
 import { monthGridRange, monthTitle, monthView } from './ui/month-view.ts';
 import { weekTitle, weekView } from './ui/week-view.ts';
 import { yearView } from './ui/year-view.ts';
@@ -107,7 +107,8 @@ const view = {
   // then no alliance times show, the same as in the old app.
   myAllianceId: null as string | null,
   hiddenEvents: new Set<string>(),
-  openFilterList: null as string | null,
+  // Whether "Show on the calendar" is open.
+  filtersOpen: false,
   pickedYearRun: null as string | null,
   // The first of the transfer dates on screen, and what is filtered out.
   predictionFirstDate: '',
@@ -1110,12 +1111,16 @@ function applyKeptChoices(): void {
 }
 
 // Rows that scroll sideways when their names do not fit: the sections in the top band
-// on a phone, and an event's tabs. The open one is always brought into view, and the
-// row fades at an edge while there are more names past it.
+// on a phone, a section's pages, and an event's tabs. The open one is always brought
+// into view, clear of the fade, and the row fades at an edge while there are more names
+// past it.
 const SIDEWAYS_ROWS: [string, string][] = [
   ['.main-nav', '.nav-tab[aria-current="page"]'],
+  ['.section-tabs', '.section-tab[aria-current="page"]'],
   ['.info-tabs', '.info-tab[aria-selected="true"]']
 ];
+// As wide as the fade at a row's edge (shell.css), so the open name is never under it.
+const ROW_FADE_WIDTH = 36;
 
 function showOpenTab(app: HTMLElement): void {
   for (const [rowSelector, openSelector] of SIDEWAYS_ROWS) {
@@ -1124,9 +1129,9 @@ function showOpenTab(app: HTMLElement): void {
     const open = row.querySelector<HTMLElement>(openSelector);
     if (open) {
       const left = open.offsetLeft - row.offsetLeft;
-      if (left < row.scrollLeft) row.scrollLeft = left;
-      else if (left + open.offsetWidth > row.scrollLeft + row.clientWidth) {
-        row.scrollLeft = left + open.offsetWidth - row.clientWidth;
+      if (left - ROW_FADE_WIDTH < row.scrollLeft) row.scrollLeft = Math.max(0, left - ROW_FADE_WIDTH);
+      else if (left + open.offsetWidth + ROW_FADE_WIDTH > row.scrollLeft + row.clientWidth) {
+        row.scrollLeft = left + open.offsetWidth + ROW_FADE_WIDTH - row.clientWidth;
       }
     }
     const update = () => {
@@ -1196,8 +1201,13 @@ function drawPage(app: HTMLElement): void {
     // Signed in: the name and picture of the game account they are on, otherwise "Me".
     playerName: person ? (onAccount ? barAccountOf(onAccount).name : '') || 'Me' : null,
     playerPicture: onAccount ? barAccountOf(onAccount).avatar : null,
-    accountMenu: person ? accountMenu(isAdmin(person), allMyAccounts().length > 1) : null
+    accountMenu: person ? accountMenu(isAdmin(person), allMyAccounts().length > 1) : null,
+    eventTypeId: currentEventTypeId()
   });
+  // The open section's colour goes on the page's root, so the band, the page and any
+  // pop-up over it all take it.
+  document.documentElement.dataset.section = view.openPage;
+  document.documentElement.dataset.event = view.openPage === 'event' ? currentEventTypeId() ?? '' : '';
 
   if (view.openPage === 'player') {
     app.innerHTML = bar + `<main class="page" data-section="player">${playerPage({
@@ -1232,29 +1242,51 @@ function drawPage(app: HTMLElement): void {
     return;
   }
 
+  // The year view has its own four events, so the filters do not apply to it.
+  const filtersShown = view.calendarView !== 'year';
+  if (!filtersShown) view.filtersOpen = false;
   app.innerHTML = bar +
-    `<main class="page">` +
-      calendarToolbar(range.title, view.calendarView) +
-      // The year view has its own four events, so the filters do not apply to it.
-      (view.calendarView === 'year' ? '' :
-        `<div class="chips">${categoryChips({
-          shownCategories: view.shownCategories,
-          hiddenEvents: view.hiddenEvents,
-          openList: view.openFilterList,
-          eventTypeIdsWithAllianceTimes: eventTypeIdsWithAllianceTimes()
-        })}</div>`) +
+    `<main class="page" data-section="calendar">` +
+      calendarToolbar({
+        title: range.title, view: view.calendarView, todayInView: todayInView(range),
+        showFilters: filtersShown, filtersOpen: view.filtersOpen
+      }) +
+      (view.filtersOpen ? filtersSheet({
+        shownCategories: view.shownCategories,
+        hiddenEvents: view.hiddenEvents,
+        eventTypeIdsWithAllianceTimes: eventTypeIdsWithAllianceTimes()
+      }) : '') +
       '<div class="calendar-layout">' +
         `<section class="calendar-panel glass ${view.calendarView}-mode">${calendarBody(range)}</section>` +
         `<div class="side-column">${sideColumn()}</div>` +
       '</div>' +
     '</main>';
 
+  placeFiltersPanel(app);
   const panel = app.querySelector<HTMLElement>('.calendar-panel');
   if (panel && view.calendarView !== 'year') {
     layoutBars(panel);
     fitBarLabels(panel);
     sizeLanes(panel);
   }
+}
+
+// Today is in sight when the shown month (or week, or year) holds it. Grey days of the
+// months either side do not count: Today is offered there, as it is in another month.
+function todayInView(range: { from: number; to: number }): boolean {
+  const today = todayNumber();
+  if (view.calendarView === 'week') return range.from <= today && today <= range.to;
+  const shown = yearAndMonthOf(view.focusDay);
+  const now = yearAndMonthOf(today);
+  return view.calendarView === 'year' ? shown.year === now.year : shown.year === now.year && shown.month === now.month;
+}
+
+// On a computer the filters open as a panel just under the Filters button.
+function placeFiltersPanel(app: HTMLElement): void {
+  const sheet = app.querySelector<HTMLElement>('.filters-sheet');
+  const button = app.querySelector<HTMLElement>('.filters-button');
+  if (!sheet || !button || !window.matchMedia('(min-width: 1000px)').matches) return;
+  sheet.style.top = Math.round(button.getBoundingClientRect().bottom + 10) + 'px';
 }
 
 // The event the Event section is named after: the one running now, or the next one.
@@ -1511,23 +1543,14 @@ function handleClicks(event: MouseEvent): void {
     return;
   }
 
-  const listButton = target.closest<HTMLElement>('[data-filter-list]');
-  if (listButton) {
-    const category = listButton.dataset.filterList as string;
-    view.openFilterList = view.openFilterList === category ? null : category;
+  if (target.closest('[data-filters-open]')) {
+    view.filtersOpen = !view.filtersOpen;
     draw();
     return;
   }
 
-  const allButton = target.closest<HTMLElement>('[data-filter-all]');
-  if (allButton) {
-    const category = allButton.dataset.filterAll as string;
-    const events = eventKeysOf(category);
-    const allShown = events.every(key => !view.hiddenEvents.has(key));
-    for (const key of events) {
-      if (allShown) view.hiddenEvents.add(key);
-      else view.hiddenEvents.delete(key);
-    }
+  if (target.closest('[data-filters-close]')) {
+    view.filtersOpen = false;
     draw();
     return;
   }
@@ -3148,16 +3171,11 @@ function returnToPlace(event: PopStateEvent): void {
   draw();
 }
 
-function eventKeysOf(category: string): string[] {
-  return filterListEvents(category, eventTypeIdsWithAllianceTimes())
-    .map(id => category + '|' + id);
-}
-
 // The top bar as it looks before anything has loaded, used when something goes wrong.
 function problemBar(): string {
   return topBar({
     stateNumber: STATE_NUMBER, openPage: view.openPage,
-    eventLabel: PAGES[3].label, playerName: null, accountMenu: null
+    eventLabel: PAGES[3].label, playerName: null, accountMenu: null, eventTypeId: null
   });
 }
 

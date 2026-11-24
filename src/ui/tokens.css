@@ -37,8 +37,19 @@
      a section never changes it. --accent is the working accent and a section may
      set its own. */
   --brand-accent: #AFC8F5;
-  --accent: var(--brand-accent);
-  --accent-ink: #1C2333;
+  /* Each section has its own colour, all with the same lightness and amount of colour so
+     only the tint changes (24 Nov). --section is the first colour: the 1458, the open
+     section, the open page, buttons. --section-second is the second: almost white with
+     the section's tint, for the other pages' names and a pop-up's text. --section-ink is
+     for text sitting on the first colour. The Calendar's blue is the one of its logo, and
+     a section with no colour of its own uses it. */
+  --section: #8BB7F4;
+  --section-ink: #0B2240;
+  --section-second: color-mix(in srgb, var(--section) 22%, #FFFFFF);
+  --accent: var(--section);
+  --accent-ink: var(--section-ink);
+  /* What a pop-up is drawn on, so the page under it does not show through. */
+  --popup-ground: #121A2B;
   --danger: #F2A0A0;
   /* The red dot of a notification, as on "Update skill level". */
   --notice-red: #E0503A;
@@ -78,6 +89,12 @@ body {
   background-attachment: fixed;
 }
 
+/* The sections' colours. Set on the page's root, so the band, the page and the pop-ups
+   over it all take the open section's colour. */
+:root[data-section="fortress"] { --section: #B0AAF1; --section-ink: #1C1838; }
+:root[data-section="transfers"] { --section: #F0D99D; --section-ink: #3A2D0C; }
+:root[data-section="event"][data-event="tyrant"] { --section: #9DDCF0; --section-ink: #072B38; }
+
 /* An event's own colours, taken from its screens in the game. --event-mark is the
    one colour the section uses for everything it marks; --event-mark-light is the
    same colour lightened so it still reads as text on a dark row; --event-ink is for
@@ -100,7 +117,6 @@ body {
 /* Fortress Battles, from its event page in the game: the violet of its sky for the
    section's colour. The page keeps the site's own background. */
 .page[data-section="fortress"] {
-  --accent: #A39BEB; --accent-ink: #1C1838;
   --event-mark: #9C94E6;
   --event-mark-light: #C4BEF5;
   --event-ink: #1C1838;

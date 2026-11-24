@@ -4,7 +4,7 @@ import './shell.css';
 import { currentTimeMode, gameClockText, nowMinute } from '../calendar/time-mode.ts';
 import { escapeForPage } from './escape.ts';
 import { logoSvg } from './logo.ts';
-import { eventIcon } from './event-icon.ts';
+import { eventIcon, imageUrl } from './event-icon.ts';
 import { eventTypeName } from '../data/catalog.ts';
 
 export interface SubPage { id: string; label: string; }
@@ -97,13 +97,29 @@ export interface TopBarOptions {
   // The picture of the game account they are on, from the game; null before the game has one.
   playerPicture?: string | null;
   accountMenu: string | null;
+  // The event the event section is about, so the open section can show its logo and name.
+  eventTypeId: string | null;
+}
+
+// The Calendar's own logo; the other sections borrow their event's.
+const CALENDAR_LOGO_FILE = 'calendar';
+
+// The open section is marked by its logo and its full name in its own colour, with the
+// line under it on the band's edge. A section with no logo of its own shows its name only.
+function openTab(page: Page, options: TopBarOptions): string {
+  const eventTypeId = page.id === 'event' ? options.eventTypeId : page.eventTypeId ?? null;
+  const logo = page.id === 'calendar' ? `<img class="event-icon" src="${escapeForPage(imageUrl(CALENDAR_LOGO_FILE))}" alt="">`
+    : eventTypeId ? eventIcon(eventTypeId) : '';
+  const name = eventTypeId ? eventTypeName(eventTypeId) : page.label;
+  return `${logo}<span>${escapeForPage(name)}</span>`;
 }
 
 export function topBar(options: TopBarOptions): string {
   const tabs = PAGES.map(page => {
+    const isOpen = page.id === options.openPage;
     const label = page.id === 'event' ? options.eventLabel : page.label;
     return `<button type="button" class="nav-tab" data-page="${page.id}"` +
-      `${page.id === options.openPage ? ' aria-current="page"' : ''}>${escapeForPage(label)}</button>`;
+      `${isOpen ? ' aria-current="page"' : ''}>${isOpen ? openTab(page, options) : escapeForPage(label)}</button>`;
   }).join('');
 
   return `<header class="top-bar">
@@ -124,18 +140,9 @@ export function topBar(options: TopBarOptions): string {
   </header>`;
 }
 
-// The row under the top bar: the pages inside the open section. A section with only
-// one page has no row.
-// The event's name as the page's title: the first word as it is written, the rest
-// in capitals, the way the app's own logo sets STATE 1458 against EVENTS.
-function eventTitle(eventTypeId: string): string {
-  const name = eventTypeName(eventTypeId);
-  const firstSpace = name.indexOf(' ');
-  if (firstSpace < 0) return `<b>${escapeForPage(name.toUpperCase())}</b>`;
-  return escapeForPage(name.slice(0, firstSpace)) + ' ' +
-    `<b>${escapeForPage(name.slice(firstSpace + 1).toUpperCase())}</b>`;
-}
-
+// The row under the top bar: the pages inside the open section, and the page's own
+// controls. A section with only one page has no row. The section's name and logo are in
+// the band above, so the row does not repeat them.
 export function sectionNav(pageId: string, openSubPage: string, controls = ''): string {
   const page = pageById(pageId);
   if (!page || page.pages.length === 0) return '';
@@ -145,17 +152,8 @@ export function sectionNav(pageId: string, openSubPage: string, controls = ''): 
     `<button type="button" class="section-tab" data-sub-page="${sub.id}"` +
     `${sub.id === openId ? ' aria-current="page"' : ''}>${escapeForPage(sub.label)}</button>`).join('');
 
-  // A section built around one event says so: the event's own logo and name, the
-  // same pair the calendar puts on its bars.
-  const eventTypeId = page.eventTypeId;
-  const identity = eventTypeId
-    ? `<span class="section-id">${eventIcon(eventTypeId)}` +
-      `<strong>${eventTitle(eventTypeId)}</strong></span>`
-    : '';
-
   return `<nav class="section-nav" aria-label="${escapeForPage(page.label)}">` +
-    `${identity}<div class="section-side">` +
-    `<div class="section-tabs">${tabs}</div>${controls}</div></nav>`;
+    `<div class="section-side"><div class="section-tabs">${tabs}</div>${controls}</div></nav>`;
 }
 
 const ARROW_LEFT = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
@@ -169,31 +167,67 @@ export type CalendarView = 'week' | 'month' | 'year';
 const TODAY_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
   ' stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
   '<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>';
+// Two arrows passing each other: UTC swaps to your own time and back.
+const SWAP_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
+  ' stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg>';
+const FUNNEL_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
+  ' stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16l-6 7.5V19l-4 1.5v-8z"/></svg>';
 
-// Today and the two arrows come first and never change width, so the title can grow
-// and shrink with the view without moving anything the hand is aiming at. Today is a
-// button of its own; on a phone the arrows are gone and the calendar is swiped.
-export function calendarToolbar(title: string, view: CalendarView): string {
+// The three views as calendar pages: Week one row of days, Month two, Year a stack of pages.
+function calendarPage(body: string): string {
+  return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"' +
+    ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + body + '</svg>';
+}
+const dayDot = (x: number, y: number) => `<circle cx="${x}" cy="${y}" r="1.05" fill="currentColor" stroke="none"/>`;
+const PAGE_OUTLINE = '<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/>';
+const VIEW_ICONS: Record<CalendarView, string> = {
+  week: calendarPage(PAGE_OUTLINE + [7, 10.3, 13.7, 17].map(x => dayDot(x, 15.2)).join('')),
+  month: calendarPage(PAGE_OUTLINE + [13.2, 16.7].map(y => [7, 10.3, 13.7, 17].map(x => dayDot(x, y)).join('')).join('')),
+  year: calendarPage('<rect x="2.5" y="8" width="13.5" height="13" rx="2.2"/><path d="M6 6.5v3M12.5 6.5v3M2.5 12h13.5"/>' +
+    '<path d="M6.5 5.5V5a2 2 0 0 1 2-2H19a2.5 2.5 0 0 1 2.5 2.5V14a2 2 0 0 1-2 2h-.5"/>' + dayDot(6, 16) + dayDot(9.2, 16) + dayDot(12.5, 16))
+};
+const VIEW_NAMES: Record<CalendarView, string> = { week: 'Week', month: 'Month', year: 'Year' };
+
+export interface ToolbarOptions {
+  title: string;
+  view: CalendarView;
+  // Today shows only while today is out of sight.
+  todayInView: boolean;
+  // The year view has its own events, so Filters is not offered there.
+  showFilters: boolean;
+  filtersOpen: boolean;
+}
+
+// The calendar's controls. On a phone: the month in the middle of the first row, Today on
+// its left only when today is out of sight, and UTC on its right; the second row has the
+// three views on the left and Filters on the right. On a computer the two rows are one:
+// the month with its arrows on the left, the views, UTC and Filters on the right. Nothing
+// is boxed: the open view is bright with a line under it.
+export function calendarToolbar(options: ToolbarOptions): string {
   const mode = currentTimeMode();
-  const viewButton = (id: CalendarView, label: string) =>
-    `<button type="button" data-view="${id}" aria-pressed="${view === id}">${label}</button>`;
+  const viewButton = (id: CalendarView) =>
+    `<button type="button" class="view-icon" data-view="${id}" aria-pressed="${options.view === id}"` +
+    ` aria-label="${VIEW_NAMES[id]}" title="${VIEW_NAMES[id]}">${VIEW_ICONS[id]}</button>`;
+  // The word says which time is shown; tapping it swaps to the other.
+  const timeWord = mode === 'game' ? 'UTC' : 'Mine';
+  const today = options.todayInView ? '<span class="today-slot"></span>'
+    : `<button type="button" class="quiet-button today-button" data-step="0">${TODAY_ICON}Today</button>`;
 
   return `<div class="toolbar">
-    <button type="button" class="today-button" data-step="0">${TODAY_ICON}Today</button>
-    <div class="step-nav" role="group" aria-label="Move through the calendar">
-      <button type="button" data-step="-1" aria-label="Previous">${ARROW_LEFT}</button>
-      <button type="button" data-step="1" aria-label="Next">${ARROW_RIGHT}</button>
+    <div class="toolbar-month">
+      ${today}
+      <div class="month-steps">
+        <button type="button" class="step-arrow" data-step="-1" aria-label="Previous">${ARROW_LEFT}</button>
+        <h1 class="period-title">${escapeForPage(options.title)}</h1>
+        <button type="button" class="step-arrow" data-step="1" aria-label="Next">${ARROW_RIGHT}</button>
+      </div>
+      <button type="button" class="quiet-button time-word" data-time-mode="${mode === 'game' ? 'local' : 'game'}"` +
+    ` title="${mode === 'game' ? 'Game time (UTC). Tap for your own time.' : 'Your own time. Tap for game time (UTC).'}">${SWAP_ICON}${timeWord}</button>
     </div>
-    <h1 class="period-title">${escapeForPage(title)}</h1>
-    <div class="toolbar-switches">
-      <div class="segmented time-switch" role="group" aria-label="Times shown in">
-        <button type="button" data-time-mode="game" aria-pressed="${mode === 'game'}" title="Game time (UTC)">UTC</button>
-        <button type="button" data-time-mode="local" aria-pressed="${mode === 'local'}">Mine</button>
-      </div>
-      <div class="segmented view-switch" role="group" aria-label="Calendar view">
-        ${viewButton('week', 'Week')}${viewButton('month', 'Month')}${viewButton('year', 'Year')}
-      </div>
+    <div class="toolbar-views">
+      <div class="view-icons" role="group" aria-label="Calendar view">${viewButton('week')}${viewButton('month')}${viewButton('year')}</div>
+      ${options.showFilters ? `<button type="button" class="quiet-button filters-button${options.filtersOpen ? ' open' : ''}"` +
+        ` data-filters-open aria-expanded="${options.filtersOpen}">${FUNNEL_ICON}Filters</button>` : ''}
     </div>
   </div>`;
 }
-

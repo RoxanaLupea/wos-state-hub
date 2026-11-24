@@ -46,14 +46,34 @@ there before discussing it again.
 - On a phone the sections are in the top band too, as its second row: one line that
   scrolls sideways, fading at an edge while there are more past it, with the open one
   kept in view. There is no bar at the bottom of the screen.
+- Section colours (Roxanne, 24 Nov): every section has its own colour, and all of them
+  have the same lightness and the same amount of colour; only the tint changes. The
+  Calendar's tint is the blue of its logo (public/images/events/calendar.png). The 1458
+  takes the open section's colour. Buttons on a page are in that page's colour. The
+  second colour is almost white with the section's tint, much lighter than the main one.
+  Pop-ups use the page's two colours too (24 Nov).
+  Accepted 24 Nov: Calendar #8BB7F4, Fortress #B0AAF1 (gold and cyan at the same
+  strength looked too dark to read and are being lightened).
+- The open section shows its logo (the Calendar has its own, calendar.png) and its full
+  name in its colour, with the line under it on the band's lower edge; the other
+  sections keep their short names. On a computer the band keeps its height with the
+  logo, sections, clock and Sign in centred on one line. The page's own event title is
+  gone: the band names the section (the Tyrant pages' titles are the day only). Built on
+  profile-draft 24 Nov.
+- Transfers #F0D99D and Tyrant #9DDCF0 (lightened 24 Nov, "ok, better"). SvS, Hellfire,
+  State, My alliance, Map and the player page have no colour of their own yet and use
+  the Calendar's blue.
 - The phone's own back does what the site's Back does and nothing more (see "Calendar
   selection" below). It never moves from one section to another: sections are opened
   by tapping them.
 
 ### Page names inside a section
 - Uppercase, a little bold.
-- The open one is in the header yellow, slightly larger, and centred as the others
-  are. The closed ones are the app's blue.
+- The open one is in the section's colour, slightly larger, with a line under it. The
+  closed ones are in the section's second colour, almost white (24 Nov).
+- On a phone they sit centred and scroll sideways when they do not fit; on a computer
+  they start at the left edge, in line with the content, and the page's own controls sit
+  at the right of the same row (24 Nov).
 - Switching between them is animated.
 - This is how every section moves between its pages. Only the colours change.
 
@@ -299,7 +319,7 @@ there before discussing it again.
   under them (no sticky row with a backing).
 - On a phone the day names (10.5 px) and the dates (12 px) are smaller, with less room
   above the bars.
-- Calendar controls on a phone (approved 24 Nov, mock-up shop2 in this chat, to be built):
+- Calendar controls on a phone (approved 24 Nov, mock-up shop2, built on profile-draft 24 Nov):
   the second row has the three views as calendar-page icons on the left (Week one row of
   days, Month two, Year a stack of pages; the open one bright with a line under it, no
   buttons) and Filters (funnel and word, no box, no count) on the right. Filters opens a
@@ -309,6 +329,10 @@ there before discussing it again.
   replaces the category chips of 17 Nov. No filled blue buttons and no count badges, ever.
 - Today shows only when today is out of sight (another month or week); the month name
   keeps its place. UTC is one word with a swap icon that flips to MINE.
+- On a computer the two rows are one: Today and the month on the left, with arrows
+  either side of the month (a computer cannot swipe); the views, UTC and Filters on the
+  right. Filters opens as a panel under it, three events to a row, the page not dimmed.
+  Shown 24 Nov (cal-desk); the arrows were added in the build.
 - Today is always in sight when the calendar opens (the site, the section, Today, another
   month or view): the weeks scroll so today's week is the first one, or to the bottom near
   the month's end.
