@@ -76,11 +76,11 @@ export function pagePlan(pageId: string, subPageId: string): string {
     page?.pages.find(one => one.id === subPageId) ?? page?.pages[0];
   const key = sub ? `${pageId}|${sub.id}` : pageId;
   const points = PLANS[key] ?? [];
-  const heading = sub ? `${page?.label} · ${sub.label}` : page?.label ?? pageId;
-
-  return `<section class="page-plan glass">
-    <h2>${escapeForPage(heading)}</h2>
-    <p class="page-plan-note">Not built yet. This is what it will hold.</p>
+  // The section and page are named in the band and the page names above, so the plan
+  // does not name them again.
+  return `<div class="work-page"><section class="work-section page-plan">
+    <div class="work-head"><h2>Not built yet</h2></div>
+    <p class="work-line">This is what it will hold.</p>
     <ul>${points.map(point => `<li>${escapeForPage(point)}</li>`).join('')}</ul>
-  </section>`;
+  </section></div>`;
 }

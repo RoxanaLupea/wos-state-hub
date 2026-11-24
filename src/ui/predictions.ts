@@ -185,13 +185,13 @@ export function predictionsPage(options: PredictionsOptions): string {
     !isWatching || groupOfState(bigGroupsOf(one.groups), options.watchedState as number));
   if (options.dates.length && !showsSomething) {
     return '<div class="predictions-page">' +
-      '<section class="admin-section glass"><p class="predictions-empty">' +
+      '<section class="admin-section"><p class="predictions-empty">' +
       `State ${options.watchedState} is not in any published range.</p></section></div>`;
   }
 
   if (!options.dates.length) {
     return '<div class="predictions-page">' +
-      '<section class="admin-section glass"><p class="predictions-empty">' +
+      '<section class="admin-section"><p class="predictions-empty">' +
       'No transfers of that kind in this stretch.</p></section></div>';
   }
 

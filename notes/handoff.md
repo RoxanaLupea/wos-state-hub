@@ -1,7 +1,25 @@
 # Handover: read this first in a new chat
 
-Written on 24 Nov 2026 at the end of a chat. Do CLAUDE.md's setup, then read this whole
+Written on 24 Nov 2026; updated at the end of the fifth chat that day (section 0). Do CLAUDE.md's setup, then read this whole
 file, then the notes CLAUDE.md lists.
+
+## 0. Fifth chat on 24 Nov: pushed
+
+- The old branches "draft" and "profile-draft" are deleted on GitHub; only main is left.
+  Section 2b's work was already live when that chat started.
+- notes/page-style.md: how every page is drawn, taken from the approved pages. Roxanne
+  accepted it ("it's ok"). Every new page, a basic one too, follows it; CLAUDE.md lists it
+  with the notes to read, and review-checklist.md checks against it.
+- The working pages' shared parts (src/ui/data-table.ts and .css, forms.css) are redrawn
+  to it: no boxes, titles in small spaced capitals, Cancel and Save as the red cross and
+  green tick on the title line, picks of up to ten as words (hidden field + data-pick),
+  switches (data-switch), tables one line per row with an edge fade on a phone, a row's
+  form on the line under it (rowEditForm), a form-only part (formSection). Moved onto
+  them: Invites, Records, My alliance, State, the event pages, Map, Admin, Fortress
+  Rewards, the event pencil forms. Alliance titles read "DVL · DEVILEMPIRE".
+- Open: Invites shows the invite list twice to signed-in people (the plain list and the
+  table); the open page name "AVAILABILITY" is clipped at its left on a computer (was so
+  before).
 
 ## 1. Where things stand
 

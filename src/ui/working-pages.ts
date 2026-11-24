@@ -3,7 +3,7 @@
 // starting point to design from.
 import { escapeForPage } from './escape.ts';
 import { EXALTED_FC, FC_LEVELS } from '../data/fc-levels.ts';
-import { choiceRow, dataTable, rowButton, rowForm, text, workSection, type Column, type Field } from './data-table.ts';
+import { choiceRow, dataTable, formSection, rowButton, rowEditForm, rowForm, rowWord, text, workSection, type Column, type Field } from './data-table.ts';
 import type { Row } from '../data/records.ts';
 import type { Alliance } from '../data/alliances.ts';
 import { allianceTag } from '../data/alliances.ts';
@@ -53,8 +53,15 @@ function page(sections: string[]): string {
 function allianceChoices(alliances: Alliance[], emptyLabel = ''): [string, string][] {
   const choices: [string, string][] = alliances
     .slice().sort((left, right) => left.sortOrder - right.sortOrder)
-    .map(one => [one.id, `${one.tag} · ${one.name}`]);
+    .map(one => [one.id, one.tag]);
   return emptyLabel ? [['', emptyLabel], ...choices] : choices;
+}
+
+// An alliance as a part's title: its tag and name, so an academy whose tag differs only
+// in capitals (DVL, dvl) is told apart in the capitals of the title.
+function allianceTitle(context: WorkContext, allianceId: string): string {
+  const alliance = context.alliances.find(one => one.id === allianceId);
+  return alliance ? `${alliance.tag} · ${alliance.name}` : allianceTag(allianceId);
 }
 
 function dayText(date: unknown): string {
@@ -203,7 +210,7 @@ export function rosterPage(context: WorkContext): string {
     const columns: Column[] = [
       { label: 'Name', cell: row => text(row.in_game_name) + `<small>${text(row.in_game_id)}</small>` },
       { label: 'Goes as', cell: row => text(MEMBER_ROLES.find(([role]) => role === row.member_role)?.[1]) },
-      { label: 'Note', cell: row => text(row.note) }
+      { label: 'Note', cell: row => text(row.note), isLong: true }
     ];
     if (canEdit) {
       columns.push({ label: '', cell: row => '<div class="cell-actions">' +
@@ -211,8 +218,8 @@ export function rosterPage(context: WorkContext): string {
     }
     const status = roster.status === 'final' ? 'Final' : 'In progress';
     const statusButton = canEdit
-      ? `<button type="button" class="row-action" data-roster-status="${escapeForPage(String(roster.id))}">` +
-        `${roster.status === 'final' ? 'Mark in progress' : 'Mark final'}</button>` : '';
+      ? rowWord(`data-roster-status="${escapeForPage(String(roster.id))}"`,
+        roster.status === 'final' ? 'Mark in progress' : 'Mark final', 'status') : '';
     return workSection(`${allianceTag(String(roster.alliance_id))} · ${status}`,
       dataTable(columns, people, 'Nobody on this roster yet.') +
       (canEdit ? rowForm({
@@ -230,11 +237,11 @@ export function rosterPage(context: WorkContext): string {
 
   const usedAlliances = new Set(ofRun.map(one => String(one.alliance_id)));
   const addRoster = canEdit
-    ? workSection('A roster for a state alliance', rowForm({
+    ? formSection({
         form: 'roster', title: 'Start a roster', submitLabel: 'Start',
-        fields: [{ name: 'alliance_id', label: 'State alliance', kind: 'select', isRequired: true,
+        fields: [{ name: 'alliance_id', label: 'For the state alliance', kind: 'select', isRequired: true,
           choices: allianceChoices(context.alliances.filter(one => !usedAlliances.has(one.id)), 'Pick an alliance') }]
-      }))
+      })
     : '';
 
   return page([
@@ -259,9 +266,7 @@ export function planPage(context: WorkContext): string {
 
   const sections = ofRun.map(plan => {
     const key = 'plan|' + plan.id;
-    if (context.editing === key) {
-      return workSection(String(plan.title || 'Plan'), planForm(plan, true));
-    }
+    if (context.editing === key) return planForm(plan, true);
     return workSection(String(plan.title || 'Plan'),
       `<div class="plan-text">${escapeForPage(String(plan.content ?? '')).replace(/\n/g, '<br>')}</div>`,
       (plan.status === 'published' ? '' : '<span class="work-line">Draft</span>') +
@@ -271,13 +276,13 @@ export function planPage(context: WorkContext): string {
   return page([
     workSection(runTitle(run), ofRun.length ? '' : '<p class="work-empty">No plan yet.</p>'),
     ...sections,
-    canEdit && context.editing !== 'plan|new' ? workSection('New plan', planForm(null, false)) : ''
+    canEdit && context.editing !== 'plan|new' ? planForm(null, false) : ''
   ]);
 }
 
 function planForm(plan: Row | null, canCancel: boolean): string {
-  return rowForm({
-    form: 'plan', key: plan ? String(plan.id) : '', title: plan ? 'Change the plan' : 'Write a plan',
+  return formSection({
+    form: 'plan', key: plan ? String(plan.id) : '', title: plan ? String(plan.title || 'Plan') : 'New plan',
     canCancel,
     fields: [
       { name: 'title', label: 'Title', kind: 'text', value: plan?.title ?? '', isRequired: true },
@@ -321,7 +326,7 @@ export function membersPage(context: WorkContext, familyIds: string[]): string {
 
   const sections = familyIds.map(allianceId => {
     const members = context.membersOf(allianceId);
-    if (!members) return workSection(allianceTag(allianceId), LOADING);
+    if (!members) return workSection(allianceTitle(context, allianceId), LOADING);
     const people = members.slice().sort((left, right) => (Number(right.member.power) || 0) - (Number(left.member.power) || 0));
     const columns: Column<RosterEntry>[] = [
       { label: 'Name', cell: entry => text(entry.member.nick_name) + `<small>${text(entry.member.chief_id)}</small>` },
@@ -344,7 +349,7 @@ export function membersPage(context: WorkContext, familyIds: string[]): string {
         return own.length ? own.map(one => escapeForPage(ROLE_NAMES[String(one.role)] ?? String(one.role))).join(', ') : '—';
       } }
     ];
-    return workSection(allianceTag(allianceId), dataTable(columns, people, "This alliance's roster has not been read yet."));
+    return workSection(allianceTitle(context, allianceId), dataTable(columns, people, "This alliance's roster has not been read yet."));
   });
   return page(sections);
 }
@@ -431,19 +436,20 @@ export function facilitiesPage(context: WorkContext): string {
     { label: 'Facility', cell: row => escapeForPage(facilityName(row)) },
     { label: 'Position', cell: row => text(`${row.position_x}, ${row.position_y}`) },
     { label: 'Buff', cell: row => escapeForPage(buffOf(buffs, row)), isNumber: true },
-    { label: 'Held by', cell: row => context.editing === 'facility|' + row.id
-      ? rowForm({ form: 'facility', key: String(row.id), title: facilityName(row), canCancel: true,
-          fields: [{ name: 'alliance_id', label: 'Held by', kind: 'select', value: row.alliance_id ?? '',
-            choices: allianceChoices(context.alliances, 'Nobody') }] })
-      : text(row.alliance_id ? allianceTag(String(row.alliance_id)) : '') }
+    { label: 'Held by', cell: row => text(row.alliance_id ? allianceTag(String(row.alliance_id)) : '') }
   ];
   if (canEdit) {
     columns.push({ label: '', cell: row => context.editing === 'facility|' + row.id ? ''
       : '<div class="cell-actions">' + rowButton('facility|' + row.id, 'Change') + '</div>' });
   }
+  const editRow = (row: Row) => context.editing === 'facility|' + row.id
+    ? rowEditForm({ form: 'facility', key: String(row.id), title: facilityName(row),
+        fields: [{ name: 'alliance_id', label: 'Held by', kind: 'select', value: row.alliance_id ?? '',
+          choices: allianceChoices(context.alliances, 'Nobody') }] })
+    : '';
   return page([
     workSection('Facilities',
-      dataTable(columns, sorted, 'No facility is recorded.'))
+      dataTable(columns, sorted, 'No facility is recorded.', editRow))
   ]);
 }
 
@@ -461,14 +467,15 @@ export function settingsPage(context: WorkContext): string {
     { label: 'Setting', cell: row => text(row.setting_key) +
       (row.event_type_id ? `<small>${escapeForPage(eventTypeName(String(row.event_type_id)))}</small>` : '') },
     { label: 'Kind', cell: row => row.setting_kind === 'game_rule' ? 'Game rule' : 'State choice' },
-    { label: 'Value', cell: row => context.editing === 'setting|' + row.id
-      ? rowForm({ form: 'setting', key: String(row.id), title: String(row.setting_key), canCancel: true,
-          fields: [{ name: 'setting_value', label: 'Value', kind: 'text', value: row.setting_value, isRequired: true }] })
-      : text(row.setting_value) },
+    { label: 'Value', cell: row => text(row.setting_value) },
     { label: '', cell: row => context.editing === 'setting|' + row.id ? ''
       : '<div class="cell-actions">' + rowButton('setting|' + row.id, 'Change') + '</div>' }
   ];
-  return page([workSection('Settings', dataTable(columns, sorted, 'No setting is stored.'))]);
+  const editRow = (row: Row) => context.editing === 'setting|' + row.id
+    ? rowEditForm({ form: 'setting', key: String(row.id), title: String(row.setting_key),
+        fields: [{ name: 'setting_value', label: 'Value', kind: 'text', value: row.setting_value, isRequired: true }] })
+    : '';
+  return page([workSection('Settings', dataTable(columns, sorted, 'No setting is stored.', editRow))]);
 }
 
 export function rolesPage(context: WorkContext): string {
@@ -511,7 +518,7 @@ export function requestsPage(context: WorkContext): string {
     { label: 'Name', cell: row => text(row.name) },
     { label: 'Status', cell: row => text(row.status) },
     { label: '', cell: row => '<div class="cell-actions">' +
-      `<button type="button" class="row-action" data-approve-alliance="${escapeForPage(String(row.id))}">Approve</button></div>` }
+      rowWord(`data-approve-alliance="${escapeForPage(String(row.id))}"`, 'Approve', 'approve') + '</div>' }
   ];
   return page([workSection('Alliances asking to join the site', dataTable(columns, waiting, 'No alliance is waiting.'))]);
 }
@@ -535,8 +542,8 @@ export function transferWorkSections(context: WorkContext, date: string): string
   const sections: string[] = [];
 
   if (context.isAdmin) {
-    sections.push(workSection(window ? 'The window' : 'Set up this window', rowForm({
-      form: 'transfer-window', key: window ? String(window.id) : date, title: longDayText(dayFromText(date)),
+    sections.push(formSection({
+      form: 'transfer-window', key: window ? String(window.id) : date, title: window ? 'The window' : 'Set up this window',
       fields: [
         { name: 'state_type', label: 'We are', kind: 'select', value: window?.state_type ?? 'ordinary',
           choices: [['ordinary', 'An ordinary state (35 + 20)'], ['leading', 'A leading state (20 + 10)']] },
@@ -544,9 +551,9 @@ export function transferWorkSections(context: WorkContext, date: string): string
         { name: 'special_invites_available', label: 'Special invites', kind: 'number', value: window?.special_invites_available ?? 0 },
         { name: 'status', label: 'Status', kind: 'select', value: window?.status ?? 'planning',
           choices: [['planning', 'Planning'], ['running', 'Running'], ['closed', 'Closed']] },
-        { name: 'note', label: 'Note', kind: 'text', value: window?.note ?? '' }
+        { name: 'note', label: 'Note', kind: 'text', value: window?.note ?? '', isWide: true }
       ]
-    })));
+    }));
   }
 
   if (window) {
@@ -564,25 +571,27 @@ export function transferWorkSections(context: WorkContext, date: string): string
       { label: 'Flags', cell: row => {
         const own = flags.filter(one => one.candidate_id === row.id);
         return own.length ? own.map(one => escapeForPage(String(one.reason ?? ''))).join('<br>') : '—';
-      } },
-      { label: 'Note', cell: row => context.editing === 'candidate|' + row.id
-        ? rowForm({ form: 'candidate-status', key: String(row.id), title: String(row.in_game_name), canCancel: true,
-            fields: [
-              { name: 'stage', label: 'Stage', kind: 'select', value: row.stage ?? '', choices: STAGES },
-              { name: 'invite_status', label: 'Invite', kind: 'select', value: row.invite_status ?? '', choices: INVITE_STATUSES },
-              { name: 'outcome', label: 'Outcome', kind: 'select', value: row.outcome ?? '', choices: OUTCOMES },
-              { name: 'note', label: 'Note', kind: 'text', value: row.note ?? '' }
-            ] })
-        : context.editing === 'flag|' + row.id
-          ? rowForm({ form: 'candidate-flag', key: String(row.id), title: 'Flag ' + String(row.in_game_name), canCancel: true,
-              submitLabel: 'Flag', fields: [{ name: 'reason', label: 'Why', kind: 'text', isRequired: true }] })
-          : text(row.note) },
-      { label: '', cell: row => '<div class="cell-actions">' +
-        (canAdd ? rowButton('candidate|' + row.id, 'Change') : '') +
-        (context.userId ? rowButton('flag|' + row.id, 'Flag') : '') + '</div>' }
+      }, isLong: true },
+      { label: 'Note', cell: row => text(row.note), isLong: true },
+      { label: '', cell: row => context.editing === 'candidate|' + row.id || context.editing === 'flag|' + row.id ? ''
+        : '<div class="cell-actions">' +
+          (canAdd ? rowButton('candidate|' + row.id, 'Change') : '') +
+          (context.userId ? rowButton('flag|' + row.id, 'Flag') : '') + '</div>' }
     ];
+    const editRow = (row: Row) => context.editing === 'candidate|' + row.id
+      ? rowEditForm({ form: 'candidate-status', key: String(row.id), title: String(row.in_game_name),
+          fields: [
+            { name: 'stage', label: 'Stage', kind: 'select', value: row.stage ?? '', choices: STAGES },
+            { name: 'invite_status', label: 'Invite', kind: 'select', value: row.invite_status ?? '', choices: INVITE_STATUSES },
+            { name: 'outcome', label: 'Outcome', kind: 'select', value: row.outcome ?? '', choices: OUTCOMES },
+            { name: 'note', label: 'Note', kind: 'text', value: row.note ?? '', isWide: true }
+          ] })
+      : context.editing === 'flag|' + row.id
+        ? rowEditForm({ form: 'candidate-flag', key: String(row.id), title: 'Flag ' + String(row.in_game_name),
+            submitLabel: 'Flag', fields: [{ name: 'reason', label: 'Why', kind: 'text', isRequired: true, isWide: true }] })
+        : '';
     sections.push(workSection('People we are inviting',
-      dataTable(columns, people, 'Nobody is on the list yet.') +
+      dataTable(columns, people, 'Nobody is on the list yet.', editRow) +
       (canAdd ? rowForm({
         form: 'candidate', key: String(window.id), title: 'Add someone', submitLabel: 'Add',
         fields: [
@@ -602,7 +611,7 @@ export function transferWorkSections(context: WorkContext, date: string): string
   if (context.mayReadBlacklist) {
     const columns: Column[] = [
       { label: 'Name', cell: row => text(row.in_game_name) + `<small>${text(row.in_game_id)}</small>` },
-      { label: 'Why', cell: row => text(row.reason) },
+      { label: 'Why', cell: row => text(row.reason), isLong: true },
       { label: 'Since', cell: row => dayText(String(row.added_at ?? '').slice(0, 10)) }
     ];
     sections.push(workSection('Blacklist', dataTable(columns, blacklist, 'Nobody is on the blacklist.') +

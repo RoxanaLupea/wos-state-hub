@@ -1,6 +1,7 @@
 // The state at a glance: its alliances with their academies, and the event times each
 // one runs. A presentation page rather than a working one.
 import './pages.css';
+import './data-table.css';
 import { eventTypeName, eventGroupName } from '../data/catalog.ts';
 import { clockText } from '../calendar/time-mode.ts';
 import { minutesFromTime } from '../calendar/days.ts';
@@ -47,70 +48,61 @@ export interface StatePageOptions {
   schedules: Schedule[];
 }
 
+// One alliance's times as lines: the event's logo, its name and slot, and the hour.
+function timeLines(times: AllianceTime[]): string {
+  return '<div class="time-lines">' + times.map(time => {
+    const minute = minutesFromTime(time.startTimeUtc);
+    return '<div class="time-line">' +
+      `<span class="time-line-icon">${eventIcon(time.eventTypeId)}</span>` +
+      `<span class="time-line-name">${escapeForPage(eventTypeName(time.eventTypeId) + slotName(time))}</span>` +
+      `<span class="time-line-hour">${escapeForPage(time.startTimeUtc ? clockText(minute) : '—')}</span></div>`;
+  }).join('') + '</div>';
+}
+
+function part(title: string, body: string): string {
+  return `<section class="work-section"><div class="work-head"><h2>${escapeForPage(title)}</h2></div>${body}</section>`;
+}
+
+// The state's parts, for the State page; the page puts the SvS history after them.
 export function statePage(options: StatePageOptions): string {
   const mains = options.alliances
     .filter(alliance => !alliance.mainAllianceId)
     .sort((left, right) => left.sortOrder - right.sortOrder);
 
   if (!mains.length) {
-    return '<section class="admin-section glass"><h2>State ' + escapeForPage(options.stateNumber) +
-      '</h2><p class="admin-help">No alliances yet.</p></section>';
+    return part('State ' + options.stateNumber, '<p class="work-empty">No alliances yet.</p>');
   }
 
   const blocks = mains.map(main => {
     const academies = options.alliances
       .filter(alliance => alliance.mainAllianceId === main.id)
       .sort((left, right) => left.sortOrder - right.sortOrder);
-
-    const timesOfOne = (alliance: Alliance, isAcademy: boolean) => {
-      const times = timesOf(alliance.id, options.schedules);
-      if (!times.length) return '';
-      const rows = times.map(time => {
-        const minute = minutesFromTime(time.startTimeUtc);
-        return '<span class="small-row">' +
-          `<span class="small-row-dot" style="background:${escapeForPage(alliance.baseColor ?? '#6F9BE6')}"></span>` +
-          `<span class="small-row-text">${escapeForPage(eventTypeName(time.eventTypeId) + slotName(time))}</span>` +
-          `<span>${escapeForPage(time.startTimeUtc ? clockText(minute) : '—')}</span></span>`;
-      }).join('');
-      // The main alliance's name is already the section's heading, so only an
-      // academy names itself again.
-      return `<div class="alliance-block${isAcademy ? ' academy' : ''}">` +
-        (isAcademy
-          ? `<span class="alliance-name">${escapeForPage(alliance.tag + ' · ' + alliance.name)}</span>` : '') +
-        `${rows}</div>`;
-    };
-
-    return '<section class="admin-section glass">' +
-      `<h2>${escapeForPage(main.tag + ' · ' + main.name)}</h2>` +
-      timesOfOne(main, false) +
-      academies.map(academy => timesOfOne(academy, true)).join('') +
-      '</section>';
+    // The main alliance's name is already the part's title, so only an academy names
+    // itself again.
+    const ownTimes = timesOf(main.id, options.schedules);
+    const academyTimes = academies.map(academy => {
+      const times = timesOf(academy.id, options.schedules);
+      return times.length
+        ? `<h3 class="time-lines-name">${escapeForPage(academy.tag + ' · ' + academy.name)}</h3>${timeLines(times)}` : '';
+    }).join('');
+    return part(main.tag + ' · ' + main.name,
+      (ownTimes.length ? timeLines(ownTimes) : '') + academyTimes ||
+        '<p class="work-empty">This alliance has no times of its own yet.</p>');
   }).join('');
 
-  return `<section class="admin-section glass"><h2>State ${escapeForPage(options.stateNumber)}</h2>` +
-    `<p class="admin-help">${mains.length} alliance${mains.length === 1 ? '' : 's'}, ` +
+  return part('State ' + options.stateNumber,
+    `<p class="work-line">${mains.length} alliance${mains.length === 1 ? '' : 's'}, ` +
     `${options.alliances.length - mains.length} academ${options.alliances.length - mains.length === 1 ? 'y' : 'ies'}. ` +
-    'Times are the ones each alliance runs its own events at.</p></section>' + blocks;
+    'Times are the ones each alliance runs its own events at.</p>') +
+    `<div class="alliance-parts">${blocks}</div>`;
 }
 
 // One alliance's times on their own, for the My alliance page.
 export function allianceTimesPage(alliance: Alliance | undefined, schedules: Schedule[]): string {
   if (!alliance) {
-    return '<section class="admin-section glass"><h2>My alliance</h2>' +
-      '<p class="admin-help">Pick your alliance to see its times.</p></section>';
+    return '<div class="work-page">' + part('My alliance', '<p class="work-empty">Pick your alliance to see its times.</p>') + '</div>';
   }
   const times = timesOf(alliance.id, schedules);
-  const rows = times.map(time => {
-    const minute = minutesFromTime(time.startTimeUtc);
-    return '<div class="event-row"><span class="event-row-left">' +
-      `<span class="event-badge list">${eventIcon(time.eventTypeId)}</span>` +
-      `<span class="event-title">${escapeForPage(eventTypeName(time.eventTypeId) + slotName(time))}</span>` +
-      '</span>' +
-      `<span class="time-value">${escapeForPage(time.startTimeUtc ? clockText(minute) : '—')}</span></div>`;
-  }).join('');
-
-  return '<section class="admin-section glass">' +
-    `<h2>${escapeForPage(alliance.tag + ' · ' + alliance.name)}</h2>` +
-    (rows || '<p class="admin-help">This alliance has no times of its own yet.</p>') +
-    '</section>';
+  return '<div class="work-page">' + part(alliance.tag + ' · ' + alliance.name,
+    times.length ? timeLines(times) : '<p class="work-empty">This alliance has no times of its own yet.</p>') + '</div>';
 }

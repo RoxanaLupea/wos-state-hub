@@ -1,25 +1,27 @@
-/* Forms, as the old app drew them: a label over each field, two fields side by side
-   where they belong together, the buttons at the end. A form opens in place, where the
-   thing being edited is shown. */
-.edit-form { display: flex; flex-direction: column; gap: 12px; padding: 14px; margin: 8px 0; border-radius: 16px;
-  border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.04); }
-.edit-form h3 { margin: 0; font-size: 16px; font-weight: 800; }
-.form-field { display: flex; flex-direction: column; gap: 5px; }
-.form-field > span { font-size: 13px; font-weight: 700; color: var(--text-muted); }
-.form-field small { font-size: 12px; color: var(--text-faint); }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* A form opens in place, where the thing being edited is shown, drawn as
+   notes/page-style.md says: no box, its title line with Cancel and Save, each field's
+   name small and muted above it (see data-table.css). Two fields that belong together
+   sit side by side. */
+.edit-form { display: flex; flex-direction: column; gap: 14px; margin: 10px 0; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 16px; }
+/* A typed value in the site's glass field, as on Add account. */
 .text-input {
-  min-height: 44px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--glass-border);
-  background: rgba(255, 255, 255, 0.06); color: var(--text); width: 100%; box-sizing: border-box; font: inherit;
+  min-height: 42px; padding: 0 12px; border-radius: 11px; border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.06); color: var(--text); width: 100%; box-sizing: border-box;
+  font: inherit; font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; outline: none; color-scheme: dark;
 }
-textarea.text-input { min-height: 80px; padding: 10px 12px; resize: vertical; }
-.text-input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.text-input:hover { border-color: color-mix(in srgb, var(--text) 35%, transparent); }
+.text-input:focus { border-color: var(--section); background: rgba(255, 255, 255, 0.09); }
+.text-input::placeholder { color: var(--text-faint); font-weight: 600; }
+textarea.text-input { min-height: 84px; padding: 10px 12px; resize: vertical; line-height: 1.45; }
+/* A long list (people) opens the device's list; the field itself is the glass one, with
+   a small arrow. */
+select.text-input { appearance: none; -webkit-appearance: none; padding-right: 34px; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23B9C2D9' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center; }
 select.text-input option { color: #1C2333; }
-.check-option { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; }
-.form-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
-.form-actions .danger-button { margin-right: auto; }
-.form-message { font-size: 13px; color: var(--danger); min-height: 1em; }
-.ghost-button.small-button, .primary-button.small-button { min-height: 36px; }
+.form-message { font-size: 13px; color: var(--danger); min-height: 1em; margin: 0; }
+.edit-form .form-message:empty { display: none; }
 
 /* The pencil: the cue to edit or add, next to what it changes. */
 .pencil-button {

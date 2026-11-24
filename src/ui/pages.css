@@ -3,9 +3,10 @@
 
 .admin-page { padding: 0 12px 20px; gap: 12px; }
 .admin-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
-.admin-section { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
-.admin-section h2 { margin: 0; font-size: 18px; font-weight: 800; }
-.admin-help { margin: 0; font-size: 13px; color: var(--text-muted); line-height: 1.45; }
+.admin-section { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.admin-section h2 { margin: 0; font-size: 14px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
+  color: color-mix(in srgb, var(--section) 55%, var(--text-muted)); }
+.admin-help { margin: 0; font-size: 13px; font-weight: 600; color: var(--text-faint); line-height: 1.45; }
 .admin-list { display: flex; flex-direction: column; }
 .admin-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--glass-border); }
 .admin-item:first-child { border-top: none; }
@@ -42,3 +43,20 @@ a.primary-button { text-decoration: none; display: inline-flex; align-items: cen
 /* A short list of what a page will still hold. */
 .plan-list { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
 .plan-list li { font-size: 14px; font-weight: 600; color: var(--text-muted); line-height: 1.45; }
+
+/* An alliance's own event times as lines: the event's logo, its name and slot, and the
+   hour at the end. A quiet line between them, no box (notes/page-style.md). */
+.time-lines { display: flex; flex-direction: column; }
+.time-line { display: flex; align-items: center; gap: 12px; padding: 8px 0; }
+.time-line + .time-line { border-top: 1px solid rgba(255, 255, 255, 0.07); }
+.time-line-icon { width: 30px; height: 30px; flex: none; display: flex; align-items: center; justify-content: center; }
+.time-line-icon img, .time-line-icon svg { width: 30px; height: 30px; object-fit: contain; }
+.time-line-name { flex: 1; min-width: 0; font-size: 14.5px; font-weight: 700; }
+.time-line-hour { font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.time-lines-name { margin: 14px 0 2px; font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-muted); }
+/* The State page's alliances: one under the other on a phone, side by side on a computer. */
+.alliance-parts { display: grid; grid-template-columns: 1fr; gap: 34px; }
+@media (min-width: 1000px) {
+  .alliance-parts { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 44px 48px; }
+}

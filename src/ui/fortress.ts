@@ -327,7 +327,7 @@ function buildMatrix(
 
 function matrixTable(title: string, what: string, built: Matrix): string {
   if (!built.rows.length) {
-    return `<section class="admin-section glass"><h2>${escapeForPage(title)}</h2>` +
+    return `<section class="admin-section"><h2>${escapeForPage(title)}</h2>` +
       `<span class="admin-item-meta">No ${what} are assigned for this season yet.</span></section>`;
   }
 
@@ -348,7 +348,7 @@ function matrixTable(title: string, what: string, built: Matrix): string {
       `${cells}</tr>`;
   }).join('');
 
-  return `<section class="admin-section glass"><h2>${escapeForPage(title)}</h2>` +
+  return `<section class="admin-section"><h2>${escapeForPage(title)}</h2>` +
     '<div class="reward-matrix-wrap"><table class="reward-matrix">' +
     `<thead><tr><th class="alliance-column">Alliance</th>${headings}</tr></thead>` +
     `<tbody>${rows}</tbody></table></div></section>`;
@@ -362,7 +362,7 @@ export interface SeasonTotalsOptions {
 
 export function seasonTotals(options: SeasonTotalsOptions): string {
   const lastBattleDay = battleDayOf(options.seasonStart, FORT_PHASES);
-  return '<section class="admin-section glass"><h2>Season rewards</h2>' +
+  return '<section class="admin-section"><h2>Season rewards</h2>' +
     `<p class="admin-help">Season ${options.seasonNumber} · ` +
     `${escapeForPage(shortDayText(options.seasonStart) + ' – ' + shortDayText(lastBattleDay))}. ` +
     'How many of each reward every alliance wins across the season. ' +

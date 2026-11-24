@@ -2,10 +2,10 @@
 
 How a page is drawn, taken from the approved pages: the player page, the calendar and
 its Filters, Fortress Phase and Season, the Transfers Timeline. Every new page, a basic
-one too, is drawn this way from the start. The working pages (Invites, Records, My
-alliance, State, the event pages, Map, Admin) were built before this and do not follow
-it yet: their glass sections, label-over-field forms, browser dropdowns, filled buttons
-and filled choice pills are not to be copied.
+one too, is drawn this way from the start. Accepted by Roxanne on 24 Nov. The working
+pages (Invites, Records, My alliance, State, the event pages, Map, Admin) follow it
+through their shared parts in src/ui/data-table.ts: build new basic pages from those
+parts, never from glass sections, browser dropdowns, filled buttons or filled pills.
 
 ## Ground
 - The page lies on the background. No panel around a page, a part or a list, and never a
@@ -46,16 +46,32 @@ and filled choice pills are not to be copied.
 - A pick among a few is words, the picked one bold and lit, the others quiet (None /
   Lvl. 1 / Lvl. 2 / Lvl. 3; Main / Alt / Farm). Two ways to show the same thing show both
   words with the picked one lit in the page's colour (All | Ours).
-- On and off is the switch from Filters.
 - The pencil is the cue to edit in place, beside what it changes.
 - No count badges, and no labels or notes that were not asked for.
 
 ## Editing
-- In place, in the same space as what it changes, with a short animation. No form panel
-  and no label over every field.
-- A typed value goes in the glass field (Add account), at the size it is shown at. No
-  browser dropdowns.
+- In place, in the same space as what it changes, with a short animation where it
+  helps. No form panel and no box around a form.
+- A part that is only a form has Cancel and Save on its own title line. A form inside a
+  part has a short title in sentence case with Cancel and Save after it.
+- Each field's name sits small and muted above it, as a value's name does.
+- A typed value goes in the glass field (Add account). A date uses the device's date
+  picker inside that field.
+- A pick among up to ten is words (alliances by their tags). Only a longer list, such
+  as people, is the glass field with a small arrow that opens the device's list.
+- On and off is the switch from Filters, with its words beside it.
+- In a table, the row being changed keeps its place; its form opens on the line under
+  it, across the whole width: Cancel and Save first, then the fields.
 - Leaving with changes not saved asks Save or Cancel.
+
+## Tables
+- Working pages show lists of records as tables: column names small, faint capitals; a
+  quiet line between rows; no box. Cells stay on one line, except written notes.
+- On a phone a table wider than the screen scrolls sideways and fades at the edge with
+  more past it. Change is the pencil alone on a phone, the pencil and the word on a
+  computer.
+- On a computer a table is as wide as its columns, and the page starts on the same left
+  edge as the page names.
 
 ## Pop-ups
 - Solid, in the page's two colours: a line of the first colour along the top edge, the

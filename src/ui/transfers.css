@@ -1,11 +1,9 @@
 /* The transfer window: the date and its places at the top, then the people on the
-   list. The colours are the app's own — glass for the surfaces, the accent for what
-   has already happened. */
-
-.transfer-page { display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+   list. No boxes (notes/page-style.md): the page lies on the background, the accent
+   marks what has already happened. */
 
 .transfer-head {
-  display: flex; align-items: center; flex-wrap: wrap; gap: 18px 28px; padding: 14px 16px;
+  display: flex; align-items: center; flex-wrap: wrap; gap: 18px 28px;
 }
 .transfer-when { display: flex; flex-direction: column; gap: 2px; }
 .transfer-when strong { font-size: 20px; font-weight: 800; }
@@ -37,8 +35,7 @@
 .place-meter-bar b { flex: 1 1 0; background: rgba(255, 255, 255, 0.10); border-radius: 999px; }
 .place-meter-bar b.spent { background: var(--accent); }
 
-.candidate-list { padding: 4px 0; overflow: hidden; }
-.candidate-list.flat { background: none; border: none; box-shadow: none; padding: 0; }
+.candidate-list { overflow: hidden; }
 /* A past window lists only the people who arrived, so there is no status to show. */
 .candidate-list.arrived-list .candidate-row {
   grid-template-columns: minmax(0, 1fr) 62px 48px 56px 58px 70px;
@@ -47,9 +44,9 @@
 .candidate-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 62px 48px 56px 58px 70px 92px;
-  align-items: center; gap: 0; padding: 7px 16px;
+  align-items: center; gap: 0; padding: 8px 0;
   font-size: 13.5px; font-variant-numeric: tabular-nums;
-  border-top: 1px solid var(--glass-border);
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
 }
 .candidate-row:first-child { border-top: none; }
 .candidate-power, .candidate-fc, .candidate-state { text-align: right; }
@@ -58,7 +55,7 @@
 
 .candidate-head {
   font-size: 10.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
-  color: var(--text-faint); padding-top: 9px; padding-bottom: 9px;
+  color: var(--text-faint); padding-top: 0; padding-bottom: 8px;
 }
 .candidate-head span { color: var(--text-faint); }
 
@@ -82,11 +79,4 @@
 /* Above the state's power cap, so it stands out in the column it belongs to. */
 .candidate-power.over-cap { color: var(--danger); font-weight: 700; }
 
-.past-window { padding: 12px 0 4px; }
-.past-window-head {
-  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
-  padding: 0 16px 10px;
-}
-.past-window-head strong { font-size: 17px; font-weight: 800; }
 .past-window-count { font-size: 13px; font-weight: 700; color: var(--text-muted); font-variant-numeric: tabular-nums; }
-.past-window .admin-help { padding: 0 16px 10px; }

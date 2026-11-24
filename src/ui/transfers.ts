@@ -130,7 +130,7 @@ export function nextTransferPage(options: TransferPageOptions): string {
   const places = window ? placesOf(window.stateType) : null;
   const group = options.ourGroup;
 
-  const head = '<section class="transfer-head glass">' +
+  const head = '<section class="transfer-head">' +
     '<div class="transfer-when">' +
     `<strong>${escapeForPage(longDayText(dayFromText(options.date)))}</strong>` +
     (options.follows ? `<small>${escapeForPage(options.follows)}</small>` : '') +
@@ -161,19 +161,18 @@ export function nextTransferPage(options: TransferPageOptions): string {
     '</section>';
 
   const list = options.candidates.length
-    ? '<section class="candidate-list glass">' + candidateHead(true) +
+    ? '<section class="candidate-list">' + candidateHead(true) +
       options.candidates.map(one =>
         candidateRow(one, options.alliances, window ? window.powerCap : null, true)).join('') +
       '</section>'
     : '';
 
-  return '<div class="transfer-page">' + head + list + '</div>';
+  return head + list;
 }
 
 export function pastTransfersPage(options: PastTransfersOptions): string {
   if (!options.windows.length) {
-    return '<section class="admin-section glass"><h2>Past transfers</h2>' +
-      '<p class="admin-help">No closed window yet.</p></section>';
+    return '<div class="work-page"><p class="work-empty">No transfer window has closed yet.</p></div>';
   }
 
   const blocks = options.windows.map(one => {
@@ -181,18 +180,18 @@ export function pastTransfersPage(options: PastTransfersOptions): string {
     const arrived = arrivedIn(one.candidates, '');
     const people = one.candidates.filter(person => person.outcome === 'transferred');
 
-    return '<section class="past-window glass">' +
-      '<div class="past-window-head">' +
-      `<strong>${escapeForPage(longDayText(dayFromText(one.window.transferDate)))}</strong>` +
+    return '<section class="work-section past-window">' +
+      '<div class="work-head">' +
+      `<h2>${escapeForPage(longDayText(dayFromText(one.window.transferDate)))}</h2>` +
       `<span class="past-window-count">${arrived} of ${places.invitation + places.open}</span>` +
       '</div>' +
       (people.length
         ? '<div class="candidate-list flat arrived-list">' + candidateHead(false) +
           people.map(person =>
             candidateRow(person, options.alliances, one.window.powerCap, false)).join('') + '</div>'
-        : '<p class="admin-help">Nobody arrived.</p>') +
+        : '<p class="work-empty">Nobody arrived.</p>') +
       '</section>';
   }).join('');
 
-  return '<div class="transfer-page">' + blocks + '</div>';
+  return '<div class="work-page">' + blocks + '</div>';
 }

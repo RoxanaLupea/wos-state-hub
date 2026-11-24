@@ -1,58 +1,131 @@
-/* The working pages: glass sections holding a table of rows and the form that adds
-   one. They carry the information until each page is designed. */
-.work-page { display: flex; flex-direction: column; gap: var(--gap); min-height: 0; }
-.work-section { padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
-.work-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.work-head h2 { margin: 0; font-size: 20px; font-weight: 800; }
-.work-head > :not(h2):first-of-type { margin-left: auto; }
-.work-empty { margin: 0; color: var(--text-muted); font-weight: 600; }
-.work-line { margin: 0; color: var(--text-muted); font-weight: 600; }
+/* The working pages, drawn as notes/page-style.md says. The page lies on the background:
+   no panels, parts kept apart by space, each part named by a title in small spaced
+   capitals with its actions on the same line. They carry the information until each
+   page is designed. */
+.work-page { display: flex; flex-direction: column; gap: 34px; min-height: 0; width: 100%; max-width: 1180px;
+  margin: 0 auto; padding: 18px 16px 28px; box-sizing: border-box; }
+.work-section { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.work-head .form-actions { display: inline-flex; align-items: center; gap: 16px; }
+.work-head { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 18px; min-height: 22px; }
+.work-head h2 { margin: 0; font-size: 14px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
+  color: color-mix(in srgb, var(--section) 55%, var(--text-muted)); }
+.work-empty { margin: 0; font-size: 14px; font-weight: 600; color: var(--text-faint); }
+.work-line { margin: 0; font-size: 13px; font-weight: 600; color: var(--text-faint); }
 
-/* A table scrolls sideways inside its section rather than widening the page. */
-.table-scroll { overflow-x: auto; margin: 0 -4px; padding: 0 4px; }
+/* A table: names of the columns small and faint, a quiet line between rows, no box. It
+   scrolls sideways inside its part rather than widening the page. */
+.table-scroll { overflow-x: auto; margin: 0 -16px; padding: 0 16px; scrollbar-width: none; }
+.table-scroll::-webkit-scrollbar { display: none; }
+.table-scroll.more-right { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent); }
+.table-scroll.more-left { -webkit-mask-image: linear-gradient(to right, transparent, #000 40px); mask-image: linear-gradient(to right, transparent, #000 40px); }
+.table-scroll.more-left.more-right { -webkit-mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent); }
 .data-table { width: 100%; border-collapse: collapse; font-size: 14px; }
 .data-table th {
-  text-align: left; padding: 8px 10px; font-size: 12px; font-weight: 800; letter-spacing: 0.06em;
+  text-align: left; padding: 0 14px 8px 0; font-size: 11px; font-weight: 800; letter-spacing: 0.08em;
   text-transform: uppercase; color: var(--text-faint); white-space: nowrap;
-  border-bottom: 1px solid var(--glass-border);
 }
-.data-table td { padding: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.07); vertical-align: middle; font-weight: 600; }
-.data-table tr:last-child td { border-bottom: none; }
+.data-table td { padding: 10px 14px 10px 0; border-top: 1px solid rgba(255, 255, 255, 0.07); vertical-align: middle; font-weight: 700;
+  white-space: nowrap; }
+/* A row being changed is marked by a line in the page's colour at its start, and its
+   form sits under it across the whole width. */
+.data-table tr.editing td { border-top-color: color-mix(in srgb, var(--section) 55%, transparent); }
+.data-table tr.edit-row td { border-top: none; padding: 0 0 18px; white-space: normal; }
+.edit-row-form { position: sticky; left: 0; width: min(100%, calc(100vw - 32px)); max-width: 640px; }
+.edit-row-form .work-form { margin: 0; }
+.data-table th:last-child, .data-table td:last-child { padding-right: 0; }
 .data-table .number { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.data-table small { display: block; font-size: 12px; color: var(--text-faint); font-weight: 600; }
+.data-table small { display: block; margin-top: 2px; font-size: 12px; color: var(--text-faint); font-weight: 600; }
 .data-table .muted { color: var(--text-muted); }
-.data-table .cell-actions { display: flex; gap: 6px; justify-content: flex-end; }
+.data-table .cell-actions { display: flex; gap: 16px; justify-content: flex-end; }
+.data-table td.long { white-space: normal; min-width: 180px; font-weight: 600; color: var(--text-muted); }
 
-.work-fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; align-items: end; }
-.work-fields .form-field.wide { grid-column: 1 / -1; }
-.work-fields .check-option { min-height: 44px; }
-
-.row-action {
-  min-height: 32px; padding: 0 10px; border-radius: 10px; border: 1px solid var(--glass-border);
-  background: rgba(255, 255, 255, 0.06); color: var(--text); font: inherit; font-size: 13px; font-weight: 700;
-  cursor: pointer; white-space: nowrap;
+/* Actions: an icon and a word, no box. A row's action has its icon in the page's colour
+   with a soft glow, as Filters does; Cancel, Save and Remove run from their tint into
+   white, as on the player page: red for Cancel and Remove, green for Save. */
+.row-word { display: inline-flex; align-items: center; gap: 5px; padding: 4px 0; border: none; background: none;
+  font: inherit; font-size: 12.5px; font-weight: 800; color: var(--text-muted); white-space: nowrap; cursor: pointer; }
+.row-word .row-icon { width: 14px; height: 14px; flex: none; color: var(--section);
+  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--section) 55%, transparent)); }
+.row-word:hover { color: var(--text); }
+/* On a phone, Change is the pencil alone, the site's cue to edit, so a table's columns
+   keep their room. */
+@media (max-width: 699px) {
+  .row-word.change { padding: 4px 2px; }
+  .row-word.change span { display: none; }
+  .row-word.change .row-icon { width: 17px; height: 17px; }
 }
-.row-action.asking { border-color: rgba(242, 160, 160, 0.5); color: var(--danger); }
+.quiet-word { --word-tint: var(--section); display: inline-flex; align-items: center; gap: 6px; padding: 4px 0; border: none;
+  background: none; font: inherit; font-size: 12.5px; font-weight: 700; line-height: 1; letter-spacing: 0; text-transform: none;
+  color: var(--text-muted); white-space: nowrap; cursor: pointer; }
+.quiet-word .words { background: linear-gradient(90deg, color-mix(in srgb, var(--word-tint) 45%, var(--text)), var(--text));
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; padding: 2px 0; }
+.quiet-word .line-icon { width: 15px; height: 15px; flex: none; overflow: visible;
+  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--word-tint) 50%, transparent)); }
+.quiet-word.cancel, .quiet-word.remove { --word-tint: var(--notice-red); }
+.quiet-word.confirm { --word-tint: var(--save-green); }
+.quiet-word.remove .words { background: linear-gradient(90deg, color-mix(in srgb, var(--word-tint) 30%, var(--text-muted)), var(--text-muted));
+  -webkit-background-clip: text; background-clip: text; }
+.quiet-word.remove.asking .words { background: none; -webkit-text-fill-color: var(--danger); color: var(--danger); }
+.quiet-word:hover { opacity: 0.85; }
+.quiet-word:disabled { opacity: 0.35; cursor: default; }
 
-.work-choices { display: flex; gap: 6px; flex-wrap: wrap; }
-.work-choice {
-  min-height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--glass-border);
-  background: var(--glass); color: var(--text-muted); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
-}
-.work-choice.on { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+/* A form opens in place: its title line with Cancel and Save, then its fields, each
+   with its name small and muted above it, as a value's name is. No box. */
+.work-form { display: flex; flex-direction: column; gap: 14px; margin: 4px 0 0; }
+/* Cancel and Save stay on the title's line; a title too long for a phone wraps instead. */
+.form-head { display: flex; align-items: center; gap: 12px; }
+.form-head h3 { margin: 0; min-width: 0; font-size: 14.5px; font-weight: 800; color: var(--text); }
+.form-head .form-actions { flex: none; display: inline-flex; align-items: center; gap: 12px; }
+.work-fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 14px 16px; align-items: start; }
+.work-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.work-field.wide, .work-fields > .work-field:has(.pick-words) { grid-column: 1 / -1; }
+.work-field-name { font-size: 11.5px; font-weight: 700; color: var(--text-muted); }
+.work-switches { display: flex; flex-wrap: wrap; gap: 12px 28px; }
+.switch-field { flex-direction: row; align-items: center; gap: 10px; }
+.switch-words { font-size: 13.5px; font-weight: 700; color: var(--text); }
+.work-form .form-message { margin: 0; }
+.work-form .form-message:empty { display: none; }
+
+/* A pick among a few: words, the picked one bold and lit in the page's colour into
+   white, the others quiet. */
+.pick-words { display: flex; flex-wrap: wrap; gap: 2px 18px; }
+.pick-word { padding: 4px 0; border: none; background: none; font: inherit; font-size: 13.5px; font-weight: 700;
+  color: var(--text-faint); white-space: nowrap; cursor: pointer; }
+.pick-word:hover { color: var(--text); }
+.pick-word.on { font-weight: 800; background: linear-gradient(90deg, color-mix(in srgb, var(--section) 60%, var(--text)), var(--text));
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+/* Choices above a table, such as how it is sorted, drawn the same way. */
+.work-choices { display: flex; flex-wrap: wrap; gap: 2px 16px; }
+.work-choice { padding: 3px 0; border: none; background: none; font: inherit; font-size: 12.5px; font-weight: 700;
+  color: var(--text-faint); white-space: nowrap; cursor: pointer; }
+.work-choice:hover { color: var(--text); }
+.work-choice.on { font-weight: 800; background: linear-gradient(90deg, color-mix(in srgb, var(--section) 60%, var(--text)), var(--text));
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 
 /* A plotted map: dots on a square of the state. */
 .map-plot { width: 100%; max-width: 640px; aspect-ratio: 1; border-radius: var(--radius-small);
-  background: rgba(255, 255, 255, 0.04); border: 1px solid var(--glass-border); }
+  background: rgba(255, 255, 255, 0.03); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08); }
 .map-keys { display: flex; gap: 14px; flex-wrap: wrap; }
 .map-key { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--text-muted); }
 .map-key i { width: 12px; height: 12px; border-radius: 3px; }
 .plan-text { line-height: 1.55; font-weight: 600; }
-.work-form .form-message { margin: 0; }
-.work-form .form-message:empty { display: none; }
-.data-table td:first-child { white-space: nowrap; }
+
 /* "Check history": the way from one run's result to the whole history. */
 .history-link {
   align-self: flex-start; margin-top: 10px; min-height: 40px; padding: 0 4px; border: none; background: none;
   color: var(--accent); font: inherit; font-size: 14px; font-weight: 800; cursor: pointer;
+}
+
+/* On a computer the page starts on the same left edge as the page names above it, as
+   the approved pages do. Tables are only as wide as their columns, and forms keep a
+   width a field can be read at. */
+@media (min-width: 1000px) {
+  .work-page { gap: 44px; max-width: 1180px; margin: 0; padding: 24px 0 40px; overflow-y: auto; flex: 1 1 auto; }
+  .table-scroll { margin: 0; padding: 0; }
+  .data-table { width: auto; min-width: min(100%, 640px); }
+  .data-table th, .data-table td { padding-right: 36px; }
+  .data-table th:last-child, .data-table td:last-child { padding-right: 0; }
+  .work-fields { max-width: 760px; }
 }

@@ -3,7 +3,7 @@
 // admins; an alliance's own results by its alliance managers. The SvS and TAL history
 // collected from the game before the site existed is shown with them.
 import { escapeForPage } from './escape.ts';
-import { dataTable, rowForm, text, type Column, type Field } from './data-table.ts';
+import { dataTable, formSection, rowForm, text, type Column, type Field } from './data-table.ts';
 import type { Row } from '../data/records.ts';
 import { allianceTag } from '../data/alliances.ts';
 import { eventTypeName } from '../data/catalog.ts';
@@ -118,7 +118,7 @@ const SVS_COLUMNS: Column[] = [
 // The whole SvS history, for the State page.
 export function svsHistorySection(context: WorkContext): string {
   const rows = svsRows(context);
-  return '<section class="work-section glass" id="svs-history"><div class="work-head"><h2>SvS history</h2></div>' +
+  return '<section class="work-section" id="svs-history"><div class="work-head"><h2>SvS history</h2></div>' +
     (rows ? dataTable(SVS_COLUMNS, rows, 'No SvS is recorded yet.') : '<p class="work-empty">Loading…</p>') +
     '</section>';
 }
@@ -427,11 +427,18 @@ export function showdownScoreOf(context: WorkContext, runDate: string): Showdown
 // My alliance · Results: what the alliance keeps, its ratings and tiers, its history.
 // ---------------------------------------------------------------------------
 
+// An alliance as a part's title: its tag and name, so an academy whose tag differs only
+// in capitals (DVL, dvl) is told apart in the capitals of the title.
+function allianceTitleOf(context: WorkContext, allianceId: string): string {
+  const alliance = context.alliances.find(one => one.id === allianceId);
+  return alliance ? `${alliance.tag} · ${alliance.name}` : allianceTag(allianceId);
+}
+
 export function allianceResultsPage(context: WorkContext): string {
   const allianceId = context.myAllianceId;
   const wrap = (body: string) => '<div class="work-page">' + body + '</div>';
   const section = (title: string, body: string) =>
-    `<section class="work-section glass"><div class="work-head"><h2>${escapeForPage(title)}</h2></div>${body}</section>`;
+    `<section class="work-section"><div class="work-head"><h2>${escapeForPage(title)}</h2></div>${body}</section>`;
   if (!allianceId) return wrap(section('Results', '<p class="work-empty">Pick your alliance on your page to see its results.</p>'));
   const records = context.rowsOf('alliance_records');
   const all = context.rowsOf('results');
@@ -449,9 +456,10 @@ export function allianceResultsPage(context: WorkContext): string {
     { label: 'Championship tier', cell: row => text(row.championship_tier) },
     { label: 'Championship Stars', cell: row => text(row.championship_stars), isNumber: true }
   ];
+  const allianceTitle = allianceTitleOf(context, allianceId);
   const kept = canEdit
-    ? rowForm({
-        form: 'alliance-records', key: allianceId, title: `${allianceTag(allianceId)} keeps`,
+    ? formSection({
+        form: 'alliance-records', key: allianceId, title: allianceTitle,
         fields: [
           ...ALLIANCE_RESULT_EVENTS.map(eventTypeId => ({
             name: 'keep_' + eventTypeId, label: eventTypeName(eventTypeId), kind: 'checkbox' as const,
@@ -463,12 +471,12 @@ export function allianceResultsPage(context: WorkContext): string {
           { name: 'championship_stars', label: 'Championship Stars', kind: 'number', value: record?.championship_stars ?? '' }
         ]
       })
-    : dataTable(facts, record ? [record] : [], 'Nothing is recorded yet.');
+    : section(allianceTitle, dataTable(facts, record ? [record] : [], 'Nothing is recorded yet.'));
 
   const histories = ALLIANCE_RESULT_EVENTS.filter(eventTypeId => !switchedOff.includes(eventTypeId)).map(eventTypeId =>
     section(eventTypeName(eventTypeId),
       allianceRunsTable(eventTypeId, (resultsOf(context, eventTypeId) ?? []).filter(one => one.row.alliance_id === allianceId))));
-  return wrap(section(allianceTag(allianceId), kept) + histories.join(''));
+  return wrap(kept + histories.join(''));
 }
 
 // ---------------------------------------------------------------------------
@@ -478,7 +486,7 @@ export function allianceResultsPage(context: WorkContext): string {
 export function opponentNotesPage(context: WorkContext, hidesOthers: boolean, hidesAll: boolean): string {
   const wrap = (body: string) => '<div class="work-page">' + body + '</div>';
   const section = (title: string, body: string, beside = '') =>
-    `<section class="work-section glass"><div class="work-head"><h2>${escapeForPage(title)}</h2>${beside}</div>${body}</section>`;
+    `<section class="work-section"><div class="work-head"><h2>${escapeForPage(title)}</h2>${beside}</div>${body}</section>`;
   const mayRead = context.isAdmin || context.alliances.some(one => context.leads(one.id));
   if (!mayRead) return wrap(section('Opponents', '<p class="work-empty">Opponent notes are for R4s and R5s.</p>'));
   const notes = context.rowsOf('opponent_notes');
@@ -490,7 +498,7 @@ export function opponentNotesPage(context: WorkContext, hidesOthers: boolean, hi
       String(right.written_at ?? '').localeCompare(String(left.written_at ?? '')));
   const columns: Column[] = [
     { label: 'Opponent', cell: row => text(row.opponent_tag) + `<small>#${text(row.opponent_state)}</small>` },
-    { label: 'Note', cell: row => text(row.note) },
+    { label: 'Note', cell: row => text(row.note), isLong: true },
     { label: 'By', cell: row => text(row.alliance_id ? allianceTag(String(row.alliance_id)) : '') +
       `<small>${row.written_at ? escapeForPage(shortDayText(dayFromText(String(row.written_at).slice(0, 10)))) : ''}</small>` }
   ];
@@ -499,12 +507,12 @@ export function opponentNotesPage(context: WorkContext, hidesOthers: boolean, hi
     `<button type="button" class="work-choice${hidesAll ? ' on' : ''}" data-opponent-toggle="all">Hide all notes</button></div>`;
   return wrap(
     section('Opponents', dataTable(columns, shown, hidesAll ? 'Opponent notes are hidden.' : 'No note yet.'), toggles) +
-    (context.myAllianceId && context.leads(context.myAllianceId) ? section('New note', rowForm({
-      form: 'opponent-note', key: context.myAllianceId, title: 'A note on an opponent', submitLabel: 'Add',
+    (context.myAllianceId && context.leads(context.myAllianceId) ? formSection({
+      form: 'opponent-note', key: context.myAllianceId, title: 'New note', submitLabel: 'Add',
       fields: [
         { name: 'opponent_state', label: 'State', kind: 'number', isRequired: true },
         { name: 'opponent_tag', label: 'Alliance tag', kind: 'text', isRequired: true },
         { name: 'note', label: 'Note', kind: 'textarea', isRequired: true }
       ]
-    })) : ''));
+    }) : ''));
 }

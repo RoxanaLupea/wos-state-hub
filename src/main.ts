@@ -651,11 +651,11 @@ function fortressSeasonMarkup(): string {
 function fortressRewardsMarkup(): string {
   if (Number.isNaN(firstFortBattleDay)) return '';
   const place = fortPlaceOf(view.fortressBattleDay ?? playedFortBattleDay());
-  return seasonTotals({
+  return '<div class="work-page">' + seasonTotals({
     seasonNumber: place.season,
     seasonStart: place.seasonStart,
     assignments: fortAssignments.filter(one => one.season === place.season)
-  });
+  }) + '</div>';
 }
 
 // How many transfer dates sit side by side at once.
@@ -757,21 +757,20 @@ function nextTransferMarkup(): string {
   const date = window?.transferDate ??
     transferDates.find(one => one >= todayText) ?? '';
   if (!date) return '';
-  const work = person ? `<div class="work-page">${transferWorkSections(workContext(), date)}</div>` : '';
-  return nextTransferPage({
+  const work = person ? transferWorkSections(workContext(), date) : '';
+  return '<div class="work-page">' + nextTransferPage({
     date,
     window,
     candidates: window ? candidatesOf(window.id) : [],
     alliances,
     ourGroup: groupOfState(bigGroupsOf(nextWindowGroups), Number(STATE_NUMBER)) ?? null,
     follows: FOLLOWS_TEXT[followsOfDate(date)] ?? ''
-  }) + work;
+  }) + work + '</div>';
 }
 
 function pastTransfersMarkup(): string {
   const todayText = textFromDay(todayNumber());
   const past = transferWindows.filter(one => one.transferDate < todayText);
-  if (!past.length) return '';
   return pastTransfersPage({
     windows: past.map(one => ({ window: one, candidates: candidatesOf(one.id) })),
     alliances
@@ -1044,6 +1043,7 @@ function draw(): void {
   app.classList.toggle('sheet-open', view.isPanelOpen && view.openPage === 'calendar');
   watchScrollEdges(app);
   showOpenTab(app);
+  watchTableEdges(app);
   syncHistory();
   rememberChoices();
 }
@@ -1145,6 +1145,19 @@ function showOpenTab(app: HTMLElement): void {
   }
 }
 
+// A working page's table that is wider than a phone scrolls sideways; it fades at the
+// edge with more past it, so a cut-off column reads as more to see, not as broken.
+function watchTableEdges(app: HTMLElement): void {
+  for (const box of Array.from(app.querySelectorAll<HTMLElement>('.table-scroll'))) {
+    const update = () => {
+      box.classList.toggle('more-left', box.scrollLeft > 1);
+      box.classList.toggle('more-right', box.scrollLeft + box.clientWidth < box.scrollWidth - 1);
+    };
+    update();
+    box.addEventListener('scroll', update, { passive: true });
+  }
+}
+
 // The boxes that scroll on their own. Each fades at an edge while there is more to
 // scroll past it, instead of cutting the rows off.
 const FADING_BOXES = '.event-page-body, .day-panel, .calendar-panel, .calendar-panel .weeks, .admin-page';
@@ -1237,8 +1250,8 @@ function drawPage(app: HTMLElement): void {
       view.openPage === 'fortress' && subPage === 'season' ? fortressSeasonMarkup() :
       view.openPage === 'fortress' && subPage === 'rewards' ? fortressRewardsMarkup() :
       view.openPage === 'state'
-        ? statePage({ stateNumber: STATE_NUMBER, alliances: alliancesStillHere(alliances), schedules }) +
-          svsHistorySection(workContext()) :
+        ? '<div class="work-page">' + statePage({ stateNumber: STATE_NUMBER, alliances: alliancesStillHere(alliances), schedules }) +
+          svsHistorySection(workContext()) + '</div>' :
       view.openPage === 'alliance' && subPage === 'times'
         ? allianceTimesPage(view.myAllianceId ? allianceById(view.myAllianceId) : undefined, schedules) :
       view.openPage === 'transfers' && subPage === 'timeline' ? predictionsMarkup() :
@@ -1376,6 +1389,35 @@ function handleClicks(event: MouseEvent): void {
   const target = event.target as HTMLElement | null;
   if (!target) return;
   if (answerWhichAccount(target)) return;
+
+  // A pick shown as words, and a switch, in a form: they set the form's hidden value in
+  // place, without drawing the page again (what is typed in the form stays).
+  const pickWord = target.closest<HTMLElement>('[data-pick]');
+  if (pickWord) {
+    const field = pickWord.closest('.work-field');
+    const input = field?.querySelector<HTMLInputElement>('input[type="hidden"]');
+    if (field && input) {
+      input.value = pickWord.dataset.pick ?? '';
+      Array.from(field.querySelectorAll<HTMLElement>('[data-pick]')).forEach(one => {
+        const isPicked = one === pickWord;
+        one.classList.toggle('on', isPicked);
+        one.setAttribute('aria-pressed', String(isPicked));
+      });
+      field.closest('form')?.querySelector<HTMLElement>('[data-form-message]')?.replaceChildren();
+    }
+    return;
+  }
+  const switchButton = target.closest<HTMLElement>('[data-switch]');
+  if (switchButton) {
+    const input = switchButton.closest('.work-field')?.querySelector<HTMLInputElement>('input[type="hidden"]');
+    if (input) {
+      const isOn = input.value !== 'on';
+      input.value = isOn ? 'on' : '';
+      switchButton.classList.toggle('on', isOn);
+      switchButton.setAttribute('aria-pressed', String(isOn));
+    }
+    return;
+  }
 
   // The menu under the player's name opens and closes in place; a tap anywhere else
   // while it is open only closes it.
@@ -1790,7 +1832,8 @@ async function reloadTransfers(): Promise<void> {
 function submitWorkingForm(formName: string, key: string, values: FormData, userId: string, accountIds: string[] = []): void {
   const text = (name: string) => String(values.get(name) ?? '').trim();
   const liveForm = () => document.querySelector<HTMLFormElement>(`form[data-form="${formName}"]`);
-  for (const button of Array.from(liveForm()?.querySelectorAll('button') ?? [])) button.disabled = true;
+  const buttonsOf = (form: HTMLFormElement | null) => Array.from(form?.querySelectorAll('button') ?? []);
+  for (const button of buttonsOf(liveForm())) button.disabled = true;
   const saving = accountIds.length === 0 ? saveWorkingForm(formName, key, text, values, userId) : (async () => {
     let tables: string[] = [];
     for (const id of accountIds) {
@@ -1803,7 +1846,7 @@ function submitWorkingForm(formName: string, key: string, values: FormData, user
     .then(async tables => { view.editing = null; await rereadTables(...tables); draw(); })
     .catch(problem => {
       const form = liveForm();
-      for (const button of Array.from(form?.querySelectorAll('button') ?? [])) button.disabled = false;
+      for (const button of buttonsOf(form)) button.disabled = false;
       const message = form?.querySelector<HTMLElement>('[data-form-message]');
       if (message) message.textContent = problem instanceof Error ? problem.message : String(problem);
     });
@@ -1852,6 +1895,13 @@ function handleSubmits(event: SubmitEvent): void {
   const values = new FormData(form);
   const text = (name: string) => String(values.get(name) ?? '').trim();
   const message = form.querySelector<HTMLElement>('[data-form-message]');
+  // A required pick shown as words has no browser check of its own.
+  const missingPick = Array.from(form.querySelectorAll<HTMLInputElement>('input[type="hidden"][data-required]'))
+    .find(one => !one.value);
+  if (missingPick) {
+    if (message) message.textContent = `Pick one under ${missingPick.dataset.required}.`;
+    return;
+  }
   const signedIn = person;
   if (WORKING_FORMS.includes(form.dataset.form ?? '')) {
     const formName = form.dataset.form as string;

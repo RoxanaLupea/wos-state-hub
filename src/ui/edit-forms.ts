@@ -5,6 +5,7 @@ import './forms.css';
 import { escapeForPage } from './escape.ts';
 import type { Schedule, DateChange } from '../calendar/occurrences.ts';
 import type { Alliance } from '../data/alliances.ts';
+import { formField, formHead } from './data-table.ts';
 
 export const PENCIL_ICON = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
   ' stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
@@ -17,21 +18,19 @@ export function pencilButton(edit: string, label: string): string {
 }
 
 function field(label: string, name: string, value: string, extra = ''): string {
-  return `<label class="form-field"><span>${escapeForPage(label)}</span>` +
+  return `<label class="work-field"><span class="work-field-name">${escapeForPage(label)}</span>` +
     `<input class="text-input" name="${name}" value="${escapeForPage(value)}"${extra}></label>`;
 }
 
 function formEnd(): string {
-  return '<p class="form-message" data-form-message></p>' +
-    '<div class="form-actions"><button type="button" class="ghost-button small-button" data-cancel-edit>Cancel</button>' +
-    '<button type="submit" class="primary-button small-button">Save</button></div></form>';
+  return '<p class="form-message" data-form-message></p></form>';
 }
 
 // The owner's form for an event's dates: its first date, how often it repeats, how
 // long it lasts and its times. Moving the first date moves every date after it.
 export function scheduleForm(schedule: Schedule): string {
-  return `<form class="edit-form" data-form="edit-schedule" data-key="${escapeForPage(schedule.id)}">` +
-    '<h3>Every date of this event</h3>' +
+  return `<form class="edit-form work-form" data-form="edit-schedule" data-key="${escapeForPage(schedule.id)}">` +
+    formHead('Every date of this event') +
     '<div class="form-row">' +
     field('First date', 'firstDate', schedule.firstDate, ' type="date" required') +
     field('Repeats every (days)', 'repeatEveryDays', schedule.repeatEveryDays ? String(schedule.repeatEveryDays) : '', ' inputmode="numeric"') +
@@ -41,16 +40,16 @@ export function scheduleForm(schedule: Schedule): string {
     '</div><div class="form-row">' +
     field('Ends at (UTC)', 'endTimeUtc', schedule.endTimeUtc ?? '', ' placeholder="none"') +
     '<span></span></div>' +
-    `<label class="check-option"><input type="checkbox" name="datesAreEstimated"${schedule.datesAreEstimated ? ' checked' : ''}>` +
-    ' The dates are an estimate until confirmed</label>' +
+    formField({ name: 'datesAreEstimated', label: 'The dates are an estimate until confirmed', kind: 'checkbox',
+      value: schedule.datesAreEstimated }) +
     formEnd();
 }
 
 // An alliance's own time for an event where the alliance picks it (Bear, Crazy Joe,
 // Foundry, Canyon, Mercenary bosses).
 export function allianceTimeForm(schedule: Schedule, title: string): string {
-  return `<form class="edit-form" data-form="edit-alliance-time" data-key="${escapeForPage(schedule.id)}">` +
-    `<h3>${escapeForPage(title)}</h3><div class="form-row">` +
+  return `<form class="edit-form work-form" data-form="edit-alliance-time" data-key="${escapeForPage(schedule.id)}">` +
+    formHead(title) + '<div class="form-row">' +
     field('Starts at (UTC)', 'startTimeUtc', schedule.startTimeUtc ?? '', ' placeholder="00:00" required') +
     field('Ends at (UTC)', 'endTimeUtc', schedule.endTimeUtc ?? '', ' placeholder="none"') +
     '</div>' + formEnd();
@@ -61,8 +60,8 @@ export function allianceTimeForm(schedule: Schedule, title: string): string {
 export function dateChangeForm(
   scheduleId: string, originalDate: string, change: DateChange | undefined, isEstimated: boolean
 ): string {
-  return `<form class="edit-form" data-form="edit-date" data-key="${escapeForPage(scheduleId + '|' + originalDate)}">` +
-    '<h3>This date only</h3>' +
+  return `<form class="edit-form work-form" data-form="edit-date" data-key="${escapeForPage(scheduleId + '|' + originalDate)}">` +
+    formHead('This date only') +
     '<div class="form-row">' +
     field('Moved to', 'movedToDate', change?.movedToDate ?? '', ' type="date"') +
     field('Starts at (UTC)', 'startTimeUtc', change?.startTimeUtc ?? '', ' placeholder="as usual"') +
@@ -70,11 +69,9 @@ export function dateChangeForm(
     field('Ends at (UTC)', 'endTimeUtc', change?.endTimeUtc ?? '', ' placeholder="as usual"') +
     '<span></span></div>' +
     (isEstimated
-      ? `<label class="check-option"><input type="checkbox" name="isConfirmed"${change?.confirmedDate ? ' checked' : ''}>` +
-        ' This date is confirmed in game</label>'
+      ? formField({ name: 'isConfirmed', label: 'This date is confirmed in game', kind: 'checkbox', value: Boolean(change?.confirmedDate) })
       : '') +
-    '<label class="form-field"><span>Note for this date</span>' +
-    `<textarea class="text-input" name="note">${escapeForPage(change?.note ?? '')}</textarea></label>` +
+    formField({ name: 'note', label: 'Note for this date', kind: 'textarea', value: change?.note ?? '' }) +
     formEnd();
 }
 
@@ -84,22 +81,15 @@ export function fortForm(
   creditedTo: string
 ): string {
   const sorted = alliances.slice().sort((left, right) => left.sortOrder - right.sortOrder);
-  const options = sorted
-    .map(one => `<option value="${escapeForPage(one.id)}"${one.id === allianceId ? ' selected' : ''}>` +
-      `${escapeForPage(one.tag)}</option>`).join('');
   // A fort can be taken for someone else: its reward then counts for that alliance, or
   // for the whole state. Left as it is, it counts for the holder.
-  const creditOptions = '<option value="">The holder</option>' +
-    `<option value="shared"${creditedTo === 'shared' ? ' selected' : ''}>The whole state</option>` +
-    sorted.filter(one => !one.mainAllianceId)
-      .map(one => `<option value="${escapeForPage(one.id)}"${one.id === creditedTo ? ' selected' : ''}>` +
-        `${escapeForPage(one.tag)}</option>`).join('');
-  return `<form class="edit-form" data-form="edit-fort" data-key="${escapeForPage(key)}">` +
-    `<h3>${escapeForPage(title)}</h3><div class="form-row">` +
-    `<label class="form-field"><span>Held by</span><select class="text-input" name="allianceId" required>` +
-    `<option value="">Pick an alliance</option>${options}</select></label>` +
-    `<label class="form-field"><span>Reward counts for</span><select class="text-input" name="creditedTo">` +
-    `${creditOptions}</select></label>` +
+  const creditChoices: [string, string][] = [['', 'The holder'], ['shared', 'The whole state'],
+    ...sorted.filter(one => !one.mainAllianceId).map(one => [one.id, one.tag] as [string, string])];
+  return `<form class="edit-form work-form" data-form="edit-fort" data-key="${escapeForPage(key)}">` +
+    formHead(title) + '<div class="work-fields">' +
+    formField({ name: 'allianceId', label: 'Held by', kind: 'select', value: allianceId, isRequired: true,
+      choices: [['', 'Pick an alliance'], ...sorted.map(one => [one.id, one.tag] as [string, string])] }) +
+    formField({ name: 'creditedTo', label: 'Reward counts for', kind: 'select', value: creditedTo, choices: creditChoices }) +
     field('Battle at (UTC)', 'battleTime', battleTime ?? '', ' placeholder="not set"') +
     '</div>' + formEnd();
 }
