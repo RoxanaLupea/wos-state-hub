@@ -24,6 +24,19 @@ Then read, in full: notes/what-this-is.md, notes/design-decisions.md,
 notes/visual-language.md and notes/rules-and-open-items.md. On a draft branch, also
 read the notes file it names (for profile-draft: notes/profile-draft.md).
 
+## The flow (24 Nov: she wants speed; Claude runs the flow itself)
+
+- Data, database and how-it-works fixes: build on main, check (types, tests, the
+  database read back), then in a few lines say what changed and what is open, and ask
+  once to push and run.
+- UI: build, render, check against notes/review-checklist.md, show phone screenshots
+  first. Her "ok" accepts it; it goes live with the next push.
+- Every rule she sets goes into this file or the notes at once, and goes out with the
+  next push, so a new chat has it.
+- Tell her when to start a new chat: right after a push with notes/handoff.md up to
+  date, once the chat has run long (many screenshots or big files read) or a large piece
+  of work is finished. Long chats are where mistakes creep in.
+
 ## What needs Roxanne's yes
 
 - Pushing, and writing to the database. Before either, walk her through what changed
