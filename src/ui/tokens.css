@@ -33,9 +33,8 @@
   --text-muted: #B9C2D9;
   --text-faint: #8F9AB8;
 
-  /* Accents. --brand-accent is the app's own blue, the one the logo is written in;
-     a section never changes it. --accent is the working accent and a section may
-     set its own. */
+  /* Accents. --brand-accent is the app's own blue. --accent is the working accent and a
+     section may set its own. */
   --brand-accent: #AFC8F5;
   /* Each section has its own colour, all with the same lightness and amount of colour so
      only the tint changes (24 Nov). --section is the first colour: the 1458, the open
@@ -46,8 +45,11 @@
   --section: #8BB7F4;
   --section-ink: #0B2240;
   --section-second: color-mix(in srgb, var(--section) 22%, #FFFFFF);
-  --accent: var(--section);
-  --accent-ink: var(--section-ink);
+  /* The working accent stays the site's own blue on pages whose section has no colour
+     of its own yet (the player page among them); a section with its own colour sets it
+     below, so its buttons are in its colour. */
+  --accent: var(--brand-accent);
+  --accent-ink: #1C2333;
   /* What a pop-up is drawn on, so the page under it does not show through. */
   --popup-ground: #121A2B;
   --danger: #F2A0A0;
@@ -94,6 +96,7 @@ body {
 :root[data-section="fortress"] { --section: #B0AAF1; --section-ink: #1C1838; }
 :root[data-section="transfers"] { --section: #F0D99D; --section-ink: #3A2D0C; }
 :root[data-section="event"][data-event="tyrant"] { --section: #9DDCF0; --section-ink: #072B38; }
+:root[data-section="calendar"], :root[data-section="event"][data-event="tyrant"] { --accent: var(--section); --accent-ink: var(--section-ink); }
 
 /* An event's own colours, taken from its screens in the game. --event-mark is the
    one colour the section uses for everything it marks; --event-mark-light is the
@@ -117,6 +120,7 @@ body {
 /* Fortress Battles, from its event page in the game: the violet of its sky for the
    section's colour. The page keeps the site's own background. */
 .page[data-section="fortress"] {
+  --accent: #A39BEB; --accent-ink: #1C1838;
   --event-mark: #9C94E6;
   --event-mark-light: #C4BEF5;
   --event-ink: #1C1838;
