@@ -112,14 +112,15 @@ const view = {
   pickedYearRun: null as string | null,
   // The first of the transfer dates on screen, and what is filtered out.
   predictionFirstDate: '',
-  // Which battles' transfers are listed. At least one of the two stays on.
+  // Which battles' transfers are listed. At least one of the two stays on. The
+  // Timeline opens on SvS only, All and Groups (Roxanne, 24 Nov).
   predictionShowsSvs: true,
-  predictionShowsSunfire: true,
+  predictionShowsSunfire: false,
   // 'all' or 'mine': the whole list, or our own group.
   predictionScope: 'all',
   // What is typed in the state box, kept as written.
   // True to show each group as one row rather than its subgroups.
-  predictionMergesGroups: false,
+  predictionMergesGroups: true,
   // The run whose own page is open.
   openEventKey: null as string | null,
   // The tab last opened (Timeline is the first). An event without that tab opens on

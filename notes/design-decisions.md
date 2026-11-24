@@ -109,8 +109,8 @@ there before discussing it again.
 - The way back to the next transfer is a small glass tab with its date at the bottom
   of the dates, on the side the next transfer is on (left or right, arrow pointing
   that way), shown only while the next transfer is out of sight (23 Nov). The
-  controls are "All | Ours" and "Ranges | Groups", All and Ranges first and chosen
-  by default, each showing both choices with the chosen one lit in the page's
+  controls are "All | Ours" and "Ranges | Groups", All and Ranges first; the Timeline
+  opens on SvS only, All and Groups (Roxanne, 24 Nov), each showing both choices with the chosen one lit in the page's
   parchment colour, like the ticked boxes (23 Nov). A group is made of the ranges
   that share a furnace cap and a generation.
 - The date columns scroll as one sheet, like a spreadsheet: no scrollbar per column,
