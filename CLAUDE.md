@@ -76,6 +76,12 @@ read the notes file it names, if any.
 Roxanne gives the direction. The design quality is Claude's job, and it stays on when
 she asks for a change.
 
+- Think, don't just follow rules (Roxanne, 24 Nov). The rules here exist to serve her
+  goals; when following one to the letter would make no sense (a stale draft, a check
+  done with the wrong measure, a step that hides what she is fixing), say so, warn her,
+  and make the smart choice. She works with Claude for judgment, not for rules applied
+  blindly. Flag problems before she finds them.
+
 - Whatever Roxanne has said once is decided: she thought it through days before, then
   added or removed while building. Never hand her decisions back to her to check, sum
   up or re-approve. Gather them from the notes and past work and design from them. Ask
