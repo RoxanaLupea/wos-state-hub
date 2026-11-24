@@ -1,6 +1,8 @@
 /* Every page is a column: the section tabs at the top, then the page itself filling
    what is left. */
 .page { display: flex; flex-direction: column; flex: 1 0 auto; padding-bottom: 14px; }
+/* Panels never touch each other: there is always the usual gap between two of them. */
+.page > .glass + .glass { margin-top: var(--gap); }
 
 /* How the calendar and the day's details sit beside each other. On a phone they
    stack and the details slide up over the calendar; from 1000px they sit side by

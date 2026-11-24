@@ -67,8 +67,9 @@ would disagree, the later one won and the earlier is gone.
 
 - An event's information is split into tabs. Which tabs depends on the event: Info,
   Predictions, Rewards, Missions.
-- Filters are category chips carrying a shown-of-total count. An arrow on a chip
-  opens a tick list of the events inside it.
+- Filters are "Show on the calendar": a sheet on a phone, a panel on a computer, each
+  category with a switch and its events under it (24 Nov; replaced the chips).
+- Panels are never stuck to each other: there is always a gap between two (24 Nov).
 - Ticking a filter must not shift the rest of the month. A week grows only when its
   bars no longer fit.
 - A pencil is the cue to edit or add. Editing happens in place, where the thing is
