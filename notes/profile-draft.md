@@ -1,6 +1,6 @@
 # Player profile draft (branch profile-draft)
 
-Read notes/handoff-23-nov.md first: it says how to restore this branch and where the work stands.
+History: this was the draft of 23 Nov. Its work is now on main; where things stand is in notes/handoff.md.
 
 This branch holds everything done after commit c146c03 on main. None of it is approved as a whole. Roxanne is very unhappy with the profile design on this branch: the options were built literally from her words instead of designed, faults were left for her to find, and she could not push any of it.
 

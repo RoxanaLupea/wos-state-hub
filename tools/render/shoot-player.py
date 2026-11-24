@@ -9,7 +9,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent))
 import shoot
 from playwright.sync_api import sync_playwright
 shoot.serve(sys.argv[1], shoot.PORT)
-session = json.dumps({"user": {"id": "00000000-0000-0000-0000-00000000aaaa", "user_metadata": {"full_name": "Roxa"}}})
+session = json.dumps({"user": {"id": "00000000-0000-0000-0000-00000000aaaa", "user_metadata": {"full_name": "TestPlayer"}}})
 steps = json.loads(sys.argv[2])
 # Game pictures cannot be fetched here: those saved in data/avatars (by the file name in
 # the picture's address, as .jpg) are answered from there.

@@ -2,7 +2,7 @@
  "accounts": [
   {
    "id": "00000000-0000-0000-0000-00000000aaaa",
-   "in_game_name": "Roxa",
+   "in_game_name": "TestPlayer",
    "in_game_id": "123456789",
    "alliance_id": "dvl",
    "language": "en",
@@ -21,7 +21,7 @@
  "game_accounts": [
   {
    "id": 1,
-   "in_game_name": "Roxa",
+   "in_game_name": "TestPlayer",
    "in_game_id": "123456789",
    "alliance_id": "dvl",
    "player_power": 1250000000,
@@ -42,7 +42,7 @@
    "id": 2,
    "owner_id": "00000000-0000-0000-0000-00000000aaaa",
    "kind": "alt",
-   "in_game_name": "Roxa2",
+   "in_game_name": "TestAlt",
    "in_game_id": "87654321",
    "alliance_id": "top",
    "player_power": 640000000,
@@ -59,7 +59,7 @@
    "id": 11,
    "owner_id": "00000000-0000-0000-0000-00000000aaaa",
    "kind": "farm",
-   "in_game_name": "RoxaFarm",
+   "in_game_name": "TestFarm",
    "in_game_id": "234567891",
    "alliance_id": "dvl",
    "player_power": 48000000,
@@ -69,7 +69,7 @@
    "id": 13,
    "owner_id": "00000000-0000-0000-0000-00000000aaaa",
    "kind": "farm",
-   "in_game_name": "RoxaFarm2",
+   "in_game_name": "TestFarm2",
    "in_game_id": "245678912",
    "alliance_id": "top",
    "player_power": 31000000,
