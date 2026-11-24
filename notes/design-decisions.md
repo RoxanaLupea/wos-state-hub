@@ -55,6 +55,8 @@ there before discussing it again.
 - A whole page has one first colour and one second colour, everywhere: its accent, its
   buttons, what it marks (current phase, holders, our group) and its pop-ups. No other
   accent colour on the page (Roxanne, 24 Nov).
+  Fortress's second colour is 55% of its violet with white, a pale lilac, because the
+  usual mix read as plain white (Roxanne, 24 Nov).
   Accepted 24 Nov: Calendar #8BB7F4, Fortress #B0AAF1 (gold and cyan at the same
   strength looked too dark to read and are being lightened).
 - The open section shows its logo (the Calendar has its own, calendar.png) and its full
