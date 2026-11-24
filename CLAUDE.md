@@ -33,6 +33,9 @@ read the notes file it names (for profile-draft: notes/profile-draft.md).
 - When she says to push, everything goes live: main and whatever is on the draft branch
   together, so she sees it all on the site. Draft or not makes no difference to a push
   she asked for (24 Nov).
+- Her "ok" or "looks good" on a draft accepts it: it is merged into main and goes live
+  with the next push, without asking about it again. Never split a push by branch and
+  leave accepted work behind (24 Nov).
 
 ## How the work is done
 
