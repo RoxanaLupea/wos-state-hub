@@ -555,9 +555,11 @@ Game accounts (from 23 Nov, still holds)
   own table. Built in supabase/accounts-from-game.sql: each player's alliance is kept in
   game_player_alliances (per in-game ID), with a counter only while a change is under
   way; a read that shows nothing new writes nothing.
-- The state boards are read every hour for our state and for every state a site account
-  is in (24 Nov), so a player in another state before a transfer sees all their ranks;
-  the page asks only for its accounts' places on them (supabase/state-ranks.sql).
+- The state boards (24 Nov): our state's are read every hour. Every other state a site
+  account is in is read once a day, with no daily copies kept; a player's own refresh of
+  an account there reads that state's boards straight away and counts as that day's
+  read. So a player in another state before a transfer sees all their ranks. The page
+  asks only for its accounts' places on the boards (supabase/state-ranks.sql).
 - The profile uses both reads (24 Nov): troops, heroes and leaderboards from the
   player's own read (twice a day); name, picture, power, alliance and rank from
   whichever is newer, the player's own read or their alliance's roster (every hour for
