@@ -683,6 +683,9 @@ Game accounts (from 23 Nov, still holds)
 - How results are shown (SvS, Sunfire presidents, TAL ranks and MVPs). A working
   version is built: a Results tab on the event, and My alliance · Results.
 - SvS results (Roxanne, 24 to 25 Nov). Her words, nothing added:
+  - "The only record and result is the current one." The event's timeline is the one she
+    designed; she never asked for a history drawn as a timeline (an earlier chat wrote
+    that into this file in her name).
   - Oracle's Prep screen is the good example (data/captures/svs.md): follow it. Its VS
     makes the match clear. The opponent is named as the opponent, once.
   - Our style: the logo colours, upper and lower case played against each other. First of
