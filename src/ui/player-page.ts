@@ -1,57 +1,21 @@
 // The page behind "Sign in". Signed out, it is the sign-in page: a fixed title,
 // signing in with Discord (first, because every alliance already uses it) or Google,
-// and "Continue as a guest". Signed in, it is the player's own page: their in-game
-// details (name, id, power, alliance and troop tiers, picked in place as on the old
-// registration forms) for the game account picked in the menu under their name: their
-// main or an alt. Under it, all their accounts, where more are added.
+// and "Continue as a guest". Signed in, it is the player's own page: the account they
+// are on (or the farm they opened from the photo bar), as the game shows it; before
+// their first account, and from "Add account" in the menu, the way to add one.
 import './pages.css';
 import './forms.css';
 import { escapeForPage } from './escape.ts';
-import type { Alliance } from '../data/alliances.ts';
-import type { SignedInPerson } from '../data/auth.ts';
-import type { Row } from '../data/records.ts';
-import {
-  accountViewToggle, accountsSection, partPencil, playerProfile, profileParts, sectionTitle, type GameRead, type LookUpState, type TroopKind
-} from './player-profile.ts';
+import { addAccountPage, playerProfile, type AddOptions, type ProfileOptions } from './player-profile.ts';
 
 export interface PlayerPageOptions {
-  alliances: Alliance[];
-  myAllianceId: string | null;
-  person: SignedInPerson | null;
+  signedIn: boolean;
   stateNumber: string;
-  homeState: number;
-  now: number;
-  // What the game says about each account, by in-game id; the skill levels of an id's
-  // Exalted troops (null where never set); and what a typed id is in the game.
-  games: ReadonlyMap<string, GameRead>;
-  skills: (id: string) => Partial<Record<TroopKind, number | null>>;
-  lookUp: LookUpState;
-  // The reminder over the troops before SvS and Tyrant, or empty.
-  skillNote: string;
-  // The person's row in accounts as saved, and with the changes not saved yet laid
-  // over it; null until it is read.
-  savedRow: Row | null;
-  draftRow: Row | null;
-  // Which parts of the page are open for editing ('info', 'troop-infantry' and so on),
-  // and which of those have changes not saved yet.
-  editing: ReadonlySet<string>;
-  changed: ReadonlySet<string>;
-  // Set while the player is leaving with changes not saved: the question to show.
+  // The account shown, or, while an account is being added, the form for it.
+  profile: ProfileOptions | null;
+  adding: AddOptions | null;
+  // Set while the player is leaving with changes not saved.
   leavePrompt: boolean;
-  // All the person's accounts (main, alts, farms) and the one they are on; the farm (or
-  // new account) open under the row, with its changes laid over it.
-  accounts: Row[];
-  activeId: number | 'new';
-  openListed: number | 'new' | null;
-  // Whether that account is open for editing (a new one always is) or only shown.
-  editingListed: boolean;
-  listedDraft: Row;
-  listedChanged: boolean;
-  // The main and the alts shown one at a time, or side by side; null on a phone, where
-  // there is only one at a time and no choice.
-  accountView: 'one' | 'both' | null;
-  // Set while the player is asked whether to remove an alt or a farm: its name.
-  removePrompt: string | null;
 }
 
 function signInPage(stateNumber: string): string {
@@ -63,80 +27,13 @@ function signInPage(stateNumber: string): string {
 }
 
 export function playerPage(options: PlayerPageOptions): string {
-  const person = options.person;
-  if (!person) return signInPage(options.stateNumber);
-
-  // The main and the alts: with more than one, a switch on a computer chooses between one
-  // at a time (tapping another swaps it in) and all side by side, each with its info and
-  // troops. A phone shows one at a time.
-  // Side by side, only the account the player is on can have a part open; a pencil in
-  // another column puts them on that account first.
-  const switchable = options.accounts.filter(one => one.kind !== 'farm');
-  const hasAlt = switchable.length > 1;
-  const sideBySide = options.accountView === 'both' && hasAlt;
-  const kindOf = (row: Row | null) => hasAlt && row ? (row.kind === 'main' ? 'Main' : 'Alt') : '';
-  // The One | Both switch sits in the Player info title's left corner.
-  const toggle = hasAlt && options.accountView ? accountViewToggle(options.accountView) : '';
-  const gameOf = (row: Row | null) => row ? options.games.get(String(row.in_game_id ?? '')) ?? null : null;
-  const common = { alliances: options.alliances, homeState: options.homeState, now: options.now };
-  const activeOptions = {
-    ...common, saved: options.savedRow, draft: options.draftRow, game: gameOf(options.savedRow),
-    skills: options.skills(String(options.savedRow?.in_game_id ?? '')),
-    editing: options.editing, changed: options.changed, kindLabel: kindOf(options.savedRow), skillNote: options.skillNote,
-    swapTo: sideBySide ? [] : switchable.filter(row => row.id !== options.activeId), viewToggle: toggle
-  };
-  const otherOptions = (row: Row) => ({
-    ...common, saved: row, draft: row, game: gameOf(row), skills: options.skills(String(row.in_game_id ?? '')),
-    editing: options.editing.size > 0 ? new Set(['elsewhere']) : new Set<string>(), changed: new Set<string>(),
-    kindLabel: kindOf(row), swapTo: [], viewToggle: ''
-  });
-  // Side by side: one Player info title and one Troop tiers title, each section split
-  // between the accounts; each half has its own pencils.
-  // Before the first account, the page is the way to add it.
-  let accounts = '';
-  if (options.savedRow === null) accounts = '';
-  else if (!sideBySide) accounts = playerProfile(activeOptions);
-  else {
-    const halves = switchable.map(row => {
-      const isActive = row.id === options.activeId;
-      return { row, isActive, parts: profileParts(isActive ? activeOptions : otherOptions(row)) };
-    });
-    const half = (one: typeof halves[number], body: string) =>
-      `<div class="split-half${one.isActive ? ' active' : ''}" data-account-column="${escapeForPage(String(one.row.id))}">${body}</div>`;
-    const row = (bodies: string) => `<div class="split-row" style="--account-count: ${halves.length}">${bodies}</div>`;
-    accounts = '<section class="player-section">' + sectionTitle('Player info', 'info', false, false, 'h2', toggle) +
-      row(halves.map(one => half(one, `<div class="half-corner">${one.parts.corner}</div>` +
-        (one.parts.infoPencil ? partPencil('info', 'Player info', one.parts.infoEditing) : '') + one.parts.info)).join('')) +
-      '</section><section class="player-section"><h2 class="player-section-title">Troop tiers</h2>' +
-      row(halves.map(one => half(one, one.parts.troops)).join('')) + '</section>';
-  }
-
-  return '<div class="player-page admin-page">' + accounts +
-    accountsSection({
-      accounts: options.accounts, games: options.games, alliances: options.alliances, homeState: options.homeState, now: options.now,
-      openListed: options.savedRow === null ? 'new' : options.openListed, editing: options.editingListed,
-      draft: options.listedDraft, changed: options.listedChanged, lookUp: options.lookUp,
-      pencil: options.editingListed || options.editing.size === 0
-    }) +
-
-    '<section class="player-section"><h2 class="player-section-title">Still to build here</h2><ul class="plan-list">' +
-    '<li>Your heroes</li>' +
-    '<li>Your own results and statistics</li></ul></section></div>' +
-    (options.leavePrompt ? leavePromptHtml() : '') +
-    (options.removePrompt ? removePromptHtml(options.removePrompt) : '');
+  if (!options.signedIn) return signInPage(options.stateNumber);
+  const body = options.adding ? addAccountPage(options.adding) : options.profile ? playerProfile(options.profile) : '';
+  return `<div class="player-page admin-page">${body}</div>` + (options.leavePrompt ? leavePromptHtml() : '');
 }
 
-// Asked when the player leaves a part (or the page) with changes not saved: Save keeps
-// them, Cancel drops them. Tapping beside the question closes it and stays.
-// Removing an alt or a farm asks first, in the same box as leaving with changes.
-function removePromptHtml(name: string): string {
-  return '<div class="leave-prompt" data-remove-answer="cancel"><div class="leave-prompt-box glass" role="dialog" aria-modal="true">' +
-    `<p class="leave-prompt-text">Remove ${escapeForPage(name)}?</p>` +
-    '<div class="leave-prompt-actions">' +
-    '<button type="button" class="ghost-button" data-remove-answer="cancel">Cancel</button>' +
-    '<button type="button" class="danger-button" data-remove-answer="remove">Remove</button></div></div></div>';
-}
-
+// Asked when the player leaves the skill levels with changes not saved: Save keeps them,
+// Cancel drops them. Tapping beside the question closes it and stays.
 function leavePromptHtml(): string {
   return '<div class="leave-prompt" data-leave-answer="stay"><div class="leave-prompt-box glass" role="dialog" aria-modal="true">' +
     '<p class="leave-prompt-text">Save your changes before you leave?</p>' +

@@ -30,9 +30,13 @@ for kind, parts in shots.items():
             p = portrait(native, ROMAN[tier])
             p.save(REPO + f'{kind}-t{tier}.png')
             print(kind, tier, best)
-# Helios and Exalted: only the saved 120 x 147 pictures exist; their art is scaled up.
+# Helios and Exalted: the screenshots stop at T10, so only the first 120 x 147 pictures
+# exist (kept in sources/, as they were before any of this work); their art is scaled up.
+# Never read them from public/images: that is this script's own output, and reading it
+# back sharpened the art again on every run.
+SOURCES = __import__('os').path.join(__import__('os').path.dirname(__file__), 'sources') + '/'
 for kind in shots:
     for t in ('helios', 'exalted'):
-        old = Image.open(REPO + f'{kind}-{t}.png').convert('RGBA')
+        old = Image.open(SOURCES + f'{kind}-{t}.png').convert('RGBA')
         flat = Image.new('RGBA', old.size, (200, 205, 230, 255)); flat.alpha_composite(old)
         portrait(flat.convert('RGB').resize((NW, NH), Image.LANCZOS), 'XI' if t == 'helios' else 'XII').save(REPO + f'{kind}-{t}.png')

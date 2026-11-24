@@ -14,6 +14,13 @@ export async function readGamePlayers(ids: string[]): Promise<Row[]> {
   return (data ?? []) as Row[];
 }
 
+// The state's top-100 boards (game_states), for each player's ranks on them.
+export async function readGameStates(stateNumbers: number[]): Promise<Row[]> {
+  const { data, error } = await database().from('game_states').select('state_number, data').in('state_number', stateNumbers);
+  if (error) throw new Error(error.message);
+  return (data ?? []) as Row[];
+}
+
 // What a typed ID is in the game, so the player sees it is the right account before
 // adding it. Null when the game has no such player.
 export interface LookedUp { name: string; avatar: string | null; power: number | null; state: number | null; alliance: string | null; furnace: number | null }

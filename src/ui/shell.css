@@ -12,7 +12,18 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.10);
 }
 .top-bar #meButton { min-height: 36px; padding: 0 12px; }
-.me-initial { display: none; }
+/* The picture of the game account the person is on, before its name; the same pictures
+   in the menu under the name. */
+.me-button { display: inline-flex; align-items: center; gap: 8px; }
+.top-bar .me-button:has(.me-pic) { padding-left: 4px; }
+.me-button .me-name { min-width: 0; }
+.me-pic, .choice-pic { flex: none; display: flex; align-items: center; justify-content: center; overflow: hidden;
+  background: var(--glass-strong); box-shadow: 0 0 0 1px var(--glass-border); font-weight: 800; color: var(--text-muted); }
+.me-pic { width: 26px; height: 26px; border-radius: 7px; font-size: 13px; }
+.choice-pic { width: 36px; height: 36px; border-radius: 10px; font-size: 16px; }
+.account-choice { --alliance-colour: var(--accent); }
+.account-choice.open { border-color: var(--alliance-colour); background: color-mix(in srgb, var(--alliance-colour) 20%, transparent); }
+.account-choice.open .choice-pic { color: var(--text); box-shadow: 0 0 0 2px var(--accent); }
 /* A small mark on the name when something on the player's own page needs them (the
    skill levels of Exalted troops). */
 .me-button { position: relative; }
@@ -238,11 +249,6 @@
   border: 1px solid transparent; border-radius: 10px; background: none; color: var(--text); font: inherit; font-size: 15px;
   font-weight: 700; text-align: left; cursor: pointer; }
 .account-choice:hover, .account-menu-item:hover { background: rgba(255, 255, 255, 0.08); }
-.account-choice { --alliance-colour: var(--accent); }
-.account-choice.open { border-color: var(--alliance-colour); background: color-mix(in srgb, var(--alliance-colour) 20%, transparent); }
-.account-choice-logo { height: 34px; width: 30px; object-fit: contain; flex: none; }
-.account-choice-tag { flex: none; width: 30px; text-align: center; font-family: var(--tag-font); font-size: 12px; font-weight: 800;
-  color: var(--alliance-colour); }
 .account-choice-text { display: flex; flex-direction: column; min-width: 0; }
 .account-choice-kind { font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
 .account-choice-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
