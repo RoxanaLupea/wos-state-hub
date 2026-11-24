@@ -367,52 +367,84 @@ there before discussing it again.
   Treasure Hunt Drill, Dreamscape Memory (daily missions, list not sent yet) and Wild
   Brawl. More are added as the owner sends them.
 
-### Player page (23 Nov)
+### Player page (settled 23-24 Nov, mockup version 34 in tools/mockups/player-page-v2)
 
-- Built from the ideas of the old Tyrant and SvS registration forms, in the site's own
-  look. Not a form and not panels: open sections (Player info, Troop tiers, Your
-  accounts) with a title over each and a thin line between them.
-- Each part shows what is saved. Its pencil (bare, in the part's top right corner, lit
-  in the accent colour while open) opens its choices in place. Only one part is open
-  at a time: while one is open the other pencils are hidden. A part with nothing saved
-  is always open.
-- Save under an open part, lit only while it has changes. Leaving with changes (another
-  page, another account, sign out, closing the part) asks "Save your changes before you
-  leave?" with Cancel and Save.
-- Player info: Name, ID, Power with an M/B switch, Foundry power typed and shown as a
-  full number (around 15,000; it can stay empty). Shown as the alliance's logo and tag,
-  the name with the ID under it, and the two powers. The old forms' checks carry over:
-  name 3-16 characters, ID 9 digits from 1 or 2 or 8 digits from 7, 8 or 9, power
-  100-999 M or 1-99.999 B.
-- Alliance: main alliances on one line, their academies smaller on the line under,
-  each under its own main alliance. A tile shows the logo (once the alliance has one)
-  and the tag, no name: names belong on the alliance's own page. A picked tile glows in
-  the colour only that alliance has (DVL purple, TOP blue, from their logos);
-  academies take their main alliance's colour for now.
-- Troop tiers: Infantry, Lancer and Marksmen side by side with a line between them, on
-  a phone too. Each shows its tier portrait large, its FC badge on the corner, and the
-  tier and skill level under it. Open, a troop shows FC5 to FC10 (FC5 is the lowest
-  accepted, fixed; when the game releases new FC levels the oldest are dropped and the
-  range moves up, in src/data/fc-levels.ts), each with its badge from the game and,
-  once picked, its badge's colour (red FC1-3, blue FC4-5, violet FC6-8, gold FC9-10).
-  Under the levels the tier as portrait tiles from the camp: Tier 10 (X) unless Helios
-  (XI) or Exalted (XII). Exalted only on FC10. Only on Exalted, the skill level as one
-  small toggle: None (the default), Lvl. 1, Lvl. 2, Lvl. 3. On a computer the open
-  troop's column widens and narrows back once saved or closed; on a phone it takes the
-  whole width under the other two.
-- Game accounts: a person has one main and any number of alts and farms. An alt is a
-  full account (own alliance, power, troops, later heroes and results); farms have the
-  same details but no troops and are not accounts to switch to. The account the
-  person is on is picked in the menu under their name in the top bar (main, alts, then
-  Profile and Sign out); it is the one filled in on every page, and its alliance is
-  their alliance. Profile opens this page.
-- Your accounts, on every account's profile: all the person's accounts side by side
-  (alliance logo, Main/Alt/Farm, name, ID, power), the one they are on lit. Tapping a
-  main or an alt switches to it; tapping a farm opens its details under the row; Add
-  opens an empty one. Every account's details have a Main | Alt | Farm toggle. There is
-  always one main: the main's own toggle cannot change, another account picked as Main
-  makes the old main an alt. A new alt, or a farm made an alt, puts the person on it to
-  fill in its troops; the account they are on made a farm puts them on the main.
+The page shows one game account, mostly straight from the game data. The player only sets
+the skill levels of Exalted troops and adds their other accounts.
+
+Header
+- The account's picture, a little taller than the text beside it, the text centred on
+  it, both from the same left edge. No FC badge on the picture.
+- Beside it: the name with the rank (R4) after it as a small label tinted in the
+  alliance's colour; the ID; the power with its state rank (#2) small after it; the
+  Foundry power on its own line under the power, its logo centred on the number.
+- The alliance as a small badge in the top right: its logo with the tag close under it.
+- "Updated 53 min ago" and Refresh: at the end of the page on a phone, in the top right
+  under the badge on a computer. Refresh is lit when it can be used, otherwise it shows
+  the time it can be used again.
+- Under the header, the photos of the person's other accounts (never the one shown).
+  Tapping one swaps to it. On a phone 7 photos fill the line from edge to edge; fewer
+  keep that size. On a computer the photos have a fixed size. Adding an account is
+  "Add account" in the menu under the name in the top bar.
+- The top bar and the menu under the name show the account's picture with its name.
+
+Troops
+- The three troop types centred in their columns: the tier portrait with its FC badge
+  overlapping its corner, the name in capitals (Infantry, Lancer, Marksmen) at one size
+  so the widest is as wide as the picture (on a computer at most 15px), and under it
+  the tier written T10, T6 (no space), Helios or Exalted, and for Exalted "· Lvl. 3".
+  No red. Below T10, the tier's portrait where the repo has it.
+- "Update troops" with a down arrow under them, on the left, in the alliance's colour,
+  only on the person's own account and only with Exalted troops. It opens each Exalted
+  troop with the None / Lvl. 1 / Lvl. 2 / Lvl. 3 toggle, then Cancel and Save (Save lit
+  only with changes). Leaving with changes asks "Save your changes before you leave?"
+  with Cancel and Save.
+- A note asking for skill levels (never set, or before SvS and Tyrant) sits above
+  "Update troops", on the left.
+
+Arena team
+- The game's own hero cards (public/images/heroes/cards/, cleaned of the level, stars,
+  S mark and red dot); the site writes on the card the level ("Lv. 80", white with a
+  dark outline, bottom left) and the stars over the bottom: five six-petal stars, one
+  petal lit per step, from the top petal counter-clockwise. The card's class badge stays.
+- Under each card: "Widget Lvl. 10". All five lines share one size so the widest fits.
+- A hero with no card yet keeps a drawn card in the game's card colours.
+
+Leaderboards
+- Short names that fit one line: the power boards keep "Power" (Hero Power, Chief Gear
+  Power, Pet Power...), and Labyrinth, Exploration and Island are one word. Each board
+  is centred in its column: the name, then the value with its rank small after it.
+- More than nine boards with a rank: these nine, in three rows of three: Hero Power,
+  Chief Gear Power, Chief Charm Power; Pet Power, Expert Power, Research Power;
+  Labyrinth, Exploration, Island. Hero Equip Power takes Hero Power's place when Hero
+  Power has no rank.
+- Nine or fewer: all the boards the account has a rank on, in that order of groups, the
+  Labyrinth's row last. Boards with no rank are left out.
+- The Labyrinth always starts its row on the left, with "Labyrinth stages" and a down
+  arrow under it, which opens its six areas. With only the Labyrinth: no stages line,
+  its total in that place and its areas always shown.
+- Kill Count, Furnace level and Migrant Score are not on the profile (Migrant Score
+  belongs with transfers).
+
+Colours
+- The alliance's colour, softened: the section titles mixed with the quiet text
+  colour, "Update troops" and "Labyrinth stages" mixed lighter, and the rank label.
+  DVL uses its purple accent; an academy its main alliance's, lighter; an alliance
+  without an accent its base colour.
+
+On a computer
+- The page centred and wider. Troops and the Arena team side by side, each only as wide
+  as its pictures, the Arena team ending at the page's right edge. The troop block
+  (pictures and their two lines) is exactly as tall as the hero block (cards and their
+  one line); hero cards 20px apart.
+- The nine leaderboards on one line in their three groups with a wider gap between
+  groups; the Labyrinth's stages open on one line under the whole row.
+
+Game accounts (from 23 Nov, still holds)
+- A person has one main and any number of alts and farms. An alt is a full account;
+  farms have no troops and are not accounts to switch to. The account the person is on
+  is picked in the menu under their name in the top bar; it is the one filled in on
+  every page, and its alliance is their alliance.
 
 ### Player data from the game (23 Nov)
 
@@ -446,6 +478,9 @@ there before discussing it again.
 
 ## Open
 
+- Player page: whether the menu under the name still lists the account the person is on.
+- Player page: names for the 13 hero cards not matched yet (9 epic, 4 rare), and hero
+  gear (the data has every arena hero's four pieces and their levels).
 - State page leaderboards: which of the 26 lead. The owner named The Labyrinth (total),
   Total Pet Power, Total Expert Power and Exploration Stage as needed; the rest is to be
   worked out later.

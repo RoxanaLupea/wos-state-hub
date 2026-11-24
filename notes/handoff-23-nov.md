@@ -270,3 +270,17 @@ and alliance pages all still without a layout, though the data for them exists.
 - The R4s' page for setting members' skill levels (My alliance > Members).
 - Troop tier colours (notes/profile-draft.md).
 - Where the refresh and "Updated" sit on the page.
+
+## 10. Update, 24 Nov: where the work stands now
+
+- The player page layout is settled on the phone and the computer: mockup version 34,
+  tools/mockups/player-page-v2/build_v34.py (screenshots v34-*). Every decision is in
+  notes/design-decisions.md under "Player page (settled 23-24 Nov)". Sections 3 to 5
+  above describe the older version 2 and are replaced by it.
+- The real page code is not changed yet; it follows the mockup.
+- New in the repo: hero cards from the game, cleaned (public/images/heroes/cards/,
+  made by tools/mockups/player-page-v2/clean_hero_cards.py); the camp class icons and
+  Marksmen T1-T9 portraits (public/images/troops/); data/captures/heroes.md and
+  troops.md updated.
+- Still to come from her: Infantry and Lancer Camp screenshots for tiers I-X; names for
+  the 13 unmatched hero cards. Hero gear is for later.
