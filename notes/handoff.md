@@ -52,9 +52,9 @@ Written on 24 Nov (second chat), waiting for Roxanne's yes, to run after the pus
   copies of name, power, alliance and tiers go from game_accounts and accounts, and
   account_alt_accounts goes. Each player's alliance is kept in game_player_alliances,
   with a counter only while a change is under way; reads write only when something
-  changes;
-  confirm_alliance_move lets the owner or an admin confirm a move. Players read their own
-  accounts' game data even while not state members.
+  changes. confirm_alliance_move and dismiss_alliance_move (3 days) are for the
+  account's owner, its R4s and admins. Players read their own accounts' game data even
+  while not state members.
 - Order: push the site first (it already reads the game data and works without the new
   table), then run the file.
 
@@ -63,8 +63,8 @@ Written on 24 Nov (second chat), waiting for Roxanne's yes, to run after the pus
 - Built on main on 24 Nov, not pushed yet: every page reads name, power and alliance
   from the game data; My alliance's Members comes from the rosters; "my alliance" is the
   account's kept alliance (game_player_alliances). game-accounts-from-game.sql is deleted.
-- Still to do: showing a move as "X > Y" with a Confirm button (design-decisions.md),
-  UI work on the draft branch.
+- On profile-draft: a move shown as "X > Y" with Dismiss and Confirm, after 2 hours
+  (design-decisions.md). Not approved yet.
 - The computer layout of the header badge (it is still top right there).
 
 ## 5. Open

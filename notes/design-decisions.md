@@ -505,8 +505,13 @@ Game accounts (from 23 Nov, still holds)
   in a row. A move back before then stops the counter. The player, or an admin, can
   also confirm the move on the site, which replaces the alliance straight away.
 - While a move is under way, the account shows both alliances, the one it is counted in
-  and the one the game shows now, as "X > Y", with a Confirm button that makes the move
-  at once (24 Nov).
+  and the one the game shows now, as "X > Y", with Dismiss and Confirm (24 Nov). Confirm
+  makes the move at once. It shows only once the account has been in the new alliance
+  for 2 hours, so short hops never show (24 Nov). Dismiss keeps the account in its own
+  alliance and hides the move for 3 days; if it has not gone back by then, the move is
+  made (24 Nov). A move back clears it; a move to a third alliance starts a new count.
+  The account's owner, the R4s of its alliance and admins can Confirm or Dismiss. There
+  is no separate way to set an alliance by hand: Confirm and Dismiss cover both ways.
 - An account on the site is only a link from a login to a member the game data already
   has (24 Nov): it holds whose account it is and whether it is a main, alt or farm.
   Name, power, alliance, rank and everything else the game gives are kept in one place,

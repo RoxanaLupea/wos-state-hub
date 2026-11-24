@@ -63,19 +63,21 @@ export async function setSkillLevel(id: string, troop: string, level: number | n
 }
 
 // Each player's alliance (supabase/accounts-from-game.sql): it changes only after 24
-// hours in a row somewhere new, or when the player or an admin confirms the move. While
-// the game shows the account somewhere else, the moving columns say where and since when.
+// hours in a row somewhere new, or when the move is confirmed; a dismissed move waits 3
+// days. While the game shows the account somewhere else, the moving columns say where and
+// since when.
 export async function readPlayerAlliances(ids: string[]): Promise<Row[]> {
   const numbers = ids.filter(id => /^\d+$/.test(id)).map(Number);
   if (numbers.length === 0) return [];
   const { data, error } = await database().from('game_player_alliances')
-    .select('player_id, state_number, alliance_tag, moving_state, moving_tag, moving_since').in('player_id', numbers);
+    .select('player_id, state_number, alliance_tag, moving_state, moving_tag, moving_since, dismissed_until').in('player_id', numbers);
   if (error) throw new Error(error.message);
   return (data ?? []) as Row[];
 }
 
-// The player (or an admin) confirms the move: the alliance becomes the one the game shows now.
-export async function confirmAllianceMove(id: string): Promise<void> {
-  const { error } = await database().rpc('confirm_alliance_move', { player_number: Number(id) });
+// The account's owner, its R4s or an admin confirms the move (the alliance becomes the
+// one the game shows now) or dismisses it (the alliance stays for 3 days).
+export async function settleAllianceMove(id: string, choice: 'confirm' | 'dismiss'): Promise<void> {
+  const { error } = await database().rpc(choice + '_alliance_move', { player_number: Number(id) });
   if (error) throw new Error(error.message);
 }

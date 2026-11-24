@@ -11,8 +11,10 @@
 -- Each account also gets its alliance and its temporary alliance (owner, 24 Nov). The
 -- temporary alliance is where the game shows the account now. When a read shows it
 -- somewhere new, a counter starts; the alliance changes only once the account has been
--- seen there for 24 hours in a row. A move back stops the counter. The player or an admin
--- can confirm the move, which changes the alliance at once.
+-- seen there for 24 hours in a row. A move back stops the counter. The account's owner,
+-- the R4s of its alliance and admins can confirm the move, which changes the alliance at
+-- once, or dismiss it, which keeps the alliance for 3 days; if the account has not gone
+-- back by then, the move is made.
 
 -- ---------------------------------------------------------------------------
 -- The alliance of each player, and a counter only while a change is under way
@@ -27,6 +29,8 @@ create table if not exists public.game_player_alliances (
   moving_state  integer,
   moving_tag    text,
   moving_since  timestamptz,
+  -- Set when the move was dismissed: the alliance stays until then.
+  dismissed_until timestamptz,
   changed_at    timestamptz not null default now(),
   -- Who confirmed the last change on the site; null when the 24 hours made it.
   confirmed_by  uuid
@@ -36,8 +40,8 @@ comment on table public.game_player_alliances is
 
 -- Records where a read saw a player. Only a change is written: the first time sets the
 -- alliance; after that a new place starts the counter, 24 hours there change the
--- alliance, and a move back clears the counter. A read that shows nothing new writes
--- nothing.
+-- alliance (3 days once the move was dismissed), and a move back clears the counter. A
+-- read that shows nothing new writes nothing.
 create or replace function admin_tools.note_alliance(player_number bigint, seen_state integer, seen_tag text, seen_at timestamptz)
 returns void language plpgsql set search_path = public as $$
 declare
@@ -50,18 +54,22 @@ begin
   select * into kept from game_player_alliances where player_id = player_number for update;
   if (kept.state_number, kept.alliance_tag) is not distinct from (seen_state, seen_tag) then
     -- Still (or back) in its alliance: no move.
-    update game_player_alliances set moving_state = null, moving_tag = null, moving_since = null
+    update game_player_alliances set moving_state = null, moving_tag = null, moving_since = null, dismissed_until = null
       where player_id = player_number and moving_since is not null;
   elsif kept.moving_since is not null and (kept.moving_state, kept.moving_tag) is not distinct from (seen_state, seen_tag) then
-    -- Seen again where it moved to: 24 hours there make it its alliance.
-    if seen_at - kept.moving_since >= interval '24 hours' then
+    -- Seen again where it moved to: 24 hours there make it its alliance, or, once the move
+    -- was dismissed, the end of the 3 days.
+    if (kept.dismissed_until is null and seen_at - kept.moving_since >= interval '24 hours')
+        or seen_at >= kept.dismissed_until then
       update game_player_alliances set state_number = seen_state, alliance_tag = seen_tag,
-        moving_state = null, moving_tag = null, moving_since = null, changed_at = seen_at, confirmed_by = null
+        moving_state = null, moving_tag = null, moving_since = null, dismissed_until = null,
+        changed_at = seen_at, confirmed_by = null
         where player_id = player_number;
     end if;
   else
-    -- Somewhere new: the counter starts.
-    update game_player_alliances set moving_state = seen_state, moving_tag = seen_tag, moving_since = seen_at
+    -- Somewhere new: the counter starts again from here.
+    update game_player_alliances set moving_state = seen_state, moving_tag = seen_tag, moving_since = seen_at,
+      dismissed_until = null
       where player_id = player_number;
   end if;
 end $$;
@@ -129,21 +137,49 @@ insert into public.game_player_alliances (player_id, state_number, alliance_tag,
   where data->'player'->>'nick_name' is not null
   on conflict (player_id) do nothing;
 
--- The player confirms their move, or an admin does: the alliance becomes the one the game
--- shows now. Nothing changes when the account is not moving.
+-- Who may confirm or dismiss a move: the account's owner, the R4s and R5s of the alliance
+-- it is counted in, and admins.
+create or replace function public.may_settle_alliance_move(player_number bigint) returns boolean
+language sql stable security definer set search_path = public as $$
+  select auth.uid() is not null and (
+    public.is_admin()
+    or exists (select 1 from game_accounts where owner_id = auth.uid() and in_game_id = player_number::text)
+    or exists (select 1 from game_player_alliances kept
+      join game_alliances game on game.state_number = kept.state_number and game.tag = kept.alliance_tag
+      where kept.player_id = player_number and game.alliance_id is not null and public.leads_alliance(game.alliance_id)));
+$$;
+
+-- Confirm: the alliance becomes the one the game shows now. Nothing changes when the
+-- account is not moving.
 create or replace function public.confirm_alliance_move(player_number bigint) returns void
 language plpgsql security definer set search_path = public as $$
 begin
-  if not (public.is_admin()
-      or exists (select 1 from game_accounts where owner_id = auth.uid() and in_game_id = player_number::text)) then
-    raise exception 'Only the account''s owner and admins can confirm its move.';
+  if not public.may_settle_alliance_move(player_number) then
+    raise exception 'Only the account''s owner, its R4s and admins can confirm its move.';
   end if;
   update game_player_alliances set state_number = moving_state, alliance_tag = moving_tag,
-    moving_state = null, moving_tag = null, moving_since = null, changed_at = now(), confirmed_by = auth.uid()
+    moving_state = null, moving_tag = null, moving_since = null, dismissed_until = null,
+    changed_at = now(), confirmed_by = auth.uid()
     where player_id = player_number and moving_since is not null;
 end $$;
+
+-- Dismiss: the account stays in its alliance for 3 days; if it has not gone back by then,
+-- the next read makes the move.
+create or replace function public.dismiss_alliance_move(player_number bigint) returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  if not public.may_settle_alliance_move(player_number) then
+    raise exception 'Only the account''s owner, its R4s and admins can dismiss its move.';
+  end if;
+  update game_player_alliances set dismissed_until = now() + interval '3 days'
+    where player_id = player_number and moving_since is not null;
+end $$;
+
+revoke all on function public.may_settle_alliance_move(bigint) from public, anon;
 revoke all on function public.confirm_alliance_move(bigint) from public, anon;
+revoke all on function public.dismiss_alliance_move(bigint) from public, anon;
 grant execute on function public.confirm_alliance_move(bigint) to authenticated;
+grant execute on function public.dismiss_alliance_move(bigint) to authenticated;
 
 -- ---------------------------------------------------------------------------
 -- Who reads the game data
