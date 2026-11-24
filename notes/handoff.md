@@ -57,6 +57,15 @@ Run on 24 Nov (second chat), after the push, and checked:
   its R4s and admins. Players read their own accounts' game data even while not state
   members. The 14:10 UTC roster read ran through it without errors.
 
+Run on 24 Nov (third chat), before the push:
+- supabase/fresh-reads.sql. Refresh stayed on "Updating" for hours: a not-fresh answer
+  (the API still reading the game) was kept as new and asked again only an hour later,
+  when it was old again. Now it is asked again the next minute, for 10 minutes, then
+  hourly until fresh; rosters too (new job game-roster-retries). game_read_at (the API's
+  cached_at) is what "Updated" and Refresh go by; read_at is when the site asked. The
+  page looks again every minute while an account shows Updating.
+- The old branch "draft" (21 Nov) is fully in main and is not used.
+
 ## 4. Next work
 
 - Live since 24 Nov: every page reads name, power and alliance from the game data; My
