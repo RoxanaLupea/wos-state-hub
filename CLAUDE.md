@@ -21,8 +21,8 @@ work again.
 Then read notes/handoff.md before anything else: where the work stands and what is next.
 
 Then read, in full: notes/what-this-is.md, notes/design-decisions.md,
-notes/visual-language.md and notes/rules-and-open-items.md. On a draft branch, also
-read the notes file it names (for profile-draft: notes/profile-draft.md).
+notes/visual-language.md and notes/rules-and-open-items.md. On a design branch, also
+read the notes file it names, if any.
 
 ## The flow (24 Nov: she wants speed; Claude runs the flow itself)
 
@@ -43,23 +43,26 @@ read the notes file it names (for profile-draft: notes/profile-draft.md).
   and why, list the items still open, and wait for a clear yes to that exact action.
 - Approved changes are kept here and pushed together once enough has gathered, not
   after every change.
-- When she says to push, everything goes live: main and whatever is on the draft branch
-  together, so she sees it all on the site. Draft or not makes no difference to a push
-  she asked for (24 Nov).
-- Her "ok" or "looks good" on a draft accepts it: it is merged into main and goes live
+- When she says to push, everything she accepted goes live: main, with every accepted
+  design branch merged into it (24 Nov).
+- Her "ok" or "looks good" on a design accepts it: it is merged into main and goes live
   with the next push, without asking about it again. Never split a push by branch and
   leave accepted work behind (24 Nov).
 
 ## How the work is done
 
-- Only UI and design work goes on a draft branch. Fixes to data, the database and
+- Each piece of design work gets its own branch, named for what it is (for example
+  design/calendar-controls), made from main when the work starts. It is merged into main
+  when Roxanne accepts it and then deleted, so a branch always shows what is still being
+  worked on and main what is done. No long-lived draft branch (24 Nov).
+- Only UI and design work goes on a design branch. Fixes to data, the database and
   how things work are done on main and pushed straight to main, still after walking
   her through them and her yes (24 Nov).
 - Every working rule she sets goes into this file, or into the notes it lists, as soon
   as it is said, in the same chat, so the next chat starts with it (24 Nov). Rules of the
   site itself go to notes/design-decisions.md.
-- Design work happens on a draft in this workspace. Her approved files stay untouched
-  until she says yes.
+- Design work happens on its design branch. Her approved files stay untouched until she
+  says yes.
 - Nothing counts as settled until she says so. Settled decisions go into
   notes/design-decisions.md first and into the code second.
 - A commit message is one short sentence, with no body.

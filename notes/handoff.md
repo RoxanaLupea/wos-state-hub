@@ -40,8 +40,10 @@ file, then the notes CLAUDE.md lists.
 
 ## 2b. Fourth chat on 24 Nov: merged into main, waiting for Roxanne's yes to push
 
-Everything below was shown to Roxanne and accepted piece by piece. It is on main and
-profile-draft (the same) in the workspace; ask once before pushing, then check the build.
+Everything below was shown to Roxanne and accepted piece by piece. It is on main; ask
+once before pushing, then check the build. From now on each design gets its own branch
+(CLAUDE.md); the old profile-draft branch on GitHub is no longer used and can be deleted
+once Roxanne says so.
 
 - Calendar grid: day names in capitals, fixed above the weeks; smaller on a phone;
   today's week in sight when the calendar opens.
