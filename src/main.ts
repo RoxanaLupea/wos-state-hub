@@ -43,7 +43,7 @@ import { showdownScoreSection } from './ui/showdown-score.ts';
 import { fortFullName } from './calendar/fort-season.ts';
 import { buildEventTree, familyOccurrences } from './calendar/event-tree.ts';
 import { currentTimeMode, gameClockText, nowMinute, setTimeMode, type TimeMode } from './calendar/time-mode.ts';
-import { readPreferences, writePreferences } from './data/preferences.ts';
+import { preferencesFrom, readPreferences, savePreferencesWithLogin, writePreferences, type Preferences } from './data/preferences.ts';
 import {
   isAdmin, isOwner, leadsAlliance, managesBattles, managesState, signInWith, signOut,
   signedInPerson, type SignedInPerson, type SignInProvider
@@ -1014,8 +1014,12 @@ function draw(): void {
 }
 
 // The player's choices are kept between visits, as the old app kept them.
+// Kept on this device at every draw, and with the login a second after the last change
+// (only when something changed), so a signed-in player finds them on any device.
+let choicesSavedWithLogin = '';
+let choicesSaveTimer = 0;
 function rememberChoices(): void {
-  writePreferences({
+  const choices: Preferences = {
     categories: Array.from(view.shownCategories),
     hiddenEvents: Array.from(view.hiddenEvents),
     followedScheduleIds: Array.from(view.followedScheduleIds),
@@ -1024,14 +1028,35 @@ function rememberChoices(): void {
     myAllianceId: view.myAllianceId,
     openInfoTab: view.openInfoTab,
     opponentNotes: { others: workChoices.get('opponents-others') ?? '', all: workChoices.get('opponents-all') ?? '' },
-    activeGameAccountId: typeof openGameAccount === 'number' ? openGameAccount : null
-  });
+    activeGameAccountId: typeof openGameAccount === 'number' ? openGameAccount : null,
+    transfers: {
+      svs: view.predictionShowsSvs, sunfire: view.predictionShowsSunfire,
+      scope: view.predictionScope === 'mine' ? 'mine' : 'all', groups: view.predictionMergesGroups
+    }
+  };
+  writePreferences(choices);
+  const text = JSON.stringify(choices);
+  if (!person || text === choicesSavedWithLogin) return;
+  const userId = person.userId;
+  window.clearTimeout(choicesSaveTimer);
+  choicesSaveTimer = window.setTimeout(() => {
+    void savePreferencesWithLogin(userId, choices).then(() => { choicesSavedWithLogin = text; }).catch(() => undefined);
+  }, 1000);
 }
 
-// The choices kept from the last visit. An alliance that has left the state since, or
-// a category the site no longer has, is dropped.
+// The choices kept from the last visit: the login's when signed in (the same on every
+// device), otherwise this device's. An alliance that has left the state since, or a
+// category the site no longer has, is dropped.
 function applyKeptChoices(): void {
-  const kept = readPreferences();
+  const withLogin = person?.preferences ? preferencesFrom(person.preferences) : null;
+  const kept = withLogin && Object.keys(withLogin).length > 0 ? withLogin : readPreferences();
+  if (withLogin && Object.keys(withLogin).length > 0) choicesSavedWithLogin = JSON.stringify(person?.preferences);
+  if (kept.transfers) {
+    view.predictionShowsSvs = kept.transfers.svs;
+    view.predictionShowsSunfire = kept.transfers.sunfire;
+    view.predictionScope = kept.transfers.scope;
+    view.predictionMergesGroups = kept.transfers.groups;
+  }
   if (kept.openInfoTab) view.openInfoTab = kept.openInfoTab;
   if (typeof kept.activeGameAccountId === 'number') openGameAccount = kept.activeGameAccountId;
   if (kept.opponentNotes) {
@@ -1755,7 +1780,7 @@ function watchRefresh(id: string): void {
   refreshWatches.set(id, 15);
   const look = (): void => {
     window.setTimeout(() => {
-      void rereadGameData([id]).then(() => {
+      void rereadGameData([id], false, false).then(() => {
         const left = (refreshWatches.get(id) ?? 1) - 1;
         if (gameReads.get(id)?.asked && left > 0) { refreshWatches.set(id, left); look(); }
       });
@@ -1764,13 +1789,15 @@ function watchRefresh(id: string): void {
   look();
 }
 
-async function rereadGameData(ids: string[], withState = false): Promise<void> {
+// withRosters false skips the rosters (all of them, the largest read), for the minute
+// checks while a refresh is on its way, which only wait for the player's own read.
+async function rereadGameData(ids: string[], withState = false, withRosters = true): Promise<void> {
   const [players, skills, kept, states, rosters] = await Promise.all([
     readGamePlayers(ids).catch(() => [] as Row[]),
     readSkillLevels(ids).catch(() => [] as Row[]),
     readPlayerAlliances(ids).catch(() => [] as Row[]),
     withState ? readGameStates([Number(STATE_NUMBER)]).catch(() => [] as Row[]) : Promise.resolve(null),
-    readGameRosters().catch(() => null)
+    withRosters || !rostersRead ? readGameRosters().catch(() => null) : Promise.resolve(null)
   ]);
   if (rosters) { rosterEntries = rosterEntriesOf(rosters); rostersRead = true; }
   // Each player as shown: their own read, with what the newer roster says laid over it.
@@ -2853,7 +2880,8 @@ function placeAddress(): string {
 function openSharedAddress(): void {
   const parts = new URLSearchParams(window.location.search);
   const page = parts.get('page');
-  if (page && pageById(page)) view.openPage = page;
+  // The profile is not one of the sections, but a reload keeps it open too.
+  if (page && (pageById(page) || page === 'player')) view.openPage = page;
   const sub = parts.get('sub');
   if (sub) view.openSubPage = sub;
   const day = dayFromText(parts.get('day') ?? '');
@@ -2979,33 +3007,39 @@ async function start(): Promise<void> {
   installIconFallback();
 
   try {
-    const [loadedSchedules, changes, settings] = await Promise.all([
-      loadSchedules(), loadDateChanges(), loadSettings()
+    // Everything the site needs is read at once rather than one after another: each read
+    // is a trip to the database, and in a row they made every reload slow.
+    const [loadedSchedules, changes, settings, loadedAlliances, loadedForts, loadedLeads, loadedDates,
+      loadedGenerations, loadedWindows, signedIn] = await Promise.all([
+      loadSchedules(), loadDateChanges(), loadSettings(),
+      // Alliance names are wanted on bars and panels, but nothing stops without them.
+      loadAlliances().catch(() => []),
+      // The board is wanted only when that page is opened, but it is small and the
+      // page is drawn from one place, so it is read once here.
+      loadFortAssignments().catch(() => []),
+      loadRallyLeads().catch(() => []),
+      loadTransferDates().catch(() => []),
+      // The state's hero generation on each transfer date, for the heroes named in texts.
+      loadGenerationsOfState(Number(STATE_NUMBER)).catch(() => []),
+      loadTransferWindows().catch(() => []),
+      // Who is signed in, with the choices kept with their login. Their alliance follows
+      // the account they are on, once the game has been read for it (drawPage).
+      signedInPerson().catch(() => null)
     ]);
-    // Alliance names are wanted on bars and panels, but nothing stops without them.
-    alliances = await loadAlliances().catch(() => []);
+    alliances = loadedAlliances;
     rememberAlliances(alliances);
+    person = signedIn;
 
     schedules = loadedSchedules;
     transferFollows = settings.get('transferFollows') === 'sunfire' ? 'sunfire' : 'svs';
     setImageBase(settings.get('imageBaseUrl') ?? '');
     firstFortBattleDay = dayFromText(settings.get('fortressSeasonStart') ?? '');
-    // The board is wanted only when that page is opened, but it is small and the
-    // page is drawn from one place, so it is read once here.
-    fortAssignments = await loadFortAssignments().catch(() => []);
+    fortAssignments = loadedForts;
     setFortRewardsGeneration(Number(settings.get('fortRewardsGeneration') ?? ''));
-    rallyLeads = await loadRallyLeads().catch(() => []);
-    buffAllocations = await loadBuffAllocations(fortAssignments.map(one => one.id)).catch(() => []);
-    transferDates = await loadTransferDates().catch(() => []);
-    // The state's hero generation on each transfer date, for the heroes named in texts.
-    setGenerationSteps(await loadGenerationsOfState(Number(STATE_NUMBER)).catch(() => []));
-    transferWindows = await loadTransferWindows().catch(() => []);
-    transferCandidates = await loadCandidatesOf(transferWindows.map(one => one.id)).catch(() => []);
-    const comingDate = nextWindow()?.transferDate ??
-      transferDates.find(one => one >= textFromDay(todayNumber())) ?? '';
-    if (comingDate) {
-      nextWindowGroups = await loadTransferGroups([comingDate]).catch(() => []);
-    }
+    rallyLeads = loadedLeads;
+    transferDates = loadedDates;
+    setGenerationSteps(loadedGenerations);
+    transferWindows = loadedWindows;
     // The runs are worked out from these, so they are set before the battle days are
     // read; without them every transfer followed neither battle and the SvS and
     // Sunfire filters emptied the page.
@@ -3015,22 +3049,29 @@ async function start(): Promise<void> {
       partOfByEventTypeId
     };
     rememberBattleDays();
-    // The predictions open on the next transfer, or the last one there is.
-    const todayText = textFromDay(todayNumber());
-    view.predictionFirstDate = transferDates.find(date => date >= todayText) ??
-      transferDates[transferDates.length - 1] ?? '';
-    // Typing shows the new state straight away rather than waiting for the field
-    // to be left.
-    if (view.predictionFirstDate) {
-      transferGroups = await loadTransferGroups(shownPredictionDates()).catch(() => []);
-    }
-
+    // The kept choices come before the transfer dates on screen, which follow the
+    // Transfers page's SvS and Sunfire switches.
     applyKeptChoices();
     openSharedAddress();
     setOpenPointRows(view.openPointRows);
-    // Who is signed in. Their alliance follows the account they are on, once the game
-    // has been read for it (drawPage).
-    person = await signedInPerson().catch(() => null);
+    // The predictions open on the next transfer of the kind shown, or the last one there is.
+    const todayText = textFromDay(todayNumber());
+    const shownDates = datesInFilter();
+    view.predictionFirstDate = shownDates.find(date => date >= todayText) ??
+      shownDates[shownDates.length - 1] ?? '';
+    const comingDate = nextWindow()?.transferDate ??
+      transferDates.find(one => one >= todayText) ?? '';
+    // What depends on the first reads, again all at once.
+    const [loadedBuffs, loadedCandidates, loadedComingGroups, loadedGroups] = await Promise.all([
+      loadBuffAllocations(fortAssignments.map(one => one.id)).catch(() => []),
+      loadCandidatesOf(transferWindows.map(one => one.id)).catch(() => []),
+      comingDate ? loadTransferGroups([comingDate]).catch(() => []) : Promise.resolve(null),
+      view.predictionFirstDate ? loadTransferGroups(shownPredictionDates()).catch(() => []) : Promise.resolve(null)
+    ]);
+    buffAllocations = loadedBuffs;
+    transferCandidates = loadedCandidates;
+    if (loadedComingGroups) nextWindowGroups = loadedComingGroups;
+    if (loadedGroups) transferGroups = loadedGroups;
     document.addEventListener('click', handleClicks);
     document.addEventListener('submit', handleSubmits);
     document.addEventListener('input', filterPlayerTyping);

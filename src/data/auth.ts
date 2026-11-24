@@ -14,6 +14,9 @@ export interface SignedInPerson {
   loginName: string;
   // Roles such as 'owner', 'admin' or 'r4'; a role tied to one alliance carries it.
   roles: { role: string; allianceId: string | null }[];
+  // The choices kept with the login (preferences.ts, login_preferences), null when none
+  // are kept yet.
+  preferences: unknown;
 }
 
 // Who is signed in on this browser, or null for a guest. The login's own row (time zone,
@@ -25,13 +28,15 @@ export async function signedInPerson(): Promise<SignedInPerson | null> {
   const meta = (user.user_metadata ?? {}) as Record<string, unknown>;
   const loginName = String(meta.full_name ?? meta.name ?? meta.user_name ?? user.email ?? '');
 
-  const [, rolesResult] = await Promise.all([
+  const [, rolesResult, keptResult] = await Promise.all([
     database().from('accounts').upsert({ id: user.id }, { onConflict: 'id', ignoreDuplicates: true }),
-    database().from('account_roles').select('role, alliance_id').eq('account_id', user.id)
+    database().from('account_roles').select('role, alliance_id').eq('account_id', user.id),
+    database().from('login_preferences').select('preferences').eq('account_id', user.id).maybeSingle()
   ]);
   return {
     userId: user.id,
     loginName,
+    preferences: (keptResult.data as { preferences?: unknown } | null)?.preferences ?? null,
     roles: ((rolesResult.data ?? []) as Record<string, unknown>[]).map(one => ({
       role: String(one.role),
       allianceId: one.alliance_id ? String(one.alliance_id) : null
