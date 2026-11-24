@@ -55,11 +55,10 @@ import { PENCIL_ICON, allianceTimeForm, dateChangeForm, fortForm, pencilButton, 
 import { deleteRow, loadRows, saveRow, type Row } from './data/records.ts';
 import { saveGameAccount, saveLoginDetails } from './data/player-profile.ts';
 import {
-  accountColour, accountMenu, filterFoundryPower, fitPlayerPage, foundryText, filterId, gameReadOf, idProblem, stateBoardsOf, TROOP_KINDS,
-  type BarAccount, type BoardEntry, type GameRead, type LookUpState, type SkillLevels, type TroopKind
+  accountColour, accountMenu, filterFoundryPower, fitPlayerPage, foundryText, filterId, gameReadOf, idProblem, rosterEntriesOf, stateBoardsOf, TROOP_KINDS, withRoster,
+  type BarAccount, type BoardEntry, type GameRead, type LookUpState, type RosterEntry, type SkillLevels, type TroopKind
 } from './ui/player-profile.ts';
-import { shortDayText } from './ui/day-names.ts';
-import { askGameRefresh, lookUpGameAccount, readGamePlayers, readGameStates, readSkillLevels, setSkillLevel } from './data/game-data.ts';
+import { askGameRefresh, lookUpGameAccount, readGamePlayers, readGameRosters, readGameStates, readSkillLevels, setSkillLevel } from './data/game-data.ts';
 import {
   ALLIANCE_RESULT_EVENTS, allianceResultsPage, championshipStars, opponentNotesPage, resultsTab, showdownScoreOf,
   svsHistorySection
@@ -67,7 +66,7 @@ import {
 import { personalEntryForm, personalEntryOf } from './ui/personal-entry.ts';
 import {
   academiesPage, availabilityPage, facilitiesPage, membersPage, planPage, requestsPage, rolesPage,
-  rosterPage, settingsPage, territoryPage, transferWorkSections, troopScore, type WorkContext
+  rosterPage, settingsPage, territoryPage, transferWorkSections, type WorkContext
 } from './ui/working-pages.ts';
 import { yearRunSteps, yearViewRuns, type YearRun } from './calendar/year-runs.ts';
 import { PAGES, calendarToolbar, pageById, sectionNav, topBar, type CalendarView } from './ui/shell.ts';
@@ -204,6 +203,8 @@ let stateBoards = new Map<string, Record<string, BoardEntry>>();
 // What the game says about the person's accounts, by in-game id, and the skill levels of
 // their Exalted troops; read once the accounts are known, and again after a refresh.
 const gameReads = new Map<string, GameRead>();
+// The alliances' rosters by in-game ID, read with the players' own data.
+let rosterEntries = new Map<string, RosterEntry>();
 const skillLevels = new Map<string, Row>();
 let gameReadFor = '';
 // While an account is being added: what its typed id turned out to be in the game.
@@ -809,8 +810,42 @@ function workContext(): WorkContext {
     choiceOf: name => workChoices.get(name) ?? '',
     isAdmin: isAdmin(person), managesState: managesState(person), managesBattles: managesBattles(person),
     leads: allianceId => leadsAlliance(person, allianceId),
-    mayReadBlacklist: isAdmin(person) || Boolean(person?.roles.some(one => one.role === 'alliance_manager'))
+    mayReadBlacklist: isAdmin(person) || Boolean(person?.roles.some(one => one.role === 'alliance_manager')),
+    troopsOf: troopsOfAccount
   };
+}
+
+// A game account's troops for the working pages: the tier from the game ("FC10 Exalted")
+// and the skill level kept per in-game ID. An ID not read yet is read once, together with
+// the others asked for at the same time, and the page is drawn again when they arrive.
+const troopsAskedFor = new Set<string>();
+let troopsToRead: string[] = [];
+function troopsOfAccount(inGameId: string): Record<string, { tier: string; skill: number }> | null {
+  if (!inGameId) return null;
+  const game = gameReads.get(inGameId);
+  if (!game) {
+    if (!troopsAskedFor.has(inGameId)) {
+      troopsAskedFor.add(inGameId);
+      troopsToRead.push(inGameId);
+      if (troopsToRead.length === 1) {
+        window.setTimeout(() => {
+          const ids = troopsToRead;
+          troopsToRead = [];
+          void rereadGameData(ids);
+        }, 0);
+      }
+    }
+    return null;
+  }
+  const levels = skillsOf(inGameId);
+  const troops: Record<string, { tier: string; skill: number }> = {};
+  for (const [kind] of TROOP_KINDS) {
+    const one = game.troops[kind];
+    if (!one) continue;
+    const word = one.tier >= 12 ? ' Exalted' : one.tier === 11 ? ' Helios' : '';
+    troops[kind] = { tier: `FC${one.fc}${word}`, skill: Number(levels[kind] ?? 0) };
+  }
+  return troops;
 }
 
 // The date a result is recorded under: the run's first day; for SvS, the day of its
@@ -1080,8 +1115,6 @@ function drawPage(app: HTMLElement): void {
     // Signed in: the name and picture of the game account they are on, otherwise "Me".
     playerName: person ? (onAccount ? barAccountOf(onAccount).name : '') || person.account?.inGameName || 'Me' : null,
     playerPicture: onAccount ? barAccountOf(onAccount).avatar : null,
-    // A mark on the name while an account's Exalted troops need a look (see skillNote).
-    playerMark: person ? myGameAccounts().some(row => skillsNeedALook(row, skillCheckRun())) : false,
     accountMenu: person ? accountMenu(myGameAccounts().map(barAccountOf), openGameAccountId(), isAdmin(person)) : null
   });
 
@@ -1699,14 +1732,18 @@ function readGameDataOfMyAccounts(): void {
 }
 
 async function rereadGameData(ids: string[], withState = false): Promise<void> {
-  const [players, skills, states] = await Promise.all([
+  const [players, skills, states, rosters] = await Promise.all([
     readGamePlayers(ids).catch(() => [] as Row[]),
     readSkillLevels(ids).catch(() => [] as Row[]),
-    withState ? readGameStates([Number(STATE_NUMBER)]).catch(() => [] as Row[]) : Promise.resolve(null)
+    withState ? readGameStates([Number(STATE_NUMBER)]).catch(() => [] as Row[]) : Promise.resolve(null),
+    readGameRosters().catch(() => null)
   ]);
-  for (const row of players) {
-    const game = gameReadOf(row);
-    if (game) gameReads.set(String(row.player_id), game);
+  if (rosters) rosterEntries = rosterEntriesOf(rosters);
+  // Each player as shown: their own read, with what the newer roster says laid over it.
+  const ownReads = new Map(players.map(row => [String(row.player_id), gameReadOf(row)] as const));
+  for (const id of ids) {
+    const game = withRoster(ownReads.get(id) ?? null, rosterEntries.get(id));
+    if (game) gameReads.set(id, game);
   }
   for (const row of skills) skillLevels.set(String(row.player_id), row);
   if (states) stateBoards = stateBoardsOf(states);
@@ -1721,39 +1758,20 @@ function skillsOf(id: string): SkillLevels {
   return levels;
 }
 
-// Major events before which players check the skill levels of their Exalted troops, and
-// how many days before the event starts the reminder shows (until the event ends).
-const SKILL_CHECK_EVENT_IDS = ['svs', 'tyrant'];
-const SKILL_CHECK_DAYS_BEFORE = 3;
-
-function skillCheckRun(): Occurrence | null {
-  const today = todayNumber();
-  const now = nowMinute();
-  return runsBetween(today - 60, today + SKILL_CHECK_DAYS_BEFORE + 1)
-    .filter(one => SKILL_CHECK_EVENT_IDS.includes(one.eventTypeId) && one.endMinute > now && one.startDay <= today + SKILL_CHECK_DAYS_BEFORE)
-    .sort((left, right) => left.startMinute - right.startMinute)[0] ?? null;
-}
-
-// Whether an account's Exalted troops need a look: a skill level never set, or, while SvS
-// or Tyrant is coming or running, one under Lvl. 3.
-function skillsNeedALook(row: Row, run: Occurrence | null): boolean {
+// Whether an account's Exalted troops need a look: their skill levels were never set or
+// not changed for over a month, and one of them is under Lvl. 3. Then "Update skill
+// level" on their page carries a red dot.
+function skillsNeedALook(row: Row): boolean {
   const id = String(row.in_game_id ?? '');
   const game = gameReads.get(id);
   if (!game) return false;
   const levels = skillsOf(id);
-  return TROOP_KINDS.some(([kind]) => (game.troops[kind]?.tier ?? 0) >= 12 &&
-    (levels[kind] === null || levels[kind] === undefined || (run !== null && Number(levels[kind]) < 3)));
-}
-
-// The note over "Update troops" while SvS or Tyrant is coming or running and the account
-// has an Exalted troop under Lvl. 3. A level never set is asked for in a note of its own.
-function skillNote(row: Row | null): string {
-  const run = skillCheckRun();
-  if (!row || !run || !skillsNeedALook(row, run)) return '';
-  const name = eventTypeName(run.eventTypeId);
-  const check = 'check that the skill levels of your Exalted troops are up to date.';
-  return run.startMinute > nowMinute() ? `Before ${name} on ${shortDayText(run.startDay)}, ${check}`
-    : `${name} is running. ${check.charAt(0).toUpperCase() + check.slice(1)}`;
+  const exalted = TROOP_KINDS.filter(([kind]) => (game.troops[kind]?.tier ?? 0) >= 12);
+  if (!exalted.some(([kind]) => Number(levels[kind] ?? 0) < 3)) return false;
+  const updated = Date.parse(String(skillLevels.get(id)?.updated_at ?? ''));
+  const monthAgo = new Date();
+  monthAgo.setMonth(monthAgo.getMonth() - 1);
+  return Number.isNaN(updated) || updated < monthAgo.getTime();
 }
 
 // The person's game accounts they can be on: the main first, then the alts, each in the
@@ -1807,11 +1825,19 @@ function shownAccountRow(): Row | null {
   return openListedRow() ?? myAccountRow();
 }
 
+// Whether the troops were open for editing the last time the page was drawn.
+let troopsWereOpen = false;
+
 function profileOptions(): ProfileOptions | null {
   const row = person && openListed !== 'new' ? shownAccountRow() : null;
   if (!row) return null;
   const id = String(row.in_game_id ?? '');
   const own = row.kind !== 'farm';
+  // The troops shrink once when editing opens and grow back once when it closes; any
+  // other drawing keeps them as they are.
+  const editingTroops = own && playerEditing.has('troops');
+  const troopsMotion = editingTroops === troopsWereOpen ? null : editingTroops ? 'opening' : 'closing';
+  troopsWereOpen = editingTroops;
   const skillDraft: SkillLevels = {};
   for (const [kind] of TROOP_KINDS) {
     const value = draftValue(kind + '_skill_level', 'troops');
@@ -1822,8 +1848,9 @@ function profileOptions(): ProfileOptions | null {
     alliances: alliancesStillHere(alliances), homeState: Number(STATE_NUMBER), now: Date.now(),
     others: allMyAccounts().filter(one => one.id !== row.id).map(barAccountOf),
     ownAccount: own, skills: skillsOf(id), skillDraft,
-    editingTroops: own && playerEditing.has('troops'), troopsChanged: partHasChanges('troops'),
-    skillNote: own ? skillNote(row) : '', labyrinthOpen
+    editingTroops: editingTroops, troopsMotion,
+    troopsChanged: partHasChanges('troops') || levelsToConfirm('troops'),
+    skillsDue: own && skillsNeedALook(row), labyrinthOpen
   };
 }
 
@@ -1912,7 +1939,14 @@ function showPlayerNote(field: string, message: string): void {
 // redrawing the page, so typing keeps its place.
 function refreshSaveButton(part: string): void {
   const button = document.querySelector<HTMLButtonElement>(`[data-player-save="${part}"]`);
-  if (button) button.disabled = !partHasChanges(part) || (part === 'listed' && lookUp.kind !== 'found');
+  if (button) button.disabled = !(partHasChanges(part) || levelsToConfirm(part)) || (part === 'listed' && lookUp.kind !== 'found');
+}
+
+// Out-of-date skill levels can be saved as they are, to confirm they are still right:
+// Save is lit for them without changes (leaving without saving does not ask).
+function levelsToConfirm(part: string): boolean {
+  const row = myAccountRow();
+  return part === 'troops' && row !== null && row.kind !== 'farm' && skillsNeedALook(row);
 }
 
 // The site account for a site alliance, from what the game says: one of ours only when
@@ -1923,7 +1957,7 @@ function siteAllianceIdOf(game: GameRead | null): string | null {
 }
 
 async function savePlayerPart(part: string): Promise<boolean> {
-  if (!person || !partHasChanges(part)) return true;
+  if (!person || !(partHasChanges(part) || levelsToConfirm(part))) return true;
   return part === 'troops' ? saveSkillLevels() : saveNewAccount();
 }
 
@@ -1976,16 +2010,23 @@ async function saveNewAccount(): Promise<boolean> {
 
 // The skill levels of the Exalted troops, kept per in-game ID, saved together.
 async function saveSkillLevels(): Promise<boolean> {
-  const id = String(myAccountRow()?.in_game_id ?? '');
+  const row = myAccountRow();
+  const id = String(row?.in_game_id ?? '');
   const levels = skillsOf(id);
+  // Out of date: every Exalted troop's level is saved, changed or not, so the date moves on
+  // and the red dot goes.
+  const confirm = row ? skillsNeedALook(row) : false;
+  const game = gameReads.get(id);
   try {
     for (const [kind] of TROOP_KINDS) {
       const column = kind + '_skill_level';
-      if (!(column in playerDraft) || sameValue(playerDraft[column], levels[kind])) continue;
-      const value = playerDraft[column];
+      const exalted = (game?.troops[kind]?.tier ?? 0) >= 12;
+      const changed = column in playerDraft && !sameValue(playerDraft[column], levels[kind]);
+      if (!changed && !(confirm && exalted)) continue;
+      const value = changed ? playerDraft[column] : levels[kind];
       const level = value === null || value === undefined ? null : Number(value);
       await setSkillLevel(id, kind, level);
-      skillLevels.set(id, { ...(skillLevels.get(id) ?? { player_id: id }), [kind]: level });
+      skillLevels.set(id, { ...(skillLevels.get(id) ?? { player_id: id }), [kind]: level, updated_at: new Date().toISOString() });
     }
   } catch (problem) {
     showPlayerNote('troops', problem instanceof Error ? problem.message : String(problem));
@@ -2179,7 +2220,7 @@ function lookUpTypedId(id: string): void {
     lookUp = answer ? {
       kind: 'found', game: {
         name: answer.name, avatar: answer.avatar, power: answer.power ?? null, powerRank: null, state: answer.state,
-        allianceTag: answer.alliance, allianceRank: null, troops: {}, heroes: [], boards: {}, readAt: null, asked: true
+        allianceTag: answer.alliance, allianceRank: null, troops: {}, heroes: [], boards: {}, readAt: null, shownAt: null, asked: true
       }
     } : { kind: 'missing' };
     draw();
@@ -2263,8 +2304,6 @@ async function saveWorkingForm(
   if (formName === 'availability') {
     if (!runColumns) throw new Error('No event is coming up.');
     if (!active) throw new Error('Fill in your details on your page first.');
-    const scores = ['infantry', 'lancer', 'marksmen'].map(kind =>
-      troopScore(text(kind + '_tier'), text(kind + '_skill_level')));
     const from = hour('from_hour_utc');
     const to = hour('to_hour_utc');
     const isUnavailable = values.get('is_unavailable') === 'on';
@@ -2273,11 +2312,6 @@ async function saveWorkingForm(
       id: key || undefined, ...runColumns, account_id: userId, game_account_id: active.id,
       alliance_id: active.alliance_id ?? view.myAllianceId, playing_for_alliance_id: orNull('playing_for_alliance_id'),
       is_unavailable: isUnavailable,
-      infantry_tier: orNull('infantry_tier'), infantry_skill_level: Number(text('infantry_skill_level')) || 0,
-      lancer_tier: orNull('lancer_tier'), lancer_skill_level: Number(text('lancer_skill_level')) || 0,
-      marksmen_tier: orNull('marksmen_tier'), marksmen_skill_level: Number(text('marksmen_skill_level')) || 0,
-      infantry_score: scores[0], lancer_score: scores[1], marksmen_score: scores[2],
-      total_troop_score: scores.some(score => score !== null) ? scores.reduce<number>((total, score) => total + (score ?? 0), 0) : null,
       has_monthly_card: values.get('has_monthly_card') === 'on',
       updated_at: now
     }, key ? '' : 'event_type_id,event_date,game_account_id');

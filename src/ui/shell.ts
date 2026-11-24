@@ -96,8 +96,6 @@ export interface TopBarOptions {
   playerName: string | null;
   // The picture of the game account they are on, from the game; null before the game has one.
   playerPicture?: string | null;
-  // A small mark on the name when something on the player's own page needs them.
-  playerMark?: boolean;
   accountMenu: string | null;
 }
 
@@ -121,7 +119,7 @@ export function topBar(options: TopBarOptions): string {
         `<span class="me-pic" aria-hidden="true">${options.playerPicture ? `<img src="${escapeForPage(options.playerPicture)}" alt="">`
           : escapeForPage((Array.from(options.playerName).find(letter => /[\p{L}\p{N}]/u.test(letter)) ?? '').toUpperCase())}</span>` +
         `<span class="me-name">${escapeForPage(options.playerName)}</span>` +
-        (options.playerMark ? '<span class="me-mark" aria-hidden="true"></span>' : '') + `</button>${options.accountMenu ?? ''}</div>`
+        `</button>${options.accountMenu ?? ''}</div>`
       : '<button type="button" class="ghost-button" data-page="player">Sign in</button>'}
   </header>`;
 }

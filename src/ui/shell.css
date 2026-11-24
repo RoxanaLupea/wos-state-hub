@@ -24,11 +24,6 @@
 .account-choice { --alliance-colour: var(--accent); }
 .account-choice.open { border-color: var(--alliance-colour); background: color-mix(in srgb, var(--alliance-colour) 20%, transparent); }
 .account-choice.open .choice-pic { color: var(--text); box-shadow: 0 0 0 2px var(--accent); }
-/* A small mark on the name when something on the player's own page needs them (the
-   skill levels of Exalted troops). */
-.me-button { position: relative; }
-.me-mark { position: absolute; top: 4px; right: 4px; width: 7px; height: 7px; border-radius: 50%;
-  background: var(--accent); box-shadow: 0 0 0 2px var(--page-color); }
 /* A phone's top bar is kept low: a smaller logo, clock and buttons, so the signed-in
    player's name fits on the first row (cut short with an ellipsis when it is long),
    and the sections below it take less room. */

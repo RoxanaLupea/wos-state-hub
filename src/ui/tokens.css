@@ -40,6 +40,10 @@
   --accent: var(--brand-accent);
   --accent-ink: #1C2333;
   --danger: #F2A0A0;
+  /* The red dot of a notification, as on "Update skill level". */
+  --notice-red: #E0503A;
+  /* The green of saving, leaning to the page's teal, as on Save. */
+  --save-green: #5ED6A6;
 
   /* The calendar week: five weekdays share the space evenly, the two weekend days
      are a little wider because that is where most events sit. */

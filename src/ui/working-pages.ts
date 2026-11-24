@@ -33,6 +33,10 @@ export interface WorkContext {
   leads: (allianceId: string) => boolean;
   // R4s, R5s and admins see the blacklist.
   mayReadBlacklist: boolean;
+  // A game account's troops as the game shows them, with the skill levels kept per
+  // in-game ID: one tier text ("FC10 Exalted") and skill level per troop type, or null
+  // while they are being read. Troops and skill levels are kept in one place only.
+  troopsOf: (inGameId: string) => Record<string, { tier: string; skill: number }> | null;
 }
 
 const LOADING = '<p class="work-empty">Loading…</p>';
@@ -78,8 +82,6 @@ export const TIER_POINTS: Record<string, number> = (() => {
   points[`FC${EXALTED_FC} Exalted`] = EXALTED_FC - 2;
   return points;
 })();
-const TIER_CHOICES: [string, string][] = [['', 'Not set'], ...Object.keys(TIER_POINTS).map(tier => [tier, tier] as [string, string])];
-const SKILL_CHOICES: [string, string][] = [['0', '0'], ['1', '1'], ['2', '2'], ['3', '3']];
 
 export function troopScore(tier: unknown, skill: unknown): number | null {
   const points = TIER_POINTS[String(tier ?? '')];
@@ -110,14 +112,25 @@ export function availabilityPage(context: WorkContext): string {
 
   const entries = all.filter(one => one.event_type_id === run.eventTypeId && one.event_date === run.date);
   const timesOf = (entry: Row) => allTimes.filter(one => one.availability_id === entry.id);
+  // Troops come from the game and skill levels from the player's page, read now; the
+  // answer keeps only the hours and choices.
+  const troopsOfEntry = (row: Row) => context.troopsOf(String(accountOf(row)?.in_game_id ?? ''));
+  const scoreOf = (row: Row): number | null => {
+    const troops = troopsOfEntry(row);
+    if (!troops) return null;
+    const scores = Object.values(troops).map(one => troopScore(one.tier, one.skill)).filter((score): score is number => score !== null);
+    return scores.length ? scores.reduce((total, score) => total + score, 0) : null;
+  };
   const sort = context.choiceOf('availability-sort') || 'score';
   entries.sort((left, right) =>
     sort === 'answered' ? String(left.created_at ?? '').localeCompare(String(right.created_at ?? '')) :
     sort === 'stay' ? hoursLength(timesOf(right)) - hoursLength(timesOf(left)) :
-    (Number(right.total_troop_score) || 0) - (Number(left.total_troop_score) || 0));
+    (scoreOf(right) ?? 0) - (scoreOf(left) ?? 0));
 
-  const troop = (prefix: string) => (row: Row) => row[prefix + '_tier']
-    ? `${text(row[prefix + '_tier'])}<small>Skill ${text(row[prefix + '_skill_level'])}</small>` : '—';
+  const troop = (kind: string) => (row: Row) => {
+    const one = troopsOfEntry(row)?.[kind];
+    return one ? `${text(one.tier)}${one.tier.endsWith('Exalted') ? `<small>Skill ${one.skill}</small>` : ''}` : '—';
+  };
   const columns: Column[] = [
     { label: 'Player', cell: row => escapeForPage(String(accountOf(row)?.in_game_name ?? nameOfAccount(accounts, row.account_id))) +
       `<small>${text(row.alliance_id ? allianceTag(String(row.alliance_id)) : '')}</small>` },
@@ -126,15 +139,14 @@ export function availabilityPage(context: WorkContext): string {
     { label: 'Infantry', cell: troop('infantry') },
     { label: 'Lancer', cell: troop('lancer') },
     { label: 'Marksmen', cell: troop('marksmen') },
-    { label: 'Score', cell: row => text(row.total_troop_score), isNumber: true },
+    { label: 'Score', cell: row => text(scoreOf(row)), isNumber: true },
     { label: 'Monthly card', cell: row => row.has_monthly_card ? 'Yes' : '—' },
     { label: 'Answered', cell: row => dayText(String(row.created_at ?? '').slice(0, 10)) }
   ];
 
   const active = context.activeAccount;
   const answer = active ? entries.find(one => one.game_account_id === active.id) : undefined;
-  // With no answer yet, the form starts from the troops kept on the game account.
-  const mine = answer ?? active;
+  const mine = answer;
   const myTimes = answer ? timesOf(answer) : [];
   const form = !context.userId ? '<p class="work-line">Sign in to send when you can play.</p>'
     : !active ? '<p class="work-line">Fill in your details on your page to answer.</p>'
@@ -147,12 +159,6 @@ export function availabilityPage(context: WorkContext): string {
             value: mine?.playing_for_alliance_id ?? context.myAllianceId ?? '', choices: allianceChoices(context.alliances, 'Not set') },
           { name: 'from_hour_utc', label: 'From (hour, UTC)', kind: 'number', value: myTimes[0]?.from_hour_utc ?? '', placeholder: '0–23' },
           { name: 'to_hour_utc', label: 'To (hour, UTC)', kind: 'number', value: myTimes[0]?.to_hour_utc ?? '', placeholder: '0–23' },
-          { name: 'infantry_tier', label: 'Infantry tier', kind: 'select', value: mine?.infantry_tier ?? '', choices: TIER_CHOICES },
-          { name: 'infantry_skill_level', label: 'Infantry skill', kind: 'select', value: String(mine?.infantry_skill_level ?? 0), choices: SKILL_CHOICES },
-          { name: 'lancer_tier', label: 'Lancer tier', kind: 'select', value: mine?.lancer_tier ?? '', choices: TIER_CHOICES },
-          { name: 'lancer_skill_level', label: 'Lancer skill', kind: 'select', value: String(mine?.lancer_skill_level ?? 0), choices: SKILL_CHOICES },
-          { name: 'marksmen_tier', label: 'Marksmen tier', kind: 'select', value: mine?.marksmen_tier ?? '', choices: TIER_CHOICES },
-          { name: 'marksmen_skill_level', label: 'Marksmen skill', kind: 'select', value: String(mine?.marksmen_skill_level ?? 0), choices: SKILL_CHOICES },
           { name: 'has_monthly_card', label: 'I have the monthly card', kind: 'checkbox', value: mine?.has_monthly_card },
           { name: 'is_unavailable', label: 'I cannot play this one', kind: 'checkbox', value: mine?.is_unavailable }
         ]

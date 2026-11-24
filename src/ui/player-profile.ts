@@ -69,8 +69,10 @@ export interface GameRead {
   troops: Partial<Record<TroopKind, GameTroop>>;
   heroes: GameHero[];
   boards: Record<string, BoardEntry>;
-  // When the database last read it, and whether a fresh read is on its way.
+  // When the database last read the player on their own (what Refresh goes by), and
+  // when anything shown was last read, the alliance's roster included.
   readAt: string | null;
+  shownAt: string | null;
   asked: boolean;
 }
 
@@ -114,7 +116,53 @@ export function gameReadOf(row: Row | null | undefined): GameRead | null {
     heroes,
     boards,
     readAt: row.read_at ? String(row.read_at) : null,
+    shownAt: row.read_at ? String(row.read_at) : null,
     asked: Boolean(row.refresh_asked_at)
+  };
+}
+
+// A member as an alliance's roster shows them, and when the roster was read.
+export interface RosterEntry { member: Record<string, any>; state: number; tag: string; readAt: string }
+
+// Every member of the rosters read, by in-game ID; the newest roster wins when a player
+// shows up on two (they moved between reads).
+export function rosterEntriesOf(rows: Row[]): Map<string, RosterEntry> {
+  const byChief = new Map<string, RosterEntry>();
+  for (const row of rows) {
+    const members = (row.data as Record<string, any> | undefined)?.members;
+    const readAt = String(row.read_at ?? '');
+    for (const member of Array.isArray(members) ? members : []) {
+      if (!member?.chief_id || !readAt) continue;
+      const id = String(member.chief_id);
+      const known = byChief.get(id);
+      if (known && Date.parse(known.readAt) >= Date.parse(readAt)) continue;
+      byChief.set(id, { member, state: Number(row.state_number), tag: String(row.tag), readAt });
+    }
+  }
+  return byChief;
+}
+
+// The player as shown: troops, heroes and boards from their own read; name, picture,
+// power, alliance and rank from whichever is newer, their own read or their alliance's
+// roster (read every hour for the main alliances).
+export function withRoster(game: GameRead | null, roster: RosterEntry | undefined): GameRead | null {
+  if (!roster) return game;
+  const member = roster.member;
+  if (game?.readAt && Date.parse(game.readAt) >= Date.parse(roster.readAt)) return game;
+  return {
+    name: member.nick_name ? String(member.nick_name) : game?.name ?? '',
+    avatar: member.avatar_url ? String(member.avatar_url) : game?.avatar ?? null,
+    power: member.power ? Number(member.power) : game?.power ?? null,
+    powerRank: game?.powerRank ?? null,
+    state: roster.state,
+    allianceTag: roster.tag,
+    allianceRank: member.alliance_rank_label ? String(member.alliance_rank_label) : game?.allianceRank ?? null,
+    troops: game?.troops ?? {},
+    heroes: game?.heroes ?? [],
+    boards: game?.boards ?? {},
+    readAt: game?.readAt ?? null,
+    shownAt: roster.readAt,
+    asked: game?.asked ?? false
   };
 }
 
@@ -245,7 +293,7 @@ function starsOf(steps: number): string {
 // it can be used again. While a fresh read is on its way, it says so.
 function freshLine(game: GameRead | null, id: string, now: number, where: 'top' | 'end'): string {
   if (!game) return `<p class="fresh ${where}">Reading from the game</p>`;
-  const when = `Updated ${escapeForPage(readAgo(game.readAt, now))}`;
+  const when = `Updated ${escapeForPage(readAgo(game.shownAt ?? game.readAt, now))}`;
   let button: string;
   if (game.asked) button = `<button type="button" class="refresh waiting" disabled>${REFRESH_ICON}Updating</button>`;
   else if (canRefresh(game, now)) button = `<button type="button" class="refresh on" data-game-refresh="${escapeForPage(id)}">${REFRESH_ICON}Refresh</button>`;
@@ -259,48 +307,73 @@ function freshLine(game: GameRead | null, id: string, now: number, where: 'top' 
 // The skill levels of Exalted troops are the one thing typed here.
 export type SkillLevels = Partial<Record<TroopKind, number | null>>;
 
-// Troops: the three troop types centred in their columns, each its tier portrait with its
-// FC badge on the corner, its name, and its tier ("T10", "Helios", "Exalted · Lvl. 3").
-// "Update troops" opens the skill levels of the Exalted ones.
+const EDIT_ICON = '<svg class="edit-icon" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="edit-icon-colour" x1="0" y1="0" x2="1" y2="1">' +
+  '<stop offset="0" style="stop-color: var(--edit-colour)"/><stop offset="1" style="stop-color: var(--text)"/></linearGradient></defs>' +
+  '<g fill="none" stroke="url(#edit-icon-colour)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+  '<path d="M11 3.5H7A3.5 3.5 0 0 0 3.5 7v10A3.5 3.5 0 0 0 7 20.5h10a3.5 3.5 0 0 0 3.5-3.5v-4.5"/>' +
+  '<path d="M17.6 3.2a2.3 2.3 0 0 1 3.2 3.2L12 15.2l-4.2 1 1-4.2z"/></g></svg>';
+
+// Cancel (a cross) and Save (a tick) in the edit icon's style: a rounded line running from
+// the button's tint into white (the tint is set by .quiet.cancel and .quiet.confirm).
+function lineIcon(id: string, path: string): string {
+  return `<svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1">` +
+    `<stop offset="0" style="stop-color: var(--quiet-tint)"/><stop offset="1" style="stop-color: var(--text)"/></linearGradient></defs>` +
+    `<path d="${path}" fill="none" stroke="url(#${id})" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+const CANCEL_ICON = lineIcon('cancel-icon-colour', 'M6 6l12 12M18 6L6 18');
+const SAVE_ICON = lineIcon('save-icon-colour', 'M4.5 12.5l5 5L19.5 6.5');
+
+// Troops: the three troop types centred in their columns, each type's name above its tier portrait (FC badge on the corner), its tier
+// under it ("T10", "Helios", "Exalted · Lvl. 3"). "Update skill level" beside the title
+// opens the skill levels in the same space: the pictures shrink under their names and each
+// Exalted troop's levels show under its picture, one under the other, with a quiet Cancel
+// and Save on the title line.
 function troopsSection(options: ProfileOptions, game: GameRead | null): string {
   const kinds = TROOP_KINDS.filter(([kind]) => game?.troops[kind]);
   if (!game || kinds.length === 0) {
     return '<section class="troops"><h2>Troops</h2><p class="nodata">The game data has no troops for this chief.</p></section>';
   }
   const exalted = kinds.filter(([kind]) => (game.troops[kind]?.tier ?? 0) >= 12);
-  if (options.editingTroops) {
-    const rows = exalted.map(([kind, label]) => {
-      const troop = game.troops[kind] as GameTroop;
-      const level = options.skillDraft[kind] ?? null;
-      const choices = [0, 1, 2, 3].map(value =>
-        `<button type="button" class="lvl${level === value ? ' on' : ''}" data-troop-pick="${kind}|skill|${value}" aria-pressed="${level === value}">` +
-        `${value ? 'Lvl. ' + value : 'None'}</button>`).join('');
-      return `<div class="erow"><div class="art troop small"><img class="p" src="${imageUrl('troops/' + kind + '-exalted')}" alt="">` +
-        (troop.fc ? `<img class="fc" src="${imageUrl('troops/fc' + troop.fc)}" alt="FC${troop.fc}">` : '') + '</div>' +
-        `<span class="tname">${label}</span><div class="lvls">${choices}</div></div>`;
-    }).join('');
-    return '<section class="troops open"><h2>Troops</h2>' +
-      `<div class="erows">${rows}</div><small class="player-note" data-note-for="troops"></small>` +
-      '<div class="saverow"><button type="button" class="ghost-button" data-cancel-part="troops">Cancel</button>' +
-      `<button type="button" class="primary-button save" data-player-save="troops"${options.troopsChanged ? '' : ' disabled'}>Save</button></div></section>`;
-  }
+  const editing = options.editingTroops;
   const items = kinds.map(([kind, label]) => {
     const troop = game.troops[kind] as GameTroop;
     const [file, word] = troop.tier >= 12 ? ['exalted', 'Exalted'] : troop.tier === 11 ? ['helios', 'Helios'] : ['t' + troop.tier, 'T' + troop.tier];
     const skill = options.skills[kind];
     const detail = `<span class="q">${word}</span>` + (troop.tier >= 12 && skill ? `<span class="s">Lvl. ${skill}</span>` : '');
-    return `<div class="item"><div class="art troop"><img class="p" src="${imageUrl('troops/' + kind + '-' + file)}" alt="">` +
-      (troop.fc ? `<img class="fc" src="${imageUrl('troops/fc' + troop.fc)}" alt="FC${troop.fc}">` : '') + '</div>' +
-      `<span class="tname">${label}</span><span class="detail">${detail}</span></div>`;
+    // While editing: the levels of an Exalted troop, one under the other, or the tier of
+    // any other troop, under the shrunken picture.
+    let pick = '';
+    if (editing && troop.tier >= 12) {
+      const level = options.skillDraft[kind] ?? null;
+      pick = '<div class="pick">' + [0, 1, 2, 3].map(value =>
+        `<button type="button" class="lvl${level === value ? ' on' : ''}" data-troop-pick="${kind}|skill|${value}" aria-pressed="${level === value}">` +
+        `${value ? 'Lvl. ' + value : 'None'}</button>`).join('') + '</div>';
+    } else if (editing) pick = `<span class="pick plain">${word}</span>`;
+    // The name above the picture; the picture and, while editing, the levels in one place.
+    return `<div class="item"><span class="tname">${label}</span><div class="slot"><div class="art troop">` +
+      `<img class="p" src="${imageUrl('troops/' + kind + '-' + file)}" alt="">` +
+      (troop.fc ? `<img class="fc" src="${imageUrl('troops/fc' + troop.fc)}" alt="FC${troop.fc}">` : '') + `</div>${pick}</div>` +
+      `<span class="detail">${detail}</span></div>`;
   }).join('');
-  // Only the skill levels of Exalted troops are set here, so the line shows only with
-  // them, and only on the person's own main or alt.
+  // The section's state for the animation: opening and closing play once, open stays.
+  const state = editing ? (options.troopsMotion === 'opening' ? ' open opening' : ' open') : options.troopsMotion === 'closing' ? ' closing' : '';
+  if (editing) {
+    // Cancel and Save drawn like "Update skill level": a line icon running from its tint
+    // into white, with a soft glow, then the word.
+    const actions = `<span class="edit-actions"><button type="button" class="quiet cancel" data-cancel-part="troops">${CANCEL_ICON}<span class="words">Cancel</span></button>` +
+      `<button type="button" class="quiet confirm" data-player-save="troops"${options.troopsChanged ? '' : ' disabled'}>${SAVE_ICON}<span class="words">Save</span></button></span>`;
+    return `<section class="troops${state}"><h2>Troops${actions}</h2><div class="items three">${items}</div>` +
+      '<small class="player-note" data-note-for="troops"></small></section>';
+  }
+  // Only the skill levels of Exalted troops are set here, so "Update skill level" shows
+  // only with them, and only on the person's own main or alt. It turns red with a red dot
+  // while the levels are out of date (see skillsDue); otherwise it is just the button.
   const canUpdate = exalted.length > 0 && options.ownAccount;
-  const unset = exalted.some(([kind]) => options.skills[kind] === null || options.skills[kind] === undefined);
-  const note = !canUpdate ? '' : options.skillNote ? `<p class="note">${escapeForPage(options.skillNote)}</p>`
-    : unset ? '<p class="note">Set the skill levels of your Exalted troops.</p>' : '';
-  const update = canUpdate ? `<button type="button" class="more update" data-player-edit="troops" aria-expanded="false">Update troops${CHEVRON}</button>` : '';
-  return `<section class="troops"><h2>Troops</h2><div class="items three">${items}</div>${note}${update}</section>`;
+  // The edit icon (owner's example, 24 Nov): a rounded square open at the top right with a
+  // pencil across it, drawn in one stroke that runs from a colour into white (see .remind).
+  const update = canUpdate ? `<button type="button" class="remind${options.skillsDue ? ' due' : ''}" data-player-edit="troops">` +
+    `${EDIT_ICON}<span><span class="words">Update skill level</span></span></button>` : '';
+  return `<section class="troops${state}"><h2>Troops${update}</h2><div class="items three">${items}</div></section>`;
 }
 
 // The Arena team: the game's own hero cards, with the level written on the card over the
@@ -395,9 +468,12 @@ export interface ProfileOptions {
   skills: SkillLevels;
   skillDraft: SkillLevels;
   editingTroops: boolean;
+  // Whether the troops are just opening or closing for editing (the animation plays once).
+  troopsMotion: 'opening' | 'closing' | null;
   troopsChanged: boolean;
-  // The reminder before SvS and Tyrant, or empty.
-  skillNote: string;
+  // Whether the skill levels are out of date: never set or not changed for over a month,
+  // with one under Lvl. 3. "Update skill level" then carries a red dot.
+  skillsDue: boolean;
   labyrinthOpen: boolean;
 }
 
@@ -411,7 +487,8 @@ export function playerProfile(options: ProfileOptions): string {
   const tag = game?.allianceTag ?? alliance?.tag ?? '';
   const logo = alliance?.logoFile ? `<img class="logo" src="${imageUrl('alliances/' + alliance.logoFile.replace(/\.png$/, ''))}" alt="">`
     : tag ? `<span class="logo none">${escapeForPage(firstLetter(tag))}</span>` : '';
-  const badge = tag ? `<div class="badge">${logo}<span class="tag">${escapeForPage(tag)}</span></div>` : '<div class="badge"></div>';
+  // The tag above the logo.
+  const badge = tag ? `<div class="badge"><span class="tag">${escapeForPage(tag)}</span>${logo}</div>` : '<div class="badge"></div>';
   const rank = game?.allianceRank ? `<span class="rank">${escapeForPage(game.allianceRank)}</span>` : '';
   const power = game?.power ?? numberOrNull(account.player_power);
   const powerLine = power ? `<div class="power"><b>${short(power)}</b>${game?.powerRank ? `<span class="pr">#${game.powerRank}</span>` : ''}</div>` : '';
@@ -513,8 +590,7 @@ export function accountMenu(accounts: BarAccount[], activeId: number | 'new', is
     item('data-sign-out', SIGN_OUT_ICON, 'Sign out', ' danger') + '</div>';
 }
 
-// The sizes the page sets once it is drawn: the troop names at one size so the widest is
-// as wide as the picture; the leaderboard names and the lines under the heroes each at
+// The sizes the page sets once it is drawn: the leaderboard names and the lines under the heroes each at
 // one size small enough to fit their columns; a long name smaller until it fits.
 export function fitPlayerPage(root: ParentNode = document): void {
   const textWidth = (one: Element) => { const range = document.createRange(); range.selectNodeContents(one); return range.getBoundingClientRect().width; };
@@ -522,15 +598,6 @@ export function fitPlayerPage(root: ParentNode = document): void {
     name.style.fontSize = '';
     let size = parseFloat(getComputedStyle(name).fontSize);
     while (name.scrollWidth > name.clientWidth + 0.5 && size > 9) { size -= 0.25; name.style.fontSize = size + 'px'; }
-  }
-  const names = Array.from(root.querySelectorAll<HTMLElement>('.pp .items.three .tname'));
-  if (names.length) {
-    const picture = root.querySelector('.pp .items.three .art');
-    const art = picture ? picture.getBoundingClientRect().width : 60;
-    for (const one of names) one.style.fontSize = '20px';
-    const widest = Math.max(...names.map(one => one.getBoundingClientRect().width));
-    // On a computer the pictures are large: the names stop at 15px.
-    if (widest > 0) for (const one of names) one.style.fontSize = Math.min(20 * art / widest, window.innerWidth >= 900 ? 15 : 99) + 'px';
   }
   const shrinkTogether = (items: HTMLElement[], room: number, smallest: number) => {
     if (items.length === 0) return;

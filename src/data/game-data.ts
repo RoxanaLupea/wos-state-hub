@@ -21,6 +21,15 @@ export async function readGameStates(stateNumbers: number[]): Promise<Row[]> {
   return (data ?? []) as Row[];
 }
 
+// The alliances' rosters (game_alliances): the main alliances are read every hour, the
+// academies twice a day. Each member carries name, picture, power, furnace level, kills
+// and rank, often newer than the player's own read (twice a day).
+export async function readGameRosters(): Promise<Row[]> {
+  const { data, error } = await database().from('game_alliances').select('state_number, tag, data, read_at');
+  if (error) throw new Error(error.message);
+  return (data ?? []) as Row[];
+}
+
 // What a typed ID is in the game, so the player sees it is the right account before
 // adding it. Null when the game has no such player.
 export interface LookedUp { name: string; avatar: string | null; power: number | null; state: number | null; alliance: string | null; furnace: number | null }

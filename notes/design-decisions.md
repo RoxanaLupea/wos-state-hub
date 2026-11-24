@@ -378,7 +378,10 @@ Header
 - Beside it: the name with the rank (R4) after it as a small label tinted in the
   alliance's colour; the ID; the power with its state rank (#2) small after it; the
   Foundry power on its own line under the power, its logo centred on the number.
-- The alliance as a small badge in the top right: its logo with the tag close under it.
+- The alliance as a small badge, the tag above the logo (24 Nov). On a phone it sits in
+  the bottom right corner of the header, so the name has the whole width; the lines
+  under the name keep clear of it. On a computer it is still in the top right (the
+  computer layout follows once the phone is settled).
 - "Updated 53 min ago" and Refresh: at the end of the page on a phone, in the top right
   under the badge on a computer. Refresh is lit when it can be used, otherwise it shows
   the time it can be used again.
@@ -390,17 +393,36 @@ Header
 
 Troops
 - The three troop types centred in their columns: the tier portrait with its FC badge
-  overlapping its corner, the name in capitals (Infantry, Lancer, Marksmen) at one size
-  so the widest is as wide as the picture (on a computer at most 15px), and under it
-  the tier written T10, T6 (no space), Helios or Exalted, and for Exalted "· Lvl. 3".
+  overlapping its corner, the name in capitals (Infantry, Lancer, Marksmen) above it
+  (see below), and under it the tier written T10, T6 (no space), Helios or Exalted, and for Exalted "· Lvl. 3".
   No red. Every tier from T1 to Exalted has its portrait.
-- "Update troops" with a down arrow under them, on the left, in the alliance's colour,
-  only on the person's own account and only with Exalted troops. It opens each Exalted
-  troop with the None / Lvl. 1 / Lvl. 2 / Lvl. 3 toggle, then Cancel and Save (Save lit
-  only with changes). Leaving with changes asks "Save your changes before you leave?"
-  with Cancel and Save.
-- A note asking for skill levels (never set, or before SvS and Tyrant) sits above
-  "Update troops", on the left.
+- "Update skill level" is one line on the title's line, after TROOPS, in normal letters
+  (it changes the levels in place, so no down arrow), only on the person's own account
+  and only with Exalted troops (24 Nov). In front of the
+  words, the owner's edit icon (a rounded square open at the top right with a pencil
+  across it). Its stroke runs from a colour into white, and the words do the same, only
+  very faintly. Two states: just the button, for changing them, in the alliance's
+  purple; while the levels are out of date (never set, or not changed for over a month)
+  and one is under Lvl. 3, a notification in red, with a small red dot after the words,
+  at the top of the letters and a little above. The icon and the dot follow the glass
+  look. There is no separate note. While out of date, Save is lit without changes, so a
+  player can confirm levels that are still right.
+- Each troop type's name sits above its picture, in the view and while editing, as the
+  title of its column: 12px on a phone (a little larger than the tier line), 15px on a
+  computer (24 Nov).
+- It opens in the same space as the troops (24 Nov): the three pictures shrink under
+  their names, still centred, in a short animation; the tier makes way, and each Exalted
+  troop's None / Lvl. 1 / Lvl. 2 / Lvl. 3 show under its picture, one under the other,
+  as words: the picked one bold, the others quiet (no boxes, no grid). A troop that is
+  not Exalted shows its tier there. The troop names never change size. A quiet Cancel
+  and Save take the place of "Update skill level" on the title line, drawn the same
+  way: a line icon (a cross, a tick) with a soft glow, then the word, both running from
+  a tint into white: red for Cancel, green for Save (Save dimmed until
+  there are changes, or lit while the levels are out of date). Closing plays the animation back. Leaving with changes asks
+  "Save your changes before you leave?" with Cancel and Save.
+- Skill levels are kept in one place only: per in-game ID in exalted_skill_levels
+  (24 Nov). Troops come from the game. Event availability answers keep only the hours
+  and choices, and show each player's troops and skill levels as they are now.
 
 Arena team
 - The game's own hero cards (public/images/heroes/cards/, cleaned of the level, stars,
@@ -428,7 +450,7 @@ Leaderboards
 
 Colours
 - The alliance's colour, softened: the section titles mixed with the quiet text
-  colour, "Update troops" and "Labyrinth stages" mixed lighter, and the rank label.
+  colour, "Update skill level" and "Labyrinth stages" mixed lighter, and the rank label.
   DVL uses its purple accent; an academy its main alliance's, lighter; an alliance
   without an accent its base colour.
 
@@ -475,6 +497,24 @@ Game accounts (from 23 Nov, still holds)
   alliance and state, plus one copy a day of the basic data for the last 30 days (about
   150 MB; heroes and chief gear only as the latest copy). Once the design shows what is
   used, only that is kept, with a longer history.
+- Each account has an alliance and a temporary alliance (24 Nov). Players move between
+  alliances often, for events or rewards, so a move is not taken as a change at once.
+  The temporary alliance follows the hourly rosters: where the account shows up now.
+  The alliance is replaced by the temporary one only once the account has stayed there
+  for 24 hours without moving: two reads 12 hours apart both show it there, and it is
+  still on that alliance's hourly roster. On the site the player can also replace their
+  alliance with the temporary one straight away, confirming the move themselves.
+- An account on the site is only a link from a login to a member the game data already
+  has (24 Nov): it holds whose account it is and whether it is a main, alt or farm.
+  Name, power, alliance, rank and everything else the game gives are kept in one place,
+  the game data, and every page shows them from there; lists such as My alliance's
+  Members come from the alliances' rosters. Nothing is copied onto the account, so
+  supabase/game-accounts-from-game.sql is not used.
+- The profile uses both reads (24 Nov): troops, heroes and leaderboards from the
+  player's own read (twice a day); name, picture, power, alliance and rank from
+  whichever is newer, the player's own read or their alliance's roster (every hour for
+  the main alliances). "Updated" shows the newer of the two; Refresh still goes by the
+  player's own read.
 
 ## Open
 
