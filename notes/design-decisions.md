@@ -481,13 +481,18 @@ Game accounts (from 23 Nov, still holds)
   60 requests a minute and 5,000 a day on the free key).
 - Players can refresh their own accounts, and R4s and admins their alliance. The API reads
   an account from the game at most once an hour, so the refresh waits an hour after the
-  last update, and the page shows when the data was last read.
+  game was last read, and the page shows when the game was last read ("Updated"), never
+  when the site asked.
 - The rosters of the main alliances still in the state (DVL, TOP, SKY, RUU) are read every
   hour, each call waiting for the API to read the game, so a roster is never more than an
   hour old. A whole roster is one request.
 - The academies' rosters (dvl, top, abc) are read twice a day, with the player pass.
-- The same account is never requested twice within an hour. Asked again within the hour,
-  the site gives the answer from the last call.
+- The site does not ask for an account it already has a fresh copy of: asking again then
+  gives nothing new, so it gives the copy it has. When the data is not updated, it makes
+  sense to try again to get a read (24 Nov, the reason for the rule): an answer that is
+  not fresh (the API still reading the game) is asked again the next minute, for 10
+  minutes, then once an hour until a fresh copy arrives. Rosters the same
+  (supabase/fresh-reads.sql).
 - The key is kept in the database's Vault and the refreshes run in the database
   (supabase/game-refresh.sql), set up on 23 Nov.
 - Anyone signed in can add any in-game ID as their account, so an ID can be claimed by

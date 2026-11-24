@@ -9,7 +9,7 @@ export async function readGamePlayers(ids: string[]): Promise<Row[]> {
   const numbers = ids.filter(id => /^\d+$/.test(id)).map(Number);
   if (numbers.length === 0) return [];
   const { data, error } = await database().from('game_players')
-    .select('player_id, state_number, alliance_tag, data, read_at, refresh_asked_at').in('player_id', numbers);
+    .select('player_id, state_number, alliance_tag, data, read_at, game_read_at, refresh_asked_at').in('player_id', numbers);
   if (error) throw new Error(error.message);
   return (data ?? []) as Row[];
 }
@@ -25,7 +25,7 @@ export async function readGameStates(stateNumbers: number[]): Promise<Row[]> {
 // academies twice a day. Each member carries name, picture, power, furnace level, kills
 // and rank, often newer than the player's own read (twice a day).
 export async function readGameRosters(): Promise<Row[]> {
-  const { data, error } = await database().from('game_alliances').select('state_number, tag, data, read_at');
+  const { data, error } = await database().from('game_alliances').select('state_number, tag, data, read_at, game_read_at');
   if (error) throw new Error(error.message);
   return (data ?? []) as Row[];
 }
@@ -40,8 +40,8 @@ export async function lookUpGameAccount(id: string): Promise<LookedUp | null> {
   return data && (data as LookedUp).name ? data as LookedUp : null;
 }
 
-// Asks for a fresh read of one account. The database allows it once the last read is
-// an hour old; within the hour it only answers when the last read was.
+// Asks for a fresh read of one account. The database allows it once the game was last
+// read over an hour ago; within the hour it only answers when that was.
 export async function askGameRefresh(id: string): Promise<void> {
   const { error } = await database().rpc('ask_game_refresh', { player_number: Number(id) });
   if (error) throw new Error(error.message);

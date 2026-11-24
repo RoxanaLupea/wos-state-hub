@@ -3,8 +3,8 @@
 // power and the alliance's badge; the photos of the person's other accounts; the troops;
 // the Arena team; the leaderboards the account is ranked on. The player only sets the
 // skill levels of Exalted troops and adds their other accounts.
-// The game's data is read by the database (supabase/game-refresh.sql); a refresh can be
-// asked once the last read is an hour old.
+// The game's data is read by the database (supabase/game-refresh.sql, fresh-reads.sql); a
+// refresh can be asked once the game was last read over an hour ago.
 import './player-profile.css';
 import { escapeForPage } from './escape.ts';
 import { imageUrl } from './event-icon.ts';
@@ -69,8 +69,9 @@ export interface GameRead {
   troops: Partial<Record<TroopKind, GameTroop>>;
   heroes: GameHero[];
   boards: Record<string, BoardEntry>;
-  // When the database last read the player on their own (what Refresh goes by), and
-  // when anything shown was last read, the alliance's roster included.
+  // When the game was last read for the player on their own (what Refresh goes by), and
+  // when the game was read for anything shown, the alliance's roster included. Both are
+  // the game's read time (game_read_at), not when the site asked the API.
   readAt: string | null;
   shownAt: string | null;
   asked: boolean;
@@ -80,6 +81,13 @@ export interface GameRead {
 const GAME_TROOP_KINDS: Record<string, TroopKind> = { infantry: 'infantry', lancer: 'lancer', marksman: 'marksmen', marksmen: 'marksmen' };
 
 const numberOrNull = (value: unknown) => value === null || value === undefined || value === '' || Number.isNaN(Number(value)) ? null : Number(value);
+
+// When the game was read for a row's copy; rows kept before game_read_at existed fall
+// back to when the site asked.
+function gameReadTime(row: Row): string | null {
+  const time = row.game_read_at ?? row.read_at;
+  return time ? String(time) : null;
+}
 
 export function gameReadOf(row: Row | null | undefined): GameRead | null {
   const data = row?.data as Record<string, any> | undefined;
@@ -115,8 +123,8 @@ export function gameReadOf(row: Row | null | undefined): GameRead | null {
     troops,
     heroes,
     boards,
-    readAt: row.read_at ? String(row.read_at) : null,
-    shownAt: row.read_at ? String(row.read_at) : null,
+    readAt: gameReadTime(row),
+    shownAt: gameReadTime(row),
     asked: Boolean(row.refresh_asked_at)
   };
 }
@@ -130,7 +138,7 @@ export function rosterEntriesOf(rows: Row[]): Map<string, RosterEntry> {
   const byChief = new Map<string, RosterEntry>();
   for (const row of rows) {
     const members = (row.data as Record<string, any> | undefined)?.members;
-    const readAt = String(row.read_at ?? '');
+    const readAt = gameReadTime(row) ?? '';
     for (const member of Array.isArray(members) ? members : []) {
       if (!member?.chief_id || !readAt) continue;
       const id = String(member.chief_id);

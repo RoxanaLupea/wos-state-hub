@@ -1745,6 +1745,25 @@ function readGameDataOfMyAccounts(): void {
   void rereadGameData(ids, first);
 }
 
+// Reads an account again every minute while its refresh is on its way, 15 times at most
+// (the database goes back to asking hourly after 10 minutes). An account shown as
+// Updating when the page opens is watched the same way, once per page load.
+const refreshWatches = new Map<string, number>();
+
+function watchRefresh(id: string): void {
+  if (refreshWatches.has(id)) return;
+  refreshWatches.set(id, 15);
+  const look = (): void => {
+    window.setTimeout(() => {
+      void rereadGameData([id]).then(() => {
+        const left = (refreshWatches.get(id) ?? 1) - 1;
+        if (gameReads.get(id)?.asked && left > 0) { refreshWatches.set(id, left); look(); }
+      });
+    }, 60000);
+  };
+  look();
+}
+
 async function rereadGameData(ids: string[], withState = false): Promise<void> {
   const [players, skills, kept, states, rosters] = await Promise.all([
     readGamePlayers(ids).catch(() => [] as Row[]),
@@ -1764,6 +1783,7 @@ async function rereadGameData(ids: string[], withState = false): Promise<void> {
   for (const row of kept) playerAlliances.set(String(row.player_id), row);
   if (states) stateBoards = stateBoardsOf(states);
   draw();
+  for (const id of ids) if (gameReads.get(id)?.asked) watchRefresh(id);
 }
 
 // An account's skill levels as saved: null for a troop type never set.
@@ -2232,15 +2252,17 @@ function handlePlayerPicks(target: HTMLElement): boolean {
   }
   const refreshButton = target.closest<HTMLElement>('[data-game-refresh]');
   if (refreshButton) {
-    // Asks the database for a fresh read; the job that reads the game runs every minute,
-    // so the account is read again a little later.
+    // Asks the database for a fresh read; the job that reads the game runs every minute
+    // and asks again while the game is still being read, so the page looks again every
+    // minute until the fresh copy is in.
     const id = refreshButton.dataset.gameRefresh as string;
     refreshButton.setAttribute('disabled', '');
     void askGameRefresh(id).then(() => {
       const game = gameReads.get(id);
       if (game) gameReads.set(id, { ...game, asked: true });
       draw();
-      window.setTimeout(() => void rereadGameData([id]), 90000);
+      refreshWatches.delete(id);
+      watchRefresh(id);
     }).catch(() => { refreshButton.removeAttribute('disabled'); });
     return true;
   }

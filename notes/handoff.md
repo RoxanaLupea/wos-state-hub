@@ -66,7 +66,6 @@ Run on 24 Nov (second chat), after the push, and checked:
 - Live since 24 Nov: a move shown as "X > Y" with Dismiss and Confirm, after 2 hours
   (design-decisions.md); on a computer the badge fills the side down to Updated and
   Refresh. profile-draft is the same as main.
-- The computer layout of the header badge (it is still top right there).
 
 ## 5. Open
 
