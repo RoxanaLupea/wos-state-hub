@@ -61,8 +61,10 @@ there before discussing it again.
   gone: the band names the section (the Tyrant pages' titles are the day only). Built on
   profile-draft 24 Nov.
 - Transfers #F0D99D and Tyrant #9DDCF0 (lightened 24 Nov, "ok, better"). SvS, Hellfire,
-  State, My alliance, Map and the player page have no colour of their own yet and use
-  the Calendar's blue.
+  State, My alliance and Map have no colour of their own yet and use the Calendar's blue.
+- The player page has the colour of the account's alliance: the 1458, its accent and its
+  second colour all come from it, one accent and one second colour for the whole page
+  (Roxanne, 24 Nov).
 - The phone's own back does what the site's Back does and nothing more (see "Calendar
   selection" below). It never moves from one section to another: sections are opened
   by tapping them.

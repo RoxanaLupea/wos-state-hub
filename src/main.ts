@@ -1209,11 +1209,15 @@ function drawPage(app: HTMLElement): void {
   document.documentElement.dataset.section = view.openPage;
   document.documentElement.dataset.event = view.openPage === 'event' ? currentEventTypeId() ?? '' : '';
 
+  setPageColour('');
   if (view.openPage === 'player') {
     app.innerHTML = bar + `<main class="page" data-section="player">${playerPage({
       signedIn: person !== null, stateNumber: STATE_NUMBER, profile: profileOptions(), adding: addOptions(),
       leavePrompt: pendingLeave !== null
     })}</main>`;
+    // The player page has the colour of the account's alliance: the 1458, the page's
+    // accent and its second colour all come from it.
+    setPageColour(app.querySelector<HTMLElement>('.pp')?.style.getPropertyValue('--ally').trim() ?? '');
     fitPlayerPage();
     return;
   }
@@ -1269,6 +1273,19 @@ function drawPage(app: HTMLElement): void {
     fitBarLabels(panel);
     sizeLanes(panel);
   }
+}
+
+// A page whose colour comes from its content rather than its section (the player page,
+// from the alliance) sets it on the page's root; an empty colour leaves the section's.
+function setPageColour(colour: string): void {
+  const root = document.documentElement.style;
+  if (!colour) {
+    for (const name of ['--section', '--accent', '--accent-ink']) root.removeProperty(name);
+    return;
+  }
+  root.setProperty('--section', colour);
+  root.setProperty('--accent', colour);
+  root.setProperty('--accent-ink', '#1C2333');
 }
 
 // Today is in sight when the shown month (or week, or year) holds it. Grey days of the

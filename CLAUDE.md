@@ -84,6 +84,8 @@ she asks for a change.
 - Read a request as a goal, not a spec. "Swap between main and alt" means a player
   reaches their other account easily. Where the control goes and how it looks is a
   design decision, made for the whole page and the way a player moves through it.
+- Build only what was discussed. Anything else, including undoing a change of your own,
+  is shown to Roxanne (screenshots) before it is made, never after (24 Nov).
 - Never build something that is clearly bad. When doing exactly what was said would
   hurt how the page works, say so in one or two sentences before building, and build
   the version that reaches her goal. She still gets the literal version if she wants
