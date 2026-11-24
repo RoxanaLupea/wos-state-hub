@@ -14,15 +14,16 @@
 @media (min-width: 1000px) { .desktop-only-text { display: inline; } }
 
 /* Each week: a row of full-height day boxes behind, the event bars on top. */
-.week-row { position: relative; min-height: 58px; padding: 27px 0 6px; border-top: 1px solid var(--glass-border); }
+/* On a phone the dates are small (12 px) and take little room above the bars. */
+.week-row { position: relative; min-height: 54px; padding: 23px 0 6px; border-top: 1px solid var(--glass-border); }
 .weeks > .week-row:first-child { border-top: none; }
 .day-boxes { position: absolute; inset: 3px 0; }
 .day-box {
   position: relative; display: flex; justify-content: center; align-items: flex-start; padding: 2px 0 0; border: none; background: transparent;
-  border-radius: var(--radius-small); color: var(--text); font-size: 14px; font-weight: 700;
+  border-radius: var(--radius-small); color: var(--text); font-size: 12px; font-weight: 700;
 }
 .day-box.weekend { background: var(--weekend-tint); }
-.day-box .day-number { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; }
+.day-box .day-number { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; }
 .day-box.other-month { color: var(--text-faint); font-weight: 500; }
 .day-box:hover { background: rgba(255, 255, 255, 0.06); }
 /* Today: a short line along the top of the day. The selected day: a soft tint, no border. */
