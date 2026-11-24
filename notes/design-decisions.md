@@ -292,6 +292,17 @@ there before discussing it again.
   function so its key stays secret. A note is translated the first time someone asks
   for it in their language, and the translation is kept with the note.
 
+### Calendar grid (24 Nov)
+
+- The day names are in capitals: the full name on a computer (MONDAY), three letters on a
+  phone (MON). They stay put above the weeks; only the weeks scroll, in their own box,
+  under them (no sticky row with a backing).
+- On a phone the day names (10.5 px) and the dates (12 px) are smaller, with less room
+  above the bars.
+- Today is always in sight when the calendar opens (the site, the section, Today, another
+  month or view): the weeks scroll so today's week is the first one, or to the bottom near
+  the month's end.
+
 ### Calendar selection, bars and event panel (settled and built 22 Nov)
 
 - Selecting in the calendar: tapping a day picks the day;

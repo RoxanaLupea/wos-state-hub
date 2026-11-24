@@ -948,33 +948,59 @@ interface ScrollPlaces {
   calendar: number;
   panel: number;
   eventBody: number;
+  weeks: number;
 }
 
 function scrollPlaces(app: HTMLElement): ScrollPlaces {
   return {
     window: window.scrollY,
     calendar: app.querySelector<HTMLElement>('.calendar-panel')?.scrollTop ?? 0,
+    weeks: app.querySelector<HTMLElement>('.calendar-panel .weeks')?.scrollTop ?? 0,
     panel: app.querySelector<HTMLElement>('.day-panel')?.scrollTop ?? 0,
     eventBody: app.querySelector<HTMLElement>('.event-page-body')?.scrollTop ?? 0
   };
+}
+
+// Whether the calendar has been drawn yet in this visit: its first drawing shows today.
+let calendarShownBefore = false;
+
+// Today's week in sight when the calendar opens (24 Nov): on a computer the weeks' box
+// scrolls so today's week is the first one, or as far as it goes near the month's end; on
+// a phone, where the window scrolls, the window moves down only if today's week is below
+// the screen. A month without today starts at its top.
+function showToday(calendar: HTMLElement, weeks: HTMLElement | null): void {
+  const todayRow = calendar.querySelector<HTMLElement>('.day-box.today')?.closest<HTMLElement>('.week-row');
+  if (weeks && weeks.scrollHeight > weeks.clientHeight + 1) {
+    weeks.scrollTop = todayRow ? weeks.scrollTop + todayRow.getBoundingClientRect().top - weeks.getBoundingClientRect().top : 0;
+    return;
+  }
+  if (!todayRow) return;
+  const bottom = todayRow.getBoundingClientRect().bottom;
+  if (bottom > window.innerHeight) window.scrollBy(0, bottom - window.innerHeight + 16);
 }
 
 function putBackScrollPlaces(app: HTMLElement, places: ScrollPlaces): void {
   const calendar = app.querySelector<HTMLElement>('.calendar-panel');
   const panel = app.querySelector<HTMLElement>('.day-panel');
   const eventBody = app.querySelector<HTMLElement>('.event-page-body');
+  const weeks = calendar?.querySelector<HTMLElement>('.weeks') ?? null;
+  // The calendar opening (the site, the section, Today, another month or view) shows today.
+  const showsToday = startAtTop.wholePage || startAtTop.calendar || !calendarShownBefore;
   if (startAtTop.wholePage) {
     window.scrollTo(0, 0);
     if (calendar) calendar.scrollTop = 0;
-    const weeks = calendar?.querySelector<HTMLElement>('.weeks');
-    if (weeks) weeks.scrollTop = 0;
     if (panel) panel.scrollTop = 0;
     if (eventBody) eventBody.scrollTop = 0;
   } else {
     window.scrollTo(0, places.window);
     if (calendar) calendar.scrollTop = startAtTop.calendar ? 0 : places.calendar;
+    if (weeks) weeks.scrollTop = places.weeks;
     if (panel) panel.scrollTop = startAtTop.panel ? 0 : places.panel;
     if (eventBody) eventBody.scrollTop = startAtTop.panel ? 0 : places.eventBody;
+  }
+  if (calendar) {
+    if (showsToday) showToday(calendar, weeks);
+    calendarShownBefore = true;
   }
   startAtTop.calendar = false;
   startAtTop.panel = false;
@@ -1528,6 +1554,7 @@ function handleClicks(event: MouseEvent): void {
   if (monthButton) {
     view.focusDay = dayFromText(monthButton.dataset.openMonth as string);
     view.calendarView = 'month';
+    startAtTop.calendar = true;
     draw();
     return;
   }
