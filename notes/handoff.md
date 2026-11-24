@@ -38,23 +38,38 @@ file, then the notes CLAUDE.md lists.
 - Every decision above is in notes/design-decisions.md (Player page, Player data from
   the game).
 
-## 2b. Fourth chat on 24 Nov: on profile-draft, to go out with the next push
+## 2b. Fourth chat on 24 Nov: merged into main, waiting for Roxanne's yes to push
+
+Everything below was shown to Roxanne and accepted piece by piece. It is on main and
+profile-draft (the same) in the workspace; ask once before pushing, then check the build.
 
 - Calendar grid: day names in capitals, fixed above the weeks; smaller on a phone;
   today's week in sight when the calendar opens.
 - The band: the open section shows its logo (Calendar: images/events/calendar.png) and
-  full name in its colour, line on the band's edge; "State TRANSFER", "FORTRESS Battles";
-  the pages' own event titles are gone. On a computer, page names on the left, the page's
-  controls on the right.
+  full name in its colour, line on the band's edge; "State TRANSFER", "FORTRESS Battles",
+  "Frostdragon TYRANT" (the word in capitals in the first colour, the other in the
+  second); the pages' own event titles are gone (Tyrant pages show the day only). On a
+  computer, page names on the left, the page's controls on the right; the band keeps its
+  height with everything centred. Page names scroll sideways on a phone when they do not
+  fit.
 - Section colours (design-decisions.md, Navigation): one first and one second colour per
-  page, everywhere; Transfers has a third (blue) for the Timeline highlight; the player
-  page takes its alliance's colour, evened (src/ui/even-colour.ts).
+  page, everywhere (accent, buttons, marks, pop-ups). Calendar #8BB7F4, Fortress #B0AAF1
+  (second 35%), Transfers #F0D99D (second light gold, third #4FA5FC for the Timeline
+  highlight), Tyrant #9DDCF0 (second 50%), SvS #8FB5F4 (its logo's blue), Tundra Arms
+  League #F0CB9D. State, My alliance and Map use the Calendar's. The rule is measured as
+  the accepted colours are: about 75–81% lightness and 72–83% saturation in HSL. The
+  player page takes its alliance's colour, evened (src/ui/even-colour.ts).
+- Pop-ups in the page's colours: Filters, "Save for which accounts?", the menu under the
+  name. The phone's back closes open Filters first.
 - Calendar controls as approved: view icons, Filters sheet / panel, Today only when out
   of sight, UTC swaps to MINE, arrows on a computer.
 - Timeline: no empty lines; Ours shows only our group's span, other lines faint; opens
   on SvS only, All and Groups.
 - Panels always have a gap between them.
-- Database, written 24 Nov: the four main alliances' colours (design-decisions.md).
+- Bear Hunt's short name is BT (data/text/en.json).
+- Database, written 24 Nov: the four main alliances' colours, full and lighter (accent):
+  DVL #9A6CCF / #C2A4E8, TOP #5582E0 / #93B4F5, SKY #D15B60 / #ED9A9A, RUU #CA6719 /
+  #E7A278.
 
 ## 3. The database
 
@@ -116,10 +131,13 @@ Run on 24 Nov (third chat), before the push:
 - R4s setting their members' skill levels (the database allows it; the page for it,
   My alliance > Members, is not built).
 - 13 hero cards not matched to hero numbers yet (design-decisions.md, Open).
-- From 24 Nov: Tyrant's second colour reads as white (Fortress was set to 35%); SvS and
-  Hellfire have no section colour; other pop-ups (Save for which accounts, the account
-  menu) are not in the page colours yet; the phone's back does not close Filters; FUN
-  and the academies' colours; lazy-loading data/text/en.json and rewards.json.
+- Waiting for Roxanne's yes (asked 24 Nov): write the academies' colours, each its main
+  alliance's lighter colour (dvl #C2A4E8, top #93B4F5, abc #ED9A9A), and FUN's grey
+  #8A8F99 (FUN left the state). Picture shown in the chat (alliance-colours).
+- The calendar controls on a computer were shown (cal-desk) but not separately approved.
+- Tundra Arms League's amber is "good enough" and close to the Transfers gold.
+- Lazy-loading data/text/en.json and rewards.json (event tabs must not lag).
+- The hero form question: which form with all heroes Roxanne meant (unanswered).
 - The render copy's transfer dates (tools/render/data) are made up and not linked to
   SvS, so SvS-only shows nothing there.
 - Everything else under Open in notes/design-decisions.md.
