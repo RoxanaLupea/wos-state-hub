@@ -47,24 +47,25 @@ Live and checked on 24 Nov:
 - exalted-skill-levels.sql and skill-levels-in-one-place.sql were run: skill levels are
   kept per in-game ID in exalted_skill_levels only.
 
-Written on 24 Nov (second chat), waiting for Roxanne's yes, to run after the push:
+Run on 24 Nov (second chat), after the push, and checked:
 - supabase/accounts-from-game.sql. Accounts keep only what is typed on the site; the
-  copies of name, power, alliance and tiers go from game_accounts and accounts, and
-  account_alt_accounts goes. Each player's alliance is kept in game_player_alliances,
-  with a counter only while a change is under way; reads write only when something
-  changes. confirm_alliance_move and dismiss_alliance_move (3 days) are for the
-  account's owner, its R4s and admins. Players read their own accounts' game data even
-  while not state members.
-- Order: push the site first (it already reads the game data and works without the new
-  table), then run the file.
+  copies of name, power, alliance and tiers are gone from game_accounts and accounts,
+  and account_alt_accounts is gone. Each player's alliance is kept in
+  game_player_alliances (573 players filled from the rosters and reads), with a counter
+  only while a change is under way; reads write only when something changes.
+  confirm_alliance_move and dismiss_alliance_move (3 days) are for the account's owner,
+  its R4s and admins. Players read their own accounts' game data even while not state
+  members. The 14:10 UTC roster read ran through it without errors.
 
 ## 4. Next work
 
-- Built on main on 24 Nov, not pushed yet: every page reads name, power and alliance
-  from the game data; My alliance's Members comes from the rosters; "my alliance" is the
-  account's kept alliance (game_player_alliances). game-accounts-from-game.sql is deleted.
+- Live since 24 Nov: every page reads name, power and alliance from the game data; My
+  alliance's Members comes from the rosters; "my alliance" is the account's kept
+  alliance (game_player_alliances). Roxanne's and Tif's accounts are in 1252 (DUB) until
+  their transfer, so My alliance shows no alliance of ours for them until then.
 - On profile-draft: a move shown as "X > Y" with Dismiss and Confirm, after 2 hours
-  (design-decisions.md). Not approved yet.
+  (design-decisions.md). Phone approved; the computer layout (badge filling the side
+  down to Updated and Refresh) shown on 24 Nov. Not pushed yet.
 - The computer layout of the header badge (it is still top right there).
 
 ## 5. Open
