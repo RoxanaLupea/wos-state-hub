@@ -65,6 +65,12 @@ Run on 24 Nov (third chat), before the push:
   cached_at) is what "Updated" and Refresh go by; read_at is when the site asked. The
   page looks again every minute while an account shows Updating.
 - The old branch "draft" (21 Nov) is fully in main and is not used.
+- supabase/login-preferences.sql: the player's choices (calendar filters, time, account,
+  the Transfers switches) kept with the login in login_preferences (owner-only), and on
+  the device. Start-up reads in two parallel rounds instead of 11 in a row; a reload keeps
+  the profile open. Add account accepts any ID the game has (no digit pattern).
+- Open: the profile's first open downloads the whole state data (about 620 kB) for the
+  boards; only the player's own ranks are needed.
 
 ## 4. Next work
 
