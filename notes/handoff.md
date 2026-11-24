@@ -69,8 +69,15 @@ Run on 24 Nov (third chat), before the push:
   the Transfers switches) kept with the login in login_preferences (owner-only), and on
   the device. Start-up reads in two parallel rounds instead of 11 in a row; a reload keeps
   the profile open. Add account accepts any ID the game has (no digit pattern).
-- Open: the profile's first open downloads the whole state data (about 620 kB) for the
-  boards; only the player's own ranks are needed.
+- Later on 24 Nov: supabase/account-kinds.sql (Edit accounts saves Main / Alt / Farm
+  together), supabase/state-ranks.sql (our state's boards hourly; other states where a
+  site account is, once a day or on a refresh, no daily copies; the page asks only for its
+  accounts' ranks through game_state_ranks) and supabase/look-up-account.sql (a newly
+  added account is read in full at the next minute).
+- Live on 24 Nov: Edit accounts; the menu without the account list; "Save for which
+  accounts?" on availability; hero cards for Gen 8 to 12 matched to hero numbers.
+- Open: hero numbers before Gen 8 (except Wu Ming, Edith) not matched to cards; the 13
+  epic and rare cards still need names; pop-ups to be designed.
 
 ## 4. Next work
 
