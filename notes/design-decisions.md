@@ -299,6 +299,16 @@ there before discussing it again.
   under them (no sticky row with a backing).
 - On a phone the day names (10.5 px) and the dates (12 px) are smaller, with less room
   above the bars.
+- Calendar controls on a phone (approved 24 Nov, mock-up shop2 in this chat, to be built):
+  the second row has the three views as calendar-page icons on the left (Week one row of
+  days, Month two, Year a stack of pages; the open one bright with a line under it, no
+  buttons) and Filters (funnel and word, no box, no count) on the right. Filters opens a
+  sheet from the bottom, "Show on the calendar" with Done: each category (State,
+  Alliance, Personal, Deals, and Packs to come) with a white-on-glass switch and "6 of 7",
+  its events under it in two columns with their logos, on bright, off grey and dim. This
+  replaces the category chips of 17 Nov. No filled blue buttons and no count badges, ever.
+- Today shows only when today is out of sight (another month or week); the month name
+  keeps its place. UTC is one word with a swap icon that flips to MINE.
 - Today is always in sight when the calendar opens (the site, the section, Today, another
   month or view): the weeks scroll so today's week is the first one, or to the bottom near
   the month's end.
