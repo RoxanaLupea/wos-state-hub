@@ -643,8 +643,11 @@ Game accounts (from 23 Nov, still holds)
   alliance, held the same by its R4s and R5s; state managers, for the state's planning
   except battles; battle managers, for the battles. Open: exactly which pages and
   actions each one gets, decided as each page is built.
-- Alliance colours. None is approved. The site uses the colours from the old sheet's
-  Alliances tab for now.
+- Alliance colours: approved and written 24 Nov for the four main alliances. Each has a
+  full colour (its tags, dots) and, as its accent, that colour's light version at the
+  sections' strength (players' pages): DVL purple #9A6CCF / #C2A4E8, TOP blue #5582E0 /
+  #93B4F5, SKY red #D15B60 / #ED9A9A, RUU orange #CA6719 / #E7A278. FUN and the
+  academies keep the old sheet's colours for now.
 - The shape of each of the three page controls.
 - The names of the Timeline's controls, and how they are arranged.
 - Where the UTC / Mine choice lives, now that it is out of the navigation. Pages
