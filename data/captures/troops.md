@@ -17,12 +17,22 @@
   portraits I to V and VI to X (each with 0 troops), and 1581 Exalted Marksman in
   training.
 - The portraits I to IX are saved in public/images/troops/ as marksmen-t1.png to
-  marksmen-t9.png, cut to the same size and shape as marksmen-t10.png. Infantry and
-  Lancer tiers I to IX are still to come.
+  marksmen-t9.png, cut to the same size and shape as marksmen-t10.png.
 - The camp tabs at the bottom carry the game's class icons: a shield (Infantry Camp), a
   spear head (Lancer Camp) and a bow with an arrow (Marksman Camp). They are saved as
   white icons in public/images/troops/ as infantry-class.png, lancer-class.png and
   marksmen-class.png.
+
+## Infantry and Lancer Camps, tiers I to X (sent 24 Nov 2026, from the owner's account)
+
+- Four screenshots, two per camp (tiers I to V and VI to X), each with the Exalted troop
+  shown and 1581 in training.
+- The portraits I to IX are saved as infantry-t1.png to infantry-t9.png and lancer-t1.png
+  to lancer-t9.png. Marksmen T10 was cut again from the Marksman screenshot, as the
+  saved one had a dark square on the mask.
+- Every troop portrait (all 36) now has one clean shape: the hexagon and the tier badge,
+  without the camp background that showed below the hexagon's lower edges
+  (tools/mockups/player-page-v2/clean_troop_shape.py).
 
 ## Fire Crystal levels (sent 23 Nov 2026, from the owner's account)
 

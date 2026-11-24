@@ -393,7 +393,7 @@ Troops
   overlapping its corner, the name in capitals (Infantry, Lancer, Marksmen) at one size
   so the widest is as wide as the picture (on a computer at most 15px), and under it
   the tier written T10, T6 (no space), Helios or Exalted, and for Exalted "· Lvl. 3".
-  No red. Below T10, the tier's portrait where the repo has it.
+  No red. Every tier from T1 to Exalted has its portrait.
 - "Update troops" with a down arrow under them, on the left, in the alliance's colour,
   only on the person's own account and only with Exalted troops. It opens each Exalted
   troop with the None / Lvl. 1 / Lvl. 2 / Lvl. 3 toggle, then Cancel and Save (Save lit

@@ -282,5 +282,5 @@ and alliance pages all still without a layout, though the data for them exists.
   made by tools/mockups/player-page-v2/clean_hero_cards.py); the camp class icons and
   Marksmen T1-T9 portraits (public/images/troops/); data/captures/heroes.md and
   troops.md updated.
-- Still to come from her: Infantry and Lancer Camp screenshots for tiers I-X; names for
-  the 13 unmatched hero cards. Hero gear is for later.
+- All 36 troop portraits (T1-T10, Helios, Exalted for each type) are in the repo.
+- Still to come from her: names for the 13 unmatched hero cards. Hero gear is for later.
