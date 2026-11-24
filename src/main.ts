@@ -55,7 +55,7 @@ import { PENCIL_ICON, allianceTimeForm, dateChangeForm, fortForm, pencilButton, 
 import { deleteRow, loadRows, saveRow, type Row } from './data/records.ts';
 import { saveGameAccount, setGameAccountKinds } from './data/player-profile.ts';
 import {
-  accountColour, accountMenu, filterFoundryPower, fitPlayerPage, foundryText, filterId, gameReadOf, idProblem, rosterEntriesOf, stateBoardsOf, TROOP_KINDS, withRoster,
+  accountColour, accountMenu, accountQuestion, filterFoundryPower, fitPlayerPage, foundryText, filterId, gameReadOf, idProblem, rosterEntriesOf, stateBoardsOf, TROOP_KINDS, withRoster,
   type AllianceMove, type BarAccount, type BoardEntry, type GameRead, type LookUpState, type RosterEntry, type SkillLevels, type TroopKind
 } from './ui/player-profile.ts';
 import { askGameRefresh, lookUpGameAccount, readGamePlayers, readGameRosters, readGameStates, readPlayerAlliances, readSkillLevels, setSkillLevel, settleAllianceMove } from './data/game-data.ts';
@@ -198,6 +198,8 @@ let openListed: number | 'new' | null = null;
 const listedDraft: Row = {};
 // What each account is while "Edit accounts" is open, by the account's id ("kind:12").
 const kindsDraft: Row = {};
+// An event's answer waiting for "Save for which accounts?" (only with alts).
+let pendingAccountSave: { formName: string; key: string; values: FormData } | null = null;
 // Whether the Labyrinth's six areas are open under the leaderboards.
 let labyrinthOpen = false;
 // The state's top-100 boards, by in-game ID, read once with the accounts' game data.
@@ -1166,7 +1168,7 @@ function drawPage(app: HTMLElement): void {
     // Signed in: the name and picture of the game account they are on, otherwise "Me".
     playerName: person ? (onAccount ? barAccountOf(onAccount).name : '') || 'Me' : null,
     playerPicture: onAccount ? barAccountOf(onAccount).avatar : null,
-    accountMenu: person ? accountMenu(myGameAccounts().map(barAccountOf), openGameAccountId(), isAdmin(person), allMyAccounts().length > 1) : null
+    accountMenu: person ? accountMenu(isAdmin(person), allMyAccounts().length > 1) : null
   });
 
   if (view.openPage === 'player') {
@@ -1290,6 +1292,7 @@ function step(direction: number): void {
 function handleClicks(event: MouseEvent): void {
   const target = event.target as HTMLElement | null;
   if (!target) return;
+  if (answerWhichAccount(target)) return;
 
   // The menu under the player's name opens and closes in place; a tap anywhere else
   // while it is open only closes it.
@@ -1706,6 +1709,67 @@ async function reloadTransfers(): Promise<void> {
 }
 
 // Forms: the player's account, a farm or alt to add, and the forms the pencils open.
+// Saves one of the working pages' forms and reads its tables again. The form is found
+// again on the page, since the page may have been drawn again in between.
+// With accounts given (an event's answer), it is saved for each of them in turn.
+function submitWorkingForm(formName: string, key: string, values: FormData, userId: string, accountIds: string[] = []): void {
+  const text = (name: string) => String(values.get(name) ?? '').trim();
+  const liveForm = () => document.querySelector<HTMLFormElement>(`form[data-form="${formName}"]`);
+  for (const button of Array.from(liveForm()?.querySelectorAll('button') ?? [])) button.disabled = true;
+  const saving = accountIds.length === 0 ? saveWorkingForm(formName, key, text, values, userId) : (async () => {
+    let tables: string[] = [];
+    for (const id of accountIds) {
+      values.set('save_for', id);
+      tables = await saveWorkingForm(formName, key, text, values, userId);
+    }
+    return tables;
+  })();
+  saving
+    .then(async tables => { view.editing = null; await rereadTables(...tables); draw(); })
+    .catch(problem => {
+      const form = liveForm();
+      for (const button of Array.from(form?.querySelectorAll('button') ?? [])) button.disabled = false;
+      const message = form?.querySelector<HTMLElement>('[data-form-message]');
+      if (message) message.textContent = problem instanceof Error ? problem.message : String(problem);
+    });
+}
+
+// "Save for which accounts?": put over the page (outside the part that is drawn again, so
+// what was typed stays): accounts are ticked, then Save; Cancel or a tap beside it closes it.
+function askWhichAccount(waiting: { formName: string; key: string; values: FormData }): void {
+  pendingAccountSave = waiting;
+  document.querySelector('.account-question')?.remove();
+  const holder = document.createElement('div');
+  holder.className = 'account-question';
+  holder.innerHTML = accountQuestion(myGameAccounts().map(barAccountOf));
+  document.body.appendChild(holder);
+}
+
+function answerWhichAccount(target: HTMLElement): boolean {
+  const choice = target.closest<HTMLElement>('.account-question [data-save-for]');
+  if (!choice) return false;
+  const answer = choice.dataset.saveFor as string;
+  // A tap inside the question but not on a button does nothing.
+  if (answer === 'cancel' && target.closest('.leave-prompt-box') && !target.closest('button')) return true;
+  const question = document.querySelector('.account-question');
+  if (answer !== 'cancel' && answer !== 'save') {
+    // An account is ticked or unticked in place; Save lights once one is ticked.
+    const picked = !choice.classList.contains('picked');
+    choice.classList.toggle('picked', picked);
+    choice.setAttribute('aria-pressed', String(picked));
+    const save = question?.querySelector<HTMLButtonElement>('[data-save-for="save"]');
+    if (save) save.disabled = !question?.querySelector('.picked');
+    return true;
+  }
+  const ids = Array.from(question?.querySelectorAll<HTMLElement>('.picked') ?? []).map(one => one.dataset.saveFor as string);
+  const waiting = pendingAccountSave;
+  pendingAccountSave = null;
+  question?.remove();
+  if (!waiting || !person || answer === 'cancel' || ids.length === 0) return true;
+  submitWorkingForm(waiting.formName, waiting.key, waiting.values, person.userId, ids);
+  return true;
+}
+
 function handleSubmits(event: SubmitEvent): void {
   const form = (event.target as HTMLElement | null)?.closest<HTMLFormElement>('form[data-form]');
   if (!form || !person) return;
@@ -1716,13 +1780,13 @@ function handleSubmits(event: SubmitEvent): void {
   const signedIn = person;
   if (WORKING_FORMS.includes(form.dataset.form ?? '')) {
     const formName = form.dataset.form as string;
-    for (const button of Array.from(form.querySelectorAll('button'))) button.disabled = true;
-    saveWorkingForm(formName, form.dataset.key ?? '', text, values, signedIn.userId)
-      .then(async tables => { view.editing = null; await rereadTables(...tables); draw(); })
-      .catch(problem => {
-        for (const button of Array.from(form.querySelectorAll('button'))) button.disabled = false;
-        if (message) message.textContent = problem instanceof Error ? problem.message : String(problem);
-      });
+    // An event's answer is for one account: with alts the player says which; with only a
+    // main (farms do not answer) it is the main's.
+    if (formName === 'availability' && myGameAccounts().length > 1) {
+      askWhichAccount({ formName, key: form.dataset.key ?? '', values });
+      return;
+    }
+    submitWorkingForm(formName, form.dataset.key ?? '', values, signedIn.userId);
     return;
   }
   if (form.dataset.form?.startsWith('edit-')) {
@@ -2496,11 +2560,16 @@ async function saveWorkingForm(
   const run = currentEventRun();
   const runColumns = run ? { event_type_id: run.eventTypeId, event_date: textFromDay(run.startDay) } : null;
 
-  // Answers are kept per game account: the one picked in the menu under the name.
-  const active = person ? myAccountRow() : null;
+  // Answers are kept per game account: each one ticked in "Save for which accounts?", or
+  // the main when there are no alts. The answer saved is that account's own, new or not.
+  const savedFor = String(values.get('save_for') ?? '');
+  const active = person ? (savedFor ? myGameAccounts().find(one => String(one.id) === savedFor)
+    : myGameAccounts().find(one => one.kind === 'main')) ?? null : null;
   if (formName === 'availability') {
     if (!runColumns) throw new Error('No event is coming up.');
     if (!active) throw new Error('Fill in your details on your page first.');
+    key = String((tableRows.get('availability') ?? []).find(one => one.event_type_id === runColumns.event_type_id &&
+      one.event_date === runColumns.event_date && one.game_account_id === active.id)?.id ?? '');
     const from = hour('from_hour_utc');
     const to = hour('to_hour_utc');
     const isUnavailable = values.get('is_unavailable') === 'on';

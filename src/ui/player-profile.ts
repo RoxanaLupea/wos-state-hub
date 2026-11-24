@@ -655,26 +655,41 @@ const MENU_EDIT_ICON = '<svg width="18" height="18" viewBox="0 0 24 24" fill="no
   '<path d="M11 3.5H7A3.5 3.5 0 0 0 3.5 7v10A3.5 3.5 0 0 0 7 20.5h10a3.5 3.5 0 0 0 3.5-3.5v-4.5"/>' +
   '<path d="M17.6 3.2a2.3 2.3 0 0 1 3.2 3.2L12 15.2l-4.2 1 1-4.2z"/></svg>';
 
-export function accountMenu(accounts: BarAccount[], activeId: number | 'new', isAdmin: boolean, canEditAccounts = false): string {
-  // With only a main there is nothing to switch to, so the accounts are not listed.
-  const choices = accounts.length < 2 ? '' : accounts.map(account =>
-    `<button type="button" class="account-choice${activeId === account.row.id ? ' open' : ''}" role="menuitem"` +
-    ` data-game-account="${escapeForPage(String(account.row.id))}"` +
-    (account.colour ? ` style="--alliance-colour: ${escapeForPage(account.colour)}"` : '') + '>' +
-    `<span class="choice-pic">${pictureOf(account.avatar, account.name)}</span><span class="account-choice-text">` +
-    `<span class="account-choice-kind">${ACCOUNT_KIND_NAMES[String(account.row.kind)] ?? ''}</span>` +
-    `<span class="account-choice-name">${escapeForPage(account.name)}</span></span></button>`).join('');
+// The menu under the name (24 Nov): no list of accounts, since the photos on the profile
+// swap between them; adding and editing accounts, the profile, Admin for admins, and
+// signing out.
+export function accountMenu(isAdmin: boolean, canEditAccounts = false): string {
   const item = (attributes: string, icon: string, label: string, extra = '') =>
     `<button type="button" class="account-menu-item${extra}" role="menuitem" ${attributes}>` +
     `<span class="account-menu-plus">${icon}</span>${label}</button>`;
-  return '<div class="account-menu glass" role="menu">' + choices +
-    (choices ? '<div class="account-menu-line"></div>' : '') +
+  return '<div class="account-menu glass" role="menu">' +
     item('data-add-account', PLUS_ICON, 'Add account') +
     // With a second account (an alt or a farm) there is something to set.
     (canEditAccounts ? item('data-edit-accounts', MENU_EDIT_ICON, 'Edit accounts') : '') +
     item('data-page="player"', PROFILE_ICON, 'Profile') +
     (isAdmin ? item('data-page="admin"', GEAR, 'Admin') : '') +
     item('data-sign-out', SIGN_OUT_ICON, 'Sign out', ' danger') + '</div>';
+}
+
+// "Save for which accounts?" (24 Nov): asked when an event's answer is saved by a player
+// with alts, listing the main and the alts (farms do not answer). Each one is ticked on
+// its own, so the answer can go to one account or several at once; nothing is ticked at
+// first, so no account is answered for by accident, and Save stays dimmed until one is.
+const TICK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor"' +
+  ' stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+export function accountQuestion(accounts: BarAccount[]): string {
+  const choices = accounts.map(account =>
+    // Drawn as the menu drew its accounts: picture, then Main or Alt over the name.
+    `<button type="button" class="account-choice" data-save-for="${escapeForPage(String(account.row.id))}" aria-pressed="false">` +
+    `<span class="choice-pic">${pictureOf(account.avatar, account.name)}</span>` +
+    `<span class="account-choice-text"><span class="account-choice-kind">${ACCOUNT_KIND_NAMES[String(account.row.kind)] ?? ''}</span>` +
+    `<span class="account-choice-name">${escapeForPage(account.name)}</span></span><span class="save-for-tick">${TICK}</span></button>`).join('');
+  return '<div class="leave-prompt" data-save-for="cancel"><div class="leave-prompt-box glass" role="dialog" aria-modal="true">' +
+    '<p class="leave-prompt-text">Save for which accounts?</p>' +
+    `<div class="save-for-list">${choices}</div>` +
+    '<div class="leave-prompt-actions"><button type="button" class="ghost-button" data-save-for="cancel">Cancel</button>' +
+    '<button type="button" class="primary-button" data-save-for="save" disabled>Save</button></div></div></div>';
 }
 
 // The sizes the page sets once it is drawn: the leaderboard names and the lines under the heroes each at

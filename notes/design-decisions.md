@@ -464,9 +464,22 @@ On a computer
 
 Game accounts (from 23 Nov, still holds)
 - A person has one main and any number of alts and farms. An alt is a full account;
-  farms have no troops and are not accounts to switch to. The account the person is on
-  is picked in the menu under their name in the top bar; it is the one filled in on
-  every page, and its alliance is their alliance.
+  farms have no troops and are not accounts to switch to. Its alliance is their alliance.
+- The menu under the name does not list the accounts (24 Nov): the photos under the
+  profile's header swap between them. The menu holds Add account, Edit accounts (with a
+  second account), Profile, Admin for admins, and Sign out.
+- Edit accounts (approved 24 Nov): opens the photo row in place on the profile, drawn
+  like the troops' skill levels: the title line ACCOUNTS with Cancel and Save, every
+  account (the one shown too) with its picture, its name, and Main / Alt / Farm as words
+  one under the other, the picked one bold. Always one main: picking Main on another
+  account makes the old one an Alt, and the main's own Alt and Farm cannot be picked. The
+  player stays on the account they were on; if it became a farm, they are put on the
+  main. Saved together (supabase/account-kinds.sql).
+- An event's answer (Tyrant availability and the like) is for accounts, not for the one
+  the player is on (24 Nov): with alts, saving asks "Save for which accounts?", listing
+  the main and the alts as the menu drew them, each ticked on its own, so one answer can
+  go to one account or several; nothing is ticked at first and Save stays dimmed until
+  one is. With no alts (only farms) it saves for the main without asking.
 
 ### Player data from the game (23 Nov)
 
