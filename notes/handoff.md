@@ -63,9 +63,9 @@ Run on 24 Nov (second chat), after the push, and checked:
   alliance's Members comes from the rosters; "my alliance" is the account's kept
   alliance (game_player_alliances). Roxanne's and Tif's accounts are in 1252 (DUB) until
   their transfer, so My alliance shows no alliance of ours for them until then.
-- On profile-draft: a move shown as "X > Y" with Dismiss and Confirm, after 2 hours
-  (design-decisions.md). Phone approved; the computer layout (badge filling the side
-  down to Updated and Refresh) shown on 24 Nov. Not pushed yet.
+- Live since 24 Nov: a move shown as "X > Y" with Dismiss and Confirm, after 2 hours
+  (design-decisions.md); on a computer the badge fills the side down to Updated and
+  Refresh. profile-draft is the same as main.
 - The computer layout of the header badge (it is still top right there).
 
 ## 5. Open

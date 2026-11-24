@@ -30,6 +30,9 @@ read the notes file it names (for profile-draft: notes/profile-draft.md).
   and why, list the items still open, and wait for a clear yes to that exact action.
 - Approved changes are kept here and pushed together once enough has gathered, not
   after every change.
+- When she says to push, everything goes live: main and whatever is on the draft branch
+  together, so she sees it all on the site. Draft or not makes no difference to a push
+  she asked for (24 Nov).
 
 ## How the work is done
 

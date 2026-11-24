@@ -515,8 +515,10 @@ Game accounts (from 23 Nov, still holds)
 - On a phone (approved 24 Nov): the pair takes the badge's corner, the old alliance
   dimmed, an arrow, the new one, as tall as a single badge; Dismiss (red cross) and
   Confirm (green tick), drawn like the troops' Cancel and Save, sit on one line right
-  under it, below the header, so the name keeps the whole width. On a computer the pair
-  is in the top right with Dismiss and Confirm under it, above Updated and Refresh.
+  under it, below the header, so the name keeps the whole width. On a computer the
+  badge stays at the top right and fills the side down to Updated and Refresh, its tag
+  larger too; during a move the pair fills that room with Dismiss and Confirm under it
+  (24 Nov).
   While a move is hidden (under 2 hours, or dismissed), the badge and the page's colour
   are the alliance the account counts in.
 - An account on the site is only a link from a login to a member the game data already
