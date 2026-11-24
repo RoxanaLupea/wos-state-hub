@@ -567,6 +567,9 @@ Game accounts (from 23 Nov, still holds)
 - Player page: whether the menu under the name still lists the account the person is on.
 - Player page: names for the 13 hero cards not matched yet (9 epic, 4 rare), and hero
   gear (the data has every arena hero's four pieces and their levels).
+- Player page: hero numbers before Gen 8 (other than Wu Ming 50019 and Edith 50032) are
+  not matched to their cards yet; Gen 8 to 12 are (50034 to 50049, 24 Nov), and 50037 is
+  not a generation hero.
 - State page leaderboards: which of the 26 lead. The owner named The Labyrinth (total),
   Total Pet Power, Total Expert Power and Exploration Stage as needed; the rest is to be
   worked out later.

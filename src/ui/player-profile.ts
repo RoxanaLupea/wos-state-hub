@@ -252,9 +252,20 @@ const CHEVRON = '<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path 
 const HEAD = '<svg class="sil" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="15" r="7"/>' +
   '<path d="M6 38c1-9 7-14 14-14s13 5 14 14z"/></svg>';
 
-// The game's hero cards by hero number (public/images/heroes/cards). The numbers come
-// from the state's Hero Power board; a hero whose number has no card yet keeps a drawn card.
-const HERO_CARDS: Record<number, string> = { 50019: 'wuming', 50032: 'edith', 50041: 'gregory', 50043: 'blanchette', 50044: 'eleonora', 50046: 'rufus' };
+// The game's hero cards by hero number (public/images/heroes/cards). Wu Ming, Edith,
+// Gregory, Blanchette, Eleonora and Rufus come from the state's Hero Power board. From
+// Gen 8 on the numbers follow the generations, three to a generation in the order
+// infantry, lancer, marksman (the game data's classes agree, and Gen 12's are held only
+// in Gen 12 states); 50037 is not one of them. A hero whose number has no card yet keeps
+// a drawn card.
+const HERO_CARDS: Record<number, string> = {
+  50019: 'wuming', 50032: 'edith',
+  50034: 'gatot', 50035: 'sonya', 50036: 'hendrik',
+  50038: 'magnus', 50039: 'fred', 50040: 'xura',
+  50041: 'gregory', 50042: 'freya', 50043: 'blanchette',
+  50044: 'eleonora', 50045: 'lloyd', 50046: 'rufus',
+  50047: 'hervor', 50048: 'karol', 50049: 'ligeia'
+};
 
 // The game's class icons, cut from the camp tabs.
 const CLASS_FILES: Record<string, string> = { Infantry: 'infantry', Lancer: 'lancer', Marksman: 'marksmen' };
