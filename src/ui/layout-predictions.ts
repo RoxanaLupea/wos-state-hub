@@ -1,7 +1,7 @@
 // The dates scroll as one sheet, like a spreadsheet: one scroll down moves every
 // column together, under date heads that stay at the top. Across and down are two
-// scrollers, so a swipe moves the sheet one way at a time. The range this state is in
-// sits on the same line in every column, as in the sheet, and the sheet opens with
+// scrollers, so a swipe moves the sheet one way at a time. Every column starts at its
+// top, with no empty lines added above it (Roxanne, 24 Nov), and the sheet opens with
 // our group in view.
 
 // How many ranges stay visible above the group this state is in. Near the top,
@@ -36,42 +36,24 @@ export function layoutPredictions(root: ParentNode): void {
     return;
   }
 
-  // Where our range is in each column, measured from the column's top.
-  for (const column of columns) column.style.paddingTop = '0px';
-  const ourRangeTop = new Map<HTMLElement, number>();
-  for (const column of columns) {
-    const ourRange = column.querySelector<HTMLElement>('.group-row.is-us');
-    if (ourRange) ourRangeTop.set(column, ourRange.getBoundingClientRect().top - column.getBoundingClientRect().top);
-  }
-  if (!ourRangeTop.size) {
+  // Where our range is in the column the strip opens on (the next transfer), measured
+  // from the column's top; the other columns can have it a little higher or lower.
+  const nextColumn = sheet.querySelector<HTMLElement>('[data-next-transfer] .date-block-scroll');
+  const openColumn = nextColumn?.querySelector('.group-row.is-us') ? nextColumn
+    : columns.find(column => column.querySelector('.group-row.is-us'));
+  const ourRange = openColumn?.querySelector<HTMLElement>('.group-row.is-us');
+  if (!openColumn || !ourRange) {
     openOn(0);
     return;
   }
+  const lowest = ourRange.getBoundingClientRect().top - openColumn.getBoundingClientRect().top;
 
-  // A column with fewer lines above our range starts lower, by empty lines, so our
-  // range is on the same line in every column. When every date has the same ranges
-  // above it, as it does now, nothing is added.
-  const lowest = Math.max(...Array.from(ourRangeTop.values()));
-  const rowHeight = columns[0].querySelector<HTMLElement>('.group-row:not(.is-us)')?.offsetHeight ?? 0;
-  for (const column of columns) {
-    const top = ourRangeTop.get(column);
-    const space = top === undefined ? 0 : Math.round(lowest - top);
-    column.style.paddingTop = space + 'px';
-    column.classList.toggle('starts-lower', space > 0);
-    column.style.setProperty('--empty-space', space + 'px');
-    if (rowHeight) column.style.setProperty('--empty-line', rowHeight + 'px');
-  }
-
-  // Opens with a couple of ranges above our group, in the column that needs the most
-  // room for that, as long as our range itself stays in view.
+  // Opens with a couple of ranges above our group in that column, as long as our range
+  // itself stays in view.
   const headsHeight = sheet.querySelector<HTMLElement>('.date-block-top')?.offsetHeight ?? 0;
   const roomBelowHeads = sheet.clientHeight - headsHeight;
-  let openingTop = lowest;
-  for (const column of columns) {
-    const space = parseFloat(column.style.paddingTop) || 0;
-    openingTop = Math.min(openingTop, space + openingPlace(column, roomBelowHeads));
-  }
-  const ourRangeHeight = sheet.querySelector<HTMLElement>('.group-row.is-us')?.offsetHeight ?? 0;
+  const openingTop = openingPlace(openColumn, roomBelowHeads);
+  const ourRangeHeight = ourRange.offsetHeight;
   const groupTop = Math.max(0, openingTop, lowest + ourRangeHeight - roomBelowHeads);
   openOn(groupTop);
 

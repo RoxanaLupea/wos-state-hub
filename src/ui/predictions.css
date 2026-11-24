@@ -177,9 +177,8 @@
   color: var(--event-ink);
 }
 
-/* A column's rows scroll with the whole sheet. Each column starts lower or higher by
-   the space set above its rows, so this state's group lines up across the dates. */
-.date-block-scroll { flex: none; --empty-line: 24px; --empty-space: 0px; }
+/* A column's rows scroll with the whole sheet. Every column starts at its top. */
+.date-block-scroll { flex: none; }
 .date-block-rows { flex: 1 1 auto; }
 .date-block-rows .group-row:last-child { border-bottom: none; border-radius: 0 0 7px 7px; }
 .date-block-head {
@@ -242,13 +241,6 @@
 /* The first row of a big group gets a line above it. It is drawn inside the row, so
    it adds no height and every line stays level with the same line in the next date. */
 .group-row.starts { box-shadow: inset 0 1px 0 var(--glass-border); }
-/* A column that starts lower is filled above its rows with empty lines, like the
-   empty cells of a sheet, rather than a blank gap. */
-.date-block-scroll.starts-lower {
-  background: repeating-linear-gradient(to top, transparent 0, transparent calc(var(--empty-line) - 1px),
-    var(--glass-border) calc(var(--empty-line) - 1px), var(--glass-border) var(--empty-line));
-  background-size: 100% var(--empty-space); background-repeat: no-repeat; background-position: top;
-}
 
 .predictions-empty { padding: 16px; font-size: 14px; color: var(--text-muted); }
 

@@ -114,13 +114,14 @@ there before discussing it again.
   parchment colour, like the ticked boxes (23 Nov). A group is made of the ranges
   that share a furnace cap and a generation.
 - The date columns scroll as one sheet, like a spreadsheet: no scrollbar per column,
-  one scroll down for all of them under date heads that stay at the top. The lines
-  are as in the sheet: our range is on the same line in every date, from the first
-  to the last. Where a column has fewer lines above it (Ours, or Groups), it starts
-  lower with empty lines, like empty cells, never a blank gap (23 Nov).
-- Ours shows the ranges our group covers on any of the dates (from the highest to the
-  lowest), with two faint lines above and two below; lines outside our group are faint
-  (Roxanne, 24 Nov).
+  one scroll down for all of them under date heads that stay at the top. Every column
+  starts at its top, as in the spreadsheet: no empty lines are added above a column,
+  in any view (Roxanne, 24 Nov: "I never asked for them, I never had them in the
+  spreadsheet"). Where the dates list the same ranges, our range is on the same line
+  in every date by itself.
+- Ours shows the ranges our group covers on any of the dates, from the highest to the
+  lowest, and nothing above or below them; on each date the lines outside its own group
+  are faint (Roxanne, 24 Nov).
 - Up and down and across are two deliberate moves: a swipe moves the sheet one way
   only (23 Nov).
 - Two ways back. The next transfer: a tab with its date at the bottom, on the side

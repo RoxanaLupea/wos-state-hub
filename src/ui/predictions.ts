@@ -51,9 +51,8 @@ function rangeCells(from: number, to: number): string {
 }
 
 // With Ours chosen: the states our group covers on any of the dates, from the highest
-// range to the lowest. Each date shows those, with two faint lines above and below.
+// range to the lowest. Each date shows those and nothing more (Roxanne, 24 Nov).
 interface OursSpan { fromState: number; toState: number; }
-const FAINT_LINES = 2;
 
 function oursSpanOf(options: PredictionsOptions): OursSpan | null {
   if (options.scope === 'all' || options.watchedState === null) return null;
@@ -74,8 +73,8 @@ function dateBlock(
   const watched = options.watchedState === null
     ? undefined : groupOfState(everyGroup, options.watchedState);
 
-  // With Ours chosen, the date shows the states our group covers on any date, with two
-  // faint lines above and below; lines outside our group are faint (Roxanne, 24 Nov).
+  // With Ours chosen, the date shows the states our group covers on any date; the lines
+  // outside its own group are faint (Roxanne, 24 Nov).
   const isWatching = span !== null;
   const big = everyGroup;
   const ours = watched;
@@ -115,8 +114,7 @@ function dateBlock(
     const first = rowList.findIndex(row => row.toState >= span.fromState);
     let last = -1;
     rowList.forEach((row, index) => { if (row.fromState <= span.toState) last = index; });
-    shownRows = first < 0 || last < 0 ? [] :
-      rowList.slice(Math.max(0, first - FAINT_LINES), Math.min(rowList.length, last + 1 + FAINT_LINES));
+    shownRows = first < 0 || last < 0 ? [] : rowList.slice(first, last + 1);
   }
   const rows = shownRows.map(row => row.html).join('');
 
