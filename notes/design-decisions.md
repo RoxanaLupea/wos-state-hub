@@ -96,7 +96,8 @@ there before discussing it again.
 - The furnace cap and the generation are centred, and so are their columns.
 - The section is named "State TRANSFER" in the band when open: the first word as
   written and in the second colour, the rest in capitals in the first (24 Nov; the
-  page's own title is gone).
+  page's own title is gone). Fortress the other way round: "FORTRESS Battles", FORTRESS
+  in the first colour, Battles in the second (24 Nov).
 - Date headers are parchment with navy ink and keep the glass texture. Every header
   looks the same; the next transfer is marked by its golden border alone.
 - The pages are Timeline, Invites and Records.

@@ -111,12 +111,17 @@ function openTab(page: Page, options: TopBarOptions): string {
   const logo = page.id === 'calendar' ? `<img class="event-icon" src="${escapeForPage(imageUrl(CALENDAR_LOGO_FILE))}" alt="">`
     : eventTypeId ? eventIcon(eventTypeId) : '';
   const name = eventTypeId ? eventTypeName(eventTypeId) : page.label;
-  // Transfers is written "State TRANSFER": the first word as it is, in the second
-  // colour, and the rest in capitals (Roxanne, 24 Nov).
+  // Two sections write their name in two parts (Roxanne, 24 Nov): one word in capitals
+  // in the first colour, the other as it is in the second colour. "State TRANSFER" and
+  // "FORTRESS Battles".
   const firstSpace = name.indexOf(' ');
-  if (page.id === 'transfers' && firstSpace > 0) {
-    return `${logo}<span><span class="nav-first-word">${escapeForPage(name.slice(0, firstSpace))}</span> ` +
-      `${escapeForPage(name.slice(firstSpace + 1).toUpperCase())}</span>`;
+  if (firstSpace > 0 && (page.id === 'transfers' || page.id === 'fortress')) {
+    const first = name.slice(0, firstSpace);
+    const rest = name.slice(firstSpace + 1);
+    const second = (words: string) => `<span class="nav-second-word">${escapeForPage(words)}</span>`;
+    return `${logo}<span>` + (page.id === 'transfers'
+      ? `${second(first)} ${escapeForPage(rest.toUpperCase())}`
+      : `${escapeForPage(first.toUpperCase())} ${second(rest)}`) + '</span>';
   }
   return `${logo}<span>${escapeForPage(name)}</span>`;
 }
