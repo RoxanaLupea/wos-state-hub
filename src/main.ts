@@ -1280,12 +1280,11 @@ function drawPage(app: HTMLElement): void {
 function setPageColour(colour: string): void {
   const root = document.documentElement.style;
   if (!colour) {
-    for (const name of ['--section', '--accent', '--accent-ink']) root.removeProperty(name);
+    for (const name of ['--section', '--section-ink']) root.removeProperty(name);
     return;
   }
   root.setProperty('--section', colour);
-  root.setProperty('--accent', colour);
-  root.setProperty('--accent-ink', '#1C2333');
+  root.setProperty('--section-ink', '#1C2333');
 }
 
 // Today is in sight when the shown month (or week, or year) holds it. Grey days of the

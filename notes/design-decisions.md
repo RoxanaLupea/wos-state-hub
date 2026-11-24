@@ -52,6 +52,9 @@ there before discussing it again.
   takes the open section's colour. Buttons on a page are in that page's colour. The
   second colour is almost white with the section's tint, much lighter than the main one.
   Pop-ups use the page's two colours too (24 Nov).
+- A whole page has one first colour and one second colour, everywhere: its accent, its
+  buttons, what it marks (current phase, holders, our group) and its pop-ups. No other
+  accent colour on the page (Roxanne, 24 Nov).
   Accepted 24 Nov: Calendar #8BB7F4, Fortress #B0AAF1 (gold and cyan at the same
   strength looked too dark to read and are being lightened).
 - The open section shows its logo (the Calendar has its own, calendar.png) and its full
