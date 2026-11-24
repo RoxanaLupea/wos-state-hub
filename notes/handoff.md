@@ -71,7 +71,8 @@ once Roxanne says so.
 - Bear Hunt's short name is BT (data/text/en.json).
 - Database, written 24 Nov: the four main alliances' colours, full and lighter (accent):
   DVL #9A6CCF / #C2A4E8, TOP #5582E0 / #93B4F5, SKY #D15B60 / #ED9A9A, RUU #CA6719 /
-  #E7A278.
+  #E7A278. The academies take their main's lighter colour (dvl #C2A4E8, top #93B4F5, abc
+  #ED9A9A); FUN, which left the state, is grey #8A8F99.
 
 ## 3. The database
 
@@ -133,9 +134,6 @@ Run on 24 Nov (third chat), before the push:
 - R4s setting their members' skill levels (the database allows it; the page for it,
   My alliance > Members, is not built).
 - 13 hero cards not matched to hero numbers yet (design-decisions.md, Open).
-- Waiting for Roxanne's yes (asked 24 Nov): write the academies' colours, each its main
-  alliance's lighter colour (dvl #C2A4E8, top #93B4F5, abc #ED9A9A), and FUN's grey
-  #8A8F99 (FUN left the state). Picture shown in the chat (alliance-colours).
 - The calendar controls on a computer were shown (cal-desk) but not separately approved.
 - Tundra Arms League's amber is "good enough" and close to the Transfers gold.
 - Lazy-loading data/text/en.json and rewards.json (event tabs must not lag).

@@ -655,8 +655,9 @@ Game accounts (from 23 Nov, still holds)
 - Alliance colours: approved and written 24 Nov for the four main alliances. Each has a
   full colour (its tags, dots) and, as its accent, that colour's light version at the
   sections' strength (players' pages): DVL purple #9A6CCF / #C2A4E8, TOP blue #5582E0 /
-  #93B4F5, SKY red #D15B60 / #ED9A9A, RUU orange #CA6719 / #E7A278. FUN and the
-  academies keep the old sheet's colours for now.
+  #93B4F5, SKY red #D15B60 / #ED9A9A, RUU orange #CA6719 / #E7A278. Each academy takes
+  its main alliance's lighter colour (dvl #C2A4E8, top #93B4F5, abc #ED9A9A); FUN left the
+  state and is grey #8A8F99 (written 24 Nov).
 - The shape of each of the three page controls.
 - The names of the Timeline's controls, and how they are arranged.
 - Where the UTC / Mine choice lives, now that it is out of the navigation. Pages

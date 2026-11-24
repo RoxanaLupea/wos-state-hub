@@ -194,7 +194,6 @@ Exalted only on FC10 (confirmed 22 Nov). Not confirmed: skill levels 0 to 3.
 - Sign-in with Discord and Google.
 - Notifications.
 - Translations: the PO workflow, the font, and a CJK companion face.
-- Colours for FUN and the academies (the four main alliances were set 24 Nov).
 - The hero planner, which is its own project.
 
 ## Facts still needed from the game
