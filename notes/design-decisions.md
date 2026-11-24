@@ -70,8 +70,9 @@ there before discussing it again.
   Timeline's highlight: the blue (#4FA5FC) that lights our group and, stronger, our
   range; our range is written in gold (Roxanne, 24 Nov).
 - Transfers #F0D99D and Tyrant #9DDCF0 (lightened 24 Nov, "ok, better"). SvS and
-  Hellfire take one of their logo's colours: SvS's red #EF7F74 (stronger than the others
-  so it does not read pink) and the league's amber #F0BD7D (lighter) (24 Nov). SvS and
+  Hellfire take one of their logo's colours: SvS's blue #8FB5F4 at the sections' strength
+  (red read too pink, then too red) and the league's amber #F0BD7D, lighter than the
+  rule, "ok for now" (24 Nov). SvS and
   Hellfire's second colour is 35% of their colour with white, as Fortress's. State, My alliance and Map use the Calendar's
   blue.
 - Every pop-up uses the page's two colours (Filters, Save for which accounts, the menu
