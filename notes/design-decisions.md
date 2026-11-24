@@ -63,9 +63,9 @@ there before discussing it again.
   logo, sections, clock and Sign in centred on one line. The page's own event title is
   gone: the band names the section (the Tyrant pages' titles are the day only). Built on
   profile-draft 24 Nov.
-- Transfers' second colour is a light version of the blue its rows always carried, not
-  the gold made light; our group and our range are lit with it, our range written in
-  gold (Roxanne, 24 Nov).
+- Transfers keeps the light gold as its second colour and has a third, only for the
+  Timeline's highlight: the blue (#4FA5FC) that lights our group and, stronger, our
+  range; our range is written in gold (Roxanne, 24 Nov).
 - Transfers #F0D99D and Tyrant #9DDCF0 (lightened 24 Nov, "ok, better"). SvS, Hellfire,
   State, My alliance and Map have no colour of their own yet and use the Calendar's blue.
 - The player page has the colour of the account's alliance: the 1458, its accent and its

@@ -220,15 +220,16 @@
 .group-row.faint { opacity: 0.38; }
 /* Three weights, lightest to strongest: the rest of the list, the group this state
    is in, and the one range the state itself sits in. Our group and our range are
-   lit with the page's second colour at two strengths, so nothing has to be labelled. */
+   lit with the page's third colour, its blue, at two strengths, so nothing has to be
+   labelled. */
 /* Our own group is written whiter than the rest, so it does not read the same as
    every other group. */
-.group-row.ours { background: color-mix(in srgb, var(--section-second) 12%, transparent); color: #FFFFFF; }
+.group-row.ours { background: color-mix(in srgb, var(--section-third) 12%, transparent); color: #FFFFFF; }
 .group-row.ours span { color: #FFFFFF; }
 .group-row.ours .range-dash { color: rgba(255, 255, 255, 0.55); }
 
 .group-row.is-us {
-  background: color-mix(in srgb, var(--section-second) 24%, transparent);
+  background: color-mix(in srgb, var(--section-third) 28%, transparent);
   font-size: 14.5px; font-weight: 800; padding-top: 5px; padding-bottom: 5px;
   /* Inside it, the range we are in is written in the page's gold. */
   color: var(--section);
