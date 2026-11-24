@@ -72,7 +72,8 @@ there before discussing it again.
   State, My alliance and Map have no colour of their own yet and use the Calendar's blue.
 - The player page has the colour of the account's alliance: the 1458, its accent and its
   second colour all come from it, one accent and one second colour for the whole page
-  (Roxanne, 24 Nov).
+  (Roxanne, 24 Nov). The alliance's colour is evened first: its tint kept, at the
+  sections' lightness and strength, so every alliance reads as clearly (24 Nov).
 - The phone's own back does what the site's Back does and nothing more (see "Calendar
   selection" below). It never moves from one section to another: sections are opened
   by tapping them.

@@ -69,6 +69,7 @@ import {
   rosterPage, settingsPage, territoryPage, transferWorkSections, type WorkContext
 } from './ui/working-pages.ts';
 import { yearRunSteps, yearViewRuns, type YearRun } from './calendar/year-runs.ts';
+import { evenColour } from './ui/even-colour.ts';
 import { PAGES, calendarToolbar, pageById, sectionNav, topBar, type CalendarView } from './ui/shell.ts';
 import { pagePlan } from './ui/page-plan.ts';
 import { playerPage } from './ui/player-page.ts';
@@ -1216,9 +1217,14 @@ function drawPage(app: HTMLElement): void {
       signedIn: person !== null, stateNumber: STATE_NUMBER, profile: profileOptions(), adding: addOptions(),
       leavePrompt: pendingLeave !== null
     })}</main>`;
-    // The player page has the colour of the account's alliance: the 1458, the page's
-    // accent and its second colour all come from it.
-    setPageColour(app.querySelector<HTMLElement>('.pp')?.style.getPropertyValue('--ally').trim() ?? '');
+    // The player page has the colour of the account's alliance, evened to the sections'
+    // lightness and strength: the 1458, the page's accent and its second colour all come
+    // from it.
+    const profile = app.querySelector<HTMLElement>('.pp');
+    const allyColour = profile?.style.getPropertyValue('--ally').trim() ?? '';
+    const evened = allyColour ? evenColour(allyColour) : '';
+    if (profile && evened) profile.style.setProperty('--ally', evened);
+    setPageColour(evened);
     fitPlayerPage();
     return;
   }
