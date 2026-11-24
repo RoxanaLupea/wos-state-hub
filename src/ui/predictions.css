@@ -217,6 +217,8 @@
 .range-fc, .range-gen { text-align: center; color: var(--text-muted); }
 /* Every other big group is shaded, so where one ends and the next starts is plain. */
 .group-row.shaded { background: var(--glass); }
+/* With Ours chosen, the other groups stay in the list but faint. */
+.group-row.faint { opacity: 0.38; }
 /* Three weights, lightest to strongest: the rest of the list, the group this state
    is in, and the one range the state itself sits in. All three are the accent the
    calendar already uses for the day you picked, just at different strengths, so

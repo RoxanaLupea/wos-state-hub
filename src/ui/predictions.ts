@@ -50,24 +50,40 @@ function rangeCells(from: number, to: number): string {
     `<span class="range-to">${to}</span>`;
 }
 
+// With Ours chosen: the states our group covers on any of the dates, from the highest
+// range to the lowest. Each date shows those, with two faint lines above and below.
+interface OursSpan { fromState: number; toState: number; }
+const FAINT_LINES = 2;
+
+function oursSpanOf(options: PredictionsOptions): OursSpan | null {
+  if (options.scope === 'all' || options.watchedState === null) return null;
+  let span: OursSpan | null = null;
+  for (const one of options.dates) {
+    const group = groupOfState(bigGroupsOf(one.groups), options.watchedState);
+    if (!group) continue;
+    span = span ? { fromState: Math.min(span.fromState, group.fromState), toState: Math.max(span.toState, group.toState) }
+      : { fromState: group.fromState, toState: group.toState };
+  }
+  return span;
+}
+
 function dateBlock(
-  date: string, groups: TransferGroup[], follows: TransferFollows, options: PredictionsOptions
+  date: string, groups: TransferGroup[], follows: TransferFollows, options: PredictionsOptions, span: OursSpan | null
 ): string {
   const everyGroup = bigGroupsOf(groups);
   const watched = options.watchedState === null
     ? undefined : groupOfState(everyGroup, options.watchedState);
 
-  // Either every group of that date, or only the one the watched state is in. A
-  // state the game publishes no range for on that date gets an empty column that
-  // says so, rather than quietly falling back to the whole list.
-  const isWatching = options.scope !== 'all' && options.watchedState !== null;
-  const big = isWatching ? (watched ? [watched] : []) : everyGroup;
+  // With Ours chosen, the date shows the states our group covers on any date, with two
+  // faint lines above and below; lines outside our group are faint (Roxanne, 24 Nov).
+  const isWatching = span !== null;
+  const big = everyGroup;
   const ours = watched;
 
   // Every published range keeps its own row. They are small units that never get
   // split up in a transfer, and rolling them into their big group would hide the
   // patterns that run down the column. The big group shows as the shading instead.
-  const rows = big.map((one, index) => {
+  const rowList = big.map((one, index) => {
     const isOurs = one === ours;
     const isShaded = index % 2 === 1;
     // Subgroups keep their own rows unless the group is asked for as one line.
@@ -85,13 +101,24 @@ function dateBlock(
       if (holdsUs) classes.push('is-us');
       else if (isOurs) classes.push('ours');
       else if (isShaded) classes.push('shaded');
-      return `<div class="${classes.join(' ')}">` +
+      if (isWatching && !isOurs) classes.push('faint');
+      const html = `<div class="${classes.join(' ')}">` +
         rangeCells(part.fromState, part.toState) +
         `<span class="range-fc" title="${escapeForPage(furnaceCapText(part.furnaceCapUpgrades))}">` +
         `${escapeForPage(shortFurnaceCapText(part.furnaceCapUpgrades))}</span>` +
         `<span class="range-gen">${escapeForPage(generationText(part.generation))}</span></div>`;
-    }).join('');
-  }).join('');
+      return { fromState: part.fromState, toState: part.toState, html };
+    });
+  }).flat();
+  let shownRows = rowList;
+  if (span) {
+    const first = rowList.findIndex(row => row.toState >= span.fromState);
+    let last = -1;
+    rowList.forEach((row, index) => { if (row.fromState <= span.toState) last = index; });
+    shownRows = first < 0 || last < 0 ? [] :
+      rowList.slice(Math.max(0, first - FAINT_LINES), Math.min(rowList.length, last + 1 + FAINT_LINES));
+  }
+  const rows = shownRows.map(row => row.html).join('');
 
   // The event the transfer follows is shown as its own logo rather than written out.
   const followedBy = follows === 'sunfire' ? 'sunfire' : follows === 'svs' ? 'svs-battle' : '';
@@ -182,7 +209,8 @@ export function predictionsPage(options: PredictionsOptions): string {
     ? '<button type="button" class="next-transfer-tab to-group" data-prediction-group hidden>' +
       `<span class="tab-arrow" aria-hidden="true"></span>${escapeForPage(String(options.watchedState))}</button>`
     : '';
+  const span = oursSpanOf(options);
   return '<div class="predictions-page"><div class="prediction-dates"><div class="prediction-sheet">' +
-    options.dates.map(one => dateBlock(one.date, one.groups, one.follows, options)).join('') +
+    options.dates.map(one => dateBlock(one.date, one.groups, one.follows, options, span)).join('') +
     '</div></div>' + backToNext + backToGroup + '</div>';
 }

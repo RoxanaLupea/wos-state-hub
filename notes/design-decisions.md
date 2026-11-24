@@ -118,6 +118,9 @@ there before discussing it again.
   are as in the sheet: our range is on the same line in every date, from the first
   to the last. Where a column has fewer lines above it (Ours, or Groups), it starts
   lower with empty lines, like empty cells, never a blank gap (23 Nov).
+- Ours shows the ranges our group covers on any of the dates (from the highest to the
+  lowest), with two faint lines above and two below; lines outside our group are faint
+  (Roxanne, 24 Nov).
 - Up and down and across are two deliberate moves: a swipe moves the sheet one way
   only (23 Nov).
 - Two ways back. The next transfer: a tab with its date at the bottom, on the side
