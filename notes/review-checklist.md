@@ -14,6 +14,8 @@ has had to point out before. When she points out a new kind of fault, it is adde
 - Did I build anything I thought was weak? Then it is fixed or raised first.
 
 ## The look
+- Drawn as notes/page-style.md says, a basic page too: nothing from the working pages'
+  glass sections, forms, dropdowns or filled buttons.
 - Only the app's own tokens. No colour or styling brought in from elsewhere.
 - No big boxes or cards around things. No control alone in its own row in the middle of
   the page.

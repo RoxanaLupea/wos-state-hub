@@ -21,7 +21,8 @@ work again.
 Then read notes/handoff.md before anything else: where the work stands and what is next.
 
 Then read, in full: notes/what-this-is.md, notes/design-decisions.md,
-notes/visual-language.md and notes/rules-and-open-items.md. On a design branch, also
+notes/visual-language.md, notes/page-style.md (how every page is drawn, basic ones
+too) and notes/rules-and-open-items.md. On a design branch, also
 read the notes file it names, if any.
 
 ## The flow (24 Nov: she wants speed; Claude runs the flow itself)
