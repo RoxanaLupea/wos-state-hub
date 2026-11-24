@@ -512,6 +512,13 @@ Game accounts (from 23 Nov, still holds)
   made (24 Nov). A move back clears it; a move to a third alliance starts a new count.
   The account's owner, the R4s of its alliance and admins can Confirm or Dismiss. There
   is no separate way to set an alliance by hand: Confirm and Dismiss cover both ways.
+- On a phone (approved 24 Nov): the pair takes the badge's corner, the old alliance
+  dimmed, an arrow, the new one, as tall as a single badge; Dismiss (red cross) and
+  Confirm (green tick), drawn like the troops' Cancel and Save, sit on one line right
+  under it, below the header, so the name keeps the whole width. On a computer the pair
+  is in the top right with Dismiss and Confirm under it, above Updated and Refresh.
+  While a move is hidden (under 2 hours, or dismissed), the badge and the page's colour
+  are the alliance the account counts in.
 - An account on the site is only a link from a login to a member the game data already
   has (24 Nov): it holds whose account it is and whether it is a main, alt or farm.
   Name, power, alliance, rank and everything else the game gives are kept in one place,
