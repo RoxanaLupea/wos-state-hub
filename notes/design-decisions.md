@@ -389,8 +389,9 @@ there before discussing it again.
   Timeline, Rules (requirements, rules and predictions together), Points, Rewards,
   the tabs only one kind of event needs (Battles, Total score, Alliance times),
   Missions, Results, Mine (23 Nov). Whether Missions joins Rewards is still open.
-- SvS (with its Castle Battle) shows on the event only that date's result; the whole
-  history is on the State page, reached from "Check history" under it (23 Nov).
+- SvS (with its Castle Battle) shows on the event only that SvS's own results. No history
+  on the event and no way to it from there (Roxanne, 24 Nov; replaces "Check history").
+  The SvS timeline is the event's own (preparation, battle, Field Triage).
 - An opponent is recorded as its state and its alliance, written as text; opponent
   alliances are not added to the site's alliances (23 Nov).
 - An event's timeline is the first of its tabs; there is no separate button to switch
@@ -681,15 +682,21 @@ Game accounts (from 23 Nov, still holds)
 - The Fortress rewards view needs work and a redesign.
 - How results are shown (SvS, Sunfire presidents, TAL ranks and MVPs). A working
   version is built: a Results tab on the event, and My alliance · Results.
-- SvS results follow WoS Oracle's SvS screens (Roxanne, 24 Nov; her screenshots and the
-  read-out are in data/captures/svs.md): what they show and how it is ordered, drawn in
-  the site's own style and colours (notes/page-style.md), never theirs. From them: the
-  history as a timeline, one line per SvS (date, attack or defence, opponent, Conquered /
-  Defended / Repelled / Castle lost, the chief); the state's totals (preps won and lost,
-  castles taken and lost, prep win rate); one SvS opened shows the prep totals with the
-  share of each side, the five prep days with who led each, and the castle holds per
-  alliance against the time needed to win. Their MMR and ratings are their own model and
-  are not taken.
+- SvS results (Roxanne, 24 to 25 Nov). Her words, nothing added:
+  - Oracle's Prep screen is the good example (data/captures/svs.md): follow it. Its VS
+    makes the match clear. The opponent is named as the opponent, once.
+  - Our style: the logo colours, upper and lower case played against each other. First of
+    all the information is easy to read.
+  - The event's colours, not dimmed: blue for winning, red for losing. Only blue and red,
+    no grey. Never one colour per state.
+  - A bar is not split in two pieces.
+  - No bare words or numbers the reader has to decode ("Repelled", "Attack", a state
+    number on its own, "In #1385"). No sentences to say what a mark (a pin) can show.
+  - Nothing she did not ask for (a white marker on the bar, a black VS circle).
+  - Castle Battle always shows where it was played and who won, even without details,
+    then "No records."; what is recorded is added.
+  - Their MMR and ratings are not taken. Where the whole history is shown is open.
+  - Not accepted yet: every version so far (branch svs-results, 25 Nov) was rejected.
 - Pop-ups: their design (24 Nov). Until then they stay as they are: "Save for which
   accounts?" as approved (ticked rows outlined, Cancel and Save under them) and the leave
   question.

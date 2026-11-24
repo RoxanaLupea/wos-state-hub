@@ -5,7 +5,11 @@
     "opponentState": 1505,
     "preparation": "loss",
     "castleBattle": "win",
-    "castleAllianceId": "dvl"
+    "castleAllianceId": "dvl",
+    "chief": {
+      "name": "KK7711唐神",
+      "allianceTag": "DVL"
+    }
   },
   {
     "date": "2024-11-09",
@@ -13,7 +17,11 @@
     "opponentState": 1447,
     "preparation": "win",
     "castleBattle": "win",
-    "castleAllianceId": "dvl"
+    "castleAllianceId": "dvl",
+    "chief": {
+      "name": "Mimi Shu",
+      "allianceTag": "DVL"
+    }
   },
   {
     "date": "2024-12-07",
@@ -21,14 +29,23 @@
     "opponentState": 1517,
     "preparation": "win",
     "castleBattle": "win",
-    "castleAllianceId": "dvl"
+    "castleAllianceId": "dvl",
+    "chief": {
+      "name": "AAA가즈아",
+      "allianceTag": "DVL"
+    }
   },
   {
     "date": "2025-01-04",
     "result": "loss",
     "opponentState": 1383,
     "preparation": "loss",
-    "castleBattle": "loss"
+    "castleBattle": "loss",
+    "chief": {
+      "name": "Màtt",
+      "allianceTag": "FAM",
+      "state": 1383
+    }
   },
   {
     "date": "2025-02-01",
@@ -36,7 +53,11 @@
     "opponentState": 1489,
     "preparation": "win",
     "castleBattle": "win",
-    "castleAllianceId": "top"
+    "castleAllianceId": "top",
+    "chief": {
+      "name": "Daddy MAK",
+      "allianceTag": "TOP"
+    }
   },
   {
     "date": "2025-03-01",
@@ -44,14 +65,23 @@
     "opponentState": 1466,
     "preparation": "win",
     "castleBattle": "win",
-    "castleAllianceId": "dvl"
+    "castleAllianceId": "dvl",
+    "chief": {
+      "name": "DDDᶜʳ٦",
+      "allianceTag": "DVL"
+    }
   },
   {
     "date": "2025-03-29",
     "result": "loss",
     "opponentState": 1534,
     "preparation": "loss",
-    "castleBattle": "loss"
+    "castleBattle": "loss",
+    "chief": {
+      "name": "It'sKandyCrush",
+      "allianceTag": "TNT",
+      "state": 1534
+    }
   },
   {
     "date": "2025-04-26",
@@ -59,21 +89,35 @@
     "opponentState": 1480,
     "preparation": "win",
     "castleBattle": "win",
-    "castleAllianceId": "dvl"
+    "castleAllianceId": "dvl",
+    "chief": {
+      "name": "SpacePussyLuna",
+      "allianceTag": "DVL"
+    }
   },
   {
     "date": "2025-05-24",
     "result": "loss",
     "opponentState": 1461,
     "preparation": "loss",
-    "castleBattle": "loss"
+    "castleBattle": "loss",
+    "chief": {
+      "name": "WEGES",
+      "allianceTag": "UNI",
+      "state": 1461
+    }
   },
   {
     "date": "2025-06-21",
     "result": "loss",
     "opponentState": 1378,
     "preparation": "loss",
-    "castleBattle": "loss"
+    "castleBattle": "loss",
+    "chief": {
+      "name": "Hocky",
+      "allianceTag": "BAD",
+      "state": 1378
+    }
   },
   {
     "date": "2025-07-19",
@@ -81,21 +125,35 @@
     "opponentState": 1453,
     "preparation": "win",
     "castleBattle": "win",
-    "castleAllianceId": "top"
+    "castleAllianceId": "top",
+    "chief": {
+      "name": "IEatBloodyVag",
+      "allianceTag": "TOP"
+    }
   },
   {
     "date": "2025-08-16",
     "result": "loss",
     "opponentState": 1496,
     "preparation": "loss",
-    "castleBattle": "loss"
+    "castleBattle": "loss",
+    "chief": {
+      "name": "BuBulili",
+      "allianceTag": "ACE",
+      "state": 1496
+    }
   },
   {
     "date": "2025-09-13",
     "result": "loss",
     "opponentState": 1461,
     "preparation": "loss",
-    "castleBattle": "loss"
+    "castleBattle": "loss",
+    "chief": {
+      "name": "Quèeñ óf Ɗàrkᴷᵂᵀ",
+      "allianceTag": "BLD",
+      "state": 1461
+    }
   },
   {
     "date": "2025-10-11",
@@ -103,7 +161,11 @@
     "opponentState": 1438,
     "preparation": "loss",
     "castleBattle": "win",
-    "castleAllianceId": "top"
+    "castleAllianceId": "top",
+    "chief": {
+      "name": "Cocodile Nuts",
+      "allianceTag": "TOP"
+    }
   },
   {
     "date": "2025-11-08",
@@ -111,14 +173,23 @@
     "opponentState": 1468,
     "preparation": "loss",
     "castleBattle": "win",
-    "castleAllianceId": "top"
+    "castleAllianceId": "top",
+    "chief": {
+      "name": "세플리카 seflica",
+      "allianceTag": "TOP"
+    }
   },
   {
     "date": "2025-12-06",
     "result": "loss",
     "opponentState": 1421,
     "preparation": "loss",
-    "castleBattle": "loss"
+    "castleBattle": "loss",
+    "chief": {
+      "name": "Reindeer Kârlôš",
+      "allianceTag": "B21",
+      "state": 1421
+    }
   },
   {
     "date": "2026-01-03",
@@ -126,7 +197,11 @@
     "opponentState": 1431,
     "preparation": "loss",
     "castleBattle": "win",
-    "castleAllianceId": "top"
+    "castleAllianceId": "top",
+    "chief": {
+      "name": "Goddess 1458",
+      "allianceTag": "TOP"
+    }
   },
   {
     "date": "2026-01-31",
@@ -141,14 +216,23 @@
     "opponentState": 1417,
     "preparation": "win",
     "castleBattle": "win",
-    "castleAllianceId": "sky"
+    "castleAllianceId": "sky",
+    "chief": {
+      "name": "Moliver",
+      "allianceTag": "ABC"
+    }
   },
   {
     "date": "2026-03-28",
     "result": "loss",
     "opponentState": 1491,
     "preparation": "loss",
-    "castleBattle": "loss"
+    "castleBattle": "loss",
+    "chief": {
+      "name": "Jaz Lalala",
+      "allianceTag": "GPX",
+      "state": 1491
+    }
   },
   {
     "date": "2026-04-25",
@@ -163,14 +247,23 @@
     "opponentState": 1397,
     "preparation": "win",
     "castleBattle": "win",
-    "castleAllianceId": "dvl"
+    "castleAllianceId": "dvl",
+    "chief": {
+      "name": "大精靈ღMomo不在家",
+      "allianceTag": "DVL"
+    }
   },
   {
     "date": "2026-06-20",
     "result": "loss",
     "opponentState": 1489,
     "preparation": "loss",
-    "castleBattle": "loss"
+    "castleBattle": "loss",
+    "chief": {
+      "name": "ATOXICL",
+      "allianceTag": "GOT",
+      "state": 1489
+    }
   },
   {
     "date": "2026-07-18",
@@ -178,7 +271,11 @@
     "opponentState": 1474,
     "preparation": "win",
     "castleBattle": "win",
-    "castleAllianceId": "dvl"
+    "castleAllianceId": "dvl",
+    "chief": {
+      "name": "Menno",
+      "allianceTag": "DVL"
+    }
   },
   {
     "date": "2026-08-15",
@@ -186,14 +283,23 @@
     "opponentState": 1407,
     "preparation": "loss",
     "castleBattle": "win",
-    "castleAllianceId": "dvl"
+    "castleAllianceId": "dvl",
+    "chief": {
+      "name": "Tung冬 愛回家",
+      "allianceTag": "DVL"
+    }
   },
   {
     "date": "2026-09-12",
     "result": "loss",
     "opponentState": 1438,
     "preparation": "loss",
-    "castleBattle": "loss"
+    "castleBattle": "loss",
+    "chief": {
+      "name": "AYAKA推しぱんだ@ケロン軍",
+      "allianceTag": "SIK",
+      "state": 1438
+    }
   },
   {
     "date": "2026-10-10",
@@ -201,13 +307,87 @@
     "opponentState": 1527,
     "preparation": "win",
     "castleBattle": "win",
-    "castleAllianceId": "dvl"
+    "castleAllianceId": "dvl",
+    "chief": {
+      "name": "A҉c҉e҉ ⓪⓪⑦࿐ᴰⱽᴸ",
+      "allianceTag": "DVL"
+    },
+    "prepPoints": {
+      "ours": 5982212262,
+      "theirs": 3171180399,
+      "days": [
+        [
+          1430000000,
+          645900000
+        ],
+        [
+          1370000000,
+          682800000
+        ],
+        [
+          906200000,
+          595300000
+        ],
+        [
+          1250000000,
+          819700000
+        ],
+        [
+          1040000000,
+          427400000
+        ]
+      ]
+    }
   },
   {
     "date": "2026-11-07",
     "result": "draw",
     "preparation": "win",
     "castleBattle": "loss",
-    "opponentState": 1385
+    "opponentState": 1385,
+    "prepPoints": {
+      "ours": 11028870560,
+      "theirs": 10722211098,
+      "days": [
+        [
+          2480000000,
+          2330000000
+        ],
+        [
+          1530000000,
+          1290000000
+        ],
+        [
+          1610000000,
+          1680000000
+        ],
+        [
+          3330000000,
+          3780000000
+        ],
+        [
+          2070000000,
+          1640000000
+        ]
+      ]
+    },
+    "castleHolds": {
+      "holdToWin": "2:30:00",
+      "holds": [
+        {
+          "allianceTag": "DVL",
+          "state": 1458,
+          "time": "1:58:10"
+        },
+        {
+          "allianceTag": "LLC",
+          "state": 1385,
+          "time": "2:14:01"
+        },
+        {
+          "time": "0:46:53"
+        }
+      ]
+    }
   }
 ]
