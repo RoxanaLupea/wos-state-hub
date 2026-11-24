@@ -1,5 +1,6 @@
-// Signing in, and who the signed-in person is: their account (in-game name and id,
-// their alliance), their farms and alts, and their roles.
+// Signing in, and who the signed-in person is: their login and their roles. Their game
+// accounts (main, alts, farms) are in game_accounts, and everything the game says about
+// them in the game data.
 //
 // Sign-in is through Discord or Google. Discord first, because every alliance already
 // uses it. Guests keep browsing without signing in.
@@ -7,22 +8,16 @@ import { database } from './database.ts';
 
 export type SignInProvider = 'discord' | 'google';
 
-export interface Account {
-  inGameName: string;
-  inGameId: string;
-  allianceId: string | null;
-}
-
 export interface SignedInPerson {
   userId: string;
-  // The name the login gives (Discord or Google), used until an in-game name is set.
+  // The name the login gives (Discord or Google), used until a game account is added.
   loginName: string;
-  account: Account | null;
   // Roles such as 'owner', 'admin' or 'r4'; a role tied to one alliance carries it.
   roles: { role: string; allianceId: string | null }[];
 }
 
-// Who is signed in on this browser, with their account, or null for a guest.
+// Who is signed in on this browser, or null for a guest. The login's own row (time zone,
+// language) is made the first time, so their game accounts and picks can hang off it.
 export async function signedInPerson(): Promise<SignedInPerson | null> {
   const { data } = await database().auth.getSession();
   const user = data.session?.user;
@@ -30,19 +25,13 @@ export async function signedInPerson(): Promise<SignedInPerson | null> {
   const meta = (user.user_metadata ?? {}) as Record<string, unknown>;
   const loginName = String(meta.full_name ?? meta.name ?? meta.user_name ?? user.email ?? '');
 
-  const [accountResult, rolesResult] = await Promise.all([
-    database().from('accounts').select('in_game_name, in_game_id, alliance_id').eq('id', user.id).maybeSingle(),
+  const [, rolesResult] = await Promise.all([
+    database().from('accounts').upsert({ id: user.id }, { onConflict: 'id', ignoreDuplicates: true }),
     database().from('account_roles').select('role, alliance_id').eq('account_id', user.id)
   ]);
-  const row = accountResult.data as Record<string, unknown> | null;
   return {
     userId: user.id,
     loginName,
-    account: row ? {
-      inGameName: String(row.in_game_name ?? ''),
-      inGameId: String(row.in_game_id ?? ''),
-      allianceId: row.alliance_id ? String(row.alliance_id) : null
-    } : null,
     roles: ((rolesResult.data ?? []) as Record<string, unknown>[]).map(one => ({
       role: String(one.role),
       allianceId: one.alliance_id ? String(one.alliance_id) : null
@@ -61,24 +50,6 @@ export async function signInWith(provider: SignInProvider): Promise<void> {
 
 export async function signOut(): Promise<void> {
   await database().auth.signOut();
-}
-
-// The person's own account row: their in-game name and id, and their alliance. The id
-// is unique across accounts; someone whose id is taken raises it with an admin.
-export async function saveAccount(userId: string, account: Account): Promise<void> {
-  const { error } = await database().from('accounts').upsert({
-    id: userId,
-    in_game_name: account.inGameName || null,
-    in_game_id: account.inGameId || null,
-    alliance_id: account.allianceId,
-    updated_at: new Date().toISOString()
-  });
-  if (error) {
-    if (error.code === '23505') {
-      throw new Error('That in-game id is already on another account. Raise it with an admin.');
-    }
-    throw new Error('Could not save your details: ' + error.message);
-  }
 }
 
 // What the person may do. The owner sets event dates and repeats; admins can edit

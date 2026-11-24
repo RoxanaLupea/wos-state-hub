@@ -1,5 +1,6 @@
 -- Keeps the game data (supabase/game-data.sql) up to date from the Whiteout Stats API.
--- Run once after game-data.sql; safe to run again.
+-- Run once after game-data.sql; safe to run again. Then run accounts-from-game.sql, which
+-- replaces keep_player and refresh_alliance so each read also notes where every player is.
 --
 -- The API key is kept in the database's Vault under the name whiteout_stats_api_key, never
 -- in this file (the repo is public). Add it once from the SQL editor:
@@ -201,7 +202,7 @@ begin
       on conflict (player_id) do update set data = excluded.data, refresh_asked_at = now();
     stored := answer->'player';
   end if;
-  return jsonb_build_object('name', stored->>'nick_name', 'avatar', stored->>'avatar_url', 'power', (stored->>'power')::bigint,
+  return jsonb_build_object('name', stored->>'nick_name', 'avatar', stored->>'avatar_url',
     'state', (stored->>'kid')::integer, 'alliance', stored->'alliance'->>'abbr', 'furnace', (stored->>'furnace_level')::integer);
 end $$;
 

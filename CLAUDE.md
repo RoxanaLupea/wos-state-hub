@@ -33,6 +33,12 @@ read the notes file it names (for profile-draft: notes/profile-draft.md).
 
 ## How the work is done
 
+- Only UI and design work goes on a draft branch. Fixes to data, the database and
+  how things work are done on main and pushed straight to main, still after walking
+  her through them and her yes (24 Nov).
+- Every working rule she sets goes into this file, or into the notes it lists, as soon
+  as it is said, in the same chat, so the next chat starts with it (24 Nov). Rules of the
+  site itself go to notes/design-decisions.md.
 - Design work happens on a draft in this workspace. Her approved files stay untouched
   until she says yes.
 - Nothing counts as settled until she says so. Settled decisions go into

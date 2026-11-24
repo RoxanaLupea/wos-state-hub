@@ -45,7 +45,7 @@ import { buildEventTree, familyOccurrences } from './calendar/event-tree.ts';
 import { currentTimeMode, gameClockText, nowMinute, setTimeMode, type TimeMode } from './calendar/time-mode.ts';
 import { readPreferences, writePreferences } from './data/preferences.ts';
 import {
-  isAdmin, isOwner, leadsAlliance, managesBattles, managesState, saveAccount, signInWith, signOut,
+  isAdmin, isOwner, leadsAlliance, managesBattles, managesState, signInWith, signOut,
   signedInPerson, type SignedInPerson, type SignInProvider
 } from './data/auth.ts';
 import {
@@ -53,12 +53,12 @@ import {
 } from './data/editing.ts';
 import { PENCIL_ICON, allianceTimeForm, dateChangeForm, fortForm, pencilButton, scheduleForm } from './ui/edit-forms.ts';
 import { deleteRow, loadRows, saveRow, type Row } from './data/records.ts';
-import { saveGameAccount, saveLoginDetails } from './data/player-profile.ts';
+import { saveGameAccount } from './data/player-profile.ts';
 import {
   accountColour, accountMenu, filterFoundryPower, fitPlayerPage, foundryText, filterId, gameReadOf, idProblem, rosterEntriesOf, stateBoardsOf, TROOP_KINDS, withRoster,
   type BarAccount, type BoardEntry, type GameRead, type LookUpState, type RosterEntry, type SkillLevels, type TroopKind
 } from './ui/player-profile.ts';
-import { askGameRefresh, lookUpGameAccount, readGamePlayers, readGameRosters, readGameStates, readSkillLevels, setSkillLevel } from './data/game-data.ts';
+import { askGameRefresh, lookUpGameAccount, readGamePlayers, readGameRosters, readGameStates, readPlayerAlliances, readSkillLevels, setSkillLevel } from './data/game-data.ts';
 import {
   ALLIANCE_RESULT_EVENTS, allianceResultsPage, championshipStars, opponentNotesPage, resultsTab, showdownScoreOf,
   svsHistorySection
@@ -205,7 +205,11 @@ let stateBoards = new Map<string, Record<string, BoardEntry>>();
 const gameReads = new Map<string, GameRead>();
 // The alliances' rosters by in-game ID, read with the players' own data.
 let rosterEntries = new Map<string, RosterEntry>();
+let rostersRead = false;
 const skillLevels = new Map<string, Row>();
+// Each account's alliance as the site keeps it, by in-game ID (it follows a move only
+// after 24 hours there, or once the move is confirmed).
+const playerAlliances = new Map<string, Row>();
 let gameReadFor = '';
 // While an account is being added: what its typed id turned out to be in the game.
 let lookUp: LookUpState = { kind: 'none' };
@@ -811,32 +815,49 @@ function workContext(): WorkContext {
     isAdmin: isAdmin(person), managesState: managesState(person), managesBattles: managesBattles(person),
     leads: allianceId => leadsAlliance(person, allianceId),
     mayReadBlacklist: isAdmin(person) || Boolean(person?.roles.some(one => one.role === 'alliance_manager')),
-    troopsOf: troopsOfAccount
+    troopsOf: troopsOfAccount,
+    gameOf: gameOfAccount,
+    membersOf: rosterMembersOf
   };
 }
 
-// A game account's troops for the working pages: the tier from the game ("FC10 Exalted")
-// and the skill level kept per in-game ID. An ID not read yet is read once, together with
-// the others asked for at the same time, and the page is drawn again when they arrive.
-const troopsAskedFor = new Set<string>();
-let troopsToRead: string[] = [];
-function troopsOfAccount(inGameId: string): Record<string, { tier: string; skill: number }> | null {
+// What the game says of any account, for the working pages: name, picture, power,
+// alliance and troops. An ID not read yet is read once, together with the others asked
+// for at the same time, and the page is drawn again when they arrive.
+const gameAskedFor = new Set<string>();
+let gameToRead: string[] = [];
+function gameOfAccount(inGameId: string): GameRead | null {
   if (!inGameId) return null;
   const game = gameReads.get(inGameId);
-  if (!game) {
-    if (!troopsAskedFor.has(inGameId)) {
-      troopsAskedFor.add(inGameId);
-      troopsToRead.push(inGameId);
-      if (troopsToRead.length === 1) {
-        window.setTimeout(() => {
-          const ids = troopsToRead;
-          troopsToRead = [];
-          void rereadGameData(ids);
-        }, 0);
-      }
+  if (game) return game;
+  if (!gameAskedFor.has(inGameId)) {
+    gameAskedFor.add(inGameId);
+    gameToRead.push(inGameId);
+    if (gameToRead.length === 1) {
+      window.setTimeout(() => {
+        const ids = gameToRead;
+        gameToRead = [];
+        void rereadGameData(ids);
+      }, 0);
     }
-    return null;
   }
+  return null;
+}
+
+// The members of one of our alliances, from its roster as the game last showed it. A
+// player who moved shows only on the newer roster. Null until the rosters are read.
+function rosterMembersOf(allianceId: string): RosterEntry[] | null {
+  if (!rostersRead) return null;
+  const tag = alliances.find(one => one.id === allianceId)?.tag;
+  if (!tag) return [];
+  return Array.from(rosterEntries.values()).filter(one => one.tag === tag && one.state === Number(STATE_NUMBER));
+}
+
+// A game account's troops for the working pages: the tier from the game ("FC10 Exalted")
+// and the skill level kept per in-game ID; null while the game is being read.
+function troopsOfAccount(inGameId: string): Record<string, { tier: string; skill: number }> | null {
+  const game = gameOfAccount(inGameId);
+  if (!game) return null;
   const levels = skillsOf(inGameId);
   const troops: Record<string, { tier: string; skill: number }> = {};
   for (const [kind] of TROOP_KINDS) {
@@ -1101,10 +1122,13 @@ function scrollToMarkedRow(app: HTMLElement): void {
 function drawPage(app: HTMLElement): void {
   const range = viewRange();
   if (person) readGameDataOfMyAccounts();
+  // The alliance of the account the player is on becomes "my alliance" once the game
+  // has been read for it.
   if (person && !activeAllianceApplied && rowsOf('game_accounts')) {
-    activeAllianceApplied = true;
     const active = myAccountRow();
-    if (active?.alliance_id) view.myAllianceId = String(active.alliance_id);
+    const allianceId = active ? allianceIdOfAccount(active) : null;
+    if (!active || (gameReads.has(String(active.in_game_id ?? '')) && alliances.length > 0)) activeAllianceApplied = true;
+    if (allianceId) view.myAllianceId = allianceId;
   }
 
   const onAccount = person ? myAccountRow() : null;
@@ -1113,7 +1137,7 @@ function drawPage(app: HTMLElement): void {
     openPage: view.openPage,
     eventLabel: currentEventLabel(),
     // Signed in: the name and picture of the game account they are on, otherwise "Me".
-    playerName: person ? (onAccount ? barAccountOf(onAccount).name : '') || person.account?.inGameName || 'Me' : null,
+    playerName: person ? (onAccount ? barAccountOf(onAccount).name : '') || 'Me' : null,
     playerPicture: onAccount ? barAccountOf(onAccount).avatar : null,
     accountMenu: person ? accountMenu(myGameAccounts().map(barAccountOf), openGameAccountId(), isAdmin(person)) : null
   });
@@ -1689,16 +1713,6 @@ function handleSubmits(event: SubmitEvent): void {
       });
     return;
   }
-  const save = form.dataset.form === 'account'
-    ? saveAccount(signedIn.userId, {
-        inGameName: text('inGameName'), inGameId: text('inGameId'), allianceId: text('allianceId') || null
-      })
-    : Promise.resolve();
-  for (const button of Array.from(form.querySelectorAll('button'))) button.disabled = true;
-  save.then(refreshPerson).catch(problem => {
-    for (const button of Array.from(form.querySelectorAll('button'))) button.disabled = false;
-    if (message) message.textContent = problem instanceof Error ? problem.message : String(problem);
-  });
 }
 
 // ---------------------------------------------------------------------------
@@ -1732,13 +1746,14 @@ function readGameDataOfMyAccounts(): void {
 }
 
 async function rereadGameData(ids: string[], withState = false): Promise<void> {
-  const [players, skills, states, rosters] = await Promise.all([
+  const [players, skills, kept, states, rosters] = await Promise.all([
     readGamePlayers(ids).catch(() => [] as Row[]),
     readSkillLevels(ids).catch(() => [] as Row[]),
+    readPlayerAlliances(ids).catch(() => [] as Row[]),
     withState ? readGameStates([Number(STATE_NUMBER)]).catch(() => [] as Row[]) : Promise.resolve(null),
     readGameRosters().catch(() => null)
   ]);
-  if (rosters) rosterEntries = rosterEntriesOf(rosters);
+  if (rosters) { rosterEntries = rosterEntriesOf(rosters); rostersRead = true; }
   // Each player as shown: their own read, with what the newer roster says laid over it.
   const ownReads = new Map(players.map(row => [String(row.player_id), gameReadOf(row)] as const));
   for (const id of ids) {
@@ -1746,6 +1761,7 @@ async function rereadGameData(ids: string[], withState = false): Promise<void> {
     if (game) gameReads.set(id, game);
   }
   for (const row of skills) skillLevels.set(String(row.player_id), row);
+  for (const row of kept) playerAlliances.set(String(row.player_id), row);
   if (states) stateBoards = stateBoardsOf(states);
   draw();
 }
@@ -1814,8 +1830,8 @@ function openListedRow(): Row | null {
 function barAccountOf(row: Row): BarAccount {
   const game = gameReads.get(String(row.in_game_id ?? ''));
   return {
-    row, avatar: game?.avatar ?? null, name: game?.name ?? String(row.in_game_name ?? ''),
-    colour: accountColour(row, game ?? null, alliancesStillHere(alliances), Number(STATE_NUMBER))
+    row, avatar: game?.avatar ?? null, name: game?.name ?? '',
+    colour: accountColour(game ?? null, alliancesStillHere(alliances), Number(STATE_NUMBER))
   };
 }
 
@@ -1882,7 +1898,8 @@ function savedOf(part: string, column: string): unknown {
 function setActiveAccount(id: number | 'new' | null): void {
   openGameAccount = id;
   const row = typeof id === 'number' ? myGameAccounts().find(one => Number(one.id) === id) : undefined;
-  if (row?.alliance_id) view.myAllianceId = String(row.alliance_id);
+  const allianceId = row ? allianceIdOfAccount(row) : null;
+  if (allianceId) view.myAllianceId = allianceId;
   rememberChoices();
 }
 
@@ -1949,11 +1966,24 @@ function levelsToConfirm(part: string): boolean {
   return part === 'troops' && row !== null && row.kind !== 'farm' && skillsNeedALook(row);
 }
 
-// The site account for a site alliance, from what the game says: one of ours only when
-// the chief is in our state.
+// The site's alliance for what the game says: one of ours only when the chief is in our
+// state.
 function siteAllianceIdOf(game: GameRead | null): string | null {
   if (!game?.allianceTag || game.state !== Number(STATE_NUMBER)) return null;
   return alliancesStillHere(alliances).find(one => one.tag === game.allianceTag)?.id ?? null;
+}
+
+// An account's alliance: the one the site keeps for it (a move counts after 24 hours
+// there, or once confirmed), or, before that is known, where the game shows it. Null
+// before it is read, or when it is in none of ours.
+function allianceIdOfAccount(row: Row): string | null {
+  const id = String(row.in_game_id ?? '');
+  const kept = playerAlliances.get(id);
+  if (kept) {
+    if (Number(kept.state_number) !== Number(STATE_NUMBER) || !kept.alliance_tag) return null;
+    return alliancesStillHere(alliances).find(one => one.tag === kept.alliance_tag)?.id ?? null;
+  }
+  return siteAllianceIdOf(gameReads.get(id) ?? null);
 }
 
 async function savePlayerPart(part: string): Promise<boolean> {
@@ -1968,10 +1998,9 @@ async function saveNewAccount(): Promise<boolean> {
   if (!person || !found) return false;
   const userId = person.userId;
   const kind = String(draftValue('kind', 'listed')) as 'main' | 'alt' | 'farm';
-  const fields: Row = {
-    kind, in_game_id: String(listedDraft.in_game_id), in_game_name: found.name, player_power: found.power,
-    alliance_id: siteAllianceIdOf(found)
-  };
+  // Only the link to the game's account is kept; its name, power and alliance stay in
+  // the game data.
+  const fields: Row = { kind, in_game_id: String(listedDraft.in_game_id) };
   const rows = tableRows.get('game_accounts');
   // There is always one main: making the new account the main makes the old main an alt,
   // first, so the two are never both the main.
@@ -1985,12 +2014,6 @@ async function saveNewAccount(): Promise<boolean> {
       // The old main goes back to being the main if the new one could not be saved.
       if (oldMain) Object.assign(oldMain, await saveGameAccount(Number(oldMain.id), userId, 'main', { kind: 'main' }).catch(() => oldMain));
       throw problem;
-    }
-    // The main's name, ID and alliance are kept on the login too, for the parts of the
-    // site that still read them from there.
-    if (kind === 'main') {
-      await saveLoginDetails(userId, { in_game_name: row.in_game_name ?? null, in_game_id: row.in_game_id ?? null, alliance_id: row.alliance_id ?? null });
-      person = await signedInPerson().catch(() => person);
     }
   } catch (problem) {
     showPlayerNote('in_game_id', problem instanceof Error ? problem.message : String(problem));
@@ -2310,7 +2333,7 @@ async function saveWorkingForm(
     if (!isUnavailable && (from === null || to === null)) throw new Error('Fill in the hours you can play, or tick that you cannot play.');
     const saved = await saveRow('availability', {
       id: key || undefined, ...runColumns, account_id: userId, game_account_id: active.id,
-      alliance_id: active.alliance_id ?? view.myAllianceId, playing_for_alliance_id: orNull('playing_for_alliance_id'),
+      alliance_id: allianceIdOfAccount(active) ?? view.myAllianceId, playing_for_alliance_id: orNull('playing_for_alliance_id'),
       is_unavailable: isUnavailable,
       has_monthly_card: values.get('has_monthly_card') === 'on',
       updated_at: now
@@ -2588,17 +2611,6 @@ async function reloadAfterEdit(formName: string): Promise<void> {
     // A moved SvS or Sunfire changes which battle a transfer follows.
     rememberBattleDays();
   }
-  draw();
-}
-
-// After a change to the account: read it again, follow its alliance, and redraw.
-async function refreshPerson(): Promise<void> {
-  person = await signedInPerson().catch(() => person);
-  // The working pages read accounts again with the change in them.
-  tableRows.delete('accounts');
-  const active = myAccountRow();
-  if (active?.alliance_id) view.myAllianceId = String(active.alliance_id);
-  else if (person?.account?.allianceId) view.myAllianceId = person.account.allianceId;
   draw();
 }
 
@@ -2939,9 +2951,9 @@ async function start(): Promise<void> {
     applyKeptChoices();
     openSharedAddress();
     setOpenPointRows(view.openPointRows);
-    // Who is signed in. A signed-in player's alliance is the one on their account.
+    // Who is signed in. Their alliance follows the account they are on, once the game
+    // has been read for it (drawPage).
     person = await signedInPerson().catch(() => null);
-    if (person?.account?.allianceId) view.myAllianceId = person.account.allianceId;
     document.addEventListener('click', handleClicks);
     document.addEventListener('submit', handleSubmits);
     document.addEventListener('input', filterPlayerTyping);

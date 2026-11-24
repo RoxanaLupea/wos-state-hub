@@ -1,5 +1,5 @@
-// Saving a player's game accounts from their page: the main, each alt and each farm,
-// with name, id, alliance, power and (not for a farm) foundry power and troop tiers. Only the columns that changed are sent.
+// Saving a player's game accounts from their page: whose account it is, main, alt or
+// farm, and the foundry power. Everything else about it comes from the game data.
 import { database } from './database.ts';
 import type { Row } from './records.ts';
 
@@ -16,13 +16,6 @@ export async function saveGameAccount(id: number | null, ownerId: string, kind: 
     : await database().from('game_accounts').insert({ owner_id: ownerId, kind, ...fields, ...stamp }).select().single();
   if (result.error) throw problemText(result.error);
   return result.data as Row;
-}
-
-// The main account's name, id and alliance are also kept on the login for now, so the
-// parts of the site that still read them from there keep working.
-export async function saveLoginDetails(userId: string, fields: Row): Promise<void> {
-  const { error } = await database().from('accounts').upsert({ id: userId, ...fields, updated_at: new Date().toISOString() });
-  if (error) throw problemText(error);
 }
 
 // Removes an alt or a farm (never the main, which the page does not offer).

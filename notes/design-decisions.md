@@ -500,16 +500,24 @@ Game accounts (from 23 Nov, still holds)
 - Each account has an alliance and a temporary alliance (24 Nov). Players move between
   alliances often, for events or rewards, so a move is not taken as a change at once.
   The temporary alliance follows the hourly rosters: where the account shows up now.
-  The alliance is replaced by the temporary one only once the account has stayed there
-  for 24 hours without moving: two reads 12 hours apart both show it there, and it is
-  still on that alliance's hourly roster. On the site the player can also replace their
-  alliance with the temporary one straight away, confirming the move themselves.
+  When a read shows the account somewhere new, a counter starts; the alliance is
+  replaced by the temporary one only once the account has been seen there for 24 hours
+  in a row. A move back before then stops the counter. The player, or an admin, can
+  also confirm the move on the site, which replaces the alliance straight away.
+- While a move is under way, the account shows both alliances, the one it is counted in
+  and the one the game shows now, as "X > Y", with a Confirm button that makes the move
+  at once (24 Nov).
 - An account on the site is only a link from a login to a member the game data already
   has (24 Nov): it holds whose account it is and whether it is a main, alt or farm.
   Name, power, alliance, rank and everything else the game gives are kept in one place,
   the game data, and every page shows them from there; lists such as My alliance's
-  Members come from the alliances' rosters. Nothing is copied onto the account, so
-  supabase/game-accounts-from-game.sql is not used.
+  Members come from the alliances' rosters. Nothing is copied onto the account.
+- What an account keeps is what is typed on the site (24 Nov): main, alt or farm, the
+  foundry power, the order of the list; on the login, the time zone and the language;
+  and the picks, personal entries, availability answers and skill levels, each in its
+  own table. Built in supabase/accounts-from-game.sql: each player's alliance is kept in
+  game_player_alliances (per in-game ID), with a counter only while a change is under
+  way; a read that shows nothing new writes nothing.
 - The profile uses both reads (24 Nov): troops, heroes and leaderboards from the
   player's own read (twice a day); name, picture, power, alliance and rank from
   whichever is newer, the player's own read or their alliance's roster (every hour for
@@ -517,6 +525,7 @@ Game accounts (from 23 Nov, still holds)
   player's own read.
 
 ## Open
+
 
 - Player page: whether the menu under the name still lists the account the person is on.
 - Player page: names for the 13 hero cards not matched yet (9 epic, 4 rare), and hero

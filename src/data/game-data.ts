@@ -61,3 +61,21 @@ export async function setSkillLevel(id: string, troop: string, level: number | n
   const { error } = await database().rpc('set_skill_level', { player_number: Number(id), troop, level });
   if (error) throw new Error(error.message);
 }
+
+// Each player's alliance (supabase/accounts-from-game.sql): it changes only after 24
+// hours in a row somewhere new, or when the player or an admin confirms the move. While
+// the game shows the account somewhere else, the moving columns say where and since when.
+export async function readPlayerAlliances(ids: string[]): Promise<Row[]> {
+  const numbers = ids.filter(id => /^\d+$/.test(id)).map(Number);
+  if (numbers.length === 0) return [];
+  const { data, error } = await database().from('game_player_alliances')
+    .select('player_id, state_number, alliance_tag, moving_state, moving_tag, moving_since').in('player_id', numbers);
+  if (error) throw new Error(error.message);
+  return (data ?? []) as Row[];
+}
+
+// The player (or an admin) confirms the move: the alliance becomes the one the game shows now.
+export async function confirmAllianceMove(id: string): Promise<void> {
+  const { error } = await database().rpc('confirm_alliance_move', { player_number: Number(id) });
+  if (error) throw new Error(error.message);
+}

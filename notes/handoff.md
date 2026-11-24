@@ -5,11 +5,12 @@ file, then the notes CLAUDE.md lists.
 
 ## 1. Where things stand
 
-- main (baacc37 and this handover) is the live site, built and checked on GitHub.
-- profile-draft holds the same as main. Design work for the next piece starts there,
-  in the workspace; nothing reaches main without Roxanne's yes.
+- main is the live site, built and checked on GitHub.
+- profile-draft holds the same as main. Only UI and design work goes there; data and
+  database fixes are made on main (CLAUDE.md). Nothing is pushed without Roxanne's yes.
 - tools/render/data/ is not in the repo (the repo is public). Fetch it again as
-  tools/render/README.md says; the profile needs add-test-player.py.
+  tools/render/README.md says; the profile needs add-test-player.py, which now brings
+  its own made-up game data (players, two rosters, kept alliances).
 
 ## 2. Done and live on 24 Nov
 
@@ -43,34 +44,27 @@ Live and checked on 24 Nov:
 - Game data tables and the refresh jobs (game-data.sql, game-refresh.sql): main
   alliance rosters every hour, academies and every player twice a day, never the same
   account twice within an hour.
-- exalted-skill-levels.sql was run: the table, can_set_skill_levels, set_skill_level,
-  and Roxanne's levels copied over.
-- skill-levels-in-one-place.sql was run: the old skill level copies on accounts and
-  the tiers, skill levels and scores in availability are gone.
+- exalted-skill-levels.sql and skill-levels-in-one-place.sql were run: skill levels are
+  kept per in-game ID in exalted_skill_levels only.
 
-Not run, and not to run as they are:
-- game-accounts-from-game.sql. It copies name, power and alliance onto the site
-  accounts, which the decision of 24 Nov (section 4) replaces. Delete it when that
-  work is built.
-- The change in game-refresh.sql that makes look_up_game_account return power. The
-  add-account form saves power from the lookup today, so new accounts get no power.
-  Settle it with the work in section 4, where accounts stop keeping power at all.
+Written on 24 Nov (second chat), waiting for Roxanne's yes, to run after the push:
+- supabase/accounts-from-game.sql. Accounts keep only what is typed on the site; the
+  copies of name, power, alliance and tiers go from game_accounts and accounts, and
+  account_alt_accounts goes. Each player's alliance is kept in game_player_alliances,
+  with a counter only while a change is under way; reads write only when something
+  changes;
+  confirm_alliance_move lets the owner or an admin confirm a move. Players read their own
+  accounts' game data even while not state members.
+- Order: push the site first (it already reads the game data and works without the new
+  table), then run the file.
 
-## 4. Next work: settled, to build
+## 4. Next work
 
-- An account on the site is only a link from a login to a member the game data already
-  has, plus main, alt or farm (and the foundry power, which the game does not give).
-  Name, power, alliance and rank come only from the game data; My alliance's Members
-  comes from the rosters. Switch every page that reads in_game_name, player_power or
-  alliance_id from game_accounts to the game data, then remove those columns (and the
-  troop tier columns) with Roxanne's yes.
-- Alliance and temporary alliance: the temporary alliance follows the hourly rosters;
-  the alliance is replaced only after the account has stayed in the new one for 24
-  hours (two reads 12 hours apart, still on that alliance's hourly roster). The player
-  can also confirm the move on the site, which replaces it at once.
-- Today the roster read only adds players it has not seen, so a known player's own row
-  keeps its old alliance until their own read. The alliance rule above needs the
-  rosters to record where each account is every hour.
+- Built on main on 24 Nov, not pushed yet: every page reads name, power and alliance
+  from the game data; My alliance's Members comes from the rosters; "my alliance" is the
+  account's kept alliance (game_player_alliances). game-accounts-from-game.sql is deleted.
+- Still to do: showing a move as "X > Y" with a Confirm button (design-decisions.md),
+  UI work on the draft branch.
 - The computer layout of the header badge (it is still top right there).
 
 ## 5. Open

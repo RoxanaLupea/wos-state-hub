@@ -4,10 +4,10 @@ import './data-table.css';
 import { escapeForPage } from './escape.ts';
 import type { Row } from '../data/records.ts';
 
-export interface Column {
+export interface Column<T = Row> {
   label: string;
   // The cell's contents, already safe to put on the page.
-  cell: (row: Row) => string;
+  cell: (row: T) => string;
   isNumber?: boolean;
 }
 
@@ -17,7 +17,7 @@ export function workSection(title: string, body: string, beside = ''): string {
     `<div class="work-head"><h2>${escapeForPage(title)}</h2>${beside}</div>${body}</section>`;
 }
 
-export function dataTable(columns: Column[], rows: Row[], emptyText: string): string {
+export function dataTable<T = Row>(columns: Column<T>[], rows: T[], emptyText: string): string {
   if (!rows.length) return `<p class="work-empty">${escapeForPage(emptyText)}</p>`;
   return '<div class="table-scroll"><table class="data-table"><thead><tr>' +
     columns.map(column => `<th${column.isNumber ? ' class="number"' : ''}>${escapeForPage(column.label)}</th>`).join('') +

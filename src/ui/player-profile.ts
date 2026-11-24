@@ -201,11 +201,9 @@ function allianceColour(alliance: Alliance | undefined, alliances: Alliance[]): 
   return main ? `color-mix(in srgb, ${own} 62%, white)` : own;
 }
 
-// An account's alliance colour, from what the game says of it (or, before the game is
-// read, the alliance saved on the account).
-export function accountColour(account: Row, game: GameRead | null, alliances: Alliance[], homeState: number): string | null {
-  const alliance = siteAllianceOf(game, alliances, homeState) ?? (game ? undefined : alliances.find(one => one.id === account.alliance_id));
-  return allianceColour(alliance, alliances);
+// An account's alliance colour, from what the game says of it; none before it is read.
+export function accountColour(game: GameRead | null, alliances: Alliance[], homeState: number): string | null {
+  return allianceColour(siteAllianceOf(game, alliances, homeState), alliances);
 }
 
 // How long ago the game was last read, the way the game itself words it.
@@ -480,9 +478,8 @@ export interface ProfileOptions {
 export function playerProfile(options: ProfileOptions): string {
   const { account, game } = options;
   const id = String(account.in_game_id ?? '');
-  const name = game?.name ?? String(account.in_game_name ?? '');
-  const alliance = siteAllianceOf(game, options.alliances, options.homeState) ??
-    (game ? undefined : options.alliances.find(one => one.id === account.alliance_id));
+  const name = game?.name ?? '';
+  const alliance = siteAllianceOf(game, options.alliances, options.homeState);
   const colour = allianceColour(alliance, options.alliances);
   const tag = game?.allianceTag ?? alliance?.tag ?? '';
   const logo = alliance?.logoFile ? `<img class="logo" src="${imageUrl('alliances/' + alliance.logoFile.replace(/\.png$/, ''))}" alt="">`
@@ -490,7 +487,7 @@ export function playerProfile(options: ProfileOptions): string {
   // The tag above the logo.
   const badge = tag ? `<div class="badge"><span class="tag">${escapeForPage(tag)}</span>${logo}</div>` : '<div class="badge"></div>';
   const rank = game?.allianceRank ? `<span class="rank">${escapeForPage(game.allianceRank)}</span>` : '';
-  const power = game?.power ?? numberOrNull(account.player_power);
+  const power = game?.power ?? null;
   const powerLine = power ? `<div class="power"><b>${short(power)}</b>${game?.powerRank ? `<span class="pr">#${game.powerRank}</span>` : ''}</div>` : '';
   const foundry = account.foundry_power ? `<div class="foundry"><img src="${imageUrl('events/foundry')}" alt="Foundry"><span>${escapeForPage(foundryText(account.foundry_power))}</span></div>` : '';
   // Another state's chief is marked with the state: our alliances are only ours here.

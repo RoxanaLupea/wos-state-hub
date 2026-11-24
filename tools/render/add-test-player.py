@@ -1,6 +1,7 @@
 # Adds a made-up signed-in player to tools/render/data/main.json, so the profile can be
 # rendered: a main (TestPlayer, DVL), an alt (TestAlt, TOP), two farms and the owner role, all
-# for the stand-in user that shoot-player.py signs in as. None of it is in the database.
+# for the stand-in user that shoot-player.py signs in as, with made-up game data for them
+# (players, two rosters, the alliances the site keeps). None of it is in the database.
 import json, pathlib
 here = pathlib.Path(__file__).parent
 data_file = here / 'data' / 'main.json'

@@ -10,6 +10,7 @@ import { allianceTag } from '../data/alliances.ts';
 import { eventTypeName } from '../data/catalog.ts';
 import { longDayText } from './day-names.ts';
 import { dayFromText } from '../calendar/days.ts';
+import type { GameRead, RosterEntry } from './player-profile.ts';
 
 // What every working page needs to know.
 export interface WorkContext {
@@ -37,6 +38,10 @@ export interface WorkContext {
   // in-game ID: one tier text ("FC10 Exalted") and skill level per troop type, or null
   // while they are being read. Troops and skill levels are kept in one place only.
   troopsOf: (inGameId: string) => Record<string, { tier: string; skill: number }> | null;
+  // What the game says of an account (name, power, alliance), or null while it is read.
+  gameOf: (inGameId: string) => GameRead | null;
+  // One of our alliances' members from its roster, or null while the rosters are read.
+  membersOf: (allianceId: string) => RosterEntry[] | null;
 }
 
 const LOADING = '<p class="work-empty">Loading…</p>';
@@ -56,10 +61,11 @@ function dayText(date: unknown): string {
   return date ? escapeForPage(longDayText(dayFromText(String(date)))) : '—';
 }
 
-// In-game names of the accounts, for the tables that hold an account id.
-function nameOfAccount(accounts: Row[], accountId: unknown): string {
-  const account = accounts.find(one => one.id === accountId);
-  return account?.in_game_name ? String(account.in_game_name) : 'Not set';
+// The in-game name of a person, for the tables that hold their login: their main
+// account's name as the game has it.
+function nameOfPerson(context: WorkContext, gameAccounts: Row[], accountId: unknown): string {
+  const main = gameAccounts.find(one => one.owner_id === accountId && one.kind === 'main');
+  return main ? context.gameOf(String(main.in_game_id ?? ''))?.name || String(main.in_game_id ?? '') : 'Not set';
 }
 
 function runTitle(run: { eventTypeId: string; date: string }): string {
@@ -104,9 +110,8 @@ export function availabilityPage(context: WorkContext): string {
   const run = context.run;
   const all = context.rowsOf('availability');
   const allTimes = context.rowsOf('availability_times');
-  const accounts = context.rowsOf('accounts');
   const gameAccounts = context.rowsOf('game_accounts');
-  if (!all || !allTimes || !accounts || !gameAccounts) return page([workSection('Availability', LOADING)]);
+  if (!all || !allTimes || !gameAccounts) return page([workSection('Availability', LOADING)]);
   // Each answer is for one game account: a main or an alt.
   const accountOf = (row: Row) => gameAccounts.find(one => one.id === row.game_account_id);
 
@@ -132,7 +137,8 @@ export function availabilityPage(context: WorkContext): string {
     return one ? `${text(one.tier)}${one.tier.endsWith('Exalted') ? `<small>Skill ${one.skill}</small>` : ''}` : '—';
   };
   const columns: Column[] = [
-    { label: 'Player', cell: row => escapeForPage(String(accountOf(row)?.in_game_name ?? nameOfAccount(accounts, row.account_id))) +
+    { label: 'Player', cell: row => escapeForPage(context.gameOf(String(accountOf(row)?.in_game_id ?? ''))?.name ??
+      nameOfPerson(context, gameAccounts, row.account_id)) +
       `<small>${text(row.alliance_id ? allianceTag(String(row.alliance_id)) : '')}</small>` },
     { label: 'Plays for', cell: row => text(row.playing_for_alliance_id ? allianceTag(String(row.playing_for_alliance_id)) : '') },
     { label: 'Hours (UTC)', cell: row => row.is_unavailable ? '<span class="muted">Cannot play</span>' : escapeForPage(hoursOf(timesOf(row))) },
@@ -297,33 +303,46 @@ function powerText(value: unknown): string {
 
 export function membersPage(context: WorkContext, familyIds: string[]): string {
   if (!context.myAllianceId) {
-    return page([workSection('Members', '<p class="work-empty">Pick your alliance on your page to see its members.</p>')]);
+    return page([workSection('Members', '<p class="work-empty">The account you are on is not in one of our alliances.</p>')]);
   }
-  // Every game account in the alliance is a member: mains, alts and farms. An alt or a
-  // farm shows whose it is (the owner's main).
+  // The members are the alliance's roster as the game last showed it. A member who has
+  // linked the account on the site shows whether it is a main, an alt or a farm (with
+  // whose it is), its foundry power and the person's roles.
   const gameAccounts = context.rowsOf('game_accounts');
   const roles = context.rowsOf('account_roles');
   if (!gameAccounts || !roles) return page([workSection('Members', LOADING)]);
-  const mainOf = (ownerId: unknown) => gameAccounts.find(one => one.owner_id === ownerId && one.kind === 'main');
+  const linkOf = (entry: RosterEntry) => gameAccounts.find(one => String(one.in_game_id ?? '') === String(entry.member.chief_id));
+  const mainNameOf = (ownerId: unknown) => {
+    const main = gameAccounts.find(one => one.owner_id === ownerId && one.kind === 'main');
+    return main ? context.gameOf(String(main.in_game_id ?? ''))?.name ?? '' : '';
+  };
 
   const sections = familyIds.map(allianceId => {
-    const people = gameAccounts.filter(one => one.alliance_id === allianceId)
-      .sort((left, right) => (Number(right.player_power) || 0) - (Number(left.player_power) || 0));
-    const columns: Column[] = [
-      { label: 'Name', cell: row => text(row.in_game_name) + `<small>${text(row.in_game_id)}</small>` },
-      { label: 'Account', cell: row => row.kind === 'main' ? 'Main'
-        : `${row.kind === 'farm' ? 'Farm' : 'Alt'}<small>${text(mainOf(row.owner_id)?.in_game_name)}</small>` },
-      { label: 'Power', cell: row => escapeForPage(powerText(row.player_power)) +
-        `<small>${dayText(String(row.player_power_updated_at ?? '').slice(0, 10))}</small>`, isNumber: true },
-      { label: 'Foundry power', cell: row => row.kind === 'farm' ? '—' : escapeForPage(powerText(row.foundry_power)) +
-        `<small>${dayText(String(row.foundry_power_updated_at ?? '').slice(0, 10))}</small>`, isNumber: true },
-      { label: 'Roles', cell: row => {
-        if (row.kind !== 'main') return '—';
-        const own = roles.filter(one => one.account_id === row.owner_id);
+    const members = context.membersOf(allianceId);
+    if (!members) return workSection(allianceTag(allianceId), LOADING);
+    const people = members.slice().sort((left, right) => (Number(right.member.power) || 0) - (Number(left.member.power) || 0));
+    const columns: Column<RosterEntry>[] = [
+      { label: 'Name', cell: entry => text(entry.member.nick_name) + `<small>${text(entry.member.chief_id)}</small>` },
+      { label: 'Account', cell: entry => {
+        const link = linkOf(entry);
+        if (!link) return '—';
+        return link.kind === 'main' ? 'Main' : `${link.kind === 'farm' ? 'Farm' : 'Alt'}<small>${text(mainNameOf(link.owner_id))}</small>`;
+      } },
+      { label: 'Power', cell: entry => escapeForPage(powerText(entry.member.power)) +
+        `<small>${dayText(entry.readAt.slice(0, 10))}</small>`, isNumber: true },
+      { label: 'Foundry power', cell: entry => {
+        const link = linkOf(entry);
+        return !link || link.kind === 'farm' ? '—' : escapeForPage(powerText(link.foundry_power)) +
+          `<small>${dayText(String(link.foundry_power_updated_at ?? '').slice(0, 10))}</small>`;
+      }, isNumber: true },
+      { label: 'Roles', cell: entry => {
+        const link = linkOf(entry);
+        if (!link || link.kind !== 'main') return '—';
+        const own = roles.filter(one => one.account_id === link.owner_id);
         return own.length ? own.map(one => escapeForPage(ROLE_NAMES[String(one.role)] ?? String(one.role))).join(', ') : '—';
       } }
     ];
-    return workSection(allianceTag(allianceId), dataTable(columns, people, 'Nobody has signed in with this alliance yet.'));
+    return workSection(allianceTag(allianceId), dataTable(columns, people, "This alliance's roster has not been read yet."));
   });
   return page(sections);
 }
@@ -452,20 +471,21 @@ export function settingsPage(context: WorkContext): string {
 
 export function rolesPage(context: WorkContext): string {
   const roles = context.rowsOf('account_roles');
-  const accounts = context.rowsOf('accounts');
-  if (!roles || !accounts) return page([workSection('Roles', LOADING)]);
+  const gameAccounts = context.rowsOf('game_accounts');
+  if (!roles || !gameAccounts) return page([workSection('Roles', LOADING)]);
   const columns: Column[] = [
-    { label: 'Person', cell: row => escapeForPage(nameOfAccount(accounts, row.account_id)) },
+    { label: 'Person', cell: row => escapeForPage(nameOfPerson(context, gameAccounts, row.account_id)) },
     { label: 'Role', cell: row => text(ROLE_NAMES[String(row.role)] ?? row.role) },
     { label: 'Alliance', cell: row => text(row.alliance_id ? allianceTag(String(row.alliance_id)) : '') },
     { label: 'Since', cell: row => dayText(String(row.granted_at ?? '').slice(0, 10)) },
     { label: '', cell: row => '<div class="cell-actions">' +
       rowButton('remove|account_roles|' + row.id, 'Remove', context.editing === 'remove|account_roles|' + row.id) + '</div>' }
   ];
-  const people: [string, string][] = [['', 'Pick a person'], ...accounts
-    .filter(one => one.in_game_name)
-    .sort((left, right) => String(left.in_game_name).localeCompare(String(right.in_game_name)))
-    .map(one => [String(one.id), `${one.in_game_name} · ${one.in_game_id ?? ''}`] as [string, string])];
+  // Each person by their main account, as the game names it.
+  const people: [string, string][] = [['', 'Pick a person'], ...gameAccounts
+    .filter(one => one.kind === 'main' && one.in_game_id)
+    .map(one => [String(one.owner_id), `${nameOfPerson(context, gameAccounts, one.owner_id)} · ${one.in_game_id}`] as [string, string])
+    .sort((left, right) => left[1].localeCompare(right[1]))];
   const fields: Field[] = [
     { name: 'account_id', label: 'Person', kind: 'select', choices: people, isRequired: true },
     { name: 'role', label: 'Role', kind: 'select', isRequired: true, choices: [['', 'Pick a role'],

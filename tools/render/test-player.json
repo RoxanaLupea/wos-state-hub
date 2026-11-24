@@ -2,38 +2,16 @@
  "accounts": [
   {
    "id": "00000000-0000-0000-0000-00000000aaaa",
-   "in_game_name": "TestPlayer",
-   "in_game_id": "123456789",
-   "alliance_id": "dvl",
    "language": "en",
-   "player_power": 1250000000,
-   "player_power_updated_at": "2026-11-20T10:00:00Z",
-   "foundry_power": 15230,
-   "foundry_power_updated_at": null,
-   "infantry_tier": "FC10 Exalted",
-   "infantry_skill_level": 3,
-   "lancer_tier": "FC10 Helios",
-   "lancer_skill_level": 0,
-   "marksmen_tier": "FC9 Helios",
-   "marksmen_skill_level": 0
+   "display_timezone": null
   }
  ],
  "game_accounts": [
   {
    "id": 1,
-   "in_game_name": "TestPlayer",
    "in_game_id": "123456789",
-   "alliance_id": "dvl",
-   "player_power": 1250000000,
-   "player_power_updated_at": "2026-11-20T10:00:00Z",
    "foundry_power": 15230,
    "foundry_power_updated_at": null,
-   "infantry_tier": "FC10 Exalted",
-   "infantry_skill_level": 3,
-   "lancer_tier": "FC10 Helios",
-   "lancer_skill_level": 0,
-   "marksmen_tier": "FC9 Helios",
-   "marksmen_skill_level": 0,
    "owner_id": "00000000-0000-0000-0000-00000000aaaa",
    "kind": "main",
    "sort_order": 0
@@ -42,37 +20,22 @@
    "id": 2,
    "owner_id": "00000000-0000-0000-0000-00000000aaaa",
    "kind": "alt",
-   "in_game_name": "TestAlt",
    "in_game_id": "87654321",
-   "alliance_id": "top",
-   "player_power": 640000000,
    "foundry_power": 9800,
-   "infantry_tier": "FC8 Helios",
-   "infantry_skill_level": 0,
-   "lancer_tier": "FC8",
-   "lancer_skill_level": 0,
-   "marksmen_tier": "FC7",
-   "marksmen_skill_level": 0,
    "sort_order": 0
   },
   {
    "id": 11,
    "owner_id": "00000000-0000-0000-0000-00000000aaaa",
    "kind": "farm",
-   "in_game_name": "TestFarm",
    "in_game_id": "234567891",
-   "alliance_id": "dvl",
-   "player_power": 48000000,
    "sort_order": 1
   },
   {
    "id": 13,
    "owner_id": "00000000-0000-0000-0000-00000000aaaa",
    "kind": "farm",
-   "in_game_name": "TestFarm2",
    "in_game_id": "245678912",
-   "alliance_id": "top",
-   "player_power": 31000000,
    "sort_order": 3
   }
  ],
@@ -82,6 +45,210 @@
    "account_id": "00000000-0000-0000-0000-00000000aaaa",
    "role": "owner",
    "alliance_id": null
+  }
+ ],
+ "game_players": [
+  {
+   "player_id": 123456789,
+   "state_number": 1458,
+   "alliance_tag": "DVL",
+   "data": {
+    "player": {
+     "nick_name": "TestPlayer",
+     "kid": 1458,
+     "power": 1250000000,
+     "alliance": {
+      "abbr": "DVL",
+      "rank_label": "R4"
+     },
+     "furnace_level": 30
+    },
+    "troops": [
+     {
+      "type": "infantry",
+      "tier": 12,
+      "fire_crystal_level": 10
+     },
+     {
+      "type": "lancer",
+      "tier": 11,
+      "fire_crystal_level": 10
+     },
+     {
+      "type": "marksman",
+      "tier": 11,
+      "fire_crystal_level": 9
+     }
+    ]
+   },
+   "read_at": "2026-11-24T10:00:00Z",
+   "refresh_asked_at": null
+  },
+  {
+   "player_id": 87654321,
+   "state_number": 1458,
+   "alliance_tag": "TOP",
+   "data": {
+    "player": {
+     "nick_name": "TestAlt",
+     "kid": 1458,
+     "power": 640000000,
+     "alliance": {
+      "abbr": "TOP",
+      "rank_label": "R3"
+     },
+     "furnace_level": 30
+    },
+    "troops": [
+     {
+      "type": "infantry",
+      "tier": 11,
+      "fire_crystal_level": 8
+     },
+     {
+      "type": "lancer",
+      "tier": 10,
+      "fire_crystal_level": 8
+     },
+     {
+      "type": "marksman",
+      "tier": 10,
+      "fire_crystal_level": 7
+     }
+    ]
+   },
+   "read_at": "2026-11-24T10:00:00Z",
+   "refresh_asked_at": null
+  },
+  {
+   "player_id": 234567891,
+   "state_number": 1458,
+   "alliance_tag": "DVL",
+   "data": {
+    "player": {
+     "nick_name": "TestFarm",
+     "kid": 1458,
+     "power": 48000000,
+     "alliance": {
+      "abbr": "DVL",
+      "rank_label": "R1"
+     },
+     "furnace_level": 30
+    }
+   },
+   "read_at": "2026-11-24T10:00:00Z",
+   "refresh_asked_at": null
+  },
+  {
+   "player_id": 245678912,
+   "state_number": 1458,
+   "alliance_tag": "TOP",
+   "data": {
+    "player": {
+     "nick_name": "TestFarm2",
+     "kid": 1458,
+     "power": 31000000,
+     "alliance": {
+      "abbr": "TOP",
+      "rank_label": "R1"
+     },
+     "furnace_level": 30
+    }
+   },
+   "read_at": "2026-11-24T10:00:00Z",
+   "refresh_asked_at": null
+  }
+ ],
+ "game_player_alliances": [
+  {
+   "player_id": 123456789,
+   "state_number": 1458,
+   "alliance_tag": "DVL",
+   "moving_state": null,
+   "moving_tag": null,
+   "moving_since": null
+  },
+  {
+   "player_id": 87654321,
+   "state_number": 1458,
+   "alliance_tag": "DVL",
+   "moving_state": 1458,
+   "moving_tag": "TOP",
+   "moving_since": "2026-11-24T06:10:00Z"
+  },
+  {
+   "player_id": 234567891,
+   "state_number": 1458,
+   "alliance_tag": "DVL",
+   "moving_state": null,
+   "moving_tag": null,
+   "moving_since": null
+  },
+  {
+   "player_id": 245678912,
+   "state_number": 1458,
+   "alliance_tag": "TOP",
+   "moving_state": null,
+   "moving_tag": null,
+   "moving_since": null
+  }
+ ],
+ "game_alliances": [
+  {
+   "state_number": 1458,
+   "tag": "DVL",
+   "alliance_id": "dvl",
+   "read_at": "2026-11-24T12:10:00Z",
+   "data": {
+    "members": [
+     {
+      "chief_id": 123456789,
+      "nick_name": "TestPlayer",
+      "power": 1251000000,
+      "alliance_rank_label": "R4"
+     },
+     {
+      "chief_id": 234567891,
+      "nick_name": "TestFarm",
+      "power": 48100000,
+      "alliance_rank_label": "R1"
+     },
+     {
+      "chief_id": 300000001,
+      "nick_name": "A very long chief name here",
+      "power": 980000000,
+      "alliance_rank_label": "R5"
+     },
+     {
+      "chief_id": 300000002,
+      "nick_name": "Snowfox",
+      "power": 410000000,
+      "alliance_rank_label": "R2"
+     }
+    ]
+   }
+  },
+  {
+   "state_number": 1458,
+   "tag": "TOP",
+   "alliance_id": "top",
+   "read_at": "2026-11-24T12:10:00Z",
+   "data": {
+    "members": [
+     {
+      "chief_id": 87654321,
+      "nick_name": "TestAlt",
+      "power": 641000000,
+      "alliance_rank_label": "R3"
+     },
+     {
+      "chief_id": 245678912,
+      "nick_name": "TestFarm2",
+      "power": 31000000,
+      "alliance_rank_label": "R1"
+     }
+    ]
+   }
   }
  ]
 }
