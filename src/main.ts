@@ -58,7 +58,7 @@ import {
   accountColour, accountMenu, accountQuestion, filterFoundryPower, fitPlayerPage, foundryText, filterId, gameReadOf, idProblem, rosterEntriesOf, stateBoardsOf, TROOP_KINDS, withRoster,
   type AllianceMove, type BarAccount, type BoardEntry, type GameRead, type LookUpState, type RosterEntry, type SkillLevels, type TroopKind
 } from './ui/player-profile.ts';
-import { askGameRefresh, lookUpGameAccount, readGamePlayers, readGameRosters, readGameStates, readPlayerAlliances, readSkillLevels, setSkillLevel, settleAllianceMove } from './data/game-data.ts';
+import { askGameRefresh, lookUpGameAccount, readGamePlayers, readGameRosters, readPlayerAlliances, readStateRanks, readSkillLevels, setSkillLevel, settleAllianceMove } from './data/game-data.ts';
 import {
   ALLIANCE_RESULT_EVENTS, allianceResultsPage, championshipStars, opponentNotesPage, resultsTab, showdownScoreOf,
   svsHistorySection
@@ -1863,7 +1863,7 @@ async function rereadGameData(ids: string[], withState = false, withRosters = tr
     readGamePlayers(ids).catch(() => [] as Row[]),
     readSkillLevels(ids).catch(() => [] as Row[]),
     readPlayerAlliances(ids).catch(() => [] as Row[]),
-    withState ? readGameStates([Number(STATE_NUMBER)]).catch(() => [] as Row[]) : Promise.resolve(null),
+    withState ? readStateRanks(ids).catch(() => null) : Promise.resolve(null),
     withRosters || !rostersRead ? readGameRosters().catch(() => null) : Promise.resolve(null)
   ]);
   if (rosters) { rosterEntries = rosterEntriesOf(rosters); rostersRead = true; }
@@ -1875,7 +1875,8 @@ async function rereadGameData(ids: string[], withState = false, withRosters = tr
   }
   for (const row of skills) skillLevels.set(String(row.player_id), row);
   for (const row of kept) playerAlliances.set(String(row.player_id), row);
-  if (states) stateBoards = stateBoardsOf(states);
+  // Each player's boards are replaced as a whole, so a board they dropped off goes.
+  if (states) for (const [id, boards] of stateBoardsOf(states)) stateBoards.set(id, boards);
   draw();
   for (const id of ids) if (gameReads.get(id)?.asked) watchRefresh(id);
 }

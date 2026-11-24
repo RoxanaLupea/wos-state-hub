@@ -131,6 +131,19 @@ async function rpc(name, args) {
     if (row?.moving_since) row.dismissed_until = new Date(Date.now() + 3 * 86400000).toISOString();
     return { data: null, error: null };
   }
+  if (name === 'game_state_ranks') {
+    const rows = [];
+    for (const state of tables.game_states ?? []) {
+      for (const board of state.data?.boards ?? []) {
+        for (const entry of board.rows ?? []) {
+          if ((args.player_ids ?? []).includes(Number(entry.chief_id))) {
+            rows.push({ player_id: Number(entry.chief_id), board: board.name, score: entry.score, label: entry.score_label ?? null, rank: entry.rank });
+          }
+        }
+      }
+    }
+    return { data: rows, error: null };
+  }
   if (name === 'set_game_account_kinds') {
     for (const [id, kind] of Object.entries(args.kinds ?? {})) {
       const row = (tables.game_accounts ?? []).find(one => String(one.id) === id);

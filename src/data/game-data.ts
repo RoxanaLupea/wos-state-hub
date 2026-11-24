@@ -14,9 +14,12 @@ export async function readGamePlayers(ids: string[]): Promise<Row[]> {
   return (data ?? []) as Row[];
 }
 
-// The state's top-100 boards (game_states), for each player's ranks on them.
-export async function readGameStates(stateNumbers: number[]): Promise<Row[]> {
-  const { data, error } = await database().from('game_states').select('state_number, data').in('state_number', stateNumbers);
+// The given players' places on their states' top-100 boards (supabase/state-ranks.sql):
+// one row per board they are on, for every state the site reads.
+export async function readStateRanks(ids: string[]): Promise<Row[]> {
+  const numbers = ids.filter(id => /^\d+$/.test(id)).map(Number);
+  if (numbers.length === 0) return [];
+  const { data, error } = await database().rpc('game_state_ranks', { player_ids: numbers });
   if (error) throw new Error(error.message);
   return (data ?? []) as Row[];
 }

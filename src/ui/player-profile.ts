@@ -179,16 +179,11 @@ export function withRoster(game: GameRead | null, roster: RosterEntry | undefine
 export function stateBoardsOf(rows: Row[]): Map<string, Record<string, BoardEntry>> {
   const byChief = new Map<string, Record<string, BoardEntry>>();
   for (const row of rows) {
-    const boards = (row.data as Record<string, any> | undefined)?.boards;
-    for (const board of Array.isArray(boards) ? boards : []) {
-      for (const entry of Array.isArray(board?.rows) ? board.rows : []) {
-        if (!entry?.chief_id) continue;
-        const id = String(entry.chief_id);
-        const chief = byChief.get(id) ?? {};
-        chief[String(board.name)] = { value: Number(entry.score) || 0, label: entry.score_label ? String(entry.score_label) : null, rank: numberOrNull(entry.rank) };
-        byChief.set(id, chief);
-      }
-    }
+    if (!row.player_id || !row.board) continue;
+    const id = String(row.player_id);
+    const chief = byChief.get(id) ?? {};
+    chief[String(row.board)] = { value: Number(row.score) || 0, label: row.label ? String(row.label) : null, rank: numberOrNull(row.rank) };
+    byChief.set(id, chief);
   }
   return byChief;
 }
