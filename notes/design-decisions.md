@@ -599,6 +599,9 @@ Game accounts (from 23 Nov, still holds)
 - The Fortress rewards view needs work and a redesign.
 - How results are shown (SvS, Sunfire presidents, TAL ranks and MVPs). A working
   version is built: a Results tab on the event, and My alliance · Results.
+- Pop-ups: their design (24 Nov). Until then they stay as they are: "Save for which
+  accounts?" as approved (ticked rows outlined, Cancel and Save under them) and the leave
+  question.
 - The maps (state, alliance, castle and event maps), described in
   rules-and-open-items.md; the owner will show examples first.
 - Everything in "Still to design" in rules-and-open-items.md.
