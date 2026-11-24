@@ -44,25 +44,23 @@ read the notes file it names, if any.
 - Approved changes are kept here and pushed together once enough has gathered, not
   after every change.
 - When she says to push, everything she accepted goes live: main, with every accepted
-  design branch merged into it (24 Nov).
+  branch merged into it (24 Nov).
 - Her "ok" or "looks good" on a design accepts it: it is merged into main and goes live
   with the next push, without asking about it again. Never split a push by branch and
   leave accepted work behind (24 Nov).
 
 ## How the work is done
 
-- New design work starts on a fresh branch made from main, named for what it is (for
-  example design/calendar-controls), never on an old draft that still holds earlier
-  designs, so Roxanne only sees what she is fixing now. It is merged into main when she
-  accepts it and then deleted (24 Nov).
-- Only UI and design work goes on a design branch. Fixes to data, the database and
-  how things work are done on main and pushed straight to main, still after walking
-  her through them and her yes (24 Nov).
+- Work goes on main as long as it does not make a mess there; whatever Roxanne approves
+  goes on main. A branch is used only when it is needed, for example a design tried in
+  several versions before she picks one: then it is a fresh branch from main, named for
+  what it is, never an old draft still holding earlier designs, and it is merged and
+  deleted once she accepts (24 Nov).
 - Every working rule she sets goes into this file, or into the notes it lists, as soon
   as it is said, in the same chat, so the next chat starts with it (24 Nov). Rules of the
   site itself go to notes/design-decisions.md.
-- Design work happens on its design branch. Her approved files stay untouched until she
-  says yes.
+- Mock-ups and unapproved experiments never go into her approved files; they stay in
+  the workspace (or on a branch) until she says yes.
 - Nothing counts as settled until she says so. Settled decisions go into
   notes/design-decisions.md first and into the code second.
 - A commit message is one short sentence, with no body.
