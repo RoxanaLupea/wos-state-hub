@@ -48,6 +48,21 @@
 .pp .logo.none { width: 32px; height: 32px; border-radius: 9px; background: var(--glass-strong); box-shadow: 0 0 0 1px var(--glass-border);
   display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; color: var(--text-muted); }
 .pp .tag { font-family: var(--tag-font); font-size: 11px; font-weight: 800; letter-spacing: .08em; line-height: 1.1; }
+/* A move under way: the alliance the account counts in, dimmed, an arrow, the one the game
+   shows now, in the corner where the badge is, as tall as a single badge. On a phone
+   Dismiss and Confirm sit on one line right under it, below the header, so the name
+   keeps the whole width and the lines under it keep clear of the corner. */
+.pp:has(.move) { --badge-room: 96px; }
+.pp .chief:has(.move) .side, .pp .move { display: contents; }
+.pp .move-pair { grid-column: 3; grid-row: 1; align-self: end; display: flex; align-items: flex-end; gap: 4px; }
+.pp .move .badge .logo { height: 32px; }
+.pp .move .logo.none { width: 28px; height: 28px; font-size: 13px; border-radius: 8px; }
+.pp .move .badge.was { opacity: .45; }
+.pp .move-arrow { width: 14px; height: 14px; margin-bottom: 9px; color: var(--text-faint); }
+.pp .move-actions { grid-column: 2 / 4; grid-row: 2; justify-self: end; display: flex; align-items: center; gap: 16px; margin-top: 12px; }
+.pp .move .quiet { font-size: 12.5px; padding: 2px 0; }
+.pp .move .player-note { grid-column: 1 / 4; grid-row: 3; justify-self: end; }
+.pp .move .player-note:empty { display: none; }
 
 /* The person's other accounts: seven photos fill the line from edge to edge; fewer keep
    the same size. Tapping one swaps to it. */
@@ -260,12 +275,26 @@
   .pp .chief .who { grid-column: 2; }
   .pp .chief .side { grid-column: 3; align-self: start; }
   .pp .who .id, .pp .who .power, .pp .who .foundry { margin-right: 0; }
-  .pp .side { height: var(--pic); display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; }
-  .pp .side .badge { align-self: flex-end; }
-  .pp .badge .logo { height: 48px; }
-  .pp .logo.none { width: 42px; height: 42px; font-size: 19px; border-radius: 12px; }
-  .pp .tag { font-size: 13px; }
-  .pp .fresh.top { display: block; margin: 0; }
+  /* The side: the badge at the top, as big as the room down to Updated and Refresh
+     allows, its tag larger too; during a move the pair fills that room with Dismiss and
+     Confirm under it. The logos' heights are what is left of the picture's height after
+     the tag, the buttons, Updated and Refresh and the gaps between them. */
+  .pp .side { height: var(--pic); display: flex; flex-direction: column; align-items: flex-end; gap: 14px; }
+  .pp .chief:has(.move) .side { display: flex; }
+  .pp .tag { font-size: 16px; }
+  .pp .side .badge { gap: 8px; }
+  .pp .side .badge .logo { height: calc(var(--pic) - 47px); }
+  .pp .side .badge .logo.none { width: calc(var(--pic) - 47px); font-size: 34px; border-radius: 18px; }
+  .pp .move { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+  .pp .move-pair { gap: 8px; }
+  .pp .side .move .badge { gap: 6px; }
+  .pp .side .move .badge .logo { height: calc(var(--pic) - 74px); }
+  .pp .side .move .badge .logo.none { width: calc(var(--pic) - 74px); font-size: 24px; border-radius: 14px; }
+  .pp .move-arrow { width: 18px; height: 18px; margin-bottom: calc((var(--pic) - 72px) / 2 - 9px); }
+  .pp .move-actions { margin-top: 0; }
+  .pp .move .quiet { font-size: 13px; }
+  .pp .fresh.top { margin-top: auto; }
+  .pp .fresh.top { display: block; margin-bottom: 0; }
   .pp .fresh.end { display: none; }
   .pp .accbar { grid-template-columns: repeat(7, 48px); gap: 10px; margin-top: 22px; }
   .pp .ph { font-size: 20px; border-radius: 13px; }

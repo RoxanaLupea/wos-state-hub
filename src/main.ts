@@ -56,9 +56,9 @@ import { deleteRow, loadRows, saveRow, type Row } from './data/records.ts';
 import { saveGameAccount } from './data/player-profile.ts';
 import {
   accountColour, accountMenu, filterFoundryPower, fitPlayerPage, foundryText, filterId, gameReadOf, idProblem, rosterEntriesOf, stateBoardsOf, TROOP_KINDS, withRoster,
-  type BarAccount, type BoardEntry, type GameRead, type LookUpState, type RosterEntry, type SkillLevels, type TroopKind
+  type AllianceMove, type BarAccount, type BoardEntry, type GameRead, type LookUpState, type RosterEntry, type SkillLevels, type TroopKind
 } from './ui/player-profile.ts';
-import { askGameRefresh, lookUpGameAccount, readGamePlayers, readGameRosters, readGameStates, readPlayerAlliances, readSkillLevels, setSkillLevel } from './data/game-data.ts';
+import { askGameRefresh, lookUpGameAccount, readGamePlayers, readGameRosters, readGameStates, readPlayerAlliances, readSkillLevels, setSkillLevel, settleAllianceMove } from './data/game-data.ts';
 import {
   ALLIANCE_RESULT_EVENTS, allianceResultsPage, championshipStars, opponentNotesPage, resultsTab, showdownScoreOf,
   svsHistorySection
@@ -1831,7 +1831,7 @@ function barAccountOf(row: Row): BarAccount {
   const game = gameReads.get(String(row.in_game_id ?? ''));
   return {
     row, avatar: game?.avatar ?? null, name: game?.name ?? '',
-    colour: accountColour(game ?? null, alliancesStillHere(alliances), Number(STATE_NUMBER))
+    colour: accountColour(alliances.find(one => one.id === allianceIdOfAccount(row)), alliancesStillHere(alliances))
   };
 }
 
@@ -1860,13 +1860,38 @@ function profileOptions(): ProfileOptions | null {
     skillDraft[kind] = value === null || value === undefined ? null : Number(value);
   }
   return {
-    account: row, game: gameReads.get(id) ?? null, stateBoards: stateBoards.get(id) ?? {},
+    account: row, game: gameReads.get(id) ?? null, countedIn: countedInOf(id), move: moveOf(id), stateBoards: stateBoards.get(id) ?? {},
     alliances: alliancesStillHere(alliances), homeState: Number(STATE_NUMBER), now: Date.now(),
     others: allMyAccounts().filter(one => one.id !== row.id).map(barAccountOf),
     ownAccount: own, skills: skillsOf(id), skillDraft,
     editingTroops: editingTroops, troopsMotion,
     troopsChanged: partHasChanges('troops') || levelsToConfirm('troops'),
     skillsDue: own && skillsNeedALook(row), labyrinthOpen
+  };
+}
+
+// The alliance the site counts an account in, as the game writes its tag; null until the
+// site has one.
+function countedInOf(id: string): AllianceMove['from'] | null {
+  const kept = playerAlliances.get(id);
+  if (!kept) return null;
+  return { tag: kept.alliance_tag ? String(kept.alliance_tag) : null, state: kept.state_number === null || kept.state_number === undefined ? null : Number(kept.state_number) };
+}
+
+// A move under way for an account: where the site counts it and where the game shows it
+// now, while the 24 hours are counting. It shows only once the account has been in the
+// new alliance for 2 hours, so short hops never show, and not while it is dismissed (3
+// days). Null otherwise.
+const MOVE_SHOWN_AFTER = 2 * 3600000;
+function moveOf(id: string): AllianceMove | null {
+  const kept = playerAlliances.get(id);
+  if (!kept?.moving_since || Date.now() - Date.parse(String(kept.moving_since)) < MOVE_SHOWN_AFTER) return null;
+  if (kept.dismissed_until && Date.parse(String(kept.dismissed_until)) > Date.now()) return null;
+  const tagOf = (value: unknown) => value ? String(value) : null;
+  const stateOf = (value: unknown) => value === null || value === undefined ? null : Number(value);
+  return {
+    from: { tag: tagOf(kept.alliance_tag), state: stateOf(kept.state_number) },
+    to: { tag: tagOf(kept.moving_tag), state: stateOf(kept.moving_state) }
   };
 }
 
@@ -2184,6 +2209,25 @@ function handlePlayerPicks(target: HTMLElement): boolean {
     const [kind, , value] = (troopPick.dataset.troopPick as string).split('|');
     playerDraft[kind + '_skill_level'] = Number(value);
     draw();
+    return true;
+  }
+  const settleButton = target.closest<HTMLElement>('[data-settle-move]');
+  if (settleButton) {
+    // Confirm: the account's alliance becomes the one the game shows now, and so does "my
+    // alliance" when it is the account the player is on. Dismiss: it stays for 3 days.
+    const [choice, id] = (settleButton.dataset.settleMove as string).split('|') as ['confirm' | 'dismiss', string];
+    const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-settle-move]'));
+    for (const button of buttons) button.disabled = true;
+    void settleAllianceMove(id, choice).then(async () => {
+      await rereadGameData([id]);
+      const active = myAccountRow();
+      const allianceId = active && String(active.in_game_id ?? '') === id ? allianceIdOfAccount(active) : null;
+      if (allianceId) view.myAllianceId = allianceId;
+      draw();
+    }).catch(problem => {
+      for (const button of buttons) button.disabled = false;
+      showPlayerNote('move', problem instanceof Error ? problem.message : String(problem));
+    });
     return true;
   }
   const refreshButton = target.closest<HTMLElement>('[data-game-refresh]');

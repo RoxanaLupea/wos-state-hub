@@ -201,9 +201,9 @@ function allianceColour(alliance: Alliance | undefined, alliances: Alliance[]): 
   return main ? `color-mix(in srgb, ${own} 62%, white)` : own;
 }
 
-// An account's alliance colour, from what the game says of it; none before it is read.
-export function accountColour(game: GameRead | null, alliances: Alliance[], homeState: number): string | null {
-  return allianceColour(siteAllianceOf(game, alliances, homeState), alliances);
+// An account's alliance colour: the alliance it counts in; none when it is in none of ours.
+export function accountColour(alliance: Alliance | undefined, alliances: Alliance[]): string | null {
+  return allianceColour(alliance, alliances);
 }
 
 // How long ago the game was last read, the way the game itself words it.
@@ -451,9 +451,18 @@ function boardsSection(boards: Record<string, BoardEntry>, labyrinthOpen: boolea
 // (a main or an alt becomes the account they are on; a farm opens on its own).
 export interface BarAccount { row: Row; avatar: string | null; name: string; colour: string | null }
 
+// A move under way: the game shows the account in another alliance, and the site still
+// counts it in its own until 24 hours pass or the move is confirmed. Each side is the
+// game's tag (no tag for no alliance) and its state.
+export interface AllianceMove { from: { tag: string | null; state: number | null }; to: { tag: string | null; state: number | null } }
+
 export interface ProfileOptions {
   account: Row;
   game: GameRead | null;
+  // The alliance the site counts the account in (a move counts after 24 hours, or once
+  // confirmed); null until the site has one, when the game's alliance is shown.
+  countedIn: AllianceMove['from'] | null;
+  move: AllianceMove | null;
   // The state's boards for this account's ID, laid under what the game says of it.
   stateBoards: Record<string, BoardEntry>;
   alliances: Alliance[];
@@ -479,13 +488,16 @@ export function playerProfile(options: ProfileOptions): string {
   const { account, game } = options;
   const id = String(account.in_game_id ?? '');
   const name = game?.name ?? '';
-  const alliance = siteAllianceOf(game, options.alliances, options.homeState);
+  // The alliance the account counts in; before the site has one, the game's.
+  const counted = options.countedIn;
+  const alliance = counted
+    ? (counted.state === options.homeState ? options.alliances.find(one => one.tag === counted.tag) : undefined)
+    : siteAllianceOf(game, options.alliances, options.homeState);
   const colour = allianceColour(alliance, options.alliances);
-  const tag = game?.allianceTag ?? alliance?.tag ?? '';
-  const logo = alliance?.logoFile ? `<img class="logo" src="${imageUrl('alliances/' + alliance.logoFile.replace(/\.png$/, ''))}" alt="">`
-    : tag ? `<span class="logo none">${escapeForPage(firstLetter(tag))}</span>` : '';
-  // The tag above the logo.
-  const badge = tag ? `<div class="badge"><span class="tag">${escapeForPage(tag)}</span>${logo}</div>` : '<div class="badge"></div>';
+  // The tag above the logo. While a move is under way: the alliance the account counts
+  // in, dimmed, an arrow, the one the game shows now, and Confirm under them.
+  const badge = options.move ? moveBadge(options.move, id, options) :
+    allianceBadge(counted ? counted.tag ?? '' : game?.allianceTag ?? '', alliance, '');
   const rank = game?.allianceRank ? `<span class="rank">${escapeForPage(game.allianceRank)}</span>` : '';
   const power = game?.power ?? null;
   const powerLine = power ? `<div class="power"><b>${short(power)}</b>${game?.powerRank ? `<span class="pr">#${game.powerRank}</span>` : ''}</div>` : '';
@@ -507,6 +519,36 @@ export function playerProfile(options: ProfileOptions): string {
   return `<div class="pp"${colour ? ` style="--ally: ${escapeForPage(colour)}"` : ''}>${header}${bar}<div class="body">` +
     troopsSection(options, game) + arenaSection(game) + boardsSection(boards, options.labyrinthOpen) +
     `</div>${freshLine(game, id, options.now, 'end')}</div>`;
+}
+
+// One alliance as a badge: its tag above its logo (or its first letter where it has none).
+function allianceBadge(tag: string, alliance: Alliance | undefined, extraClass: string): string {
+  if (!tag) return `<div class="badge${extraClass}"></div>`;
+  const logo = alliance?.logoFile ? `<img class="logo" src="${imageUrl('alliances/' + alliance.logoFile.replace(/\.png$/, ''))}" alt="">`
+    : `<span class="logo none">${escapeForPage(firstLetter(tag))}</span>`;
+  return `<div class="badge${extraClass}"><span class="tag">${escapeForPage(tag)}</span>${logo}</div>`;
+}
+
+const MOVE_ARROW = '<svg class="move-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" ' +
+  'stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const CONFIRM_MOVE_ICON = lineIcon('move-confirm-colour', 'M4.5 12.5l5 5L19.5 6.5');
+const DISMISS_MOVE_ICON = lineIcon('move-dismiss-colour', 'M6 6l12 12M18 6L6 18');
+
+// "X > Y" with Dismiss and Confirm under it: the alliance the account counts in, dimmed,
+// then the one the game shows now. A side with no alliance shows a dash where its badge
+// would be. Dismiss and Confirm are drawn like the troops' Cancel and Save, one under the
+// other so the whole move keeps to the corner.
+function moveBadge(move: AllianceMove, id: string, options: ProfileOptions): string {
+  const side = (one: AllianceMove['from'], extraClass: string) => {
+    const ours = one.state === options.homeState ? options.alliances.find(alliance => alliance.tag === one.tag) : undefined;
+    return one.tag ? allianceBadge(one.tag, ours, extraClass) : `<div class="badge${extraClass}"><span class="logo none">–</span></div>`;
+  };
+  return '<div class="move">' +
+    `<div class="move-pair">${side(move.from, ' was')}${MOVE_ARROW}${side(move.to, '')}</div>` +
+    '<div class="move-actions">' +
+    `<button type="button" class="quiet cancel" data-settle-move="dismiss|${escapeForPage(id)}">${DISMISS_MOVE_ICON}<span class="words">Dismiss</span></button>` +
+    `<button type="button" class="quiet confirm" data-settle-move="confirm|${escapeForPage(id)}">${CONFIRM_MOVE_ICON}<span class="words">Confirm</span></button></div>` +
+    '<small class="player-note" data-note-for="move"></small></div>';
 }
 
 // Adding an account, from "Add account" in the menu under the name (or as the page itself

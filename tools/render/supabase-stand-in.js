@@ -121,6 +121,16 @@ async function rpc(name, args) {
     if (row) row.refresh_asked_at = new Date().toISOString();
     return { data: row?.read_at ?? null, error: null };
   }
+  if (name === 'confirm_alliance_move') {
+    const row = (tables.game_player_alliances ?? []).find(one => one.player_id === args.player_number);
+    if (row?.moving_since) Object.assign(row, { state_number: row.moving_state, alliance_tag: row.moving_tag, moving_state: null, moving_tag: null, moving_since: null });
+    return { data: null, error: null };
+  }
+  if (name === 'dismiss_alliance_move') {
+    const row = (tables.game_player_alliances ?? []).find(one => one.player_id === args.player_number);
+    if (row?.moving_since) row.dismissed_until = new Date(Date.now() + 3 * 86400000).toISOString();
+    return { data: null, error: null };
+  }
   if (name === 'set_skill_level') {
     tables.exalted_skill_levels = tables.exalted_skill_levels ?? [];
     let row = tables.exalted_skill_levels.find(one => one.player_id === args.player_number);
