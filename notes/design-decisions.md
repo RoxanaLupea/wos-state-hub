@@ -56,7 +56,8 @@ there before discussing it again.
   buttons, what it marks (current phase, holders, our group) and its pop-ups. No other
   accent colour on the page (Roxanne, 24 Nov).
   Fortress's second colour is 35% of its violet with white (Roxanne, 24 Nov; she tried
-  55% and went back to 35%).
+  55% and went back to 35%). Tyrant's is 50% of its cyan. The Tyrant section reads
+  "Frostdragon TYRANT" (TYRANT in capitals in the first colour) (24 Nov).
   Accepted 24 Nov: Calendar #8BB7F4, Fortress #B0AAF1 (gold and cyan at the same
   strength looked too dark to read and are being lightened).
 - The open section shows its logo (the Calendar has its own, calendar.png) and its full
@@ -69,9 +70,9 @@ there before discussing it again.
   Timeline's highlight: the blue (#4FA5FC) that lights our group and, stronger, our
   range; our range is written in gold (Roxanne, 24 Nov).
 - Transfers #F0D99D and Tyrant #9DDCF0 (lightened 24 Nov, "ok, better"). SvS and
-  Hellfire take one of their logo's colours at the same strength, SvS's red #ED9B94 and
-  the league's amber #DDA96B (24 Nov). Tyrant, SvS and Hellfire's second colour is 35% of
-  their colour with white, as Fortress's. State, My alliance and Map use the Calendar's
+  Hellfire take one of their logo's colours: SvS's red #EF7F74 (stronger than the others
+  so it does not read pink) and the league's amber #F0BD7D (lighter) (24 Nov). SvS and
+  Hellfire's second colour is 35% of their colour with white, as Fortress's. State, My alliance and Map use the Calendar's
   blue.
 - Every pop-up uses the page's two colours (Filters, Save for which accounts, the menu
   under the name), and the phone's back closes open Filters before anything else.
