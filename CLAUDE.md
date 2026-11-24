@@ -42,6 +42,12 @@ before she finds them. The notes give the site's look; they do not design the pa
    and against notes/review-checklist.md. Fix what fails.
 4. Show one result, phone first, full-screen screenshots, the fewest that show it.
 
+Each page is designed on its own, but never varies from the elements the site already
+has (Roxanne, 25 Nov). The same element is never drawn in different ways; sizes may adapt
+to where it sits. A new element is fine, but say it is new. Before showing anything,
+render every page before and after the change and compare them: nothing outside the
+change may move. She must be able to count on the work without inspecting it closely.
+
 ## What needs her yes
 
 - Pushing and writing to the database: say in a few lines what changed and what is still
