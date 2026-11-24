@@ -71,6 +71,21 @@
   box-shadow: 0 0 0 1px var(--glass-border); font: inherit; font-size: 17px; font-weight: 800; color: var(--text-muted); cursor: pointer; }
 
 .pp .body { margin-top: 26px; display: flex; flex-direction: column; gap: 26px; }
+
+/* "Edit accounts": the photo row in place, with its title line and Cancel and Save, every
+   account's picture, its name, and Main, Alt and Farm under it as words, the picked one
+   bold (the troops' skill levels' words). Seven to a line, like the photos. */
+.pp .accounts-edit { margin-top: 22px; }
+.pp .accounts-edit h2 { margin-bottom: 12px; }
+.pp .accgrid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 16px 8px; }
+.pp .acc { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
+.pp .acc .ph { display: flex; align-items: center; justify-content: center; cursor: default; }
+.pp .acc-name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 9.5px; font-weight: 700;
+  line-height: 1.2; color: var(--text-muted); }
+.pp .acc .kinds { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.pp .acc .lvl { padding: 0 4px; }
+.pp .acc .lvl:disabled { opacity: .35; cursor: default; }
+.pp .acc .lvl:disabled:hover { color: var(--text-faint); }
 .pp .items { display: grid; column-gap: 8px; }
 .pp .items.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .pp .items.five { grid-template-columns: repeat(5, minmax(0, 1fr)); }
@@ -297,6 +312,10 @@
   .pp .fresh.top { display: block; margin-bottom: 0; }
   .pp .fresh.end { display: none; }
   .pp .accbar { grid-template-columns: repeat(7, 48px); gap: 10px; margin-top: 22px; }
+  .pp .accounts-edit { margin-top: 26px; }
+  .pp .accgrid { grid-template-columns: repeat(auto-fill, 76px); gap: 18px 12px; }
+  .pp .acc .ph { width: 48px; }
+  .pp .acc-name { font-size: 11.5px; }
   .pp .ph { font-size: 20px; border-radius: 13px; }
   .pp { --row: 170px; --name-line: 22px; --troop: calc(var(--row) - var(--name-line)); }
   .pp .body { margin-top: 44px; display: grid; justify-content: space-between;

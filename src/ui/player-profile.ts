@@ -479,6 +479,9 @@ export interface ProfileOptions {
   now: number;
   // The person's other accounts, never the one shown.
   others: BarAccount[];
+  // While "Edit accounts" is open: every account (the one shown too), what each is in
+  // the draft, and whether anything changed.
+  kindsEditing: { accounts: BarAccount[]; kinds: Record<string, string>; changed: boolean } | null;
   // Whether this is the person's main or an alt (a farm cannot set skill levels).
   ownAccount: boolean;
   skills: SkillLevels;
@@ -518,8 +521,10 @@ export function playerProfile(options: ProfileOptions): string {
     `<div class="who"><div class="name">${escapeForPage(name)}${rank}</div>` +
     `<div class="id"><span class="k">ID</span> ${escapeForPage(id)}${elsewhere}</div>${powerLine}${foundry}</div>` +
     `<div class="side">${badge}${freshLine(game, id, options.now, 'top')}</div></header>`;
-  // The person's other accounts; tapping one swaps to it.
-  const bar = options.others.length === 0 ? '' : '<nav class="accbar" aria-label="Your other accounts">' + options.others.map(other => {
+  // The person's other accounts; tapping one swaps to it. While "Edit accounts" is open,
+  // every account with Main, Alt and Farm under it in the same place.
+  const bar = options.kindsEditing ? accountsEditor(options.kindsEditing) :
+    options.others.length === 0 ? '' : '<nav class="accbar" aria-label="Your other accounts">' + options.others.map(other => {
     const attribute = other.row.kind === 'farm' ? 'data-listed-account' : 'data-game-account';
     return `<button type="button" class="ph" ${attribute}="${escapeForPage(String(other.row.id))}" aria-label="${escapeForPage(other.name)}"` +
       ` title="${escapeForPage(other.name)}">${pictureOf(other.avatar, other.name)}</button>`;
@@ -528,6 +533,32 @@ export function playerProfile(options: ProfileOptions): string {
   return `<div class="pp"${colour ? ` style="--ally: ${escapeForPage(colour)}"` : ''}>${header}${bar}<div class="body">` +
     troopsSection(options, game) + arenaSection(game) + boardsSection(boards, options.labyrinthOpen) +
     `</div>${freshLine(game, id, options.now, 'end')}</div>`;
+}
+
+// "Edit accounts" (24 Nov), drawn like the troops' skill levels: the row of photos gets
+// its title line with Cancel and Save, and every account shows its picture, its name, and
+// Main, Alt and Farm as words one under the other, the picked one bold. There is always
+// one Main: picking Main on another account makes the old one an Alt, and the Main's own
+// Alt and Farm cannot be picked.
+const ACCOUNT_KIND_WORDS: [string, string][] = [['main', 'Main'], ['alt', 'Alt'], ['farm', 'Farm']];
+
+function accountsEditor(editing: NonNullable<ProfileOptions['kindsEditing']>): string {
+  const items = editing.accounts.map(account => {
+    const id = String(account.row.id);
+    const kind = editing.kinds[id] ?? String(account.row.kind);
+    const picks = ACCOUNT_KIND_WORDS.map(([value, word]) => {
+      const locked = kind === 'main' && value !== 'main';
+      return `<button type="button" class="lvl${kind === value ? ' on' : ''}" data-account-kind="${escapeForPage(id)}|${value}"` +
+        ` aria-pressed="${kind === value}"${locked ? ' disabled' : ''}>${word}</button>`;
+    }).join('');
+    return `<div class="acc"><div class="ph">${pictureOf(account.avatar, account.name)}</div>` +
+      `<span class="acc-name" title="${escapeForPage(account.name)}">${escapeForPage(account.name)}</span>` +
+      `<div class="kinds" role="group" aria-label="${escapeForPage(account.name)}">${picks}</div></div>`;
+  }).join('');
+  const actions = `<span class="edit-actions"><button type="button" class="quiet cancel" data-cancel-part="kinds">${CANCEL_ICON}<span class="words">Cancel</span></button>` +
+    `<button type="button" class="quiet confirm" data-player-save="kinds"${editing.changed ? '' : ' disabled'}>${SAVE_ICON}<span class="words">Save</span></button></span>`;
+  return `<section class="accounts-edit"><h2>Accounts${actions}</h2><div class="accgrid">${items}</div>` +
+    '<small class="player-note" data-note-for="kinds"></small></section>';
 }
 
 // One alliance as a badge: its tag above its logo (or its first letter where it has none).
@@ -618,7 +649,13 @@ const ACCOUNT_KIND_NAMES: Record<string, string> = { main: 'Main', alt: 'Alt' };
 // The menu under the player's name in the top bar: their main and alts, each with its
 // picture and name, the one they are on lit; Add account; their profile; for admins, the
 // admin pages; and signing out.
-export function accountMenu(accounts: BarAccount[], activeId: number | 'new', isAdmin: boolean): string {
+// The menu's own edit icon: the owner's edit icon (24 Nov) in the menu's plain line.
+const MENU_EDIT_ICON = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"' +
+  ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+  '<path d="M11 3.5H7A3.5 3.5 0 0 0 3.5 7v10A3.5 3.5 0 0 0 7 20.5h10a3.5 3.5 0 0 0 3.5-3.5v-4.5"/>' +
+  '<path d="M17.6 3.2a2.3 2.3 0 0 1 3.2 3.2L12 15.2l-4.2 1 1-4.2z"/></svg>';
+
+export function accountMenu(accounts: BarAccount[], activeId: number | 'new', isAdmin: boolean, canEditAccounts = false): string {
   // With only a main there is nothing to switch to, so the accounts are not listed.
   const choices = accounts.length < 2 ? '' : accounts.map(account =>
     `<button type="button" class="account-choice${activeId === account.row.id ? ' open' : ''}" role="menuitem"` +
@@ -633,6 +670,8 @@ export function accountMenu(accounts: BarAccount[], activeId: number | 'new', is
   return '<div class="account-menu glass" role="menu">' + choices +
     (choices ? '<div class="account-menu-line"></div>' : '') +
     item('data-add-account', PLUS_ICON, 'Add account') +
+    // With a second account (an alt or a farm) there is something to set.
+    (canEditAccounts ? item('data-edit-accounts', MENU_EDIT_ICON, 'Edit accounts') : '') +
     item('data-page="player"', PROFILE_ICON, 'Profile') +
     (isAdmin ? item('data-page="admin"', GEAR, 'Admin') : '') +
     item('data-sign-out', SIGN_OUT_ICON, 'Sign out', ' danger') + '</div>';

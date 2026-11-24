@@ -131,6 +131,13 @@ async function rpc(name, args) {
     if (row?.moving_since) row.dismissed_until = new Date(Date.now() + 3 * 86400000).toISOString();
     return { data: null, error: null };
   }
+  if (name === 'set_game_account_kinds') {
+    for (const [id, kind] of Object.entries(args.kinds ?? {})) {
+      const row = (tables.game_accounts ?? []).find(one => String(one.id) === id);
+      if (row) row.kind = kind;
+    }
+    return { data: null, error: null };
+  }
   if (name === 'set_skill_level') {
     tables.exalted_skill_levels = tables.exalted_skill_levels ?? [];
     let row = tables.exalted_skill_levels.find(one => one.player_id === args.player_number);

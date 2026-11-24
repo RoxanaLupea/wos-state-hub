@@ -18,6 +18,12 @@ export async function saveGameAccount(id: number | null, ownerId: string, kind: 
   return result.data as Row;
 }
 
+// Sets what each account is (main, alt or farm), all together (supabase/account-kinds.sql).
+export async function setGameAccountKinds(kinds: Record<string, string>): Promise<void> {
+  const { error } = await database().rpc('set_game_account_kinds', { kinds });
+  if (error) throw new Error('Could not save: ' + error.message);
+}
+
 // Removes an alt or a farm (never the main, which the page does not offer).
 export async function removeGameAccount(id: number): Promise<void> {
   const { error } = await database().from('game_accounts').delete().eq('id', id).neq('kind', 'main');
