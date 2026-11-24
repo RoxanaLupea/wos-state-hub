@@ -3,16 +3,18 @@
 // the same whichever view it is seen in.
 import { textFromDay, todayNumber } from '../calendar/days.ts';
 import { weekPieces, type WeekPieceOptions } from '../calendar/week-bars.ts';
-import { longDayText, WEEKDAY_SHORT } from './day-names.ts';
+import { longDayText, WEEKDAY_NAMES, WEEKDAY_SHORT } from './day-names.ts';
 import { escapeForPage } from './escape.ts';
 import { renderBar, type BarRenderOptions } from './bar.ts';
 import { yearAndMonthOf } from '../calendar/days.ts';
 import type { Bar } from '../calendar/bars.ts';
 
+// The days' names over the columns, in capitals: MON, TUE... on a phone, the full name on
+// a computer (24 Nov). The row stays at the top while the weeks scroll under it.
 export function weekdayNamesRow(): string {
-  return '<div class="grid7 weekday-names">' + WEEKDAY_SHORT.map((name, index) =>
-    `<div class="weekday-name${index > 4 ? ' weekend' : ''}">${name.charAt(0)}` +
-    `<span class="desktop-only-text">${name.slice(1)}</span></div>`).join('') + '</div>';
+  return '<div class="weekday-bar"><div class="grid7 weekday-names">' + WEEKDAY_SHORT.map((name, index) =>
+    `<div class="weekday-name${index > 4 ? ' weekend' : ''}">${name}` +
+    `<span class="desktop-only-text">${WEEKDAY_NAMES[index].slice(name.length)}</span></div>`).join('') + '</div></div>';
 }
 
 export interface WeekRowOptions {
