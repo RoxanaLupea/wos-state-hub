@@ -3053,12 +3053,14 @@ function stepWithKeys(event: KeyboardEvent): void {
 // own way back to the day there too.
 function backLevel(): number {
   if (view.openPage !== 'calendar') return 0;
+  // Open filters are one step above whatever is under them, so back closes them first.
+  const filters = view.filtersOpen ? 1 : 0;
   const isPhone = window.innerWidth < PHONE_WIDTH;
   // On a phone a closed panel is the calendar itself, whatever was open in it.
-  if (isPhone && !view.isPanelOpen) return 0;
+  if (isPhone && !view.isPanelOpen) return filters;
   let level = isPhone ? 1 : 0;
   if (view.openEventKey && view.openedFromDay !== null) level += 1;
-  return level;
+  return level + filters;
 }
 
 function placeKey(): string {
@@ -3172,7 +3174,9 @@ function returnToPlace(event: PopStateEvent): void {
     // and the calendar shows. The picked day and the open section stay as they are.
     const targetLevel = Number(placeKeys[placeIndex] ?? 0);
     while (backLevel() > targetLevel) {
-      if (view.openEventKey && view.openedFromDay !== null) {
+      if (view.filtersOpen) {
+        view.filtersOpen = false;
+      } else if (view.openEventKey && view.openedFromDay !== null) {
         view.openEventKey = null;
         view.pickedRowKey = null;
         view.openedFromDay = null;

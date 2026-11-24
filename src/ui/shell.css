@@ -235,8 +235,12 @@
 .account-menu-wrap { position: relative; }
 .account-menu { position: absolute; top: calc(100% + 8px); right: 0; z-index: 40; width: 260px; max-width: calc(100vw - 24px);
   padding: 8px; display: none; flex-direction: column; gap: 2px;
-  /* Glass over the page's own colour, so the page under it does not show through. */
-  background: linear-gradient(var(--glass-strong), var(--glass-strong)), color-mix(in srgb, var(--page-color) 92%, transparent); }
+  /* Solid, so the page under it does not show through, and in the page's two colours: a
+     line of the first along its top, its words in the second. */
+  background: linear-gradient(var(--glass-strong), var(--glass-strong)), var(--popup-ground);
+  border-top: 1px solid color-mix(in srgb, var(--section) 45%, transparent); }
+.account-menu .account-menu-item { color: var(--section-second); }
+.account-menu .account-menu-plus { color: var(--section); }
 .account-menu-wrap.open .account-menu { display: flex; }
 .account-menu-line { height: 1px; margin: 6px 4px; background: var(--glass-border); }
 .account-choice, .account-menu-item { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 40px; padding: 6px 10px;

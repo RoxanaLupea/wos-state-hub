@@ -97,7 +97,14 @@ body {
   /* Transfers alone has a third colour: the blue that lights our group and our range
      on the Timeline, a thing only this page has (Roxanne, 24 Nov). */
   --section-third: #4FA5FC; }
-:root[data-section="event"][data-event="tyrant"] { --section: #9DDCF0; --section-ink: #072B38; }
+:root[data-section="event"][data-event="tyrant"] { --section: #9DDCF0; --section-ink: #072B38;
+  --section-second: color-mix(in srgb, #9DDCF0 35%, #FFFFFF); }
+/* SvS and Hellfire (Tundra Arms League), from one of their logo's colours at the
+   sections' strength: SvS's red, the league's amber (24 Nov). */
+:root[data-section="event"][data-event="svs"] { --section: #ED9B94; --section-ink: #3A1210;
+  --section-second: color-mix(in srgb, #ED9B94 35%, #FFFFFF); }
+:root[data-section="event"][data-event="hellfire"] { --section: #DDA96B; --section-ink: #3A2408;
+  --section-second: color-mix(in srgb, #DDA96B 35%, #FFFFFF); }
 
 /* What a page marks uses the same two colours: --event-mark is the first colour,
    --event-mark-light the second, for text on a dark row, and --event-ink is for text
