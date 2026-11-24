@@ -38,6 +38,24 @@ file, then the notes CLAUDE.md lists.
 - Every decision above is in notes/design-decisions.md (Player page, Player data from
   the game).
 
+## 2b. Fourth chat on 24 Nov: on profile-draft, to go out with the next push
+
+- Calendar grid: day names in capitals, fixed above the weeks; smaller on a phone;
+  today's week in sight when the calendar opens.
+- The band: the open section shows its logo (Calendar: images/events/calendar.png) and
+  full name in its colour, line on the band's edge; "State TRANSFER", "FORTRESS Battles";
+  the pages' own event titles are gone. On a computer, page names on the left, the page's
+  controls on the right.
+- Section colours (design-decisions.md, Navigation): one first and one second colour per
+  page, everywhere; Transfers has a third (blue) for the Timeline highlight; the player
+  page takes its alliance's colour, evened (src/ui/even-colour.ts).
+- Calendar controls as approved: view icons, Filters sheet / panel, Today only when out
+  of sight, UTC swaps to MINE, arrows on a computer.
+- Timeline: no empty lines; Ours shows only our group's span, other lines faint; opens
+  on SvS only, All and Groups.
+- Panels always have a gap between them.
+- Database, written 24 Nov: the four main alliances' colours (design-decisions.md).
+
 ## 3. The database
 
 Live and checked on 24 Nov:
@@ -98,6 +116,12 @@ Run on 24 Nov (third chat), before the push:
 - R4s setting their members' skill levels (the database allows it; the page for it,
   My alliance > Members, is not built).
 - 13 hero cards not matched to hero numbers yet (design-decisions.md, Open).
+- From 24 Nov: Tyrant's second colour reads as white (Fortress was set to 35%); SvS and
+  Hellfire have no section colour; other pop-ups (Save for which accounts, the account
+  menu) are not in the page colours yet; the phone's back does not close Filters; FUN
+  and the academies' colours; lazy-loading data/text/en.json and rewards.json.
+- The render copy's transfer dates (tools/render/data) are made up and not linked to
+  SvS, so SvS-only shows nothing there.
 - Everything else under Open in notes/design-decisions.md.
 
 ## 6. How to work with Roxanne (learnt the hard way on 23 and 24 Nov)
