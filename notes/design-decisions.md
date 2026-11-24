@@ -94,9 +94,9 @@ there before discussing it again.
 - The group is drawn as aligned ranges in three weights. Our group's text is white.
   The range we are in carries light yellow accents, with its text in yellow.
 - The furnace cap and the generation are centred, and so are their columns.
-- The page is titled "State TRANSFER": the first word as written, the rest in
-  capitals, the way the logo sets STATE 1458 against EVENTS. "State" is the logo's
-  blue.
+- The section is named "State TRANSFER" in the band when open: the first word as
+  written and in the second colour, the rest in capitals in the first (24 Nov; the
+  page's own title is gone).
 - Date headers are parchment with navy ink and keep the glass texture. Every header
   looks the same; the next transfer is marked by its golden border alone.
 - The pages are Timeline, Invites and Records.
