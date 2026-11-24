@@ -103,8 +103,8 @@ body {
    sections' strength: SvS's blue and the league's amber (24 Nov). */
 :root[data-section="event"][data-event="svs"] { --section: #8FB5F4; --section-ink: #0B2240;
   --section-second: color-mix(in srgb, #8FB5F4 35%, #FFFFFF); }
-:root[data-section="event"][data-event="hellfire"] { --section: #DCAA6A; --section-ink: #3A2408;
-  --section-second: color-mix(in srgb, #DCAA6A 35%, #FFFFFF); }
+:root[data-section="event"][data-event="hellfire"] { --section: #F0CB9D; --section-ink: #3A2408;
+  --section-second: color-mix(in srgb, #F0CB9D 35%, #FFFFFF); }
 
 /* What a page marks uses the same two colours: --event-mark is the first colour,
    --event-mark-light the second, for text on a dark row, and --event-ink is for text

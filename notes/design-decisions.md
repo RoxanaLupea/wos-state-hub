@@ -47,7 +47,9 @@ there before discussing it again.
   scrolls sideways, fading at an edge while there are more past it, with the open one
   kept in view. There is no bar at the bottom of the screen.
 - Section colours (Roxanne, 24 Nov): every section has its own colour, and all of them
-  have the same lightness and the same amount of colour; only the tint changes. The
+  have the same lightness and the same amount of colour; only the tint changes. Measured
+  as the accepted ones are: about 75–81% lightness and 72–83% saturation in HSL (the
+  amount of white), not by OKLCH, which made the gold and amber too dark. The
   Calendar's tint is the blue of its logo (public/images/events/calendar.png). The 1458
   takes the open section's colour. Buttons on a page are in that page's colour. The
   second colour is almost white with the section's tint, much lighter than the main one.
@@ -71,7 +73,7 @@ there before discussing it again.
   range; our range is written in gold (Roxanne, 24 Nov).
 - Transfers #F0D99D and Tyrant #9DDCF0 (lightened 24 Nov, "ok, better"). SvS and
   Hellfire take one of their logo's colours: SvS's blue #8FB5F4 at the sections' strength
-  (red read too pink, then too red) and the league's amber #DCAA6A, at the sections' strength
+  (red read too pink, then too red) and the league's amber #F0CB9D, at the sections' strength
   too (24 Nov). SvS and
   Hellfire's second colour is 35% of their colour with white, as Fortress's. State, My alliance and Map use the Calendar's
   blue.
