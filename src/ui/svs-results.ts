@@ -159,8 +159,8 @@ function stateOfPowerPart(run: SvsRun): string {
 }
 
 // ---------------------------------------------------------------------------
-// Editing in place: the same layout, with every value in a light glass field. Only the
-// owner gets here, from the edit icon on the tabs' line; Save goes back to the results.
+// Editing in place: the same layout, with every value in a light glass box. Admins get
+// here from the edit button on the tabs' line; Save goes back to the results.
 // ---------------------------------------------------------------------------
 
 export const SVS_EDIT_FORM_ID = 'svs-result-form';

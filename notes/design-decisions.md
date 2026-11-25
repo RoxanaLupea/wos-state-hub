@@ -284,8 +284,9 @@ there before discussing it again.
 - SvS results are entered from Roxanne's screenshots of the game; editing from the page is
   for when someone wants to change them. No form: editing is in place, in the same layout
   as the results, tapping the numbers or selecting them to change them (25 Nov).
-- Only the owner (Roxanne) can change SvS results, so nobody else can ruin these entries
-  (25 Nov).
+- Admins change SvS results ("when I say me I mean admin, I will say owner when I want
+  something locked that tight"), so nobody else can ruin these entries; admins will be
+  selected carefully (25 Nov).
 - Editing the SvS results: the # stays outside the opponent's field (it is always added in
   front of the number); the Battle starts with one field and a + button (25 Nov).
 - Rule for the entire site: no page or panel opens in editing mode showing a Save button,
@@ -300,6 +301,10 @@ there before discussing it again.
   a slightly smaller font if the value doesn't fit (25 Nov).
 - While editing, every number is the same colour: we only know the winner of a day after,
   same for the Battle. We add the numbers and they get sorted when we save (25 Nov).
+- She can't check the full SvS on a phone: tapping its parts shouldn't open the phase but
+  the entire event, in the panel on the right (25 Nov; design not settled yet).
+- Sunfire Castle gets the same results as the SvS (Occupation Ranking and president). It is
+  entered only from the screenshots she sends; Claude updates the database (25 Nov).
 - The Battle's times are in a smaller font; the winner's stays bigger than the rest, but
   only a little (25 Nov).
 - Each SvS also has one overall result: win (Preparation and Battle), loss (both lost)

@@ -88,7 +88,7 @@
 .svs-president .ours { color: var(--ours); }
 .svs-president .theirs { color: var(--theirs); }
 
-/* Editing in place (owner only): nothing moves. Each value gets a light glass box that
+/* Editing in place (admins): nothing moves. Each value gets a light glass box that
    fits in the space the value already takes, so it is plain what can be changed and that
    editing is on; where the value would not fit inside, its font is a little smaller. */
 .svs-field {

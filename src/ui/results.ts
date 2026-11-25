@@ -130,8 +130,8 @@ export function svsHistorySection(context: WorkContext): string {
 
 // An SvS event's Results tab: this SvS, drawn like the game's screens, and the way to
 // the whole history. Opened from Preparation or from the Battle it shows only that part.
-// Only the owner changes it: the edit icon on the tabs' line swaps it to editing in
-// place (svsResultsActions), and Save goes back to the results.
+// Admins change it: the edit button on the tabs' line swaps it to editing in place
+// (resultsTabActions), and Save goes back to the results.
 function svsResults(options: ResultsOptions): string {
   const { context } = options;
   const recorded = resultsOf(context, 'svs');
@@ -139,7 +139,7 @@ function svsResults(options: ResultsOptions): string {
   const existing = recorded.find(one => one.row.event_date === options.runDate);
   const known = (svsHistory as Record<string, unknown>[]).find(one => one.date === options.runDate);
   const run = existing ? svsRunOf(existing, known) : known ? svsRunFromHistory(known) : null;
-  if (context.isOwner && context.editing === svsEditKey(options.runDate)) {
+  if (context.isAdmin && context.editing === svsEditKey(options.runDate)) {
     return svsResultEditor({
       run: run ?? EMPTY_RUN, ourState: options.stateNumber, dayNameOf: day => dayNameOf('svs-prep', day),
       formKey: formKey('svs', options.runDate, '', existing),
@@ -159,10 +159,10 @@ function svsEditKey(runDate: string): string {
   return 'svs-result|' + runDate;
 }
 
-// The key the edit button opens on an event's Results tab, for the one who may change
-// those results (only the owner, for an SvS); empty when nobody here may.
+// The key the edit button opens on an event's Results tab, for those who may change
+// those results (admins, for an SvS); empty when nobody here may.
 export function resultsEditKey(options: ResultsOptions): string {
-  return SVS_FAMILY.includes(options.eventTypeId) && options.context.isOwner ? svsEditKey(options.runDate) : '';
+  return SVS_FAMILY.includes(options.eventTypeId) && options.context.isAdmin ? svsEditKey(options.runDate) : '';
 }
 
 // At the right of the tabs' line: the edit button for the one who may change these

@@ -24,9 +24,25 @@ Do CLAUDE.md's setup first. Updated 25 Nov 2026.
   president only.
 - The president icons (public/images/events/president.png, supreme-president.png) are
   cut out of her screenshot; the real files are on her list in rules-and-open-items.md.
-- Next, when she asks: the editing for recording an SvS (points, Occupation Ranking,
-  president). Admins still get the old form, which cannot take them. Design it as quick
-  mockups first, in place, never form-like.
+- Live on 25 Nov (2ae8599): editing the SvS results in place, owner only (changed to admins
+  in the workspace after, not pushed yet). The profile's
+  edit button (now shared: editButton and EDIT_ICON in edit-forms.ts, .edit-button in
+  forms.css) sits on the tabs' line (event panel option tabActions); Cancel and Save take
+  its place. Each value gets a small glass box in the space it already has, nothing
+  moves, all numbers one colour while editing; the ranking is sorted and the State of
+  Power result worked out on saving (svsDetailsFromEdit in main.ts). The SvS history on
+  the State page shows every president.
+- Site-wide rule (25 Nov): no page opens in editing mode or shows Save; every editable
+  page or panel gets the edit button and edits in place. Still open: every other page
+  with a form open (results of TAL, Tyrant and the alliance events, My alliance results,
+  Opponents, rosters, plans, Link an academy, Give a role, transfers, blacklist, Fortress
+  planning, personal entries, availability). Each one: quick mockup first.
+- Admins write results, on the page and in the database: "me" means admins (25 Nov).
+- In the database since 25 Nov: 7 Nov SvS with WoS Oracle's points and the LLC and DVL
+  holds, 10 Oct SvS (results and Oracle points), 21 Nov Sunfire Castle (ranking and
+  president, from her screenshots), each with a "source" detail. Sunfire results are not
+  shown anywhere yet: next, a mockup of Sunfire's results like the SvS's, and tapping an
+  SvS bar opening the whole State of Power (both her decisions, design-decisions.md).
 - Roxanne's and Tif's accounts are in 1252 (DUB) until their transfer to 1458.
 
 ## The database

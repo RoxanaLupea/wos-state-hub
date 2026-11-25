@@ -65,3 +65,18 @@ letters that are written here as close as plain text allows.
 | 2026-10-10 | Supreme | [DVL]Ace⓪⓪⑦ DVL (styled letters) |
 | 2026-10-24 | President No.57 | [SKY]なぽれおんNapo JPN |
 | 2026-11-07 | President No.58 | [DVL]利姆鲁 |
+| 2026-11-21 | President No.59 | [RUU]Choco民ღ,,RUU (styled letters) |
+
+## Sunfire Castle, 21 Nov 2026 (sent 25 Nov 2026)
+
+Saved as sunfire-occupation-ranking-2026-11-21.png and sunfire-hall-of-fame-2026-11-25.png.
+Occupation Ranking (Defend Phase ends in 10d 00:07:33 when taken):
+
+| Rank | Alliance | Alliance Leader | Total Occupation |
+|---|---|---|---|
+| 1 | [RUU]なちゅらるぅELT島 | PHOCA RUU (styled letters) | 02:36:07 |
+| 2 | [DVL]DEVILEMPIRE | KATCAU (styled letters, as read) | 00:48:39 |
+| 3 | [TOP]TOP | Scrub | 00:03:28 |
+| 4 | [SKY]LoveAndPeace | 三角なぼじろうのｽｼﾛｰ… (cut off in game) | 00:01:12 |
+
+President No.59 [RUU]Choco民ღ,,RUU, in office 2026.11.21.

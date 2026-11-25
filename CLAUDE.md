@@ -21,6 +21,9 @@ notes/rules-and-open-items.md (game rules).
 
 ## How to work with Roxanne
 
+- When she says "me" about who may do something, she means admins. She says "owner" when
+  she wants something locked that tight (25 Nov).
+
 - Do what she asks, exactly. When she asks to look, answer or discuss, do that and build
   nothing. Add nothing she did not ask for.
 - Her words win over everything: over the notes, over an example she sends, over your own
@@ -58,6 +61,9 @@ change may move. She must be able to count on the work without inspecting it clo
 
 - Pushing and writing to the database: say in a few lines what changed and what is still
   open, then wait for a clear yes to that exact action.
+- Game information she gives (screenshots, numbers) goes into the database right away,
+  with her as the source that confirms it: updated_by her account and a "source" detail
+  (25 Nov). Data from other sites (WoS Oracle) says so in its source.
 - Her "ok" on a design accepts it; it goes live with the next push. When she says push,
   everything she accepted goes live together.
 - A design tried in versions goes on a fresh branch from main, merged and deleted once
