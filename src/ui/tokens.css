@@ -1,6 +1,10 @@
 /* Every colour, size and spacing value the app uses lives here, and nowhere else.
    Change a value here and it changes everywhere it is used. */
 :root {
+  /* SvS: our side is the SvS preparation blue, theirs the SvS battle red, the softer
+     timeline colours of the two (catalog). The edge shades are the ends of an SvS bar. */
+  --ours: #7C9DD6; --ours-deep: #4F78C8; --ours-edge: #3E63AE;
+  --theirs: #E07A7F; --theirs-deep: #C24A52; --theirs-edge: #A63A44;
   /* Page */
   --page-color: #0C1220;
   --page-background:

@@ -146,6 +146,11 @@
 /* Where the event is: a pin in front of the row's name, in the event's colour, its tip on
    the text's baseline and a little taller than the text; the name bold and white. */
 .tree-row.current .tree-label { font-weight: 800; color: #FFFFFF; }
+/* A row tapped (or the day tapped on the calendar) is highlighted; the pin stays on the
+   row that is on now (owner, 25 Nov). */
+.tree-row.picked { background: rgba(255, 255, 255, 0.07); }
+.tree-row.picked .tree-label { font-weight: 800; color: #FFFFFF; }
+.tree-row.picked .tree-dot, .tree-row.picked .tree-step-dot { box-shadow: 0 0 0 4px color-mix(in srgb, var(--current-color) 35%, transparent); }
 .tree-label .pin-icon {
   display: inline-block; width: 1.3em; height: 1.3em; margin: 0 0.35em 0 -0.15em; vertical-align: -0.13em; overflow: visible;
   filter: drop-shadow(0 0 3px color-mix(in srgb, var(--event-color) 55%, transparent));

@@ -45,3 +45,19 @@ export function mixColors(first: string, second: string, share: number): string 
     Math.round(one + (other - one) * share).toString(16).padStart(2, '0');
   return '#' + mix(start.red, end.red) + mix(start.green, end.green) + mix(start.blue, end.blue);
 }
+
+// How bright a colour looks (its relative luminance, 0 black to 1 white).
+export function brightness(hex: string): number {
+  const rgb = hexToRgb(hex);
+  const channel = (value: number) => {
+    const share = value / 255;
+    return share <= 0.03928 ? share / 12.92 : Math.pow((share + 0.055) / 1.055, 2.4);
+  };
+  return 0.2126 * channel(rgb.red) + 0.7152 * channel(rgb.green) + 0.0722 * channel(rgb.blue);
+}
+
+// Two colours in the order an event's colours run (owner, 25 Nov): the darker first, so
+// bars go from dark on the left to light on the right, and timelines from dark to light.
+export function darkerFirst(one: string, other: string): [string, string] {
+  return brightness(one) <= brightness(other) ? [one, other] : [other, one];
+}

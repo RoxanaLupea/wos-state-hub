@@ -1,8 +1,5 @@
-/* One SvS's result (svs-results.ts). Our side is the SvS preparation blue, theirs the
-   SvS battle red, the softer timeline colours of the two (catalog). */
+/* One SvS's result (svs-results.ts), in our blue and their red (tokens.css). */
 .svs-result {
-  --ours: #7C9DD6; --ours-deep: #4F78C8;
-  --theirs: #E07A7F; --theirs-deep: #C24A52;
   display: flex; flex-direction: column; gap: calc(var(--panel-section-gap) - 3px); margin-top: calc(var(--panel-top) - 15.5px); padding-bottom: calc(var(--panel-bottom) - 5.5px);
   /* Preparation's totals are as large as the two fit side by side (11,028,870,560); no
      other number is bigger than they are. Read where it is used, against the width. */

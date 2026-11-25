@@ -4,6 +4,38 @@ Do CLAUDE.md's setup first. Updated 25 Nov 2026.
 
 ## Now
 
+### Pushed 25 Nov, 23:30 (approved by her)
+
+- Timeline: the pin marks only the current stage; a picked stage gets a highlight
+  (event-tree.ts isPicked, event-panel.css .tree-row.picked).
+- Held dates: a week's own numbers hide once its dates are held at the top (dates-held).
+- Computer: the weeks box has 10 px room on the left so a picked Monday bar keeps its ring.
+- Bars run dark to light; events with two logo colours by real brightness (colors.ts
+  darkerFirst). SvS bars: Results blue against red, slanted split at 50%, darker ends
+  (tokens.css --ours/--theirs, SVS_FAMILY in catalog.ts).
+- A reload on a phone opens the calendar, not the day or event (openSharedAddress).
+- Foundry power asks for an update after two weeks (FOUNDRY_POWER_DAYS).
+- The yellow events keep their colours (her words: "those stay as they are for now").
+
+### Not on main: branch wip-25-nov (only if she allowed it)
+
+- New categories Special events (9 festivals) and Packs (4 packs), Hero Ascension Training
+  in Deals, no short tag on special events and packs (catalog.ts eventTypeTag). Icons and
+  colours are placeholders. Files: data/catalog/event-types.json, data/text/en.json,
+  src/ui/category-chips.ts, src/data/catalog.ts.
+- Their dates: supabase/special-events-and-packs.sql, to run right after that push (the
+  live site must know the event types first).
+
+### Still open (ask one at a time)
+
+- Artisan's Trove: Torxim's calendar shows Charms every Wed-Thu and Chief Gear every Fri-Sat;
+  asked whether to save them as weekly estimates. Not answered.
+- Pack prices: the orange bubble amount (same for everyone) or her RON price. Not answered.
+- Monday and Thursday screenshot reminders (she sends the game calendar Mondays, the
+  Top-up Center Mondays and Thursdays). A one-off reminder is set for 7 Dec 10:00.
+- Sources found: torxim.com (Game Calendar with packs, irregular event history with exact
+  past windows), wostools.net (daily shop checks: /pack-purchase-calculator?seen=DATE).
+
 - main is the live site. Last push 25 Nov, 19:45 (09e8f0f), the profile:
   - No CHARACTERS title: Edit and Add under the photos on a phone, as two dashed places
     after the last photo on a computer. Editing: every character, tap one (ringed), its
@@ -167,3 +199,21 @@ Run on 24 Nov (third chat), before the push:
 - The render copy's transfer dates (tools/render/data) are made up and not linked to
   SvS, so SvS-only shows nothing there.
 - Everything else under Open in notes/design-decisions.md.
+- Armament Competition and Officer Project: keep tracking their dates. Every two weeks
+  (weeks of 7 Dec, 21 Dec, ...) remind Roxanne to tell you which days the game shows,
+  and save them with her as the source. A reminder is scheduled in chat for 7 Dec 10:00
+  Bucharest; set the next one each time. Seen so far: Armament 9, 13, 27 Nov; Officer
+  Project 11, 15, 25, 29 Nov (two days each). A guide (Out of Games) gives Armament
+  Mon-Tue and Fri-Sat, Officer Project Wed-Thu and Sun-Mon, every two weeks; the Monday
+  Armament did not run on 23 Nov.
+- TAL's Hall of Heroism stage (21-29 Nov in the game): to add discreetly, maybe with its
+  own switch in the filters; Roxanne decides later.
+- The yellow events (Hall of Heroes, TAL, KOI, State Transfer) need telling apart. The
+  25 Nov mockup was rejected as brown and depressing; bring a new version.
+- Packs category: Roxanne is sending screenshots.
+- Special events: icons and colours are placeholders until her logos; New Year (start 1
+  Jan only) and the Harvest feast day (1 Dec, top 10 alliances) are not added.
+- Packs (Roxanne, 25 Nov): some packs are only for new accounts or once in a lifetime. Her
+  1252 account has had them already; her 1458 account is new and has nothing. Mix &
+  Match and Custom Pet Chest were on both accounts. Screenshots wanted on Mondays (game
+  calendar) and Mondays and Thursdays (Top-up Center).

@@ -53,6 +53,9 @@
   background-color: var(--page-color); background-image: linear-gradient(var(--glass), var(--glass)), var(--page-background);
   background-attachment: fixed; filter: saturate(140%);
 }
+/* The week whose dates are held: its own dates and today's mark hide under them. */
+.week-row.dates-held .day-box .day-number { visibility: hidden; }
+.week-row.dates-held .day-box.today::before { display: none; }
 .held-date {
   position: relative; display: flex; justify-content: center; align-items: flex-start; margin-top: 3px; padding: 2px 0 0;
   border: none; border-radius: var(--radius-small) var(--radius-small) 0 0; background: transparent;

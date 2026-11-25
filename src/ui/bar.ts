@@ -9,12 +9,12 @@
 
 import {
   eventBarSubtitle, eventTypeById, eventTypeColor, eventTypeInitials, eventTypeName, eventTypeShortName, eventTypeTag,
-  eventStepsByEventType, hasLogoColors, logoColors, phaseName, showsTimesInLine, windowLabel
+  SVS_FAMILY, eventStepsByEventType, hasLogoColors, logoColors, phaseName, showsTimesInLine, windowLabel
 } from '../data/catalog.ts';
 import { MINUTES_PER_DAY, minutesFromTime, textFromDay } from '../calendar/days.ts';
 import { clockText, windowText } from '../calendar/time-mode.ts';
 import { spanText } from '../calendar/spans.ts';
-import { colorWithAlpha, hexToHsl, hslToHex, mixColors } from './colors.ts';
+import { colorWithAlpha, hexToHsl, hslToHex, mixColors, darkerFirst } from './colors.ts';
 import { escapeForPage } from './escape.ts';
 import { eventIcon } from './event-icon.ts';
 import type { Bar } from '../calendar/bars.ts';
@@ -129,19 +129,25 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
   if (bar.markers) return renderMarkerBar(piece, options);
 
   const fade = barFadeColors(bar.eventTypeId);
-  // An event with its logo's colours fades from its light tone to its dark one, the
-  // same way as its tickets' lines. Other bars still fade from dark to light.
-  const isLightFirst = hasLogoColors(bar.eventTypeId);
-  const firstColor = isLightFirst ? fade.light : fade.dark;
-  const middleColor = isLightFirst ? mixColors(fade.light, fade.dark, 0.4) : fade.middle;
-  const lastColor = isLightFirst ? fade.dark : fade.light;
-  const style =
-    `grid-column:${piece.firstColumn + 1} / ${piece.lastColumn + 2};grid-row:${piece.lane + 1};` +
-    'background:linear-gradient(90deg,' +
+  // Every bar fades from its dark tone on the left to its light one on the right (owner,
+  // 25 Nov: "dark to light left to right for all of them"), its tickets' lines too.
+  // An event with its logo's colours takes them in that order too, whichever is darker.
+  const [firstColor, lastColor] = hasLogoColors(bar.eventTypeId) ? darkerFirst(fade.light, fade.dark) : [fade.dark, fade.light];
+  const middleColor = hasLogoColors(bar.eventTypeId) ? mixColors(firstColor, lastColor, 0.4) : fade.middle;
+  // An SvS bar is our blue against their red, split on a slant in the middle like the
+  // game's SvS screens, each side darkest at its own end (owner, 25 Nov).
+  const background = SVS_FAMILY.includes(bar.eventTypeId)
+    ? 'linear-gradient(110deg,color-mix(in srgb,var(--ours-edge) 90%,transparent) 0%,' +
+      'color-mix(in srgb,var(--ours) 80%,transparent) 50%,color-mix(in srgb,var(--theirs) 80%,transparent) 50%,' +
+      'color-mix(in srgb,var(--theirs-edge) 90%,transparent) 100%)'
+    : 'linear-gradient(90deg,' +
       (fade.hint
         ? `${colorWithAlpha(fade.hint, 0.8)} 0%,${colorWithAlpha(firstColor, 0.8)} ${HINT_SHARE}%,`
         : `${colorWithAlpha(firstColor, 0.8)} 0%,`) +
-      `${colorWithAlpha(middleColor, 0.68)} 40%,${colorWithAlpha(lastColor, 0.58)} 100%);` +
+      `${colorWithAlpha(middleColor, 0.68)} 40%,${colorWithAlpha(lastColor, 0.58)} 100%)`;
+  const style =
+    `grid-column:${piece.firstColumn + 1} / ${piece.lastColumn + 2};grid-row:${piece.lane + 1};` +
+    `background:${background};` +
     `box-shadow:inset 0 0 0 1px ${colorWithAlpha(fade.middle, 0.55)};` +
     `--logo-shade:${fade.dark};--bar-glow:${fade.light};`;
 
@@ -308,11 +314,11 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
     const color = escapeForPage(eventTypeColor(part.eventTypeId));
     const bottom = -6 - 5 * index;
     if (openings) {
-      // While a part is open its line fades from its light colour to its dark one, the
+      // While a part is open its line fades from its dark colour to its light one, the
       // same as in the event's timeline. A line split over two weeks fades fully in each
-      // week, so a short piece at the start of a week is never only the dark end.
-      const { light, dark } = logoColors(part.eventTypeId);
-      const fade = `linear-gradient(to right,${light},${dark})`;
+      // week, so a short piece at the start of a week is never only the light end.
+      const [darker, lighter] = darkerFirst(logoColors(part.eventTypeId).light, logoColors(part.eventTypeId).dark);
+      const fade = `linear-gradient(to right,${darker},${lighter})`;
       return openings.map(opening =>
         `<span class="bar-stripe" style="background:${fade};bottom:${bottom}px"` +
         ` data-start-minute="${opening.start}" data-end-minute="${opening.end}"></span>`).join('');

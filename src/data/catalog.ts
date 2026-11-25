@@ -124,6 +124,9 @@ export function eventTypeColor(id: string): string {
   return eventTypesById.get(id)?.color ?? '#7E8AA8';
 }
 
+// The SvS and its parts: our state against another, drawn in our blue and their red.
+export const SVS_FAMILY = ['svs', 'svs-matchmaking', 'svs-prep', 'svs-battle', 'castle-battle', 'svs-triage'];
+
 // The light and the dark colour of an event's logo. Without its own pair, both are the
 // event's single colour.
 export function logoColors(id: string): { light: string; dark: string } {

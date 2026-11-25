@@ -968,3 +968,15 @@ All nine are built.
   for now, in case we have to bring it back" (YEAR_VIEW_SHOWN in shell.ts). "with the
   extra space see if we can separate the 2 icons better from utc and filters, we don't
   want them to look like 4 settings when there's only 3".
+- Timeline pin (25 Nov, correcting the build): "only current stages are marked in the
+  timeline, when we select one they don't get a pin, they get a highlight, the pin stays
+  on the current day".
+- Bar colours (25 Nov): "you know how I said that the colour will be light to dark, left to right? i think we want dark to light left to right for all of them". Events with two logo colours run from the darker of the two to the lighter.
+- Reload on the phone (25 Nov): "on reload it still opens an event page on mobile". A reload on the phone opens the calendar; a shared link still opens its event.
+- SvS bars (25 Nov): "state of power bar, wouldn't it look better with the colours we use in resouts?", "svs is an exception since it has 2 colours, can we also do the oblic split they do in game?", "now just make the blue and red slightly darker near the left right edges". SvS bars are our blue against their red from the Results, split on a slant in the middle, each side darkest at its own end.
+- Special events (25 Nov): "they would be on a special events category, all of them confirmed once they happen and estimated for next events", "add the events with their past dates and the new category". Packs (25 Nov): "I also need a new category for packs, since people might want to plan their budget".
+- Foundry power on the profile (25 Nov): "it's every 2 weeks". It asks for an update two weeks after it was set.
+- Officer Project and Armament Competition (25 Nov): "we'll just have to keep tracking them and see, i need you to remind me to tell you about them".
+- TAL Hall of Heroism (25 Nov): "we should add it but discreetly, like the other bars i guess? - we decide later, maybe we let people uncheck it separately". Not built yet.
+- Yellow events mockup (25 Nov, rejected): "they look the same to me, shitty yellow almost brown, depressing and ugly, worse than what we had".
+- Deals and Packs (25 Nov): "This is part of deals, idk why or how these work, we'll keep them separate and decide if we want to merge them, deals might be tied to missions in game, packs we just buy them". Packs are what is bought in the Top-up Center.

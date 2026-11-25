@@ -33,6 +33,8 @@ notes/rules-and-open-items.md (game rules).
   a working rule: when a better design needs something else, think, say so and bring the
   better design (25 Nov). Don't just agree.
 - One question at a time, and only when it is truly open.
+- Never change saved data from your own reading of a screenshot or a theory: say what you
+  think it shows and wait for her to confirm before changing anything (25 Nov).
 
 ## How to design
 

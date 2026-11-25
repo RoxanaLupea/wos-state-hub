@@ -50,8 +50,11 @@
   .calendar-panel .weeks { min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin;
     scrollbar-color: color-mix(in srgb, var(--accent) 35%, transparent) transparent; }
   .calendar-panel .weekday-names { scrollbar-gutter: stable; overflow-y: hidden; }
+  /* The weeks' box reaches 10 px past the first column, so a picked bar on a Monday
+     keeps its whole ring and glow (the box cuts off what passes its edge). */
+  .calendar-panel .weeks { margin-left: -10px; padding-left: 10px; }
   /* The held dates on the panel's glass, the width of the weeks. */
-  .calendar-panel .held-dates { margin: 0 0 -34px; padding: 0; border: none; }
+  .calendar-panel .held-dates { margin: 0 0 -34px -10px; padding: 0 0 0 10px; border: none; }
   /* Scrolled, the weeks fade in just under the held dates (owner, 25 Nov), so the bars
      soften as they near the top instead of being cut off; the held dates stay solid. */
   .calendar-panel .weeks.more-above {

@@ -1290,7 +1290,7 @@ function watchScrollEdges(app: HTMLElement): void {
 function scrollToMarkedRow(app: HTMLElement): void {
   const panel = app.querySelector<HTMLElement>('.event-page-body') ??
     app.querySelector<HTMLElement>('.day-panel');
-  const marked = panel?.querySelector<HTMLElement>('.tree-row.current');
+  const marked = panel?.querySelector<HTMLElement>('.tree-row.picked') ?? panel?.querySelector<HTMLElement>('.tree-row.current');
   if (!panel || !marked) return;
   const panelBox = panel.getBoundingClientRect();
   const rowBox = marked.getBoundingClientRect();
@@ -2508,13 +2508,13 @@ async function saveFoundryPower(): Promise<boolean> {
   return true;
 }
 
-// Foundry power is out of date a month after it was set (as the skill levels are).
+// Foundry power is out of date two weeks after it was set, once per Foundry Battle (owner,
+// 25 Nov: "it's every 2 weeks").
+const FOUNDRY_POWER_DAYS = 14;
 function foundryNeedsALook(row: Row): boolean {
   if (!row.foundry_power) return false;
   const updated = Date.parse(String(row.foundry_power_updated_at ?? ''));
-  const monthAgo = new Date();
-  monthAgo.setMonth(monthAgo.getMonth() - 1);
-  return Number.isNaN(updated) || updated < monthAgo.getTime();
+  return Number.isNaN(updated) || updated < Date.now() - FOUNDRY_POWER_DAYS * 24 * 60 * 60 * 1000;
 }
 
 // What each account is, saved together. The account the player is on stays theirs unless
@@ -3432,6 +3432,10 @@ function openSharedAddress(): void {
   if (page && (pageById(page) || page === 'player')) view.openPage = page;
   const sub = parts.get('sub');
   if (sub) view.openSubPage = sub;
+  // A reload on a phone opens the calendar itself, never the day or event that filled the
+  // screen before (owner, 25 Nov); a shared address still opens them.
+  const navigation = performance.getEntriesByType?.('navigation')[0] as PerformanceNavigationTiming | undefined;
+  if (navigation?.type === 'reload' && window.innerWidth < PHONE_WIDTH) return;
   const day = dayFromText(parts.get('day') ?? '');
   if (!Number.isNaN(day)) {
     view.chosenDay = day;
@@ -3719,6 +3723,8 @@ async function start(): Promise<void> {
       const first = weeks.querySelector<HTMLElement>('.week-row');
       if (passedWeek === first && first && first.getBoundingClientRect().top >= line - 0.5) passedWeek = null;
       held.classList.toggle('showing', passedWeek !== null);
+      // The held week's own dates hide, so its dates are never seen twice (owner, 25 Nov).
+      for (const row of Array.from(weeks.querySelectorAll<HTMLElement>('.week-row'))) row.classList.toggle('dates-held', row === passedWeek);
       if (!passedWeek) return;
       const days = Array.from(passedWeek.querySelectorAll<HTMLElement>('.day-box'));
       Array.from(held.querySelectorAll<HTMLElement>('.held-date')).forEach((cell, column) => {

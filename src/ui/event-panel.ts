@@ -21,7 +21,7 @@ import {
   EXPERT_CHEST_HOSTS, NUMBERED_REWARD_LISTS, rewardBandName, rewardListName,
   rewardListsOf, rewardSectionName
 } from './reward-names.ts';
-import { colorWithAlpha, hexToHsl, hslToHex, mixColors } from './colors.ts';
+import { colorWithAlpha, hexToHsl, hslToHex, mixColors, darkerFirst } from './colors.ts';
 import { tintedPanelStyle } from './next-up.ts';
 import { PIN_ICON } from './edit-forms.ts';
 import type { EventTree } from '../calendar/event-tree.ts';
@@ -46,11 +46,11 @@ export function backLinks(backToDay: number | null): string {
 // matches the bar the player tapped.
 function fadeColorAt(eventTypeId: string, position: number): string {
   const at = Math.min(1, Math.max(0, position));
-  // An event with its logo's colours runs from its first colour to its second down
-  // the timeline, the same way as its bar runs left to right.
+  // An event with its logo's colours runs from dark to light down the timeline, the
+  // same way as its bar runs left to right.
   if (hasLogoColors(eventTypeId)) {
-    const { light, dark } = logoColors(eventTypeId);
-    return mixColors(light, dark, at);
+    const [darker, lighter] = darkerFirst(logoColors(eventTypeId).light, logoColors(eventTypeId).dark);
+    return mixColors(darker, lighter, at);
   }
   const fade = barFadeColors(eventTypeId);
   const from = at <= 0.4 ? fade.dark : fade.middle;
@@ -467,21 +467,21 @@ export function renderEventTree(tree: EventTree): string {
     const span = column0.spans.find(one => index >= one.from && index <= one.to);
     const state = !span ? '' : index === span.from ? 'start' : index === span.to ? 'end' : 'middle';
     if (!span) return '<span class="tree-side"></span>';
-    // The line fades from the ticket's light colour where it opens, marked by a small
-    // circle, to its dark colour where it closes.
+    // The line fades from the ticket's darker colour where it opens, marked by a small
+    // circle, to its lighter colour where it closes.
     const partTypeId = column0.part.occurrence.eventTypeId;
-    const { light, dark } = logoColors(partTypeId);
+    const [darker, lighter] = darkerFirst(logoColors(partTypeId).light, logoColors(partTypeId).dark);
     const length = Math.max(1, span.to - span.from);
     const colorAt = (rowPlace: number) =>
-      mixColors(light, dark, Math.min(1, Math.max(0, (rowPlace - span.from) / length)));
+      mixColors(darker, lighter, Math.min(1, Math.max(0, (rowPlace - span.from) / length)));
     const topHalf = `linear-gradient(${colorAt(index - 0.5)},${colorAt(index)})`;
     const bottomHalf = `linear-gradient(${colorAt(index)},${colorAt(index + 0.5)})`;
     return `<span class="tree-side ${state}" style="--side-top:${topHalf};--side-bottom:${bottomHalf}">` +
       (state === 'start'
         ? `<span class="tree-side-logo" title="${escapeForPage(eventTypeName(partTypeId))}">` +
           `${eventIcon(partTypeId)}</span>` +
-          `<span class="tree-side-start" style="background:${light}"></span>` : '') +
-      (state === 'end' ? `<span class="tree-cap" style="background:${dark}"></span>` : '') +
+          `<span class="tree-side-start" style="background:${darker}"></span>` : '') +
+      (state === 'end' ? `<span class="tree-cap" style="background:${lighter}"></span>` : '') +
       '</span>';
   }).join('');
 
@@ -620,8 +620,11 @@ export function renderEventTree(tree: EventTree): string {
     const rowClass = 'tree-row' +
       (row.level === 0 ? ' main' : row.isSideRow ? ' side' : ' nested') +
       (row.isCurrent ? ' current' : '') +
+      (row.isPicked ? ' picked' : '') +
       (playState === 'now' ? ' play-now' : '');
-    const rowKey = ` data-row-key="${escapeForPage(row.key ?? '')}"`;
+    // The highlight's halo takes the row's own colour.
+    const rowKey = ` data-row-key="${escapeForPage(row.key ?? '')}"` +
+      (row.isPicked ? ` style="--current-color:${dotColor}"` : '');
 
     if (!hasPoints && !noteHtml) {
       return `<div class="${rowClass}"${rowKey}>${inside}</div>`;

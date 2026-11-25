@@ -7,7 +7,7 @@ import { editButton } from './edit-forms.ts';
 import { cancelWord, dataTable, formSection, rowForm, saveWord, text, type Column, type Field } from './data-table.ts';
 import type { Row } from '../data/records.ts';
 import { allianceTag } from '../data/alliances.ts';
-import { dayNameOf, eventTypeName } from '../data/catalog.ts';
+import { SVS_FAMILY, dayNameOf, eventTypeName } from '../data/catalog.ts';
 import { longDayText, shortDayText } from './day-names.ts';
 import { dayFromText } from '../calendar/days.ts';
 import type { WorkContext } from './working-pages.ts';
@@ -18,7 +18,6 @@ import svsHistory from '../../seed/svs-results.json';
 import sunfireHistory from '../../seed/sunfire-results.json';
 import talHistory from '../../seed/tal-results.json';
 
-const SVS_FAMILY = ['svs', 'svs-matchmaking', 'svs-prep', 'svs-battle', 'castle-battle', 'svs-triage'];
 // The events an alliance records for itself.
 export const ALLIANCE_RESULT_EVENTS = ['showdown', 'foundry', 'canyon', 'winter-siege', 'alliance-championship'];
 

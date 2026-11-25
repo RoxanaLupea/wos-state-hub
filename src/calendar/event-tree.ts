@@ -49,6 +49,8 @@ export interface TreeRow {
   // Filled in once the rows are in order.
   key?: string;
   isCurrent?: boolean;
+  // Tapped (or the day tapped on the calendar): highlighted, without the pin.
+  isPicked?: boolean;
 }
 
 export interface SidePart {
@@ -352,9 +354,12 @@ export function buildEventTree(
   const started = isRunning
     ? ordered.filter(row => row.minute <= now && !row.isSideRow && !row.isEndRow && !row.openingPartKey)
     : [];
-  // While the event runs, the row that is on now; otherwise the row that was tapped.
-  const current = picked ?? (isRunning ? started[started.length - 1] : tappedRow(ordered, options));
+  // The pin marks only the row that is on now, while the event runs (owner, 25 Nov). A row
+  // tapped, or the row of the day tapped on the calendar, is highlighted instead.
+  const current = isRunning ? started[started.length - 1] : undefined;
   if (current) current.isCurrent = true;
+  const highlighted = picked ?? (isRunning ? undefined : tappedRow(ordered, options));
+  if (highlighted) highlighted.isPicked = true;
 
   return {
     rows: ordered,
