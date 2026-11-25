@@ -6,6 +6,7 @@ has had to point out before. When she points out a new kind of fault, it is adde
 ## The flow
 - Go through the page as a player would: what they see first, what they tap, where
   they end up. Every step is obvious without being explained.
+- A link to another page carries an arrow that says it jumps there.
 - What can be tapped looks tappable. Nothing important hangs on a tiny arrow or icon.
 - A picked choice looks picked, not like a stray badge.
 - Removing or deleting sits apart from Save and Cancel, never in the same row as an
@@ -27,12 +28,15 @@ has had to point out before. When she points out a new kind of fault, it is adde
 
 ## The layout
 - Nothing shown twice. Nothing touching or colliding. Nothing cramped.
-- Lines and edges align. A line under something sits right under it.
+- Lines and edges align. A line under something sits right under it. Measure it in the
+  screenshot's pixels: words on one line the same height, edges on the same x.
 - It works on a phone and on a computer, both checked.
 
 ## The content
 - A label reads correctly whatever is picked.
-- An empty value looks intentionally empty, never broken.
+- An empty value looks intentionally empty, never broken. Before showing anything as not
+  recorded, check whether the records already hold it (the president always is). A part
+  of a result that is not recorded is not shown at all, with no line saying so.
 - A value is written the same way when shown and when edited.
 - Text follows the writing rules in notes/visual-language.md: facts from the game, the
   game's names, full sentences, no filler.

@@ -71,6 +71,12 @@ export function eventTypeShortName(id: string): string {
   return text['eventType.' + id + '.shortName'] ?? eventTypeName(id);
 }
 
+// A stage's name, for the stages of an event (State of Power: Matchmaking, Preparation,
+// Battle, Field Triage). Empty for an event that is not a stage.
+export function eventTypeStageName(id: string): string {
+  return text['eventType.' + id + '.stageName'] ?? '';
+}
+
 // A name of two or three letters for a bar too narrow even for the short name
 // (Field Triage's last day: "FT", Brothers in Arms after "BIA / KE": "BIA"). Most events
 // have none, and then show only their logo.

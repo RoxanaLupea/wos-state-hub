@@ -72,5 +72,5 @@ change may move. She must be able to count on the work without inspecting it clo
   public.
 - A rule she sets goes into this file or the notes in the same chat. Her decisions go to
   notes/design-decisions.md in her words, never yours.
-- Tell her when to start a new chat: after a push with notes/handoff.md up to date, or
-  when the chat has run long.
+- Never suggest starting a new chat or stopping: she decides when (25 Nov). Keep
+  notes/handoff.md up to date after every push.

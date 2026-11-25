@@ -115,3 +115,27 @@ chief the site shows with the castle result. It matched the site's own history o
 | Dec 7, 2024 | ATK | 1517 | Conquered | AAA가즈아 |
 | Nov 9, 2024 | ATK | 1447 | Conquered | Mimi Shu |
 | Oct 12, 2024 | DEF | 1505 | Defended |  |
+
+## State 1060 screens from the game (sent 25 Nov 2026)
+From the owner's other account. Saved as svs-prep-points-1060-vs-1012.jpg,
+svs-prep-points-1060-vs-1146.jpg, sunfire-castle-occupation-ranking.jpg and
+svs-prep-screen-in-game.jpg. Day V was still In Progress on both prep screens.
+
+Game text on the prep screen: "The State with the higher total points at the end of the
+[Preparation Phase] will gain State Bonus. The [Cross-State Castle Battle] will be held
+within the State with lower points."
+
+| Prep | 1060 | 1012 | 1060 | 1146 |
+|---|---|---|---|---|
+| Total | 7,480,314,895 | 4,744,360,418 | 6,132,188,736 | 7,230,533,351 |
+| I | 1,527,338,960 | 1,084,943,950 | 1,265,944,370 | 1,551,223,230 |
+| II | 1,681,757,392 | 1,154,106,624 | 1,209,772,395 | 1,371,438,744 |
+| III | 1,250,919,420 | 869,553,450 | 1,121,469,480 | 1,189,279,870 |
+| IV | 1,817,226,983 | 878,883,434 | 1,488,435,561 | 2,067,634,807 |
+| V | 1,203,072,140 | 756,872,960 | 1,046,566,930 | 1,050,956,700 |
+
+Sunfire Castle, Occupation Ranking (Defend Phase ends in 13d 15:45:49):
+1. [xSK]SuicideKings, leader DaddyxKrampu…, 02:48:01
+2. (Invader) [Hel]HelNeverDies, leader FoxXxY (with symbols around it, as read), 00:53:39
+3. (Invader) [UNX]XXXUnited, leader Clyde, 00:44:49
+4. [T60]Team1060, leader Mr Boom 7, 00:32:03

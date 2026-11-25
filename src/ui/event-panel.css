@@ -95,6 +95,9 @@
 .tree-cap { position: relative; z-index: 1; width: 15px; height: 3px; border-radius: 2px; }
 .tree-label { padding-left: 8px; font-size: 14px; color: var(--text); min-width: 0; }
 .tree-label.main { font-size: 15px; font-weight: 700; }
+/* A stage of the event (State of Power: Matchmaking, Preparation, Battle, Field Triage)
+   is written in capitals, as on its bar. */
+.tree-label.main.stage { font-size: 14px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
 .tree-label.side-row { color: var(--text-muted); font-weight: 700; }
 /* Instructions of a phase or step: open from its row (same arrow as points), smaller text. */
 .tree-instructions { margin: 2px 0 6px; font-size: 13px; line-height: 1.4; color: var(--text-muted); }

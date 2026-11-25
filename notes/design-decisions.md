@@ -243,6 +243,46 @@ there before discussing it again.
   whether it is marked "(Invader)" and how long it held the castle. The rank follows
   from the times. The invaders' state is the SvS opponent, recorded once per SvS.
 - Sunfire records only the president: number, name, alliance and date in office.
+- SvS results panel (25 Nov, from the game screens; accepted as the last mockup showed it,
+  states and VS at the top): the results are
+  for the entire SvS event; opened from Preparation or from SvS Battle, only that part
+  shows. WIN and LOSS are written in caps.
+- The split bar's meeting point is a line, not a fuzzy dot; on the total it is a line
+  that pulses a little light (25 Nov).
+- The president is always known from our castle records, never "not recorded": if the
+  opponents win both, the invader is the president; if we win both, we get the Supreme
+  President; if we win Preparation and lose the battle, we are the president. "Supreme
+  President" never shows on a win and a loss: the title is the game's, Supreme
+  President or President No. N (25 Nov).
+- Check history has an arrow that shows it jumps to another page (25 Nov).
+- Alliances in the SvS results take the state colour, not their own: ours blue, the
+  opponent always red. DVL shows blue because it acted as the state alliance. "Do this
+  for now" (25 Nov).
+- The president shows with the alliance they are part of, not the one that won the
+  castle. If it is our state (DVL, TOP or whoever), it shows with the alliance's logo and
+  all of that; if it is them, just a normal red pill (25 Nov).
+- State of Power's stages are Matchmaking, Preparation, Battle and Field Triage: the
+  results say Preparation and Battle, not Castle Battle, and the timeline writes the
+  stages in uppercase (25 Nov).
+- The two states in the results drop the word "State": just the number, a little bigger.
+  The castle logo sits next to the state where the battle was fought, on the inside
+  (25 Nov).
+- The state numbers are bigger than the small label (tried much bigger; she asked for them
+  and the castle logo smaller again), and the castle logo is the same height as them, with
+  no black shadow. Everything from our side is blue, everything from their side red
+  (25 Nov).
+- The SvS result and the president show only on the whole State of Power, never on the
+  Battle. Its line is "STATE OF POWER" with WIN, LOSS or DRAW (not "SvS result": we are
+  already in the results). Under it the president: the game's icon for a President or a
+  Supreme President (Roxanne is finding the two icons), then the alliance and the
+  president's name written as in game ([DVL]name), blue for ours, red for theirs. No
+  title text, no "(Invader)", no alliance logo (25 Nov).
+- Points or an Occupation Ranking that are not recorded are simply not shown; no line
+  saying they are not recorded (25 Nov).
+- Part titles and their results (PREPARATION, BATTLE, WIN, LOSS) are the same height and
+  aligned (25 Nov).
+- The Battle's times are in a smaller font; the winner's stays bigger than the rest, but
+  only a little (25 Nov).
 - Each SvS also has one overall result: win (Preparation and Battle), loss (both lost)
   or draw (one of each). 1458's results so far, read from the Hall of Fame and the
   alliances' Glory Path, are in seed/svs-results.json: 28 SvS from 12 Oct 2024 to

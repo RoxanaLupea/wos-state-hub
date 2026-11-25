@@ -245,3 +245,9 @@ Item pictures the owner still has to get, for public/images/items/ (lowercase na
 - The third Tyrant 30-day skin (snowy landscape picture). Name not known.
 - The purple-tile tower skin for Tyrant Occupation ranks 2 to 10 (30-Day and 14-Day).
   Name not known.
+
+Event pictures the owner still has to get, for public/images/events/:
+
+- president.png and supreme-president.png: the President and Supreme President icons
+  (SvS results). The ones in the repo are cut out of her screenshot (25 Nov) until she
+  finds the real files.

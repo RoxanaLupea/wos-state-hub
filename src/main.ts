@@ -26,7 +26,7 @@ import {
 import { allianceTimesPage, statePage } from './ui/state-page.ts';
 import { loadDateChanges, loadSchedules, loadSettings } from './data/schedules.ts';
 import {
-  categoryOf, dayNameOf, eventStepsByEventType, eventTypeById, eventTypeName, eventTypeShortName,
+  categoryOf, dayNameOf, eventStepsByEventType, eventTypeById, eventTypeName, eventTypeShortName, eventTypeStageName,
   isDetailsOnly, partOfByEventTypeId, phaseName, phaseNameForDay, phaseShortName, phasesByEventType,
   phaseNote, pointSourcesForDay, showsTimesInLine, sortOrderOf, stepLabel, stepNote
 } from './data/catalog.ts';
@@ -493,7 +493,7 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
 
   const tree = buildEventTree(occurrence, nearby, {
     phasesByEventType, stepsByEventType: eventStepsByEventType, minutesFromTime,
-    partOfByEventTypeId, nameOf: eventTypeName, shortNameOf: eventTypeShortName,
+    partOfByEventTypeId, nameOf: eventTypeName, stageNameOf: eventTypeStageName, shortNameOf: eventTypeShortName,
     phaseNameOf: phaseName, stepLabel, dayNameOf,
     phaseNoteOf: phaseNote, stepNoteOf: stepNote, timesInLine: showsTimesInLine,
     pointSourceIdsForDay: (eventTypeId, dayNumber) =>
@@ -537,7 +537,7 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
       ? fortBattlesHtmlOf(occurrence.startDay, occurrence.endDay, myAllianceIds) : '',
     resultsHtml: resultsTab({
       context: workContext(), eventTypeId: occurrence.eventTypeId, runDate: resultRunDate(occurrence, nearby),
-      isSwitchedOff: resultsSwitchedOff
+      stateNumber: Number(STATE_NUMBER), isSwitchedOff: resultsSwitchedOff
     }),
     personalHtml: personalEntryForm({
       occurrence, category: categoryOf(occurrence.eventTypeId), userId: person?.userId ?? null,

@@ -6,11 +6,12 @@ import { escapeForPage } from './escape.ts';
 import { dataTable, formSection, rowForm, text, type Column, type Field } from './data-table.ts';
 import type { Row } from '../data/records.ts';
 import { allianceTag } from '../data/alliances.ts';
-import { eventTypeName } from '../data/catalog.ts';
+import { dayNameOf, eventTypeName } from '../data/catalog.ts';
 import { longDayText, shortDayText } from './day-names.ts';
 import { dayFromText } from '../calendar/days.ts';
 import type { WorkContext } from './working-pages.ts';
 import type { ShowdownScore } from './showdown-score.ts';
+import { historyLink, svsResult, type Outcome, type SvsHold, type SvsPart, type SvsRun } from './svs-results.ts';
 import svsHistory from '../../seed/svs-results.json';
 import talHistory from '../../seed/tal-results.json';
 
@@ -23,6 +24,8 @@ export interface ResultsOptions {
   eventTypeId: string;
   // The run open on the page, as a date ("2026-11-28").
   runDate: string;
+  // Our state's number.
+  stateNumber: number;
   // Events an alliance switched off in its results section.
   isSwitchedOff: (allianceId: string, eventTypeId: string) => boolean;
 }
@@ -123,12 +126,12 @@ export function svsHistorySection(context: WorkContext): string {
     '</section>';
 }
 
-// An SvS event's Results tab: this SvS only, and the way to the whole history.
+// An SvS event's Results tab: this SvS, drawn like the game's screens, and the way to
+// the whole history. Opened from Preparation or from the Battle it shows only that part.
 function svsResults(options: ResultsOptions): string {
   const { context } = options;
   const recorded = resultsOf(context, 'svs');
-  const rows = svsRows(context);
-  if (!recorded || !rows) return '<p class="work-empty">Loading…</p>';
+  if (!recorded) return '<p class="work-empty">Loading…</p>';
   const existing = recorded.find(one => one.row.event_date === options.runDate);
   // A run already in the history collected before the site fills the form until it is
   // recorded here.
@@ -152,9 +155,55 @@ function svsResults(options: ResultsOptions): string {
       { name: 'note', label: 'Note', kind: 'text', value: existing?.row.note ?? '' }
     ]
   }) : '';
-  const thisRun = rows.filter(row => row.date === options.runDate);
-  return form + dataTable(SVS_COLUMNS, thisRun, 'This SvS is not recorded yet.') +
-    '<button type="button" class="history-link" data-page="state" data-scroll-to="svs-history">Check history</button>';
+  const run = existing ? svsRunOf(existing, known) : known ? svsRunFromHistory(known) : null;
+  const part: SvsPart = options.eventTypeId === 'svs-prep' ? 'preparation'
+    : options.eventTypeId === 'svs-battle' || options.eventTypeId === 'castle-battle' ? 'battle' : 'whole';
+  return form + (run
+    ? svsResult({ run, part, ourState: options.stateNumber, dayNameOf: day => dayNameOf('svs-prep', day) })
+    : historyLink());
+}
+
+function outcomeOf(value: unknown): Outcome {
+  return value === 'win' || value === 'loss' || value === 'draw' ? value : '';
+}
+
+// A run from the history collected before the site.
+function svsRunFromHistory(known: Record<string, unknown>): SvsRun {
+  return {
+    opponentState: known.opponentState ? Number(known.opponentState) : null,
+    result: outcomeOf(known.result), preparation: outcomeOf(known.preparation), battle: outcomeOf(known.castleBattle),
+    points: null, holds: [],
+    president: known.presidentName ? { tag: String(known.presidentTag ?? ''), name: String(known.presidentName) } : null
+  };
+}
+
+// A run recorded on the site. Its points and Occupation Ranking are details: points_ours,
+// points_theirs, points_ours_1 … points_theirs_5, and hold_1, hold_2 … as "ours|DVL|7090"
+// (side, tag, seconds held). What it does not hold yet comes from the history.
+function svsRunOf(view: ResultView, known: Record<string, unknown> | undefined): SvsRun {
+  const fromHistory = known ? svsRunFromHistory(known) : null;
+  const number = (key: string) => Number(view.details.get(key) ?? NaN);
+  const ours = number('points_ours'), theirs = number('points_theirs');
+  const points = Number.isFinite(ours) && Number.isFinite(theirs) ? {
+    ours, theirs,
+    days: [1, 2, 3, 4, 5].map(day => [number('points_ours_' + day), number('points_theirs_' + day)] as [number, number])
+      .filter(([ourDay, theirDay]) => Number.isFinite(ourDay) && Number.isFinite(theirDay))
+  } : null;
+  const holds: SvsHold[] = [];
+  for (let place = 1; view.details.has('hold_' + place); place++) {
+    const [side, tag, seconds] = String(view.details.get('hold_' + place)).split('|');
+    holds.push({ side: side === 'theirs' ? 'theirs' : 'ours', tag: tag ?? '', seconds: Number(seconds) || 0 });
+  }
+  const presidentTag = view.row.president_alliance_id ? allianceTag(String(view.row.president_alliance_id))
+    : view.details.get('president_tag') ?? '';
+  return {
+    opponentState: view.opponents[0]?.opponent_state ? Number(view.opponents[0].opponent_state) : fromHistory?.opponentState ?? null,
+    result: outcomeOf(view.details.get('result') ?? view.row.outcome) || (fromHistory?.result ?? ''),
+    preparation: outcomeOf(view.details.get('preparation')) || (fromHistory?.preparation ?? ''),
+    battle: outcomeOf(view.details.get('castle_battle')) || (fromHistory?.battle ?? ''),
+    points, holds,
+    president: view.row.president_name ? { tag: presidentTag, name: String(view.row.president_name) } : fromHistory?.president ?? null
+  };
 }
 
 // ---------------------------------------------------------------------------

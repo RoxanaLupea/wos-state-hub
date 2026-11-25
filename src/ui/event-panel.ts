@@ -575,7 +575,7 @@ export function renderEventTree(tree: EventTree): string {
       (isNewDay ? `<b>${escapeForPage(shortDayText(rowDay))}</b>` : '') +
       `<span>${escapeForPage(clockText(row.minute))}</span></span>` +
       sideCell + (openingColumns.length ? openingCells(index) : '') + mainLine +
-      `<span class="tree-label${row.level === 0 && !row.isEndRow ? ' main' : ''}` +
+      `<span class="tree-label${row.level === 0 && !row.isEndRow ? ' main' : ''}${row.isStage ? ' stage' : ''}` +
       `${row.isSideRow || row.isEndRow ? ' side-row' : ''}"` +
       // A ticket's rows are written in the ticket's own colour, like its line; other
       // rows beside the event use the light end of their bar.

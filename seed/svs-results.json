@@ -5,7 +5,9 @@
     "opponentState": 1505,
     "preparation": "loss",
     "castleBattle": "win",
-    "castleAllianceId": "dvl"
+    "castleAllianceId": "dvl",
+    "presidentTag": "DVL",
+    "presidentName": "KK7711唐神"
   },
   {
     "date": "2024-11-09",
@@ -13,7 +15,9 @@
     "opponentState": 1447,
     "preparation": "win",
     "castleBattle": "win",
-    "castleAllianceId": "dvl"
+    "castleAllianceId": "dvl",
+    "presidentTag": "DVL",
+    "presidentName": "Mimi Shu"
   },
   {
     "date": "2024-12-07",
@@ -21,14 +25,18 @@
     "opponentState": 1517,
     "preparation": "win",
     "castleBattle": "win",
-    "castleAllianceId": "dvl"
+    "castleAllianceId": "dvl",
+    "presidentTag": "DVL",
+    "presidentName": "AAA가즈아"
   },
   {
     "date": "2025-01-04",
     "result": "loss",
     "opponentState": 1383,
     "preparation": "loss",
-    "castleBattle": "loss"
+    "castleBattle": "loss",
+    "presidentTag": "FAM",
+    "presidentName": "Màtt"
   },
   {
     "date": "2025-02-01",
@@ -36,7 +44,9 @@
     "opponentState": 1489,
     "preparation": "win",
     "castleBattle": "win",
-    "castleAllianceId": "top"
+    "castleAllianceId": "top",
+    "presidentTag": "TOP",
+    "presidentName": "Daddy MAK"
   },
   {
     "date": "2025-03-01",
@@ -44,14 +54,18 @@
     "opponentState": 1466,
     "preparation": "win",
     "castleBattle": "win",
-    "castleAllianceId": "dvl"
+    "castleAllianceId": "dvl",
+    "presidentTag": "DVL",
+    "presidentName": "DDD"
   },
   {
     "date": "2025-03-29",
     "result": "loss",
     "opponentState": 1534,
     "preparation": "loss",
-    "castleBattle": "loss"
+    "castleBattle": "loss",
+    "presidentTag": "TNT",
+    "presidentName": "It'sKandyCrush"
   },
   {
     "date": "2025-04-26",
@@ -59,21 +73,27 @@
     "opponentState": 1480,
     "preparation": "win",
     "castleBattle": "win",
-    "castleAllianceId": "dvl"
+    "castleAllianceId": "dvl",
+    "presidentTag": "DVL",
+    "presidentName": "SpacePussyLuna"
   },
   {
     "date": "2025-05-24",
     "result": "loss",
     "opponentState": 1461,
     "preparation": "loss",
-    "castleBattle": "loss"
+    "castleBattle": "loss",
+    "presidentTag": "UNI",
+    "presidentName": "WEGES"
   },
   {
     "date": "2025-06-21",
     "result": "loss",
     "opponentState": 1378,
     "preparation": "loss",
-    "castleBattle": "loss"
+    "castleBattle": "loss",
+    "presidentTag": "BAD",
+    "presidentName": "Hocky"
   },
   {
     "date": "2025-07-19",
@@ -81,21 +101,27 @@
     "opponentState": 1453,
     "preparation": "win",
     "castleBattle": "win",
-    "castleAllianceId": "top"
+    "castleAllianceId": "top",
+    "presidentTag": "TOP",
+    "presidentName": "IEatBloodyVag"
   },
   {
     "date": "2025-08-16",
     "result": "loss",
     "opponentState": 1496,
     "preparation": "loss",
-    "castleBattle": "loss"
+    "castleBattle": "loss",
+    "presidentTag": "ACE",
+    "presidentName": "BuBulili"
   },
   {
     "date": "2025-09-13",
     "result": "loss",
     "opponentState": 1461,
     "preparation": "loss",
-    "castleBattle": "loss"
+    "castleBattle": "loss",
+    "presidentTag": "BLD",
+    "presidentName": "Queen of Dark KWT"
   },
   {
     "date": "2025-10-11",
@@ -103,7 +129,9 @@
     "opponentState": 1438,
     "preparation": "loss",
     "castleBattle": "win",
-    "castleAllianceId": "top"
+    "castleAllianceId": "top",
+    "presidentTag": "TOP",
+    "presidentName": "Cocodile Nuts"
   },
   {
     "date": "2025-11-08",
@@ -111,14 +139,18 @@
     "opponentState": 1468,
     "preparation": "loss",
     "castleBattle": "win",
-    "castleAllianceId": "top"
+    "castleAllianceId": "top",
+    "presidentTag": "TOP",
+    "presidentName": "세플리카 seflica"
   },
   {
     "date": "2025-12-06",
     "result": "loss",
     "opponentState": 1421,
     "preparation": "loss",
-    "castleBattle": "loss"
+    "castleBattle": "loss",
+    "presidentTag": "B21",
+    "presidentName": "Reindeer Kârlôš"
   },
   {
     "date": "2026-01-03",
@@ -126,14 +158,18 @@
     "opponentState": 1431,
     "preparation": "loss",
     "castleBattle": "win",
-    "castleAllianceId": "top"
+    "castleAllianceId": "top",
+    "presidentTag": "TOP",
+    "presidentName": "Goddess 1458"
   },
   {
     "date": "2026-01-31",
     "result": "draw",
     "preparation": "win",
     "castleBattle": "loss",
-    "opponentState": 1480
+    "opponentState": 1480,
+    "presidentTag": "ABC",
+    "presidentName": "STING ksa"
   },
   {
     "date": "2026-02-28",
@@ -141,21 +177,27 @@
     "opponentState": 1417,
     "preparation": "win",
     "castleBattle": "win",
-    "castleAllianceId": "sky"
+    "castleAllianceId": "sky",
+    "presidentTag": "ABC",
+    "presidentName": "Moliver"
   },
   {
     "date": "2026-03-28",
     "result": "loss",
     "opponentState": 1491,
     "preparation": "loss",
-    "castleBattle": "loss"
+    "castleBattle": "loss",
+    "presidentTag": "GPX",
+    "presidentName": "Jaz Lalala"
   },
   {
     "date": "2026-04-25",
     "result": "draw",
     "preparation": "win",
     "castleBattle": "loss",
-    "opponentState": 1433
+    "opponentState": 1433,
+    "presidentTag": "DVL",
+    "presidentName": "Tokemon"
   },
   {
     "date": "2026-05-23",
@@ -163,14 +205,18 @@
     "opponentState": 1397,
     "preparation": "win",
     "castleBattle": "win",
-    "castleAllianceId": "dvl"
+    "castleAllianceId": "dvl",
+    "presidentTag": "DVL",
+    "presidentName": "大精靈ღMomo不在家"
   },
   {
     "date": "2026-06-20",
     "result": "loss",
     "opponentState": 1489,
     "preparation": "loss",
-    "castleBattle": "loss"
+    "castleBattle": "loss",
+    "presidentTag": "GOT",
+    "presidentName": "ATOXICL"
   },
   {
     "date": "2026-07-18",
@@ -178,7 +224,9 @@
     "opponentState": 1474,
     "preparation": "win",
     "castleBattle": "win",
-    "castleAllianceId": "dvl"
+    "castleAllianceId": "dvl",
+    "presidentTag": "DVL",
+    "presidentName": "Menno"
   },
   {
     "date": "2026-08-15",
@@ -186,14 +234,18 @@
     "opponentState": 1407,
     "preparation": "loss",
     "castleBattle": "win",
-    "castleAllianceId": "dvl"
+    "castleAllianceId": "dvl",
+    "presidentTag": "DVL",
+    "presidentName": "Tung冬 愛回家"
   },
   {
     "date": "2026-09-12",
     "result": "loss",
     "opponentState": 1438,
     "preparation": "loss",
-    "castleBattle": "loss"
+    "castleBattle": "loss",
+    "presidentTag": "SIK",
+    "presidentName": "AYAKA推しぱんだ@ケロン軍"
   },
   {
     "date": "2026-10-10",
@@ -201,13 +253,17 @@
     "opponentState": 1527,
     "preparation": "win",
     "castleBattle": "win",
-    "castleAllianceId": "dvl"
+    "castleAllianceId": "dvl",
+    "presidentTag": "DVL",
+    "presidentName": "Ace⓪⓪⑦ DVL"
   },
   {
     "date": "2026-11-07",
     "result": "draw",
     "preparation": "win",
     "castleBattle": "loss",
-    "opponentState": 1385
+    "opponentState": 1385,
+    "presidentTag": "DVL",
+    "presidentName": "利姆鲁"
   }
 ]

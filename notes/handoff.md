@@ -5,8 +5,20 @@ Do CLAUDE.md's setup first. Updated 25 Nov 2026.
 ## Now
 
 - main is the live site, built and checked on GitHub. Only main is on GitHub.
-- Next: the SvS results panel on the SvS event's Results tab, designed from the game
-  screens Roxanne sends.
+- 25 Nov: the SvS results panel is designed and accepted ("Ok, I like it") and built in
+  src/ui/svs-results.ts (+ .css), called from results.ts. Opened from SvS preparation it
+  shows Preparation only, from SvS Battle / Castle Battle the Battle only, from
+  matchmaking and Field Triage the whole SvS (Claude's reading: there is no panel for the
+  whole SvS). The SvS timeline writes its stages in capitals (stageName in en.json).
+  The seed's SvS history now holds every president from the Hall of Fame capture.
+- Records: points are details points_ours, points_theirs, points_ours_1..5,
+  points_theirs_1..5; the Occupation Ranking is hold_1, hold_2… as "ours|DVL|7090"
+  (side, tag, seconds); an outside president's tag is detail president_tag. No run has
+  points or a ranking recorded yet.
+- President icons public/images/events/president.png and supreme-president.png are cut
+  out of Roxanne's screenshot; she is looking for the real files.
+- Open: recording a run (points, ranking, president) has no designed editing yet; the
+  admin form is still the old one with the old fields.
 - Roxanne's and Tif's accounts are in 1252 (DUB) until their transfer to 1458.
 
 ## The database

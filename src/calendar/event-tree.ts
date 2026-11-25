@@ -30,6 +30,9 @@ export interface TreeRow {
   occurrence: Occurrence;
   // 0 is the main line, 1 is a row hanging under it.
   level: number;
+  // A stage of the event (State of Power's Matchmaking, Preparation, Battle, Field
+  // Triage), written in capitals.
+  isStage?: boolean;
   dayNumber?: number;
   pointSourceIds: string[];
   // Rows of a part drawn on its own line beside the main one.
@@ -69,6 +72,9 @@ export interface TreeOptions {
   minutesFromTime: (time: string | null) => number;
   partOfByEventTypeId: Map<string, string | null>;
   nameOf: (eventTypeId: string) => string;
+  // A stage's name (State of Power: Matchmaking, Preparation, Battle, Field Triage), or
+  // empty for an event that is not a stage. A stage is written in capitals in the timeline.
+  stageNameOf: (eventTypeId: string) => string;
   shortNameOf: (eventTypeId: string) => string;
   phaseNameOf: (phaseId: string) => string;
   stepLabel: (stepId: string) => string;
@@ -249,8 +255,10 @@ export function buildEventTree(
     } else {
       // Several events in one run: each on the main line, everything else under it.
       const hasDays = content.some(row => row.dayNumber);
+      const stageName = options.stageNameOf(member.eventTypeId);
       rows.push({
-        minute: member.startMinute, label: options.nameOf(member.eventTypeId),
+        minute: member.startMinute, label: stageName || options.nameOf(member.eventTypeId),
+        isStage: Boolean(stageName),
         eventTypeId: member.eventTypeId, occurrence: member, level: 0,
         isCancelled: member.wasCancelled,
         pointSourceIds: hasDays ? [] : options.pointSourceIdsForDay(member.eventTypeId, 1)

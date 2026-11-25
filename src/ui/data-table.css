@@ -112,11 +112,14 @@
 .map-key i { width: 12px; height: 12px; border-radius: 3px; }
 .plan-text { line-height: 1.55; font-weight: 600; }
 
-/* "Check history": the way from one run's result to the whole history. */
+/* "Check history": the way from one run's result to the whole history. Its arrow says
+   it jumps to another page. */
 .history-link {
-  align-self: flex-start; margin-top: 10px; min-height: 40px; padding: 0 4px; border: none; background: none;
+  align-self: flex-start; display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 10px; min-height: 40px; padding: 0 4px; border: none; background: none;
   color: var(--accent); font: inherit; font-size: 14px; font-weight: 800; cursor: pointer;
 }
+.history-link svg { width: 18px; height: 18px; }
 
 /* On a computer the page starts on the same left edge as the page names above it, as
    the approved pages do. Tables are only as wide as their columns, and forms keep a
