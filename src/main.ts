@@ -3698,9 +3698,15 @@ async function start(): Promise<void> {
       if (onPhone) document.documentElement.style.setProperty('--held-dates-top', (height + toolbarHeight + 5 + names.offsetHeight) + 'px');
       const line = onPhone ? names.getBoundingClientRect().bottom : weeks.getBoundingClientRect().top;
       let passedWeek: HTMLElement | null = null;
+      // A week counts once its own dates start to pass under the held ones, so the held
+      // dates always name the week whose bars are just under them.
+      const heldHeight = held.offsetHeight;
       for (const row of Array.from(weeks.querySelectorAll<HTMLElement>('.week-row'))) {
-        if (row.getBoundingClientRect().top < line - 0.5) passedWeek = row;
+        if (row.getBoundingClientRect().top < line + heldHeight - 0.5) passedWeek = row;
       }
+      // At the very top nothing has passed yet: the first week shows its own dates.
+      const first = weeks.querySelector<HTMLElement>('.week-row');
+      if (passedWeek === first && first && first.getBoundingClientRect().top >= line - 0.5) passedWeek = null;
       held.classList.toggle('showing', passedWeek !== null);
       if (!passedWeek) return;
       const days = Array.from(passedWeek.querySelectorAll<HTMLElement>('.day-box'));

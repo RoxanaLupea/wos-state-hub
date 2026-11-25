@@ -46,6 +46,11 @@ Do CLAUDE.md's setup first. Updated 25 Nov 2026.
     column is kept for reminders), Filters opens under its button; held dates on the
     calendar's glass.
   - A bar that is only its logo (Sunfire Castle) no longer shows its short name.
+  - 20:50 push: the weeks fade in just under the held dates (computer: a mask on .weeks;
+    phone: .held-dates::after, 18 px); the held band's glass copies the panel's
+    saturate(140%) so it is not darker (on her phone, still to be confirmed by her); no
+    weekend tint in the held dates; the held dates name the week whose bars are under
+    them; UTC/Mine keeps one width (time-word-box), so no icon moves.
 - Earlier on 25 Nov: new-version notice, top bar across the window and held at the top on
   a phone, day names held on a phone.
 - New version live: src/ui/new-version.ts checks version.json (written by vite.config.ts)

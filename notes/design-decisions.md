@@ -957,3 +957,9 @@ All nine are built.
 - Phone calendar opening (25 Nov, replaces "today's week in sight" on a phone): "Top. If
   we press on today they get smaller, calendar goes to the top and then it's scrolled, a
   tiny animation, not too long, but we need the user to understand what's happening".
+- Held dates (25 Nov): "On pc, I need the items to fade a little as they approach the top,
+  and try to do the same on the phone"; "the fade happens over a big area, it can bee more
+  narrow"; no weekend tint in the held dates ("that doesn't have to happen in this bar
+  because it looks funny"); the band never darker than the calendar ("i don't understand
+  why the top has to get so dark to make something fade"). "changing from utc to mine
+  shouldn't change the positions of the swap icon or the view icons".

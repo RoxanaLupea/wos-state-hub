@@ -239,6 +239,9 @@ export function calendarToolbar(options: ToolbarOptions): string {
     ` aria-label="${VIEW_NAMES[id]}" title="${VIEW_NAMES[id]}">${VIEW_ICONS[id]}</button>`;
   // The word says which time is shown; tapping it swaps to the other.
   const timeWord = mode === 'game' ? 'UTC' : 'Mine';
+  // The other word sits unseen in the same place, so the button is as wide as the wider
+  // of the two and nothing moves when the time is swapped (owner, 25 Nov).
+  const otherWord = mode === 'game' ? 'Mine' : 'UTC';
   const today = options.todayInView ? '<span class="today-slot"></span>'
     : `<button type="button" class="quiet-button today-button" data-step="0" aria-label="Today">${TODAY_ICON}<span class="phone-hidden">Today</span></button>`;
   // A week's year is left out on a phone, so the line fits (owner, 25 Nov); a month keeps it.
@@ -255,7 +258,7 @@ export function calendarToolbar(options: ToolbarOptions): string {
         <button type="button" class="step-arrow" data-step="1" aria-label="Next">${ARROW_RIGHT}</button>
       </div>
       <button type="button" class="quiet-button time-word" data-time-mode="${mode === 'game' ? 'local' : 'game'}"` +
-    ` title="${mode === 'game' ? 'Game time (UTC). Tap for your own time.' : 'Your own time. Tap for game time (UTC).'}">${SWAP_ICON}${timeWord}</button>
+    ` title="${mode === 'game' ? 'Game time (UTC). Tap for your own time.' : 'Your own time. Tap for game time (UTC).'}">${SWAP_ICON}<span class="time-word-box"><span class="shown">${timeWord}</span><span aria-hidden="true">${otherWord}</span></span></button>
     </div>
     <div class="toolbar-views">
       <div class="view-icons" role="group" aria-label="Calendar view">${viewButton('week')}${viewButton('month')}${viewButton('year')}</div>

@@ -20,7 +20,15 @@
     content: ''; position: absolute; z-index: -1; top: -5px; left: -1px; right: -1px; bottom: 0;
     border: 1px solid var(--glass-border); border-bottom: none; border-radius: var(--radius) var(--radius) 0 0;
     background-color: var(--page-color); background-image: linear-gradient(var(--glass), var(--glass)), var(--page-background);
-    background-attachment: fixed; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    background-attachment: fixed; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14); filter: saturate(140%);
+  }
+  /* Under the held dates the weeks fade into the calendar's glass as they near the top
+     (owner, 25 Nov), instead of being cut off at the dates' edge. */
+  .held-dates.showing::after {
+    content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 18px; pointer-events: none;
+    background-color: var(--page-color); background-image: linear-gradient(var(--glass), var(--glass)), var(--page-background);
+    background-attachment: fixed; filter: saturate(140%);
+    -webkit-mask-image: linear-gradient(#000, transparent); mask-image: linear-gradient(#000, transparent);
   }
   /* Behind the rounded corners, the page itself, so the weeks never show in them. */
   .weekday-names.stuck::after {
@@ -37,17 +45,21 @@
   height: 24px; margin: 0 -5px -24px; padding: 0 4px; visibility: hidden;
   border: 1px solid transparent; border-top: none; border-bottom: none;
 }
-.held-dates.showing {
-  visibility: visible; border-color: var(--glass-border);
+.held-dates.showing { visibility: visible; border-color: var(--glass-border); }
+/* The calendar's glass drawn behind the held dates: the page, the glass's light, and the
+   glass's colour lift (the panel's saturate(140%)), so the band matches the panel exactly. */
+.held-dates.showing::before {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
   background-color: var(--page-color); background-image: linear-gradient(var(--glass), var(--glass)), var(--page-background);
-  background-attachment: fixed;
+  background-attachment: fixed; filter: saturate(140%);
 }
 .held-date {
   position: relative; display: flex; justify-content: center; align-items: flex-start; margin-top: 3px; padding: 2px 0 0;
   border: none; border-radius: var(--radius-small) var(--radius-small) 0 0; background: transparent;
   color: var(--text); font: inherit; font-size: 12px; font-weight: 700; cursor: pointer;
 }
-.held-date.weekend { background: var(--weekend-tint); }
+/* No weekend tint in the held dates (owner, 25 Nov): there it looked odd. */
+.held-date.weekend { background: transparent; }
 .held-date.other-month { color: var(--text-faint); font-weight: 500; }
 .held-date .day-number { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; }
 .held-date.today::before { content: ''; position: absolute; top: 0; left: 10px; right: 10px; height: 3px; border-radius: 0 0 3px 3px; background: var(--accent); }

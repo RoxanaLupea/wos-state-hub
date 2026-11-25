@@ -195,6 +195,9 @@
 @media (hover: hover) { .quiet-button:hover { color: var(--section-second); } }
 .filters-button.open { box-shadow: inset 0 -2px 0 var(--section); }
 .time-word { text-transform: uppercase; }
+.time-word-box { display: inline-grid; }
+.time-word-box > span { grid-area: 1 / 1; justify-self: start; }
+.time-word-box > span:not(.shown) { visibility: hidden; }
 /* The arrows step a month (or week, or year). A phone swipes instead, so it has none. */
 .step-arrow { display: none; width: 28px; height: 28px; align-items: center; justify-content: center; padding: 0;
   border: none; border-radius: 8px; background: none; color: var(--text-muted); cursor: pointer; }

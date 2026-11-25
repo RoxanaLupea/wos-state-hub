@@ -52,6 +52,16 @@
   .calendar-panel .weekday-names { scrollbar-gutter: stable; overflow-y: hidden; }
   /* The held dates on the panel's glass, the width of the weeks. */
   .calendar-panel .held-dates { margin: 0 0 -34px; padding: 0; border: none; }
+  /* Scrolled, the weeks fade in just under the held dates (owner, 25 Nov), so the bars
+     soften as they near the top instead of being cut off; the held dates stay solid. */
+  .calendar-panel .weeks.more-above {
+    -webkit-mask-image: linear-gradient(to bottom, #000 34px, transparent 34px, #000 54px);
+    mask-image: linear-gradient(to bottom, #000 34px, transparent 34px, #000 54px);
+  }
+  .calendar-panel .weeks.more-above.more-below {
+    -webkit-mask-image: linear-gradient(to bottom, #000 34px, transparent 34px, #000 54px, #000 calc(100% - 48px), transparent);
+    mask-image: linear-gradient(to bottom, #000 34px, transparent 34px, #000 54px, #000 calc(100% - 48px), transparent);
+  }
   .side-column { min-height: 0; }
   .next-up { flex: none; }
   /* Its scrollbar sits in the page's margin, so the panel lines up with the tiles above it. */
