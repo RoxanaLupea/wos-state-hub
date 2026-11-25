@@ -14,7 +14,8 @@ Do CLAUDE.md's setup first. Updated 25 Nov 2026.
   darkerFirst). SvS bars: Results blue against red, slanted split at 50%, darker ends
   (tokens.css --ours/--theirs, SVS_FAMILY in catalog.ts).
 - A reload on a phone opens the calendar, not the day or event (openSharedAddress).
-- Foundry power asks for an update after two weeks (FOUNDRY_POWER_DAYS).
+- Foundry power asked for an update after two weeks (FOUNDRY_POWER_DAYS); replaced the same
+  night by "when registration opens" (not pushed yet).
 - The yellow events keep their colours (her words: "those stay as they are for now").
 
 ### Not on main: branch wip-25-nov (only if she allowed it)
@@ -28,6 +29,13 @@ Do CLAUDE.md's setup first. Updated 25 Nov 2026.
 
 ### Still open (ask one at a time)
 
+- Push yes for the foundry reminder "when registration opens" (built, not pushed).
+- Her 1252 Foundry Legion 1 screenshot (25 Nov): Roxanne 16,480 (her 1252 main, game_accounts
+  id 1), Lord Daddy Tif 32,315 (Tif's 1252 main, id 2), Lordy 20,752 (no site account).
+  Asked whether to save the first two with her as the source; not answered. Foundry power
+  for players without a site account needs a place per in-game player (to plan).
+- Next chat's work (her plan): she gives the list of people moving from 1252 to 1458 at the
+  next transfer, and their data is taken from 1252.
 - Artisan's Trove: Torxim's calendar shows Charms every Wed-Thu and Chief Gear every Fri-Sat;
   asked whether to save them as weekly estimates. Not answered.
 - Pack prices: the orange bubble amount (same for everyone) or her RON price. Not answered.
@@ -51,8 +59,8 @@ Do CLAUDE.md's setup first. Updated 25 Nov 2026.
     is cut short last (shell.css). 390 px and up unchanged.
   - Menu: Admin, Profile, Sign out. "Account" is "character" wherever players see it.
   - Foundry power in place (part 'foundry' in main.ts): "Add foundry power" when empty,
-    the edit icon after the number, red with a dot a month after it was set (that month
-    is not confirmed by her yet: ask).
+    the edit icon after the number, red with a dot once a new Foundry Battle registration
+    opens after it was set (her rule, 25 Nov; lastFoundryRegistrationStart in main.ts).
   - Leaderboards in her order (Research, Gear, Charms / Hero, Pet, Expert / Exploration,
     Island, Labyrinth); on a computer the groups spread evenly. LABYRINTH STAGES a part
     of its own, capitals, arrow; closed at first on a phone, open on a computer.

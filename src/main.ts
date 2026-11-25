@@ -2508,13 +2508,27 @@ async function saveFoundryPower(): Promise<boolean> {
   return true;
 }
 
-// Foundry power is out of date two weeks after it was set, once per Foundry Battle (owner,
-// 25 Nov: "it's every 2 weeks").
-const FOUNDRY_POWER_DAYS = 14;
+// Foundry power is out of date once a new Foundry Battle registration opens after it was
+// set, because that is when players can check it in the game (owner, 25 Nov: "I want it
+// when registration opens because that's when they can check"). Registration is the
+// state Foundry Battle's third and fourth days (phase ph6).
+const FOUNDRY_REGISTRATION_FIRST_DAY = 3;
+function lastFoundryRegistrationStart(): number | null {
+  const today = todayNumber();
+  let latest: number | null = null;
+  for (const run of runsBetween(today - 21, today)) {
+    if (run.eventTypeId !== 'foundry' || run.allianceIds.length) continue;
+    const opens = run.startMinute + (FOUNDRY_REGISTRATION_FIRST_DAY - 1) * MINUTES_PER_DAY;
+    if (opens <= nowMinute() && (latest === null || opens > latest)) latest = opens;
+  }
+  return latest;
+}
 function foundryNeedsALook(row: Row): boolean {
   if (!row.foundry_power) return false;
   const updated = Date.parse(String(row.foundry_power_updated_at ?? ''));
-  return Number.isNaN(updated) || updated < Date.now() - FOUNDRY_POWER_DAYS * 24 * 60 * 60 * 1000;
+  if (Number.isNaN(updated)) return true;
+  const opens = lastFoundryRegistrationStart();
+  return opens !== null && updated < opens * 60000;
 }
 
 // What each account is, saved together. The account the player is on stays theirs unless

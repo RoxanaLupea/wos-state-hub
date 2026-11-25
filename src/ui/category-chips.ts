@@ -13,7 +13,12 @@ export const CATEGORIES: Category[] = [
   { id: 'state', label: 'State' },
   { id: 'alliance', label: 'Alliance' },
   { id: 'personal', label: 'Personal' },
-  { id: 'deals', label: 'Deals' }
+  { id: 'deals', label: 'Deals' },
+  // Holiday festivals, the anniversary and the like (owner, 25 Nov).
+  { id: 'special', label: 'Special events' },
+  // What is bought in the game's Top-up Center, kept apart from Deals, which are tied to
+  // missions (owner, 25 Nov).
+  { id: 'packs', label: 'Packs' }
 ];
 
 export const CATEGORY_ORDER = CATEGORIES.map(category => category.id);

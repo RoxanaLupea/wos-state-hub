@@ -980,3 +980,4 @@ All nine are built.
 - TAL Hall of Heroism (25 Nov): "we should add it but discreetly, like the other bars i guess? - we decide later, maybe we let people uncheck it separately". Not built yet.
 - Yellow events mockup (25 Nov, rejected): "they look the same to me, shitty yellow almost brown, depressing and ugly, worse than what we had".
 - Deals and Packs (25 Nov): "This is part of deals, idk why or how these work, we'll keep them separate and decide if we want to merge them, deals might be tied to missions in game, packs we just buy them". Packs are what is bought in the Top-up Center.
+- Foundry power reminder (25 Nov, replaces "every 2 weeks"): "I want it when registration opens because that's when they can check". The number turns red with a dot when a Foundry Battle registration opens after it was set.

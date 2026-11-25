@@ -94,8 +94,8 @@ export function eventTypeInitials(id: string): string {
 // (State of Power: SvS, Brothers in Arms: KE). Otherwise, for now, an event whose name
 // has two words or more uses its initials: King of Icefield KOI, Crazy Joe CJ.
 export function eventTypeTag(id: string): string {
-  // Deals have no second name.
-  if (categoryOf(id) === 'deals') return '';
+  // Deals, special events and packs have no second name.
+  if (['deals', 'special', 'packs'].includes(categoryOf(id))) return '';
   // A stored tag wins, and a stored empty tag means the event has no second name.
   const own = text['eventType.' + id + '.tag'];
   if (own !== undefined) return own;

@@ -20,10 +20,12 @@ would disagree, the later one won and the earlier is gone.
   its own colours set the same way.
 - Those colours are used everywhere the event appears, not only on its bar: its lines
   and dots in the timelines, and its text.
-- A ticket's line, while it is open, fades from its light tone to its darker one. Its
-  text is in the light tone. Its line under the calendar bar fades the same way.
-- A bar is one natural fade across its whole width, dark behind the logo to light at
-  the end, keeping its transparency.
+- Everything runs dark to light, left to right or top to bottom (Roxanne, 25 Nov): a bar
+  is one natural fade across its whole width, dark behind the logo to light at the end,
+  keeping its transparency; a ticket's line, while it is open, fades the same way, and
+  so does its line under the calendar bar. Its text is in the light tone. With two logo
+  colours, the darker of the two comes first. SvS is the exception: our blue against
+  their red, split on a slant in the middle.
 - Week-long events are more see-through.
 - Alliance colours: each alliance has two banner colours, one of them its base. An
   academy uses its main alliance's colour, lighter.

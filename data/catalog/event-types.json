@@ -651,5 +651,117 @@
     "colorEnd": "#B98E54",
     "icon": "arrows",
     "sortOrder": 20
+  },
+  {
+    "id": "lunar-new-year",
+    "category": "special",
+    "color": "#EE5A55",
+    "colorEnd": "#B82E33",
+    "icon": "dragon",
+    "sortOrder": 54
+  },
+  {
+    "id": "valentines",
+    "category": "special",
+    "color": "#F28AB4",
+    "colorEnd": "#C94677",
+    "icon": "gift",
+    "sortOrder": 55
+  },
+  {
+    "id": "lantern-of-blessings",
+    "category": "special",
+    "color": "#7FCDB0",
+    "colorEnd": "#3C9B80",
+    "icon": "star",
+    "sortOrder": 56
+  },
+  {
+    "id": "anniversary",
+    "category": "special",
+    "color": "#A592F2",
+    "colorEnd": "#6A55CF",
+    "icon": "calendar",
+    "sortOrder": 57
+  },
+  {
+    "id": "easter",
+    "category": "special",
+    "color": "#B2DA72",
+    "colorEnd": "#6FA83E",
+    "icon": "sun",
+    "sortOrder": 58
+  },
+  {
+    "id": "moonlight-festival",
+    "category": "special",
+    "color": "#9DB8F2",
+    "colorEnd": "#5272C9",
+    "icon": "star",
+    "sortOrder": 59
+  },
+  {
+    "id": "halloween",
+    "category": "special",
+    "color": "#F29548",
+    "colorEnd": "#BB5B1E",
+    "icon": "skull",
+    "sortOrder": 60
+  },
+  {
+    "id": "harvest-festival",
+    "category": "special",
+    "color": "#E0754A",
+    "colorEnd": "#A8432A",
+    "icon": "gift",
+    "sortOrder": 61
+  },
+  {
+    "id": "christmas",
+    "category": "special",
+    "color": "#5EBB86",
+    "colorEnd": "#2E8052",
+    "icon": "bell",
+    "sortOrder": 62
+  },
+  {
+    "id": "hero-ascension-training",
+    "category": "deals",
+    "color": "#7FB8F0",
+    "colorEnd": "#4F86D6",
+    "icon": "star",
+    "sortOrder": 63
+  },
+  {
+    "id": "mix-and-match",
+    "category": "packs",
+    "color": "#F08A8A",
+    "colorEnd": "#C4505A",
+    "icon": "gift",
+    "sortOrder": 64
+  },
+  {
+    "id": "custom-pet-chest",
+    "category": "packs",
+    "color": "#F0B86A",
+    "colorEnd": "#C47E34",
+    "icon": "gift",
+    "sortOrder": 65
+  },
+  {
+    "id": "artisans-trove",
+    "category": "packs",
+    "color": "#7CC8F0",
+    "colorEnd": "#3E8CC9",
+    "icon": "gift",
+    "sortOrder": 66
+  },
+  {
+    "id": "exclusive-gear-enhancement",
+    "category": "packs",
+    "color": "#9FB4E8",
+    "colorEnd": "#5E78C2",
+    "icon": "gift",
+    "sortOrder": 67
   }
 ]
