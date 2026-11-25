@@ -71,7 +71,7 @@ import {
 } from './ui/working-pages.ts';
 import { yearRunSteps, yearViewRuns, type YearRun } from './calendar/year-runs.ts';
 import { evenColour } from './ui/even-colour.ts';
-import { PAGES, calendarToolbar, pageById, sectionNav, topBar, type CalendarView } from './ui/shell.ts';
+import { PAGES, YEAR_VIEW_SHOWN, calendarToolbar, pageById, sectionNav, topBar, type CalendarView } from './ui/shell.ts';
 import { pagePlan } from './ui/page-plan.ts';
 import { playerPage } from './ui/player-page.ts';
 import type { AddOptions, ProfileOptions } from './ui/player-profile.ts';
@@ -88,6 +88,10 @@ import { watchForNewVersion } from './ui/new-version.ts';
 import { problemPanel } from './ui/problem-panel.ts';
 import { installIconFallback } from './ui/event-icon.ts';
 import { fitBarLabels, layoutBars, sizeLanes } from './ui/layout-bars.ts';
+
+// The browser's own scroll memory is off from the very start, before it can put a
+// reloaded page back where it was (the site places every scroll itself).
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
 const STATE_NUMBER = '1458';
 // The season the first written-down battle day belongs to, so later seasons can be
@@ -1089,6 +1093,9 @@ function putBackScrollPlaces(app: HTMLElement, places: ScrollPlaces): void {
     if (panel) panel.scrollTop = startAtTop.panel ? 0 : places.panel;
     if (eventBody) eventBody.scrollTop = startAtTop.panel ? 0 : places.eventBody;
   }
+  // The site's first drawing on a phone starts at the top, whatever the browser kept
+  // from before a reload (owner, 25 Nov).
+  if (calendar && !calendarShownBefore && window.innerWidth < 1000) window.scrollTo(0, 0);
   if (calendar) {
     if (showsToday && glideToToday) glideDownToToday(calendar, weeks);
     else if (showsToday) showToday(calendar, weeks);
@@ -1201,6 +1208,8 @@ function applyKeptChoices(): void {
   if (kept.hiddenEvents) view.hiddenEvents = new Set(kept.hiddenEvents);
   if (kept.followedScheduleIds) view.followedScheduleIds = new Set(kept.followedScheduleIds);
   if (kept.calendarView) view.calendarView = kept.calendarView;
+  // A year view kept from before it was set aside opens as the month.
+  if (view.calendarView === 'year' && !YEAR_VIEW_SHOWN) view.calendarView = 'month';
   if (kept.timeMode) setTimeMode(kept.timeMode);
   if (kept.myAllianceId !== undefined) {
     const isStillHere = kept.myAllianceId === null ||
@@ -3669,17 +3678,17 @@ async function start(): Promise<void> {
       const bar = document.querySelector<HTMLElement>('.top-bar');
       const height = bar ? bar.getBoundingClientRect().height : 0;
       document.documentElement.style.setProperty('--top-bar-height', height + 'px');
-      const names = document.querySelector<HTMLElement>('.calendar-panel .weekday-names');
-      if (!names) return;
       const onPhone = window.innerWidth < 1000;
       // On a phone the Next up tiles above the calendar get smaller and fade as they
-      // scroll away (owner, 25 Nov).
+      // scroll away (owner, 25 Nov), in every view.
       const tiles = document.querySelector<HTMLElement>('.page > .calendar-layout .next-up');
       if (tiles) {
         const gone = onPhone ? Math.min(1, Math.max(0, window.scrollY / Math.max(1, tiles.offsetHeight + 14))) : 0;
         tiles.style.transform = gone ? `scale(${1 - 0.15 * gone})` : '';
         tiles.style.opacity = gone ? String(1 - gone) : '';
       }
+      const names = document.querySelector<HTMLElement>('.calendar-panel .weekday-names');
+      if (!names) return;
       // On a phone the calendar's controls stay under the top bar too, and the day names under them.
       const toolbar = document.querySelector<HTMLElement>('.page > .toolbar');
       const toolbarHeight = onPhone && toolbar ? toolbar.getBoundingClientRect().height : 0;
@@ -3695,7 +3704,9 @@ async function start(): Promise<void> {
         weeks.dataset.holdsDates = 'yes';
         weeks.addEventListener('scroll', holdDayNames, { passive: true });
       }
-      if (onPhone) document.documentElement.style.setProperty('--held-dates-top', (height + toolbarHeight + 5 + names.offsetHeight) + 'px');
+      // Measured to the fraction of a pixel, so no sliver of the weeks shows between the
+      // day names and the dates.
+      if (onPhone) document.documentElement.style.setProperty('--held-dates-top', (height + toolbarHeight + 5 + names.getBoundingClientRect().height) + 'px');
       const line = onPhone ? names.getBoundingClientRect().bottom : weeks.getBoundingClientRect().top;
       let passedWeek: HTMLElement | null = null;
       // A week counts once its own dates start to pass under the held ones, so the held

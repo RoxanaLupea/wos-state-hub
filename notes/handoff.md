@@ -51,6 +51,12 @@ Do CLAUDE.md's setup first. Updated 25 Nov 2026.
     saturate(140%) so it is not darker (on her phone, still to be confirmed by her); no
     weekend tint in the held dates; the held dates name the week whose bars are under
     them; UTC/Mine keeps one width (time-word-box), so no icon moves.
+  - 21:00 push: the year view is set aside, not deleted (YEAR_VIEW_SHOWN = false in
+    shell.ts; a kept 'year' opens as the month); Week and Month sit together as one
+    choice, apart from Filters and UTC; no sliver under the day names (fractional
+    --held-dates-top, the names' band 1 px deeper); a reload on a phone starts at the
+    top (scrollRestoration manual at the start of main.ts); the Next up tiles fade in
+    every view.
 - Earlier on 25 Nov: new-version notice, top bar across the window and held at the top on
   a phone, day names held on a phone.
 - New version live: src/ui/new-version.ts checks version.json (written by vite.config.ts)

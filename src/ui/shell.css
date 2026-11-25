@@ -177,7 +177,7 @@
   .today-button { order: 0; margin-right: -4px; }
   .month-steps { order: 1; margin-right: auto; min-width: 0; }
   .page > .toolbar .period-title { font-size: 18px; }
-  .view-icons { order: 2; gap: 8px; }
+  .view-icons { order: 2; gap: 2px; margin-right: 10px; }
   .filters-button { order: 3; }
   .time-word { order: 4; }
   .phone-hidden { display: none; }
@@ -203,7 +203,9 @@
   border: none; border-radius: 8px; background: none; color: var(--text-muted); cursor: pointer; }
 @media (hover: hover) { .step-arrow:hover { color: var(--text); background: rgba(255, 255, 255, 0.06); } }
 /* The views: calendar pages, the open one bright with a line under it in the section's colour. */
-.view-icons { display: inline-flex; gap: 14px; }
+/* The two views sit close together as one choice, a clear space after them, so they do
+   not read as two more settings beside Filters and UTC (owner, 25 Nov). */
+.view-icons { display: inline-flex; gap: 4px; }
 .view-icon { display: inline-flex; padding: 5px 2px 3px; border: none; background: none; color: var(--text-faint);
   border-bottom: 2px solid transparent; cursor: pointer; }
 @media (hover: hover) { .view-icon:hover { color: var(--text-muted); } }
@@ -223,7 +225,7 @@
   .period-title { font-size: 24px; }
   .period-title .title-long { display: inline; }
   .period-title .title-short { display: none; }
-  .view-icons { order: 3; margin-left: auto; }
+  .view-icons { order: 3; margin-left: auto; margin-right: 14px; }
   .time-word { order: 4; }
   .filters-button { order: 5; }
 }

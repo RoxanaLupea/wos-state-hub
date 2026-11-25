@@ -963,3 +963,8 @@ All nine are built.
   because it looks funny"); the band never darker than the calendar ("i don't understand
   why the top has to get so dark to make something fade"). "changing from utc to mine
   shouldn't change the positions of the swap icon or the view icons".
+- Year view (25 Nov): "I think we can keep only week and month, this is hard to read and
+  we already have everything in the monthly view, don't delete it yet, just disable it
+  for now, in case we have to bring it back" (YEAR_VIEW_SHOWN in shell.ts). "with the
+  extra space see if we can separate the 2 icons better from utc and filters, we don't
+  want them to look like 4 settings when there's only 3".

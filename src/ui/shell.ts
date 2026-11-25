@@ -215,6 +215,9 @@ const VIEW_ICONS: Record<CalendarView, string> = {
   year: calendarPage('view-year-colour', '<rect x="2.5" y="8" width="13.5" height="13" rx="2.2"/><path d="M6 6.5v3M12.5 6.5v3M2.5 12h13.5"/>' +
     '<path d="M6.5 5.5V5a2 2 0 0 1 2-2H19a2.5 2.5 0 0 1 2.5 2.5V14a2 2 0 0 1-2 2h-.5"/>' + dayDot(6, 16) + dayDot(9.2, 16) + dayDot(12.5, 16))
 };
+// The year view is set aside for now (owner, 25 Nov: "we can keep only week and month …
+// don't delete it yet, just disable it"); its code stays, and this brings it back.
+export const YEAR_VIEW_SHOWN = false;
 const VIEW_NAMES: Record<CalendarView, string> = { week: 'Week', month: 'Month', year: 'Year' };
 
 export interface ToolbarOptions {
@@ -261,7 +264,7 @@ export function calendarToolbar(options: ToolbarOptions): string {
     ` title="${mode === 'game' ? 'Game time (UTC). Tap for your own time.' : 'Your own time. Tap for game time (UTC).'}">${SWAP_ICON}<span class="time-word-box"><span class="shown">${timeWord}</span><span aria-hidden="true">${otherWord}</span></span></button>
     </div>
     <div class="toolbar-views">
-      <div class="view-icons" role="group" aria-label="Calendar view">${viewButton('week')}${viewButton('month')}${viewButton('year')}</div>
+      <div class="view-icons" role="group" aria-label="Calendar view">${viewButton('week')}${viewButton('month')}${YEAR_VIEW_SHOWN ? viewButton('year') : ''}</div>
       ${options.showFilters ? `<button type="button" class="quiet-button filters-button${options.filtersOpen ? ' open' : ''}"` +
         ` data-filters-open aria-expanded="${options.filtersOpen}" aria-label="Filters">${FUNNEL_ICON}<span class="phone-hidden">Filters</span></button>` : ''}
     </div>
