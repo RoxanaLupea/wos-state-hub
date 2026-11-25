@@ -4,8 +4,21 @@ Do CLAUDE.md's setup first. Updated 25 Nov 2026.
 
 ## Now
 
-- main is the live site, built and checked on GitHub (25 Nov, commit a2326eb). Only main
+- main is the live site, built and checked on GitHub (25 Nov, commit after a2326eb: SvS
+  editing worked out live, Matchmaking title, timeline pin, digit-only times). Only main
   is on GitHub.
+- Live on 25 Nov: Next up / Now cards per event (State of Power one card, "Now" with its
+  stage while it runs); SvS editing with full numbers per day, totals and WIN/LOSS
+  worked out from the days and the ranking (svs-results.ts updateSvsEditor, main.ts
+  svsDetailsFromEdit); MATCHMAKING title above "#1458 vs #…"; the pin (PIN_ICON in
+  edit-forms.ts) in front of an event's current row instead of the tint; times held typed
+  as digits only (typeHoldTime). The SvS opponent's state is read by
+  admin_tools.refresh_other_states (supabase/svs-opponent-state.sql, run 25 Nov).
+- 7 Nov and 10 Oct: the rounded WoS Oracle days were adjusted in the database so they add
+  up to the exact totals (her instruction, 25 Nov).
+- Open: the State page's Presidency (SvS and Sunfire results, ours and the opponent's
+  state) is still to design. "Alliance Championship" runs past its Next up card on a phone
+  (flagged, not fixed).
 - SvS results panel (src/ui/svs-results.ts and .css, called from results.ts), designed
   with Roxanne from the game screens and accepted. Her decisions are in
   design-decisions.md under "SvS results panel". Every SvS stage opens the whole State of
@@ -31,8 +44,7 @@ Do CLAUDE.md's setup first. Updated 25 Nov 2026.
   and the alliance events, My alliance results, Opponents, rosters, plans, Link an
   academy, Give a role, transfers, blacklist, Fortress planning, personal entries,
   availability.
-- Open: the "Next up / Then" cards still name SvS phases (flagged, no answer yet). The
-  president icons are cut out of her screenshot; the real files are to come from her.
+- The president icons are cut out of her screenshot; the real files are to come from her.
 - In the database since 25 Nov: 7 Nov SvS (WoS Oracle's points, LLC and DVL holds), 10 Oct
   SvS, 21 Nov Sunfire Castle (ranking and president from her screenshots), each with a
   "source" detail.
