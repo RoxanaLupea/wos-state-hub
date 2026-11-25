@@ -4,11 +4,14 @@
 /* ---------- Page frame ---------- */
 .app { min-height: 100vh; display: flex; flex-direction: column; }
 /* The navigation is the page's frame, not a block of content: a band of its own tone
-   across the whole width with a line under it, on a phone as on a computer. */
+   across the whole width with a line under it, on a phone as on a computer. It stays at
+   the top while the page scrolls under it (owner, 25 Nov), so its tone is the same as
+   before but solid enough, and blurred, that nothing under it shows through. */
 .top-bar {
   display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
   padding: 14px 16px 6px; margin-bottom: 12px;
-  background: rgba(255, 255, 255, 0.05);
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(24, 30, 43, 0.94); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.10);
 }
 .top-bar #meButton { min-height: 36px; padding: 0 12px; }
@@ -112,6 +115,17 @@
      reaches past the page's padding and puts the same padding back, so the logo
      starts on the same left edge as everything below it. */
   .top-bar { margin: -16px -24px 0; padding: 0 24px; min-height: 71px; }
+  /* On a screen wider than the page, the band still runs from edge to edge (owner,
+     25 Nov: it was cut where the page ends): the same band is drawn behind the page,
+     across the window, at the top bar's height; what is on it stays lined up with the
+     page. On a computer the window never scrolls (each part scrolls in its own box), so
+     the top bar already stays in place and needs no sticking. */
+  .top-bar { position: relative; height: 71px; background: none; border-bottom: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  body::before {
+    content: ''; position: fixed; top: 0; left: 0; right: 0; height: 71px; box-sizing: border-box; pointer-events: none;
+    background: rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  }
+  .app { position: relative; z-index: 1; }
   /* The sections fill the band's height, so the open one's line sits on its lower edge
      while the logo, clock and Sign in stay centred. */
   .main-nav { align-self: stretch; }

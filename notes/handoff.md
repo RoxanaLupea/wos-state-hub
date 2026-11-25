@@ -4,7 +4,12 @@ Do CLAUDE.md's setup first. Updated 25 Nov 2026.
 
 ## Now
 
-- main is the live site (25 Nov, late afternoon: Roboto and the shared panel rules).
+- main is the live site (25 Nov, evening: new-version notice, top bar across the window
+  and held at the top on a phone, day names held on a phone).
+- New version live: src/ui/new-version.ts checks version.json (written by vite.config.ts)
+  every 5 minutes and on coming back; reloads in the background, offers Reload on screen,
+  never reloads while editing. A page opened before this needs one manual reload.
+- Earlier on 25 Nov: Roboto and the shared panel rules.
   Only main is on GitHub.
 - Font: Roboto everywhere (index.html, tokens.css), event short forms stay Montserrat.
   Roboto is installed in the workspace, so renders match the site. The calendar bars and

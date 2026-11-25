@@ -13,7 +13,7 @@ cd "$repo_root"
   --outfile="$output_folder/main.js" \
   --alias:@supabase/supabase-js="$repo_root/tools/render/supabase-stand-in.js" \
   --define:import.meta.env.VITE_SUPABASE_URL='""' --define:import.meta.env.VITE_SUPABASE_ANON_KEY='""' \
-  --define:import.meta.env.BASE_URL='"./"' \
+  --define:import.meta.env.BASE_URL='"./"' --define:import.meta.env.VITE_SITE_VERSION='""' --define:import.meta.env.DEV=false \
   --loader:.png=file --log-level=warning
 cat > "$output_folder/index.html" <<'PAGE'
 <!DOCTYPE html>

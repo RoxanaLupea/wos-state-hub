@@ -6,6 +6,19 @@
 /* Month grid: 5 weekdays and 2 slightly wider weekend days */
 .grid7 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) repeat(2, minmax(0, var(--weekend-width))); column-gap: 2px; }
 .weekday-names { padding-bottom: 6px; }
+/* On a phone the window scrolls, so the day names stay under the top bar while the weeks
+   scroll under them (owner, 25 Nov); a computer already scrolls only the weeks. Once
+   they are held there, they take the top bar's tone so the weeks do not show through. */
+@media (max-width: 999px) {
+  .weekday-names {
+    position: sticky; top: var(--top-bar-height, 0px); z-index: 5;
+    margin: -6px -4px 0; padding: 6px 4px 6px;
+  }
+  .weekday-names.stuck {
+    background: rgba(24, 30, 43, 0.94); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.10); margin-bottom: -1px;
+  }
+}
 .weekday-name { text-align: center; font-size: 10.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
   color: var(--text-muted); }
 @media (min-width: 1000px) { .weekday-name { font-size: 12px; } }

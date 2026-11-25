@@ -53,3 +53,13 @@
   .calendar-panel::-webkit-scrollbar-track, .day-panel::-webkit-scrollbar-track, .admin-page::-webkit-scrollbar-track { background: transparent; }
   .filter-list { max-height: min(520px, calc(100vh - 220px)); }
 }
+
+/* A newer version of the site is live (new-version.ts): one quiet line at the bottom of
+   the screen, the site's dark glass, solid enough that nothing behind it shows through. */
+.new-version {
+  position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 50;
+  display: flex; align-items: center; gap: 16px; padding: 12px 16px 12px 18px; white-space: nowrap;
+  background: rgba(18, 24, 40, 0.92); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+}
+.new-version-words { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+.new-version .edit-button { --edit-colour: var(--accent); }

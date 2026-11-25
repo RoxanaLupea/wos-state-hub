@@ -84,6 +84,7 @@ import { dayPanel } from './ui/day-panel.ts';
 import { eventPanel, groupPanel, type RewardViewState, setOpenPointRows } from './ui/event-panel.ts';
 import { partOpenings } from './ui/bar.ts';
 import { fitNextTiles, nextUpTiles } from './ui/next-up.ts';
+import { watchForNewVersion } from './ui/new-version.ts';
 import { problemPanel } from './ui/problem-panel.ts';
 import { installIconFallback } from './ui/event-icon.ts';
 import { fitBarLabels, layoutBars, sizeLanes } from './ui/layout-bars.ts';
@@ -1027,6 +1028,9 @@ function putBackScrollPlaces(app: HTMLElement, places: ScrollPlaces): void {
 // The event a form was opened on. Moving to another event, page or day closes it.
 let editingPlace = '';
 
+// What has to follow each drawing of the page (the day names held on a phone).
+const afterEachDraw: (() => void)[] = [];
+
 function draw(): void {
   const app = document.getElementById('app');
   if (!app) return;
@@ -1060,6 +1064,7 @@ function draw(): void {
   showOpenTab(app);
   const svsEditor = document.getElementById(SVS_EDIT_FORM_ID);
   if (svsEditor instanceof HTMLFormElement) updateSvsEditor(svsEditor);
+  for (const step of afterEachDraw) step();
   watchTableEdges(app);
   syncHistory();
   rememberChoices();
@@ -3475,6 +3480,9 @@ async function start(): Promise<void> {
         if (form) updateSvsEditor(form);
       });
     }
+    // A newer version gone live: reloaded in the background, offered on screen; never
+    // reloaded by itself while something is being edited.
+    watchForNewVersion(() => view.editing !== null || view.fortressEditing || (view.openPage === 'player' && PLAYER_PARTS.some(partHasChanges)));
     // Closing or reloading the tab with changes not saved: the browser asks in its own words.
     window.addEventListener('beforeunload', event => {
       if (view.openPage === 'player' && PLAYER_PARTS.some(partHasChanges)) event.preventDefault();
@@ -3512,6 +3520,18 @@ async function start(): Promise<void> {
       sizeLanes(panel);
     };
     window.addEventListener('resize', layOutCalendarAgain);
+    // On a phone the day names stay under the top bar while the weeks scroll; they take
+    // the bar's tone only once they are held there.
+    const holdDayNames = () => {
+      const bar = document.querySelector<HTMLElement>('.top-bar');
+      const height = bar ? bar.getBoundingClientRect().height : 0;
+      document.documentElement.style.setProperty('--top-bar-height', height + 'px');
+      const names = document.querySelector<HTMLElement>('.calendar-panel .weekday-names');
+      if (names) names.classList.toggle('stuck', window.innerWidth < 1000 && names.getBoundingClientRect().top <= height + 0.5);
+    };
+    window.addEventListener('scroll', holdDayNames, { passive: true });
+    window.addEventListener('resize', holdDayNames);
+    afterEachDraw.push(holdDayNames);
     document.fonts?.addEventListener('loadingdone', layOutCalendarAgain);
     void document.fonts?.ready.then(layOutCalendarAgain);
     draw();

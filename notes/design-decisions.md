@@ -880,3 +880,15 @@ All nine are built.
 
 - States 354 to 363 appear in two ranges, 322-363 and 354-399, on 54 of the 66 dates
   in supabase/transfer-group-predictions.csv.
+- A new version going live (25 Nov): "how about a reload suggestion when a new version is
+  up?", together with the silent reload while the page is in the background; accepted as
+  mocked ("yes"): one quiet line at the bottom, "A new version is ready" and Reload in the
+  edit button's style. Nothing reloads by itself while someone is editing
+  (src/ui/new-version.ts, version.json written by the build).
+- The top bar (25 Nov): "it has a problem on pc, it cuts without a reason" (it stopped
+  where the page's 1950px ends on a wider screen) "and then I also want it fixed at the
+  top, so when we scroll it stays in place". Built: the band runs across the whole window
+  on a computer; on a phone it stays at the top while the page scrolls under it.
+- "We also said that the MONDAY/TUESDAY and so on will be fixed and only the calendar
+  scrolls" (25 Nov): on a phone the day names stay under the top bar while the weeks
+  scroll, taking the bar's tone once held; a computer already scrolls only the weeks.
