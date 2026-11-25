@@ -6,13 +6,14 @@
 
 /* The alliance's colour, softened: the section titles mixed with the quiet text colour,
    the two text buttons a lighter mix with the text colour, and the rank as a label. */
-.pp { --ally: var(--accent); --edge: 16px; --pic: 100px; position: relative; width: 100%; margin: 0 auto;
+.pp { --ally: var(--accent); --edge: 16px; --pic: 128px; position: relative; width: 100%; margin: 0 auto;
   padding: 22px var(--edge) 28px; box-sizing: border-box; color: var(--text); }
 .pp h2 { display: flex; align-items: center; margin: -1px 0 10px; font-size: 14px; font-weight: 800; letter-spacing: .14em;
   text-transform: uppercase; color: color-mix(in srgb, var(--ally) 55%, var(--text-muted)); }
 
-/* Header. The picture a little taller than the text, the text centred on it; the alliance
-   a small badge in the top right. */
+/* Header. The picture clearly taller than the text beside it (owner, 25 Nov: her own
+   profile's proportions, the picture about a third taller than the text), the text
+   centred on it; the alliance a small badge. */
 .pp .chief { display: grid; grid-template-columns: var(--pic) minmax(0, 1fr) auto; column-gap: 14px; align-items: center; }
 .pp .pic { position: relative; width: var(--pic); height: var(--pic); border-radius: 20px; background: var(--glass-strong);
   display: flex; align-items: center; justify-content: center; overflow: hidden; font-size: 36px; font-weight: 800; color: var(--text-muted);
@@ -36,12 +37,23 @@
   font-variant-numeric: tabular-nums; }
 .pp .foundry span { text-box: trim-both cap alphabetic; }
 .pp .foundry img { height: 18px; margin: -4px 0; }
+/* On the person's own character (owner, 25 Nov): Add foundry power, or the edit icon alone
+   after the number, red with a dot while out of date; editing in place, a small box where
+   the number is (its digits where they were) and Cancel and Save as icons. */
+.pp .foundry .remind { margin: -6px 0 -6px 3px; }
+.pp .foundry .add-foundry { margin-left: 2px; }
+.pp .remind.icon-only { gap: 0; padding: 4px 2px; }
+.pp .remind.icon-only > span { align-self: flex-start; }
+.pp .foundry-field { width: 4.6em; height: 22px; margin: -4px 0 -4px -3px; font-size: 14px; font-weight: 700; color: var(--text); }
+.pp .foundry.editing .quiet { margin: -6px 0 -6px 6px; padding: 4px 2px; }
+.pp .foundry.editing .quiet + .quiet { margin-left: 4px; }
+.pp .foundry.editing .player-note { flex-basis: 100%; }
 /* On a phone the alliance sits in the bottom right corner, the tag above the logo, so the
    name has the whole width: the details span both columns, and the lines under the name
    keep clear of the badge. */
 .pp { --badge-room: 58px; }
 .pp .chief .who { grid-column: 2 / 4; grid-row: 1; }
-.pp .chief .side { grid-column: 3; grid-row: 1; align-self: end; }
+.pp .chief .side { grid-column: 3; grid-row: 1; align-self: end; margin-bottom: calc((var(--pic) - var(--who-height, var(--pic))) / 2 + 8px); }
 .pp .who .id, .pp .who .power, .pp .who .foundry { margin-right: var(--badge-room); }
 .pp .badge { display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .pp .badge .logo { height: 36px; display: block; }
@@ -72,20 +84,40 @@
 
 .pp .body { margin-top: 26px; display: flex; flex-direction: column; gap: 26px; }
 
-/* "Edit accounts": the photo row in place, with its title line and Cancel and Save, every
-   account's picture, its name, and Main, Alt and Farm under it as words, the picked one
-   bold (the troops' skill levels' words). Seven to a line, like the photos. */
-.pp .accounts-edit { margin-top: 22px; }
-.pp .accounts-edit h2 { margin-bottom: 12px; }
+/* The characters: their title with Edit beside it, then the photos (owner, 25 Nov).
+   Editing keeps the title line in place, with Cancel and Save, and shows every
+   character's picture, its name, and Main, Alt, Farm and Remove under it as words, the
+   picked one bold (the troops' skill levels' words). Seven to a line, like the photos. */
+/* The characters, no title (owner, 25 Nov): the photos, then Edit and Add under them on a
+   phone (Cancel and Save there while editing). */
+.pp .characters { margin-top: 18px; }
+.pp .characters .accbar { margin-top: 0; }
+.pp .char-row { display: flex; flex-direction: column; gap: 6px; }
+.pp .char-actions { display: flex; align-items: center; gap: 18px; }
+.pp .char-actions .remind { margin: 0; }
+.pp .char-actions .quiet { padding: 4px 0; }
+.pp .characters.editing .char-actions { margin-top: 4px; gap: 22px; }
 .pp .accgrid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 16px 8px; }
 .pp .acc { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
-.pp .acc .ph { display: flex; align-items: center; justify-content: center; cursor: default; }
+.pp .acc .ph { display: flex; align-items: center; justify-content: center; }
 .pp .acc-name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 9.5px; font-weight: 700;
   line-height: 1.2; color: var(--text-muted); }
-.pp .acc .kinds { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-.pp .acc .lvl { padding: 0 4px; }
-.pp .acc .lvl:disabled { opacity: .35; cursor: default; }
-@media (hover: hover) { .pp .acc .lvl:disabled:hover { color: var(--text-faint); } }
+/* Editing: the picked character ringed in the alliance colour, its name brighter; then the line that sets the picked one, its name, Main, Alt and Farm, and
+   Remove apart at the end in the danger colour. */
+.pp .acc .ph { cursor: pointer; }
+.pp .acc.picked .ph { box-shadow: 0 0 0 2px var(--ally), 0 0 12px color-mix(in srgb, var(--ally) 45%, transparent); }
+.pp .acc.picked .acc-name { color: var(--text); }
+.pp .kind-line { display: flex; align-items: center; gap: 14px; margin-top: 12px; }
+.pp .kind-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 800; }
+.pp .kind-picks { display: flex; gap: 12px; }
+.pp .kind-pick { display: inline-flex; align-items: center; gap: 6px; padding: 6px 0; border: none; background: none; font: inherit;
+  font-size: 12.5px; font-weight: 700; line-height: 1; color: var(--text-muted); cursor: pointer; }
+.pp .kind-pick .mark { width: 13px; height: 13px; flex: none; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--text-faint); }
+.pp .kind-pick.on { color: var(--text); font-weight: 800; }
+.pp .kind-pick.on .mark { box-shadow: inset 0 0 0 1.5px var(--ally), 0 0 6px color-mix(in srgb, var(--ally) 55%, transparent);
+  background: radial-gradient(circle, color-mix(in srgb, var(--ally) 70%, var(--text)) 0 3.5px, transparent 4px); }
+.pp .kind-pick:disabled { opacity: .35; cursor: default; }
+.pp .char-actions .remove:disabled { opacity: .35; cursor: default; }
 .pp .items { display: grid; column-gap: 8px; }
 .pp .items.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .pp .items.five { grid-template-columns: repeat(5, minmax(0, 1fr)); }
@@ -191,6 +223,7 @@
   -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 .pp .quiet.cancel { --quiet-tint: var(--notice-red); }
 .pp .quiet.confirm { --quiet-tint: var(--save-green); }
+.pp .quiet.neutral { --quiet-tint: var(--text-faint); }
 .pp .quiet .words { text-box: trim-both cap alphabetic; padding: 2px 0; }
 .pp .quiet .line-icon { width: 15px; height: 15px; flex: none; overflow: visible;
   filter: drop-shadow(0 0 3px color-mix(in srgb, var(--quiet-tint) 50%, transparent)); }
@@ -199,22 +232,26 @@
 .pp .saverow button { min-width: 110px; }
 .pp .save:disabled { background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-faint); cursor: default; }
 
-/* Leaderboards: three rows of three, by kind. Each board is centred in its column: its
-   short name, then its value with its rank after it. The Labyrinth always starts its row
-   on the left and opens its areas under the grid, drawn the same way, smaller. */
+/* Leaderboards: three rows of three, by kind (owner, 25 Nov): Research, Chief Gear and
+   Charms; Hero, Pet and Expert power; Exploration, Island and the Labyrinth. Each board is
+   centred in its column: its short name, then its value with its rank after it. The
+   Labyrinth's stages are a part of their own under them, with a small title, drawn the same
+   way, smaller. */
 .pp .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 12px; }
 .pp .board { display: flex; flex-direction: column; align-items: center; text-align: center; min-width: 0; }
 .pp .board .cap { font-size: 11.5px; font-weight: 700; line-height: 1.25; color: var(--text-muted); white-space: nowrap; }
 .pp .board .v { margin-top: 6px; font-size: 19px; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .pp .board .r { margin-left: 4px; font-size: 11px; font-weight: 800; color: var(--accent); }
-.pp .grid > .lab-first { grid-column: 1; }
-.pp .labmore { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 12px; margin-top: 12px; }
-.pp .labmore .more { grid-column: var(--col); }
-.pp .more { justify-self: start; display: flex; align-items: center; gap: 3px; padding: 0; border: none; background: none; font: inherit;
-  font-size: 11.5px; font-weight: 800; white-space: nowrap; cursor: pointer; color: color-mix(in srgb, var(--ally) 50%, var(--text)); }
-.pp .more .chev { width: 13px; height: 13px; }
-.pp .more[aria-expanded=true] .chev { transform: rotate(180deg); }
-.pp .areas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px 12px; margin-top: 30px; }
+/* The stages' title: Leaderboards' capitals a little smaller, with the arrow after it. */
+.pp .stages { margin-top: 22px; }
+.pp .stages-title { display: inline-flex; align-items: center; gap: 4px; padding: 4px 0; border: none; background: none; font: inherit;
+  font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; line-height: 1; cursor: pointer;
+  color: color-mix(in srgb, var(--ally) 55%, var(--text-muted)); }
+.pp .stages-title .chev { width: 15px; height: 15px; transition: transform .2s; }
+.pp .areas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px 12px; margin-top: 10px; }
+/* Closed at first on a phone, open at first on a computer, until the player taps it. */
+.pp .stages:not(.open) .areas { display: none; }
+.pp .stages.open .chev { transform: rotate(180deg); }
 .pp .board.area .cap { font-size: 10.5px; }
 .pp .board.area .v { font-size: 16px; }
 
@@ -286,8 +323,8 @@
   .pp .troops { --art-h: var(--troop); --shrink: .6; --pick-gap: 8px; }
   .pp .pick { gap: 3px; }
   .pp .lvl { height: 16px; font-size: 13px; line-height: 16px; }
-  .pp .quiet { font-size: 13.5px; }
-  .pp { --edge: 32px; --pic: 132px; max-width: 1180px; padding-top: 40px; padding-bottom: 48px; }
+  .pp .quiet, .pp .kind-pick { font-size: 13.5px; }
+  .pp { --edge: 32px; --pic: 160px; max-width: 1180px; padding-top: 40px; padding-bottom: 48px; }
   .pp .chief { column-gap: 26px; }
   .pp .who { gap: 16px; }
   .pp .name { font-size: 34px; }
@@ -296,11 +333,14 @@
   .pp .power { font-size: 36px; }
   .pp .power .pr { font-size: 15px; }
   .pp .foundry { font-size: 17px; }
+  .pp .foundry-field { font-size: 17px; height: 26px; }
   .pp .foundry img { height: 21px; }
   .pp .pic { font-size: 50px; border-radius: 26px; }
   /* On a computer the details and the side keep their own columns. */
   .pp .chief .who { grid-column: 2; }
-  .pp .chief .side { grid-column: 3; align-self: start; }
+  /* On a computer the badge's tag starts level with the name (owner, 25 Nov: lower). */
+  .pp .chief .side { grid-column: 3; align-self: start; margin-bottom: 0; }
+  .pp .side .badge { margin-top: 18px; }
   .pp .who .id, .pp .who .power, .pp .who .foundry { margin-right: 0; }
   /* The side: the badge at the top, as big as the room down to Updated and Refresh
      allows, its tag larger too; during a move the pair fills that room with Dismiss and
@@ -310,22 +350,38 @@
   .pp .chief:has(.move) .side { display: flex; }
   .pp .tag { font-size: 16px; }
   .pp .side .badge { gap: 8px; }
-  .pp .side .badge .logo { height: calc(var(--pic) - 47px); }
-  .pp .side .badge .logo.none { width: calc(var(--pic) - 47px); font-size: 34px; border-radius: 18px; }
+  .pp .side .badge .logo { height: 85px; }
+  .pp .side .badge .logo.none { width: 85px; font-size: 34px; border-radius: 18px; }
   .pp .move { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
   .pp .move-pair { gap: 8px; }
   .pp .side .move .badge { gap: 6px; }
-  .pp .side .move .badge .logo { height: calc(var(--pic) - 74px); }
-  .pp .side .move .badge .logo.none { width: calc(var(--pic) - 74px); font-size: 24px; border-radius: 14px; }
-  .pp .move-arrow { width: 18px; height: 18px; margin-bottom: calc((var(--pic) - 72px) / 2 - 9px); }
+  .pp .side .move .badge .logo { height: 58px; }
+  .pp .side .move .badge .logo.none { width: 58px; font-size: 24px; border-radius: 14px; }
+  .pp .move-arrow { width: 18px; height: 18px; margin-bottom: 21px; }
   .pp .move-actions { margin-top: 0; }
   .pp .move .quiet { font-size: 13px; }
   .pp .fresh.top { margin-top: auto; }
   .pp .fresh.top { display: block; margin-bottom: 0; }
   .pp .fresh.end { display: none; }
-  .pp .accbar { grid-template-columns: repeat(7, 48px); gap: 10px; margin-top: 22px; }
-  .pp .accounts-edit { margin-top: 26px; }
-  .pp .accgrid { grid-template-columns: repeat(auto-fill, 76px); gap: 18px 12px; }
+  .pp .accbar { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+  .pp .accbar .ph { width: 48px; }
+  .pp .characters { margin-top: 26px; }
+  /* On a computer Edit and Add (or Cancel and Save) follow the last character. */
+  .pp .char-row { flex-direction: row; align-items: center; gap: 10px; }
+  /* After the photos, Edit and Add are two more places in the row (owner, 25 Nov: the
+     words beside the photos looked awkward): the photo's size and corners, a faint dashed
+     edge, their icon in the middle. */
+  .pp .char-row .char-actions { gap: 10px; }
+  .pp .char-row .char-actions .remind { width: 48px; height: 48px; justify-content: center; padding: 0; border-radius: 13px;
+    border: 1.5px dashed color-mix(in srgb, var(--ally) 35%, var(--glass-border)); }
+  .pp .char-row .char-actions .remind > span { display: none; }
+  .pp .char-row .char-actions .remind .edit-icon { width: 20px; height: 20px; }
+
+  /* Editing keeps the photos where they were: 48 px apart by 10, each name centred under
+     its photo in 58 px. */
+  .pp .accgrid { display: flex; flex-wrap: wrap; gap: 18px 0; margin-left: -5px; }
+  .pp .acc { width: 58px; }
+  .pp .kind-line { gap: 16px; }
   .pp .acc .ph { width: 48px; }
   .pp .acc-name { font-size: 11.5px; }
   .pp .ph { font-size: 20px; border-radius: 13px; }
@@ -349,7 +405,10 @@
   .pp .art.hero .cm-badge { width: 24px; height: 24px; top: 5px; left: 5px; border-radius: 7px; }
   .pp .art.hero .cm { height: 16px; }
   .pp .detail, .pp .arena .detail { font-size: 13px; }
-  .pp .grid { grid-template-columns: repeat(3, minmax(0, 1fr)) 40px repeat(3, minmax(0, 1fr)) 40px repeat(3, minmax(0, 1fr)); column-gap: 10px; }
+  /* On a computer the nine boards are one line in their three groups (owner, 25 Nov): the
+     boards of a group the same distance apart, edge to edge, and the groups spread evenly
+     over the width. */
+  .pp .grid { grid-template-columns: repeat(3, auto) 1fr repeat(3, auto) 1fr repeat(3, auto); column-gap: 32px; }
   .pp .grid > * { grid-row: 1; }
   .pp .grid > :nth-child(1) { grid-column: 1; } .pp .grid > :nth-child(2) { grid-column: 2; } .pp .grid > :nth-child(3) { grid-column: 3; }
   .pp .grid > :nth-child(4) { grid-column: 5; } .pp .grid > :nth-child(5) { grid-column: 6; } .pp .grid > :nth-child(6) { grid-column: 7; }
@@ -357,10 +416,12 @@
   .pp .board .cap { font-size: 13px; }
   .pp .board .v { font-size: 22px; }
   .pp .board .r { font-size: 12px; }
-  .pp .labmore { grid-template-columns: repeat(3, minmax(0, 1fr)) 40px repeat(3, minmax(0, 1fr)) 40px repeat(3, minmax(0, 1fr)); column-gap: 10px; }
-  .pp .labmore .more { grid-column: var(--desk-col); }
-  .pp .areas { grid-template-columns: repeat(6, minmax(0, 1fr)); }
-  .pp .more { font-size: 13px; }
+  .pp .areas { grid-template-columns: repeat(6, auto); justify-content: space-between; }
+  .pp .stages:not(.closed) .areas { display: grid; }
+  .pp .stages:not(.closed) .chev { transform: rotate(180deg); }
+  /* The section titles larger on a computer (owner, 25 Nov), the stages' a little smaller. */
+  .pp h2 { font-size: 16px; }
+  .pp .stages-title { font-size: 14px; }
   .pp .remind { font-size: 13.5px; }
   .pp .remind .edit-icon { width: 18px; height: 18px; }
   .pp.adding { padding-top: 40px; }

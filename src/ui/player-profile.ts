@@ -6,6 +6,16 @@
 // The game's data is read by the database (supabase/game-refresh.sql, fresh-reads.sql); a
 // refresh can be asked once the game was last read over an hour ago.
 import { EDIT_ICON } from './edit-forms.ts';
+
+// The edit icon while something is out of date, red into white. Its colour has a name of
+// its own: an icon's colour is set by the first icon of that name on the page, so the
+// red one would otherwise colour every edit icon after it.
+const DUE_EDIT_ICON = EDIT_ICON.replace(/edit-icon-colour/g, 'edit-icon-due').replace(/var\(--edit-colour\)/, 'var(--notice-red)');
+
+// Add, in the edit icon's look: a plus in one stroke from the colour into white.
+const ADD_ICON = '<svg class="edit-icon" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="add-icon-colour" x1="0" y1="0" x2="1" y2="1">' +
+  '<stop offset="0" style="stop-color: var(--edit-colour)"/><stop offset="1" style="stop-color: var(--text)"/></linearGradient></defs>' +
+  '<path d="M12 4.5v15M4.5 12h15" fill="none" stroke="url(#add-icon-colour)" stroke-width="2.2" stroke-linecap="round"/></svg>';
 import './player-profile.css';
 import { escapeForPage } from './escape.ts';
 import { imageUrl } from './event-icon.ts';
@@ -244,7 +254,7 @@ export type LookUpState =
 const REFRESH_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7" fill="none" ' +
   'stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const CHEVRON = '<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" ' +
-  'stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  'stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const HEAD = '<svg class="sil" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="15" r="7"/>' +
   '<path d="M6 38c1-9 7-14 14-14s13 5 14 14z"/></svg>';
 
@@ -332,6 +342,11 @@ function lineIcon(id: string, path: string): string {
 }
 const CANCEL_ICON = lineIcon('cancel-icon-colour', 'M6 6l12 12M18 6L6 18');
 const SAVE_ICON = lineIcon('save-icon-colour', 'M4.5 12.5l5 5L19.5 6.5');
+// Cancel where Remove is the red choice beside it: grey. Its colour has its own name, so the
+// red Cancel elsewhere on the page keeps its own (an icon's colour is set by the first icon
+// of that name).
+const NEUTRAL_CANCEL_ICON = lineIcon('cancel-neutral-colour', 'M6 6l12 12M18 6L6 18');
+const BIN_ICON = lineIcon('bin-icon-colour', 'M4 7h16M9.5 7V4.5h5V7M6.5 7l1 12.5h9l1-12.5M10.2 11v5M13.8 11v5');
 
 // Troops: the three troop types centred in their columns, each type's name above its tier portrait (FC badge on the corner), its tier
 // under it ("T10", "Helios", "Exalted · Lvl. 3"). "Update skill level" beside the title
@@ -382,7 +397,7 @@ function troopsSection(options: ProfileOptions, game: GameRead | null): string {
   // The edit icon (owner's example, 24 Nov): a rounded square open at the top right with a
   // pencil across it, drawn in one stroke that runs from a colour into white (see .remind).
   const update = canUpdate ? `<button type="button" class="remind${options.skillsDue ? ' due' : ''}" data-player-edit="troops">` +
-    `${EDIT_ICON}<span><span class="words">Update skill level</span></span></button>` : '';
+    `${options.skillsDue ? DUE_EDIT_ICON : EDIT_ICON}<span><span class="words">Update skill level</span></span></button>` : '';
   return `<section class="troops${state}"><h2>Troops${update}</h2><div class="items three">${items}</div></section>`;
 }
 
@@ -403,15 +418,16 @@ function arenaSection(game: GameRead | null): string {
   return `<section class="arena"><h2>Arena team</h2><div class="items five">${heroes}</div></section>`;
 }
 
-// The boards in the order of their groups: gear and heroes, growth, then the stages and
-// scores with the Labyrinth's row last. Kill Count, Furnace Level and Migrant Score are
-// not on the profile, and Personal Power is the header's power.
-const BOARD_ORDER = ['Hero Power', 'Chief Gear Power', 'Chief Charm Power', 'Hero Equip Power', 'Total Pet Power', 'Total Expert Power',
-  'Research Power', "Hero's Total Power", 'Troop Power', 'Building Power', 'The Labyrinth', 'Exploration Stage', 'Island Prosperity'];
+// The boards in the order of their groups (owner, 25 Nov): Research, Chief Gear and
+// Charms; then Hero, Pet and Expert power (the other hero and troop boards with them);
+// then Exploration, Island and the Labyrinth. Kill Count, Furnace Level and Migrant Score
+// are not on the profile, and Personal Power is the header's power.
+const BOARD_ORDER = ['Research Power', 'Chief Gear Power', 'Chief Charm Power', 'Hero Power', 'Hero Equip Power', 'Total Pet Power',
+  'Total Expert Power', "Hero's Total Power", 'Troop Power', 'Building Power', 'Exploration Stage', 'Island Prosperity', 'The Labyrinth'];
 // With more than nine boards ranked, these nine (Hero Equip Power stands in for Hero Power
 // when Hero Power has no rank).
-const NINE = ['Hero Power', 'Chief Gear Power', 'Chief Charm Power', 'Total Pet Power', 'Total Expert Power', 'Research Power',
-  'The Labyrinth', 'Exploration Stage', 'Island Prosperity'];
+const NINE = ['Research Power', 'Chief Gear Power', 'Chief Charm Power', 'Hero Power', 'Total Pet Power', 'Total Expert Power',
+  'Exploration Stage', 'Island Prosperity', 'The Labyrinth'];
 const SHORT_NAMES: Record<string, string> = {
   'Total Pet Power': 'Pet Power', 'Total Expert Power': 'Expert Power', 'The Labyrinth': 'Labyrinth',
   'Exploration Stage': 'Exploration', 'Island Prosperity': 'Island'
@@ -428,31 +444,25 @@ function boardValue(name: string, entry: BoardEntry): string {
   return name.endsWith('Power') ? short(entry.value) : entry.value.toLocaleString('en-US');
 }
 
-function boardsSection(boards: Record<string, BoardEntry>, labyrinthOpen: boolean): string {
+// The Labyrinth's stages are a part of their own under the boards (owner, 25 Nov): their
+// title in capitals, a little smaller than Leaderboards, with an arrow that opens and
+// closes them; closed at first on a phone, open at first on a computer (open is null
+// until the player taps it, and the screen decides).
+function boardsSection(boards: Record<string, BoardEntry>, open: boolean | null): string {
   const ranked = BOARD_ORDER.filter(name => boards[name]?.rank);
   let shown: string[];
   if (ranked.length > 9) {
     const hero = ranked.includes('Hero Power') ? 'Hero Power' : 'Hero Equip Power';
-    shown = [hero, ...NINE.slice(1)].filter(name => ranked.includes(name));
+    shown = NINE.map(name => name === 'Hero Power' ? hero : name).filter(name => ranked.includes(name));
   } else shown = ranked;
-  if (shown.length === 0) return '';
   const areas = LABYRINTH_AREAS.filter(name => boards[name])
     .map(name => board(name, boardValue(name, boards[name]), boards[name].rank, 'board area')).join('');
-  const cells = shown.map(name => board(name, boardValue(name, boards[name]), boards[name].rank,
-    name === 'The Labyrinth' ? 'board lab-first' : 'board')).join('');
-  let labyrinth = '';
-  if (shown.length === 1 && shown[0] === 'The Labyrinth') {
-    // Only the Labyrinth: its total, then its areas, always shown.
-    labyrinth = areas ? `<div class="areas">${areas}</div>` : '';
-  } else if (shown.includes('The Labyrinth') && areas) {
-    // Under the Labyrinth: the line that opens its areas, and closes them again. On a
-    // computer the nine are one line in three groups of three, a gap column between groups.
-    const index = shown.indexOf('The Labyrinth');
-    const deskColumn = Math.floor(index / 3) * 4 + index % 3 + 1;
-    labyrinth = `<div class="labmore"><button type="button" class="more" data-labyrinth-stages style="--col: 1; --desk-col: ${deskColumn}"` +
-      ` aria-expanded="${labyrinthOpen}">Labyrinth stages${CHEVRON}</button></div>` + (labyrinthOpen ? `<div class="areas">${areas}</div>` : '');
-  }
-  return `<section class="boards"><h2>Leaderboards</h2><div class="grid">${cells}</div>${labyrinth}</section>`;
+  if (shown.length === 0 && !areas) return '';
+  const cells = shown.map(name => board(name, boardValue(name, boards[name]), boards[name].rank)).join('');
+  const state = open === null ? '' : open ? ' open' : ' closed';
+  const stages = areas ? `<div class="stages${state}"><button type="button" class="stages-title" data-labyrinth-stages>` +
+    `Labyrinth stages${CHEVRON}</button><div class="areas">${areas}</div></div>` : '';
+  return `<section class="boards"><h2>Leaderboards</h2>${cells ? `<div class="grid">${cells}</div>` : ''}${stages}</section>`;
 }
 
 // ---------------------------------------------------------------------------
@@ -484,9 +494,15 @@ export interface ProfileOptions {
   others: BarAccount[];
   // While "Edit accounts" is open: every account (the one shown too), what each is in
   // the draft, and whether anything changed.
-  kindsEditing: { accounts: BarAccount[]; kinds: Record<string, string>; changed: boolean } | null;
+  kindsEditing: { accounts: BarAccount[]; kinds: Record<string, string>; changed: boolean; picked: string | null; removing: string | null } | null;
   // Whether this is the person's main or an alt (a farm cannot set skill levels).
   ownAccount: boolean;
+  // The foundry power on the person's own character (owner, 25 Nov): being edited (with
+  // what is typed), and whether it is out of date.
+  foundryEditing: { typed: string; changed: boolean } | null;
+  foundryDue: boolean;
+  // The Labyrinth's stages opened or closed by the player; null until they tap it.
+  labyrinthOpen: boolean | null;
   skills: SkillLevels;
   skillDraft: SkillLevels;
   editingTroops: boolean;
@@ -496,7 +512,6 @@ export interface ProfileOptions {
   // Whether the skill levels are out of date: never set or not changed for over a month,
   // with one under Lvl. 3. "Update skill level" then carries a red dot.
   skillsDue: boolean;
-  labyrinthOpen: boolean;
 }
 
 export function playerProfile(options: ProfileOptions): string {
@@ -516,52 +531,107 @@ export function playerProfile(options: ProfileOptions): string {
   const rank = game?.allianceRank ? `<span class="rank">${escapeForPage(game.allianceRank)}</span>` : '';
   const power = game?.power ?? null;
   const powerLine = power ? `<div class="power"><b>${short(power)}</b>${game?.powerRank ? `<span class="pr">#${game.powerRank}</span>` : ''}</div>` : '';
-  const foundry = account.foundry_power ? `<div class="foundry"><img src="${imageUrl('events/foundry')}" alt="Foundry"><span>${escapeForPage(foundryText(account.foundry_power))}</span></div>` : '';
+  const foundry = foundryLine(account, options);
   // Another state's chief is marked with the state: our alliances are only ours here.
-  const elsewhere = game?.state && game.state !== options.homeState ? ` · State ${game.state}` : '';
+  const elsewhere = game?.state && game.state !== options.homeState ? ` · #${game.state}` : '';
   const header = '<header class="chief">' +
     `<div class="pic">${pictureOf(game?.avatar ?? null, name)}</div>` +
     `<div class="who"><div class="name">${escapeForPage(name)}${rank}</div>` +
     `<div class="id"><span class="k">ID</span> ${escapeForPage(id)}${elsewhere}</div>${powerLine}${foundry}</div>` +
     `<div class="side">${badge}${freshLine(game, id, options.now, 'top')}</div></header>`;
-  // The person's other accounts; tapping one swaps to it. While "Edit accounts" is open,
-  // every account with Main, Alt and Farm under it in the same place.
-  const bar = options.kindsEditing ? accountsEditor(options.kindsEditing) :
-    options.others.length === 0 ? '' : '<nav class="accbar" aria-label="Your other accounts">' + options.others.map(other => {
+  // The person's other characters, with no title (owner, 25 Nov): Edit and Add under them
+  // on a phone, after the last one on a computer; with no other character, only Add.
+  // Tapping a picture swaps to it. Edit opens them in place, Cancel and Save where Edit
+  // and Add were.
+  const addCharacter = `<button type="button" class="remind" data-add-account aria-label="Add character" title="Add character">${ADD_ICON}<span><span class="words">Add</span></span></button>`;
+  const editCharacters = options.others.length ? `<button type="button" class="remind" data-edit-accounts aria-label="Edit characters" title="Edit characters">` +
+    `${EDIT_ICON}<span><span class="words">Edit</span></span></button>` : '';
+  const photos = options.others.length === 0 ? '' : '<nav class="accbar" aria-label="Your other characters">' + options.others.map(other => {
     const attribute = other.row.kind === 'farm' ? 'data-listed-account' : 'data-game-account';
     return `<button type="button" class="ph" ${attribute}="${escapeForPage(String(other.row.id))}" aria-label="${escapeForPage(other.name)}"` +
       ` title="${escapeForPage(other.name)}">${pictureOf(other.avatar, other.name)}</button>`;
   }).join('') + '</nav>';
+  const bar = options.kindsEditing ? accountsEditor(options.kindsEditing) :
+    options.ownAccount ? `<section class="characters"><div class="char-row">${photos}<div class="char-actions">${editCharacters}${addCharacter}</div></div></section>` :
+    photos ? `<section class="characters">${photos}</section>` : '';
   const boards = { ...options.stateBoards, ...(game?.boards ?? {}) };
   return `<div class="pp"${colour ? ` style="--ally: ${escapeForPage(colour)}"` : ''}>${header}${bar}<div class="body">` +
     troopsSection(options, game) + arenaSection(game) + boardsSection(boards, options.labyrinthOpen) +
     `</div>${freshLine(game, id, options.now, 'end')}</div>`;
 }
 
-// "Edit accounts" (24 Nov), drawn like the troops' skill levels: the row of photos gets
-// its title line with Cancel and Save, and every account shows its picture, its name, and
-// Main, Alt and Farm as words one under the other, the picked one bold. There is always
-// one Main: picking Main on another account makes the old one an Alt, and the Main's own
-// Alt and Farm cannot be picked.
+// Editing the characters (owner, 25 Nov: "see all characters and select which one we're
+// editing"): every character's picture with its name under it; the picked
+// one is ringed, and the line under them sets it: Main, Alt, Farm, or Remove, which asks
+// in a pop-up first ("Are you sure you want to remove x?") and then takes the character off at once. There is always one Main:
+// picking Main on another character makes the old one an Alt, and the Main itself can
+// be neither changed nor removed (another character becomes the Main first). The title
+// Cancel and Save for the kinds go under the line that sets them (owner, 25 Nov).
 const ACCOUNT_KIND_WORDS: [string, string][] = [['main', 'Main'], ['alt', 'Alt'], ['farm', 'Farm']];
 
 function accountsEditor(editing: NonNullable<ProfileOptions['kindsEditing']>): string {
+  const kindOf = (account: BarAccount) => editing.kinds[String(account.row.id)] ?? String(account.row.kind);
+  const picked = editing.accounts.find(account => String(account.row.id) === editing.picked) ??
+    editing.accounts.find(account => kindOf(account) !== 'main') ?? editing.accounts[0];
   const items = editing.accounts.map(account => {
     const id = String(account.row.id);
-    const kind = editing.kinds[id] ?? String(account.row.kind);
-    const picks = ACCOUNT_KIND_WORDS.map(([value, word]) => {
-      const locked = kind === 'main' && value !== 'main';
-      return `<button type="button" class="lvl${kind === value ? ' on' : ''}" data-account-kind="${escapeForPage(id)}|${value}"` +
-        ` aria-pressed="${kind === value}"${locked ? ' disabled' : ''}>${word}</button>`;
-    }).join('');
-    return `<div class="acc"><div class="ph">${pictureOf(account.avatar, account.name)}</div>` +
-      `<span class="acc-name" title="${escapeForPage(account.name)}">${escapeForPage(account.name)}</span>` +
-      `<div class="kinds" role="group" aria-label="${escapeForPage(account.name)}">${picks}</div></div>`;
+    const isPicked = account === picked;
+    return `<div class="acc${isPicked ? ' picked' : ''}"><button type="button" class="ph" data-pick-character="${escapeForPage(id)}"` +
+      ` aria-pressed="${isPicked}" aria-label="${escapeForPage(account.name)}">${pictureOf(account.avatar, account.name)}</button>` +
+      `<span class="acc-name" title="${escapeForPage(account.name)}">${escapeForPage(account.name)}</span></div>`;
   }).join('');
-  const actions = `<span class="edit-actions"><button type="button" class="quiet cancel" data-cancel-part="kinds">${CANCEL_ICON}<span class="words">Cancel</span></button>` +
-    `<button type="button" class="quiet confirm" data-player-save="kinds"${editing.changed ? '' : ' disabled'}>${SAVE_ICON}<span class="words">Save</span></button></span>`;
-  return `<section class="accounts-edit"><h2>Accounts${actions}</h2><div class="accgrid">${items}</div>` +
-    '<small class="player-note" data-note-for="kinds"></small></section>';
+  let line = '';
+  let remove = '';
+  if (picked) {
+    const id = String(picked.row.id);
+    const kind = kindOf(picked);
+    const locked = kind === 'main';
+    // Main, Alt and Farm as choices, each with a round mark that fills for the picked one.
+    const words = ACCOUNT_KIND_WORDS.map(([value, word]) =>
+      `<button type="button" class="kind-pick${kind === value ? ' on' : ''}" role="radio" data-account-kind="${escapeForPage(id)}|${value}"` +
+      ` aria-checked="${kind === value}"${locked && value !== 'main' ? ' disabled' : ''}><span class="mark"></span>${word}</button>`).join('');
+    // Remove drawn like Cancel and Save, with a bin (owner, 25 Nov), on their line.
+    remove = `<button type="button" class="quiet cancel remove" data-account-kind="${escapeForPage(id)}|remove"${locked ? ' disabled' : ''}>` +
+      `${BIN_ICON}<span class="words">Remove</span></button>`;
+    line = `<div class="kind-line"><span class="kind-name">${escapeForPage(picked.name)}</span>` +
+      `<div class="kind-picks" role="radiogroup" aria-label="${escapeForPage(picked.name)}">${words}</div></div>`;
+  }
+  const removing = editing.accounts.find(account => String(account.row.id) === editing.removing);
+  const ask = removing ? '<div class="leave-prompt" data-remove-answer="cancel"><div class="leave-prompt-box glass" role="dialog" aria-modal="true">' +
+    `<p class="leave-prompt-text">Are you sure you want to remove ${escapeForPage(removing.name)}?</p>` +
+    '<div class="leave-prompt-actions"><button type="button" class="ghost-button" data-remove-answer="cancel">Cancel</button>' +
+    '<button type="button" class="danger-button" data-remove-answer="remove">Remove</button></div></div></div>' : '';
+  // Cancel, Remove and Save on one line under the choice (owner, 25 Nov), Cancel the
+  // neutral one, since Remove is the red one here.
+  const actions = `<div class="char-actions"><button type="button" class="quiet neutral" data-cancel-part="kinds">${NEUTRAL_CANCEL_ICON}<span class="words">Cancel</span></button>` +
+    `${remove}<button type="button" class="quiet confirm" data-player-save="kinds"${editing.changed ? '' : ' disabled'}>${SAVE_ICON}<span class="words">Save</span></button></div>`;
+  return `<section class="characters editing"><div class="accgrid">${items}</div>${line}${actions}` +
+    `<small class="player-note" data-note-for="kinds"></small></section>${ask}`;
+}
+
+// The foundry power under the power, its logo first (owner, 25 Nov). On the person's own
+// character: with none yet, the edit icon and "Add foundry power"; once it is there, the
+// edit icon alone after it, red with a dot while it is out of date, as "Update skill
+// level" is. Editing is in place: a small box where the number is, then Cancel and Save
+// as icons.
+function foundryLine(account: Row, options: ProfileOptions): string {
+  const logo = `<img src="${imageUrl('events/foundry')}" alt="Foundry">`;
+  const value = account.foundry_power ? foundryText(account.foundry_power) : '';
+  if (options.ownAccount && options.foundryEditing) {
+    const editing = options.foundryEditing;
+    return `<div class="foundry editing">${logo}<input class="svs-field foundry-field" id="player-foundry_power" data-player-field="foundry_power"` +
+      ` inputmode="numeric" autocomplete="off" aria-label="Foundry power" placeholder="Foundry power" value="${escapeForPage(editing.typed)}">` +
+      `<button type="button" class="quiet cancel" data-cancel-part="foundry" aria-label="Cancel">${CANCEL_ICON}</button>` +
+      `<button type="button" class="quiet confirm" data-player-save="foundry" aria-label="Save"${editing.changed ? '' : ' disabled'}>${SAVE_ICON}</button>` +
+      '<small class="player-note" data-note-for="foundry_power"></small></div>';
+  }
+  if (options.ownAccount) {
+    if (!value) return `<div class="foundry">${logo}<button type="button" class="remind add-foundry" data-player-edit="foundry">` +
+      `${EDIT_ICON}<span><span class="words">Add foundry power</span></span></button></div>`;
+    return `<div class="foundry">${logo}<span>${escapeForPage(value)}</span><button type="button" class="remind icon-only${options.foundryDue ? ' due' : ''}"` +
+      ` data-player-edit="foundry" aria-label="Update foundry power">${options.foundryDue ? DUE_EDIT_ICON : EDIT_ICON}<span></span></button></div>`;
+  }
+  return value ? `<div class="foundry">${logo}<span>${escapeForPage(value)}</span></div>` : '';
 }
 
 // One alliance as a badge: its tag above its logo (or its first letter where it has none).
@@ -621,15 +691,15 @@ export function addAccountPage(options: AddOptions): string {
     const tag = found.allianceTag ?? '';
     answer = `<div class="found"${colour ? ` style="--ally: ${escapeForPage(colour)}"` : ''}><div class="pic">${pictureOf(found.avatar, found.name)}</div>` +
       `<div class="who"><div class="name">${escapeForPage(found.name)}</div>` +
-      `<div class="id">${escapeForPage(tag)}${found.state && found.state !== options.homeState ? ` · State ${found.state}` : ''}</div>` +
+      `<div class="id">${escapeForPage(tag)}${found.state && found.state !== options.homeState ? ` · #${found.state}` : ''}</div>` +
       (found.power ? `<div class="power"><b>${short(found.power)}</b></div>` : '') + '</div></div>';
   } else if (lookUp.kind === 'looking') answer = '<p class="add-answer">Looking for this ID in the game.</p>';
   else if (lookUp.kind === 'missing') answer = '<p class="add-answer problem">The game has no player with this ID.</p>';
-  else if (lookUp.kind === 'taken') answer = '<p class="add-answer problem">This ID is already one of your accounts.</p>';
+  else if (lookUp.kind === 'taken') answer = '<p class="add-answer problem">This ID is already one of your characters.</p>';
   const chosen = String(draft.kind ?? 'alt');
-  const kinds = found && !options.first ? '<div class="kind-words" role="group" aria-label="Account">' + ACCOUNT_KINDS.map(([kind, label]) =>
+  const kinds = found && !options.first ? '<div class="kind-words" role="group" aria-label="Character">' + ACCOUNT_KINDS.map(([kind, label]) =>
     `<button type="button" class="kind-word${chosen === kind ? ' selected' : ''}" data-kind-pick="${kind}" aria-pressed="${chosen === kind}">${label}</button>`).join('') + '</div>' : '';
-  return '<div class="pp adding"><section class="add"><h2>Add account</h2>' +
+  return '<div class="pp adding"><section class="add"><h2>Add character</h2>' +
     '<div class="add-id"><input class="info-field id-entry" id="player-in_game_id" data-player-field="in_game_id" inputmode="numeric"' +
     ` autocomplete="off" placeholder="In-game ID" aria-label="In-game ID" value="${escapeForPage(id)}">` +
     '<small class="player-note" data-note-for="in_game_id"></small></div>' + answer + kinds +
@@ -638,8 +708,6 @@ export function addAccountPage(options: AddOptions): string {
     '</section></div>';
 }
 
-const PLUS_ICON = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"' +
-  ' aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
 const PROFILE_ICON = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"' +
   ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/>' +
   '<path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>';
@@ -652,25 +720,16 @@ const ACCOUNT_KIND_NAMES: Record<string, string> = { main: 'Main', alt: 'Alt' };
 // The menu under the player's name in the top bar: their main and alts, each with its
 // picture and name, the one they are on lit; Add account; their profile; for admins, the
 // admin pages; and signing out.
-// The menu's own edit icon: the owner's edit icon (24 Nov) in the menu's plain line.
-const MENU_EDIT_ICON = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"' +
-  ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-  '<path d="M11 3.5H7A3.5 3.5 0 0 0 3.5 7v10A3.5 3.5 0 0 0 7 20.5h10a3.5 3.5 0 0 0 3.5-3.5v-4.5"/>' +
-  '<path d="M17.6 3.2a2.3 2.3 0 0 1 3.2 3.2L12 15.2l-4.2 1 1-4.2z"/></svg>';
-
-// The menu under the name (24 Nov): no list of accounts, since the photos on the profile
-// swap between them; adding and editing accounts, the profile, Admin for admins, and
-// signing out.
-export function accountMenu(isAdmin: boolean, canEditAccounts = false): string {
+// The menu under the name (24 Nov): no list of characters, since the photos on the profile
+// swap between them, and no Edit or Add, which sit beside the characters on the profile
+// (owner, 25 Nov). In her order: Admin for admins, the profile, signing out.
+export function accountMenu(isAdmin: boolean): string {
   const item = (attributes: string, icon: string, label: string, extra = '') =>
     `<button type="button" class="account-menu-item${extra}" role="menuitem" ${attributes}>` +
     `<span class="account-menu-plus">${icon}</span>${label}</button>`;
   return '<div class="account-menu glass" role="menu">' +
-    item('data-add-account', PLUS_ICON, 'Add account') +
-    // With a second account (an alt or a farm) there is something to set.
-    (canEditAccounts ? item('data-edit-accounts', MENU_EDIT_ICON, 'Edit accounts') : '') +
-    item('data-page="player"', PROFILE_ICON, 'Profile') +
     (isAdmin ? item('data-page="admin"', GEAR, 'Admin') : '') +
+    item('data-page="player"', PROFILE_ICON, 'Profile') +
     item('data-sign-out', SIGN_OUT_ICON, 'Sign out', ' danger') + '</div>';
 }
 
@@ -689,7 +748,7 @@ export function accountQuestion(accounts: BarAccount[]): string {
     `<span class="account-choice-text"><span class="account-choice-kind">${ACCOUNT_KIND_NAMES[String(account.row.kind)] ?? ''}</span>` +
     `<span class="account-choice-name">${escapeForPage(account.name)}</span></span><span class="save-for-tick">${TICK}</span></button>`).join('');
   return '<div class="leave-prompt" data-save-for="cancel"><div class="leave-prompt-box glass" role="dialog" aria-modal="true">' +
-    '<p class="leave-prompt-text">Save for which accounts?</p>' +
+    '<p class="leave-prompt-text">Save for which characters?</p>' +
     `<div class="save-for-list">${choices}</div>` +
     '<div class="leave-prompt-actions"><button type="button" class="ghost-button" data-save-for="cancel">Cancel</button>' +
     '<button type="button" class="primary-button" data-save-for="save" disabled>Save</button></div></div></div>';
@@ -710,8 +769,18 @@ export function fitPlayerPage(root: ParentNode = document): void {
     let size = parseFloat(getComputedStyle(items[0]).fontSize);
     while (Math.max(...items.map(textWidth)) > room && size > smallest) { size -= 0.25; for (const one of items) one.style.fontSize = size + 'px'; }
   };
+  // On a phone the boards share the width in equal columns, so their names shrink together
+  // to fit one; on a computer each board is as wide as its name.
   const caps = Array.from(root.querySelectorAll<HTMLElement>('.pp .grid .board .cap'));
-  if (caps.length) shrinkTogether(caps, (caps[0].parentElement as HTMLElement).getBoundingClientRect().width - 4, 9);
+  if (window.innerWidth < 1000) {
+    if (caps.length) shrinkTogether(caps, (caps[0].parentElement as HTMLElement).getBoundingClientRect().width - 4, 9);
+  } else for (const one of caps) one.style.fontSize = '';
+  // On a phone the alliance badge sits with its foot on the foundry line (owner, 25 Nov):
+  // the text is centred on the picture, so the badge is raised by the space under the text.
+  for (const page of Array.from(root.querySelectorAll<HTMLElement>('.pp'))) {
+    const who = page.querySelector<HTMLElement>('.chief .who');
+    if (who) page.style.setProperty('--who-height', who.offsetHeight + 'px');
+  }
   const heroLines = Array.from(root.querySelectorAll<HTMLElement>('.pp .arena .detail'));
   if (heroLines.length) shrinkTogether(heroLines, (heroLines[0].parentElement as HTMLElement).getBoundingClientRect().width, 8);
 }

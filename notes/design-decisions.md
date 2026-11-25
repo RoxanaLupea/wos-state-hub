@@ -892,3 +892,46 @@ All nine are built.
 - "We also said that the MONDAY/TUESDAY and so on will be fixed and only the calendar
   scrolls" (25 Nov): on a phone the day names stay under the top bar while the weeks
   scroll, taking the bar's tone once held; a computer already scrolls only the weeks.
+- Day names and dates while the calendar scrolls (25 Nov): "the days and date stay on, once
+  we've passed a line of dates - they're not visible anymore or they're next to the days
+  bar, then we display them at the top, so only the actual numbers change when we scrolled
+  to the next week, on both phone and pc"
+- Phone calendar (25 Nov): "the filters and all that should always be visible and the head
+  of the table stays the same, only the rest of the calendar scrolls, and when we move from
+  week to month i need the month to open at the top and see a short animation of it
+  scrolling to the current week"
+- Player leaderboards (25 Nov): "research chief gear and charms are a group, in this order,
+  then Hero power, pet power, expert power, then Exploration, island, labyrinth".
+  "Labyrinth stages will be like a subsection under the leaderboards, I don't like how
+  it's hanging now."
+- The menu under the name (25 Nov): "Admin, Profile, Edit, Add, sign out - and we need a
+  way to remove a character too, and rename accounts to characters". Then: "We're removing
+  the edit from there and adding it next to accounts like we did in other pages".
+- Characters on the profile (25 Nov): "I think edit and add can go next to characters and
+  if someone doesn't have any then we only see the add, that should clean the menu". On
+  editing: "I don't like how the edit thing looks, it's hard to use, so what if we see all
+  characters and select which one we're editing?" (her screenshots to follow).
+- Removing a character (25 Nov): "removing needs a confirmation pop-up".
+- Editing characters (25 Nov): "it's not clear that main alt and farm are options, remove
+  needs a trashcan like cancel and save"; "remove and the options slightly smaller than the
+  character name, same size as the cancel and save font". Pop-up: "Are you sure you want to
+  remove x?", nothing under the names but the names.
+- Labyrinth stages (25 Nov): "in caps, a slightly smaller font than Leaderboard and an arrow
+  to expand, expanded by default on pc".
+- Foundry power on the profile (25 Nov): "I also want the foundry logo to show up with an
+  edit logo asking to add it if we don't have it and update same as the skill if it's not
+  up to date, but in place, once we add it the first time just the icon will be displayed".
+- Profile (25 Nov): "I don't think I want the "CHARACTERS" title, instead the Edit and add
+  icons go under them on the phone, on the right after the last character on the pc";
+  "on pc: TROOPS, ARENA TEAM, LEADERBOARDS all in bigger font or bigger weight or both,
+  LABYRINTH STAGES slightly smaller"; "state 1252 becomes #1252"; "the photo should be
+  bigger than the total text height, I like the proportions in the ss" (her own profile:
+  the picture about a third taller than the text beside it).
+- Profile (25 Nov): "save and cancel go under ofc, edit and add have too much space between
+  the characters and them, the DVL and alliance logo are too low, align it to the bottom
+  with the foundry data". "the way the leaderboard data is centered works very well on
+  mobile, not so well on pc, make sure the 3 categories are spaced equally and each
+  leaderboard in it".
+- Spacing (25 Nov): "I don't like how you add a bunch of space everywhere, same distance
+  above and below a row, when some things are connected then it doesn't make sense to
+  have them so distanced from each other".

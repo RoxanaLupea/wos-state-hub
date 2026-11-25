@@ -312,7 +312,7 @@ function powerText(value: unknown): string {
 
 export function membersPage(context: WorkContext, familyIds: string[]): string {
   if (!context.myAllianceId) {
-    return page([workSection('Members', '<p class="work-empty">The account you are on is not in one of our alliances.</p>')]);
+    return page([workSection('Members', '<p class="work-empty">The character you are on is not in one of our alliances.</p>')]);
   }
   // The members are the alliance's roster as the game last showed it. A member who has
   // linked the account on the site shows whether it is a main, an alt or a farm (with
@@ -332,7 +332,7 @@ export function membersPage(context: WorkContext, familyIds: string[]): string {
     const people = members.slice().sort((left, right) => (Number(right.member.power) || 0) - (Number(left.member.power) || 0));
     const columns: Column<RosterEntry>[] = [
       { label: 'Name', cell: entry => text(entry.member.nick_name) + `<small>${text(entry.member.chief_id)}</small>` },
-      { label: 'Account', cell: entry => {
+      { label: 'Character', cell: entry => {
         const link = linkOf(entry);
         if (!link) return '—';
         return link.kind === 'main' ? 'Main' : `${link.kind === 'farm' ? 'Farm' : 'Alt'}<small>${text(mainNameOf(link.owner_id))}</small>`;

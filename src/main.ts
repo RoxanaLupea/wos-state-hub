@@ -53,7 +53,7 @@ import {
 } from './data/editing.ts';
 import { PENCIL_ICON, allianceTimeForm, dateChangeForm, editButton, fortForm, pencilButton, scheduleForm } from './ui/edit-forms.ts';
 import { deleteRow, loadRows, saveRow, type Row } from './data/records.ts';
-import { saveGameAccount, setGameAccountKinds } from './data/player-profile.ts';
+import { removeGameAccount, saveGameAccount, setGameAccountKinds } from './data/player-profile.ts';
 import {
   accountColour, accountMenu, accountQuestion, filterFoundryPower, fitPlayerPage, foundryText, filterId, gameReadOf, idProblem, rosterEntriesOf, stateBoardsOf, TROOP_KINDS, withRoster,
   type AllianceMove, type BarAccount, type BoardEntry, type GameRead, type LookUpState, type RosterEntry, type SkillLevels, type TroopKind
@@ -205,8 +205,6 @@ const listedDraft: Row = {};
 const kindsDraft: Row = {};
 // An event's answer waiting for "Save for which accounts?" (only with alts).
 let pendingAccountSave: { formName: string; key: string; values: FormData } | null = null;
-// Whether the Labyrinth's six areas are open under the leaderboards.
-let labyrinthOpen = false;
 // The state's top-100 boards, by in-game ID, read once with the accounts' game data.
 let stateBoards = new Map<string, Record<string, BoardEntry>>();
 // What the game says about the person's accounts, by in-game id, and the skill levels of
@@ -979,6 +977,39 @@ function scrollPlaces(app: HTMLElement): ScrollPlaces {
   };
 }
 
+// The Labyrinth's stages opened or closed by the player; null until they tap the title,
+// and then a phone starts with them closed and a computer with them open (owner, 25 Nov).
+let labyrinthOpen: boolean | null = null;
+
+// While the characters are edited (25 Nov): the one picked for editing, and the one
+// waiting for its removal to be confirmed.
+let pickedCharacter: string | null = null;
+let removingCharacter: string | null = null;
+
+// Removing a character, once confirmed in the pop-up (owner, 25 Nov): it goes at once,
+// whatever else is being edited. The one the player was on gives way to the main.
+async function removeCharacter(id: string): Promise<void> {
+  try {
+    await removeGameAccount(Number(id));
+  } catch (problem) {
+    removingCharacter = null;
+    draw();
+    showPlayerNote('kinds', problem instanceof Error ? problem.message : String(problem));
+    return;
+  }
+  removingCharacter = null;
+  if (pickedCharacter === id) pickedCharacter = null;
+  tableRows.set('game_accounts', (tableRows.get('game_accounts') ?? []).filter(row => String(row.id) !== id));
+  delete kindsDraft['kind:' + id];
+  if (typeof openGameAccount === 'number' && String(openGameAccount) === id) {
+    const main = myGameAccounts().find(one => one.kind === 'main');
+    openGameAccount = main ? Number(main.id) : null;
+  }
+  // With only the main left there is nothing more to set.
+  if (allMyAccounts().length < 2) { dropDraft('kinds'); playerEditing.delete('kinds'); }
+  draw();
+}
+
 // Whether the calendar has been drawn yet in this visit: its first drawing shows today.
 let calendarShownBefore = false;
 
@@ -1238,7 +1269,7 @@ function drawPage(app: HTMLElement): void {
     // Signed in: the name and picture of the game account they are on, otherwise "Me".
     playerName: person ? (onAccount ? barAccountOf(onAccount).name : '') || 'Me' : null,
     playerPicture: onAccount ? barAccountOf(onAccount).avatar : null,
-    accountMenu: person ? accountMenu(isAdmin(person), allMyAccounts().length > 1) : null,
+    accountMenu: person ? accountMenu(isAdmin(person)) : null,
     eventTypeId: currentEventTypeId()
   });
   // The open section's colour goes on the page's root, so the band, the page and any
@@ -2049,7 +2080,7 @@ function handleSubmits(event: SubmitEvent): void {
 
 // The parts of the player's page that are saved with their own Save button: the skill
 // levels of the Exalted troops, an account being added, and what each account is.
-const PLAYER_PARTS = ['troops', 'listed', 'kinds'];
+const PLAYER_PARTS = ['troops', 'listed', 'kinds', 'foundry'];
 
 // What each part of the page changes. Name, power, alliance, troops and heroes come
 // from the game; the player sets only the skill levels of Exalted troops, and the ID and
@@ -2057,6 +2088,7 @@ const PLAYER_PARTS = ['troops', 'listed', 'kinds'];
 function partColumns(part: string): string[] {
   if (part === 'listed') return ['kind', 'in_game_id'];
   if (part === 'kinds') return allMyAccounts().map(row => 'kind:' + String(row.id));
+  if (part === 'foundry') return ['foundry_power'];
   return TROOP_KINDS.map(([kind]) => kind + '_skill_level');
 }
 
@@ -2230,12 +2262,16 @@ function profileOptions(): ProfileOptions | null {
     kindsEditing: playerEditing.has('kinds') ? {
       accounts: allMyAccounts().map(barAccountOf),
       kinds: Object.fromEntries(allMyAccounts().map(one => [String(one.id), String(draftValue('kind:' + String(one.id), 'kinds'))])),
-      changed: partHasChanges('kinds')
+      changed: partHasChanges('kinds'), picked: pickedCharacter, removing: removingCharacter
     } : null,
     ownAccount: own, skills: skillsOf(id), skillDraft,
     editingTroops: editingTroops, troopsMotion,
     troopsChanged: partHasChanges('troops') || levelsToConfirm('troops'),
-    skillsDue: own && skillsNeedALook(row), labyrinthOpen
+    skillsDue: own && skillsNeedALook(row), labyrinthOpen,
+    foundryEditing: own && playerEditing.has('foundry') ? {
+      typed: foundryText(draftValue('foundry_power', 'foundry')), changed: partHasChanges('foundry')
+    } : null,
+    foundryDue: own && foundryNeedsALook(row)
   };
 }
 
@@ -2383,7 +2419,33 @@ function allianceIdOfAccount(row: Row): string | null {
 
 async function savePlayerPart(part: string): Promise<boolean> {
   if (!person || !(partHasChanges(part) || levelsToConfirm(part))) return true;
-  return part === 'troops' ? saveSkillLevels() : part === 'kinds' ? saveAccountKinds() : saveNewAccount();
+  return part === 'troops' ? saveSkillLevels() : part === 'kinds' ? saveAccountKinds() : part === 'foundry' ? saveFoundryPower() : saveNewAccount();
+}
+
+// The foundry power of the character the player is on, with when it was set, so the page
+// knows when it is out of date.
+async function saveFoundryPower(): Promise<boolean> {
+  const row = myAccountRow();
+  if (!person || !row) return false;
+  const fields = { foundry_power: playerDraft.foundry_power ?? null, foundry_power_updated_at: new Date().toISOString() };
+  try {
+    Object.assign(row, await saveGameAccount(Number(row.id), person.userId, String(row.kind) as 'main' | 'alt' | 'farm', fields));
+  } catch (problem) {
+    showPlayerNote('foundry_power', problem instanceof Error ? problem.message : String(problem));
+    return false;
+  }
+  dropDraft('foundry');
+  playerEditing.delete('foundry');
+  return true;
+}
+
+// Foundry power is out of date a month after it was set (as the skill levels are).
+function foundryNeedsALook(row: Row): boolean {
+  if (!row.foundry_power) return false;
+  const updated = Date.parse(String(row.foundry_power_updated_at ?? ''));
+  const monthAgo = new Date();
+  monthAgo.setMonth(monthAgo.getMonth() - 1);
+  return Number.isNaN(updated) || updated < monthAgo.getTime();
 }
 
 // What each account is, saved together. The account the player is on stays theirs unless
@@ -2511,12 +2573,11 @@ async function answerLeave(answer: string): Promise<void> {
 }
 
 // Whatever was open on the player's page closes: the skill levels, an account being
-// added, the Labyrinth's areas.
+// added.
 function closePlayerParts(): void {
   for (const part of PLAYER_PARTS) dropDraft(part);
   playerEditing.clear();
   lookUp = { kind: 'none' };
-  labyrinthOpen = false;
 }
 
 function handlePlayerPicks(target: HTMLElement): boolean {
@@ -2568,6 +2629,8 @@ function handlePlayerPicks(target: HTMLElement): boolean {
     leaveParts(PLAYER_PARTS, () => {
       closePlayerParts();
       openListed = null;
+      pickedCharacter = null;
+      removingCharacter = null;
       playerEditing.add('kinds');
       view.openPage = 'player';
       view.openSubPage = '';
@@ -2576,9 +2639,35 @@ function handlePlayerPicks(target: HTMLElement): boolean {
     });
     return true;
   }
+  const stagesButton = target.closest<HTMLElement>('[data-labyrinth-stages]');
+  if (stagesButton) {
+    labyrinthOpen = !(labyrinthOpen ?? window.innerWidth >= 1000);
+    draw();
+    return true;
+  }
+  const characterPick = target.closest<HTMLElement>('[data-pick-character]');
+  if (characterPick) {
+    pickedCharacter = characterPick.dataset.pickCharacter ?? null;
+    draw();
+    return true;
+  }
+  const removeAnswer = target.closest<HTMLElement>('[data-remove-answer]');
+  if (removeAnswer) {
+    // Tapping beside the question is the same as Cancel.
+    if (removeAnswer.dataset.removeAnswer === 'cancel' && target.closest('.leave-prompt-box') && !target.closest('button')) return true;
+    if (removeAnswer.dataset.removeAnswer === 'remove' && removingCharacter) void removeCharacter(removingCharacter);
+    else { removingCharacter = null; draw(); }
+    return true;
+  }
   const accountKindPick = target.closest<HTMLButtonElement>('[data-account-kind]');
   if (accountKindPick && !accountKindPick.disabled) {
     const [id, kind] = (accountKindPick.dataset.accountKind as string).split('|');
+    // Remove asks first, in a pop-up (owner, 25 Nov).
+    if (kind === 'remove') {
+      removingCharacter = id;
+      draw();
+      return true;
+    }
     // Always one main: a new main makes the old one an alt.
     if (kind === 'main') {
       for (const row of allMyAccounts()) {
@@ -2618,12 +2707,6 @@ function handlePlayerPicks(target: HTMLElement): boolean {
     dropDraft(part);
     playerEditing.delete(part);
     if (part === 'listed') { openListed = null; lookUp = { kind: 'none' }; }
-    draw();
-    return true;
-  }
-  const stagesButton = target.closest<HTMLElement>('[data-labyrinth-stages]');
-  if (stagesButton) {
-    labyrinthOpen = !labyrinthOpen;
     draw();
     return true;
   }
@@ -2695,7 +2778,7 @@ function filterPlayerTyping(event: Event): void {
   // Foundry power is written with its thousands marked while it is typed, as it is shown.
   const shown = field === 'foundry_power' ? foundryText(kept) : kept;
   if (shown !== input.value) input.value = shown;
-  const part = 'listed';
+  const part = field === 'foundry_power' ? 'foundry' : 'listed';
   draftFor(part)[field] = field === 'foundry_power' ? (kept === '' ? null : Number(kept)) : kept;
   showPlayerNote(field, '');
   if (field === 'in_game_id') lookUpTypedId(kept);

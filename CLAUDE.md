@@ -51,6 +51,11 @@ before she finds them. The notes give the site's look; they do not design the pa
 5. Design with quick mockups first (25 Nov): less building, more thinking, faster
    delivery. Build it properly in the code only once she lands on an idea.
 
+Spacing shows what belongs together (Roxanne, 25 Nov): things that are connected sit
+close (a choice and the Cancel and Save under it, a part and its own sub-part); only
+separate sections get the larger gaps. Never the same distance above and below
+everything.
+
 Panels follow the same rules, set once and inherited (notes/page-style.md, "Event
 panels"): we design using them, and an exception changes only what makes it one
 (Roxanne, 25 Nov).
@@ -65,6 +70,8 @@ change may move. She must be able to count on the work without inspecting it clo
 
 - Pushing and writing to the database: say in a few lines what changed and what is still
   open, then wait for a clear yes to that exact action.
+- A "yes, but…" that adds something new is a yes only to what was shown: build the new
+  part, show it, and ask again before pushing (25 Nov).
 - Game information she gives (screenshots, numbers) goes into the database right away,
   with her as the source that confirms it: updated_by her account and a "source" detail
   (25 Nov). Data from other sites (WoS Oracle) says so in its source.
