@@ -5,6 +5,7 @@
 // skill levels of Exalted troops and adds their other accounts.
 // The game's data is read by the database (supabase/game-refresh.sql, fresh-reads.sql); a
 // refresh can be asked once the game was last read over an hour ago.
+import { EDIT_ICON } from './edit-forms.ts';
 import './player-profile.css';
 import { escapeForPage } from './escape.ts';
 import { imageUrl } from './event-icon.ts';
@@ -320,11 +321,7 @@ function freshLine(game: GameRead | null, id: string, now: number, where: 'top' 
 // The skill levels of Exalted troops are the one thing typed here.
 export type SkillLevels = Partial<Record<TroopKind, number | null>>;
 
-const EDIT_ICON = '<svg class="edit-icon" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="edit-icon-colour" x1="0" y1="0" x2="1" y2="1">' +
-  '<stop offset="0" style="stop-color: var(--edit-colour)"/><stop offset="1" style="stop-color: var(--text)"/></linearGradient></defs>' +
-  '<g fill="none" stroke="url(#edit-icon-colour)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
-  '<path d="M11 3.5H7A3.5 3.5 0 0 0 3.5 7v10A3.5 3.5 0 0 0 7 20.5h10a3.5 3.5 0 0 0 3.5-3.5v-4.5"/>' +
-  '<path d="M17.6 3.2a2.3 2.3 0 0 1 3.2 3.2L12 15.2l-4.2 1 1-4.2z"/></g></svg>';
+// The edit icon is shared with every page (edit-forms.ts).
 
 // Cancel (a cross) and Save (a tick) in the edit icon's style: a rounded line running from
 // the button's tint into white (the tint is set by .quiet.cancel and .quiet.confirm).

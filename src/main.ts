@@ -60,9 +60,10 @@ import {
 } from './ui/player-profile.ts';
 import { askGameRefresh, lookUpGameAccount, readGamePlayers, readGameRosters, readPlayerAlliances, readStateRanks, readSkillLevels, setSkillLevel, settleAllianceMove } from './data/game-data.ts';
 import {
-  ALLIANCE_RESULT_EVENTS, allianceResultsPage, championshipStars, opponentNotesPage, resultsTab, showdownScoreOf,
+  ALLIANCE_RESULT_EVENTS, allianceResultsPage, championshipStars, opponentNotesPage, resultsTab, resultsTabActions, showdownScoreOf,
   svsHistorySection
 } from './ui/results.ts';
+import { shortPoints } from './ui/svs-results.ts';
 import { personalEntryForm, personalEntryOf } from './ui/personal-entry.ts';
 import {
   academiesPage, availabilityPage, facilitiesPage, membersPage, planPage, requestsPage, rolesPage,
@@ -519,6 +520,10 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
   const dayInEvent = Math.min(Math.max(day - occurrence.startDay + 1, 1), occurrence.lengthDays);
 
   view.rewardView.ownBand = ownRewardBands();
+  const resultsOptions = {
+    context: workContext(), eventTypeId: occurrence.eventTypeId, runDate: resultRunDate(occurrence, nearby),
+    stateNumber: Number(STATE_NUMBER), isSwitchedOff: resultsSwitchedOff
+  };
   return eventPanel(occurrence, {
     tree, day, dayOfEvent: dayInEvent,
     allianceTags: occurrence.allianceIds.length
@@ -535,10 +540,8 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
     editFormHtml: headFormOf(occurrence),
     fortBattlesHtml: occurrence.eventTypeId === 'fortress-battles'
       ? fortBattlesHtmlOf(occurrence.startDay, occurrence.endDay, myAllianceIds) : '',
-    resultsHtml: resultsTab({
-      context: workContext(), eventTypeId: occurrence.eventTypeId, runDate: resultRunDate(occurrence, nearby),
-      stateNumber: Number(STATE_NUMBER), isSwitchedOff: resultsSwitchedOff
-    }),
+    resultsHtml: resultsTab(resultsOptions),
+    tabActions: { results: resultsTabActions(resultsOptions) },
     personalHtml: personalEntryForm({
       occurrence, category: categoryOf(occurrence.eventTypeId), userId: person?.userId ?? null,
       entries: person ? rowsOf('personal_entries') : []
@@ -818,7 +821,7 @@ function workContext(): WorkContext {
     run: run ? { eventTypeId: run.eventTypeId, date: textFromDay(run.startDay) } : null,
     editing: view.editing,
     choiceOf: name => workChoices.get(name) ?? '',
-    isAdmin: isAdmin(person), managesState: managesState(person), managesBattles: managesBattles(person),
+    isAdmin: isAdmin(person), isOwner: isOwner(person), managesState: managesState(person), managesBattles: managesBattles(person),
     leads: allianceId => leadsAlliance(person, allianceId),
     mayReadBlacklist: isAdmin(person) || Boolean(person?.roles.some(one => one.role === 'alliance_manager')),
     troopsOf: troopsOfAccount,
@@ -1699,6 +1702,24 @@ function handleClicks(event: MouseEvent): void {
     return;
   }
 
+  // A + under a list being edited adds one more row, numbered after the last.
+  const addRow = target.closest<HTMLElement>('[data-add-row]');
+  if (addRow) {
+    const list = addRow.parentElement?.parentElement;
+    const template = list?.querySelector<HTMLTemplateElement>('template[data-row-template]');
+    if (list && template) {
+      const count = list.querySelectorAll('[data-row]').length;
+      const row = template.content.firstElementChild?.cloneNode(true) as HTMLElement | undefined;
+      if (row) {
+        const number = row.querySelector('[data-row-number]');
+        if (number) number.textContent = String(count + 1);
+        template.before(row);
+        row.querySelector<HTMLInputElement>('input')?.focus();
+      }
+    }
+    return;
+  }
+
   const workChoice = target.closest<HTMLElement>('[data-work-choice]');
   if (workChoice) {
     const [name, value] = (workChoice.dataset.workChoice as string).split('|');
@@ -1818,6 +1839,65 @@ function handleClicks(event: MouseEvent): void {
 const WORKING_FORMS = ['rally-lead', 'fort-reserve', 'buff-share', 'availability', 'roster', 'roster-member', 'plan', 'academy', 'facility', 'setting', 'role',
   'result', 'personal', 'alliance-records', 'opponent-note', 'transfer-window', 'candidate', 'candidate-status',
   'candidate-flag', 'blacklist'];
+
+// An SvS's points as whole numbers: "7,480,314,895" and "7480314895" are the same; "11.03B"
+// and "645.9M" are read too.
+function pointsFromText(value: string): string {
+  const clean = value.replace(/[\s,]/g, '');
+  if (!clean) return '';
+  const short = /^(\d+(?:\.\d+)?)([BMK])$/i.exec(clean);
+  if (short) {
+    const times = { B: 1e9, M: 1e6, K: 1e3 }[short[2].toUpperCase() as 'B' | 'M' | 'K'];
+    return String(Math.round(Number(short[1]) * times));
+  }
+  if (!/^\d+$/.test(clean)) throw new Error(`"${value}" is not a number of points.`);
+  return clean;
+}
+
+// "02:14:01" (or "2:14:01", or "53:39") as seconds.
+function secondsFromText(value: string): number {
+  const parts = value.trim().split(':').map(Number);
+  if (!parts.length || parts.some(part => !Number.isInteger(part) || part < 0) || parts.length > 3) {
+    throw new Error(`"${value}" is not a time held (02:14:01).`);
+  }
+  return parts.reduce((total, part) => total * 60 + part, 0);
+}
+
+// The SvS editor's fields turned into what an SvS keeps: points as whole numbers, each
+// Occupation Ranking row as detail hold_N ("ours|DVL|7090", ours when the tag is one of
+// our alliances), the State of Power result from the two parts, and the president
+// ("[DVL]name") as our alliance or, for an outside one, the tag as a detail.
+function svsDetailsFromEdit(values: FormData): { allianceId: string | null; name: string | null } {
+  const pointFields: string[] = [];
+  values.forEach((_value, name) => { if (name.startsWith('detail_points_')) pointFields.push(name); });
+  for (const name of pointFields) {
+    // A short number left as it was keeps the exact one it stood for.
+    const exact = String(values.get('exact_' + name) ?? '');
+    const typed = String(values.get(name) ?? '').trim();
+    values.set(name, exact && typed === shortPoints(Number(exact)) ? exact : pointsFromText(typed));
+  }
+  const tags = values.getAll('hold_tag').map(one => String(one).trim());
+  const times = values.getAll('hold_time').map(one => String(one).trim());
+  // The rows are typed in any order and sorted on saving, longest hold first.
+  const holds: { side: string; tag: string; seconds: number }[] = [];
+  tags.forEach((tag, index) => {
+    if (!tag && !times[index]) return;
+    if (!tag) throw new Error('Each row of the ranking needs its alliance tag.');
+    holds.push({ side: alliances.some(one => one.tag === tag) ? 'ours' : 'theirs', tag, seconds: secondsFromText(times[index] || '0') });
+  });
+  holds.sort((left, right) => right.seconds - left.seconds)
+    .forEach((hold, index) => values.set('detail_hold_' + (index + 1), `${hold.side}|${hold.tag}|${hold.seconds}`));
+  const preparation = String(values.get('detail_preparation') ?? '');
+  const battle = String(values.get('detail_castle_battle') ?? '');
+  if (preparation && battle) values.set('detail_result', preparation === battle ? preparation : 'draw');
+  const president = String(values.get('president') ?? '').trim();
+  const match = /^\[([^\]]+)\]\s*(.+)$/.exec(president);
+  if (president && !match) throw new Error('Write the president as in the game: [DVL]name.');
+  if (!match) return { allianceId: null, name: null };
+  const ours = alliances.find(one => one.tag === match[1]);
+  if (!ours) values.set('detail_president_tag', match[1]);
+  return { allianceId: ours?.id ?? null, name: match[2].trim() };
+}
 
 // The transfer pages read their own copy of the windows and candidates.
 async function reloadTransfers(): Promise<void> {
@@ -2760,10 +2840,15 @@ async function saveWorkingForm(
     const outcome = orNull('outcome') ?? (['win', 'loss'].includes(text('detail_outcome')) ? text('detail_outcome') : null);
     const before = (tableRows.get('results') ?? []).find(one => String(one.id) === existingId);
     const rank = whole('rank');
+    // An SvS edited in place: its points, Occupation Ranking and president are turned into
+    // the details and columns it is kept as, and its State of Power result follows from
+    // its two parts.
+    const president = eventTypeId === 'svs' ? svsDetailsFromEdit(values) : null;
     const saved = await saveRow('results', {
       id: existingId ? Number(existingId) : undefined, event_type_id: eventTypeId, event_date: date,
       alliance_id: allianceId, state_alliance_id: orNull('state_alliance_id'),
       outcome, rank, note: orNull('note'),
+      ...(president ? { president_alliance_id: president.allianceId, president_name: president.name } : {}),
       updated_by: userId, updated_at: now
     });
     // A Championship group rank adds the alliance's Stars for its tier; changing a rank

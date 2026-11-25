@@ -60,7 +60,7 @@ export function svsResult(options: SvsResultOptions): string {
 }
 
 // Points as the game's big numbers read at a glance: 11.03B, 645.9M.
-function shortPoints(value: number): string {
+export function shortPoints(value: number): string {
   if (value >= 1e9) return (value / 1e9).toFixed(2) + 'B';
   if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
   return value.toLocaleString('en-US');
@@ -156,4 +156,104 @@ function stateOfPowerPart(run: SvsRun): string {
       `<span class="${side}">[${escapeForPage(run.president.tag)}]${escapeForPage(run.president.name)}</span></div>`;
   }
   return '<section class="svs-part state-of-power">' + partTitle('State of Power', run.result) + president + '</section>';
+}
+
+// ---------------------------------------------------------------------------
+// Editing in place: the same layout, with every value in a light glass field. Only the
+// owner gets here, from the edit icon on the tabs' line; Save goes back to the results.
+// ---------------------------------------------------------------------------
+
+export const SVS_EDIT_FORM_ID = 'svs-result-form';
+
+export interface SvsEditOptions {
+  run: SvsRun;
+  ourState: number;
+  dayNameOf: (dayNumber: number) => string;
+  // The form's key: "svs|<date>||<result id>".
+  formKey: string;
+  // Kept as it is: which of our alliances held the castle, from the old records.
+  castleAllianceId: string;
+}
+
+const PLUS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" ' +
+  'stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
+
+function field(name: string, value: string, extra = '', className = 'svs-field'): string {
+  return `<input class="${className}" name="${name}" value="${escapeForPage(value)}" autocomplete="off"${extra}>`;
+}
+
+function numberField(name: string, value: number | null | undefined): string {
+  return field(name, value === null || value === undefined || !Number.isFinite(value) ? '' : String(value),
+    ' inputmode="numeric"');
+}
+
+// Points read as on the results (11.03B), so the layout stays the same. The exact number
+// goes with it, and is kept when the short one is left as it was.
+function pointsField(name: string, value: number | null | undefined): string {
+  const className = 'svs-field';
+  if (value === null || value === undefined || !Number.isFinite(value)) return field(name, '', ' inputmode="decimal"', className);
+  return field(name, shortPoints(value), ' inputmode="decimal"', className) +
+    `<input type="hidden" name="exact_${name}" value="${value}" data-short="${shortPoints(value)}">`;
+}
+
+// WIN and LOSS as words in place; the chosen one is white.
+function outcomeChoice(name: string, outcome: Outcome): string {
+  return '<span class="svs-choices">' + (['win', 'loss'] as const).map(choice =>
+    `<label><input type="radio" name="${name}" value="${choice}"${outcome === choice ? ' checked' : ''}>` +
+    `<span>${outcomeWord(choice)}</span></label>`).join('') + '</span>';
+}
+
+function holdRow(place: number, hold: SvsHold | null, longest = 1): string {
+  return `<div class="svs-hold ${hold?.side ?? 'blank'}${place === 1 ? ' first' : ''}" data-row>` +
+    `<span class="svs-rank" data-row-number>${place}</span>` +
+    field('hold_tag', hold?.tag ?? '', ' maxlength="4" aria-label="Alliance tag"', 'svs-field svs-pill-field') +
+    `<span class="svs-track"><i style="--share:${hold ? ((100 * hold.seconds) / longest).toFixed(1) : 0}"></i></span>` +
+    field('hold_time', hold ? holdTime(hold.seconds) : '', ' placeholder="00:00:00" inputmode="numeric" aria-label="Time held"', 'svs-field svs-time-field') +
+  '</div>';
+}
+
+export function svsResultEditor(options: SvsEditOptions): string {
+  const { run } = options;
+  const castle = `<img class="svs-castle" src="${imageUrl('castle-battle')}" alt="">`;
+  const foughtIn = battleFoughtIn(run);
+  const points = run.points;
+  const days = [1, 2, 3, 4, 5].map(day => {
+    const [ourDay, theirDay] = points?.days[day - 1] ?? [NaN, NaN];
+    return '<div class="svs-day"><div class="svs-day-values">' +
+      pointsField(`detail_points_ours_${day}`, ourDay) +
+      `<span class="svs-day-name">${escapeForPage(options.dayNameOf(day))}</span>` +
+      pointsField(`detail_points_theirs_${day}`, theirDay) +
+      '</div>' + splitBar(Number.isFinite(ourDay) ? ourDay : 0, Number.isFinite(theirDay) ? theirDay : 0, false) + '</div>';
+  }).join('');
+  // The Battle starts with one field and a + button.
+  const longest = Math.max(1, ...run.holds.map(hold => hold.seconds));
+  const holds = run.holds.length ? run.holds.map((hold, index) => holdRow(index + 1, hold, longest)).join('') : holdRow(1, null);
+  const president = run.president ? `[${run.president.tag}]${run.president.name}` : '';
+  const isSupreme = !!run.preparation && run.preparation === run.battle;
+  return `<form class="svs-result editing" id="${SVS_EDIT_FORM_ID}" data-form="result" data-key="${escapeForPage(options.formKey)}">` +
+    `<input type="hidden" name="state_alliance_id" value="${escapeForPage(options.castleAllianceId)}">` +
+    '<div class="svs-states">' +
+      `<span class="svs-state ours">#${options.ourState}${foughtIn === 'ours' ? castle : ''}</span>` +
+      '<span class="svs-vs">VS</span>' +
+      `<span class="svs-state theirs">${foughtIn === 'theirs' ? castle : ''}#` +
+        numberField('opponent_state', run.opponentState) + '</span>' +
+    '</div>' +
+    '<section class="svs-part preparation"><h3 class="part-title">Preparation' +
+      outcomeChoice('detail_preparation', run.preparation) + '</h3>' +
+      '<div class="svs-totals">' + pointsField('detail_points_ours', points?.ours) + pointsField('detail_points_theirs', points?.theirs) + '</div>' +
+      splitBar(points?.ours ?? 0, points?.theirs ?? 0, true) +
+      `<div class="svs-days">${days}</div></section>` +
+    '<section class="svs-part battle"><h3 class="part-title">Battle' + outcomeChoice('detail_castle_battle', run.battle) + '</h3>' +
+      `<div class="svs-holds">${holds}` +
+      `<template data-row-template>${holdRow(0, null)}</template>` +
+      `<div class="svs-plus-row"><button type="button" class="svs-plus" data-add-row aria-label="Add an alliance">${PLUS}</button></div>` +
+      '</div></section>' +
+    // The State of Power result follows from the two parts when saved.
+    '<section class="svs-part state-of-power">' + partTitle('State of Power', run.result) +
+      '<div class="svs-president">' +
+        `<img src="${imageUrl(isSupreme ? 'supreme-president' : 'president')}" alt="">` +
+        field('president', president, ' placeholder="[Tag]name" aria-label="President"') +
+      '</div></section>' +
+    '<p class="form-message" data-form-message></p>' +
+  '</form>';
 }

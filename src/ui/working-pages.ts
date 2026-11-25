@@ -29,6 +29,8 @@ export interface WorkContext {
   // The choices made above tables, such as how a list is sorted.
   choiceOf: (name: string) => string;
   isAdmin: boolean;
+  // The site's owner: the only one who changes the SvS results.
+  isOwner: boolean;
   managesState: boolean;
   managesBattles: boolean;
   leads: (allianceId: string) => boolean;

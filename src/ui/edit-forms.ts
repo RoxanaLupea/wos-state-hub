@@ -11,6 +11,21 @@ export const PENCIL_ICON = '<svg width="15" height="15" viewBox="0 0 24 24" fill
   ' stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
   '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>';
 
+// The edit icon (owner's example, 24 Nov): a rounded square open at the top right with a
+// pencil across it, in one stroke that runs from a colour into white.
+export const EDIT_ICON = '<svg class="edit-icon" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="edit-icon-colour" x1="0" y1="0" x2="1" y2="1">' +
+  '<stop offset="0" style="stop-color: var(--edit-colour)"/><stop offset="1" style="stop-color: var(--text)"/></linearGradient></defs>' +
+  '<g fill="none" stroke="url(#edit-icon-colour)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+  '<path d="M11 3.5H7A3.5 3.5 0 0 0 3.5 7v10A3.5 3.5 0 0 0 7 20.5h10a3.5 3.5 0 0 0 3.5-3.5v-4.5"/>' +
+  '<path d="M17.6 3.2a2.3 2.3 0 0 1 3.2 3.2L12 15.2l-4.2 1 1-4.2z"/></g></svg>';
+
+// The edit button, as on the profile's "Update skill level": the edit icon, then the word.
+// It swaps what everyone sees to editing in place; Cancel and Save take its place there.
+export function editButton(edit: string, words = 'Edit'): string {
+  return `<button type="button" class="edit-button" data-edit="${escapeForPage(edit)}">${EDIT_ICON}` +
+    `<span><span class="words">${escapeForPage(words)}</span></span></button>`;
+}
+
 // A pencil that opens the form named by `edit`.
 export function pencilButton(edit: string, label: string): string {
   return `<button type="button" class="pencil-button" data-edit="${escapeForPage(edit)}"` +

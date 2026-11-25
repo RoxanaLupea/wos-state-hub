@@ -7,6 +7,10 @@ has had to point out before. When she points out a new kind of fault, it is adde
 - Go through the page as a player would: what they see first, what they tap, where
   they end up. Every step is obvious without being explained.
 - A link to another page carries an arrow that says it jumps there.
+- Nothing opens in editing mode or shows Save on its own: a page or panel opens as a
+  member sees it, and the edit button (the profile's) swaps it to editing (site-wide rule,
+  25 Nov). Editing moves nothing: measure every element's position in both modes; each
+  value gets a small box that fits in the space it already has.
 - What can be tapped looks tappable. Nothing important hangs on a tiny arrow or icon.
 - A picked choice looks picked, not like a stray badge.
 - Removing or deleting sits apart from Save and Cancel, never in the same row as an

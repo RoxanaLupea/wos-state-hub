@@ -3,7 +3,8 @@
 // admins; an alliance's own results by its alliance managers. The SvS and TAL history
 // collected from the game before the site existed is shown with them.
 import { escapeForPage } from './escape.ts';
-import { dataTable, formSection, rowForm, text, type Column, type Field } from './data-table.ts';
+import { editButton } from './edit-forms.ts';
+import { cancelWord, dataTable, formSection, rowForm, saveWord, text, type Column, type Field } from './data-table.ts';
 import type { Row } from '../data/records.ts';
 import { allianceTag } from '../data/alliances.ts';
 import { dayNameOf, eventTypeName } from '../data/catalog.ts';
@@ -11,7 +12,7 @@ import { longDayText, shortDayText } from './day-names.ts';
 import { dayFromText } from '../calendar/days.ts';
 import type { WorkContext } from './working-pages.ts';
 import type { ShowdownScore } from './showdown-score.ts';
-import { historyLink, svsResult, type Outcome, type SvsHold, type SvsPart, type SvsRun } from './svs-results.ts';
+import { SVS_EDIT_FORM_ID, historyLink, svsResult, svsResultEditor, type Outcome, type SvsHold, type SvsPart, type SvsRun } from './svs-results.ts';
 import svsHistory from '../../seed/svs-results.json';
 import talHistory from '../../seed/tal-results.json';
 
@@ -93,29 +94,30 @@ function svsRows(context: WorkContext): Row[] | null {
   const recorded = resultsOf(context, 'svs');
   if (!recorded) return null;
   const recordedDates = new Set(recorded.map(one => String(one.row.event_date)));
-  const history = (svsHistory as Record<string, unknown>[])
-    .filter(one => !recordedDates.has(String(one.date)))
-    .map(one => ({
-      date: one.date, result: one.result, opponent: one.opponentState ? '#' + one.opponentState : '',
-      preparation: one.preparation, castle: one.castleBattle, castleAlliance: one.castleAllianceId ?? ''
-    }));
-  return recorded.map(one => ({
-    date: one.row.event_date, result: one.details.get('result') ?? one.row.outcome,
-    opponent: [one.opponents[0]?.opponent_alliance, one.opponents[0]?.opponent_state ? '#' + one.opponents[0].opponent_state : '']
-      .filter(Boolean).join(' '),
-    preparation: one.details.get('preparation'), castle: one.details.get('castle_battle'),
-    castleAlliance: one.row.state_alliance_id ?? '', note: one.row.note
-  } as Row)).concat(history as Row[])
+  const history = (svsHistory as Record<string, unknown>[]).filter(one => !recordedDates.has(String(one.date)));
+  const rowOf = (date: string, run: SvsRun, note: unknown): Row => ({ date, run, note });
+  return recorded.map(one => rowOf(String(one.row.event_date),
+      svsRunOf(one, (svsHistory as Record<string, unknown>[]).find(known => known.date === one.row.event_date)), one.row.note))
+    .concat(history.map(one => rowOf(String(one.date), svsRunFromHistory(one), '')))
     .sort((left, right) => String(right.date).localeCompare(String(left.date)));
 }
 
+// The president as the game writes it, blue for ours and red for theirs (the invader,
+// when they won both parts).
+function presidentCell(run: SvsRun): string {
+  if (!run.president) return '—';
+  const side = run.preparation === 'loss' && run.battle === 'loss' ? 'theirs' : 'ours';
+  return `<span class="svs-name ${side}">[${escapeForPage(run.president.tag)}]${escapeForPage(run.president.name)}</span>`;
+}
+
+const runOf = (row: Row) => row.run as SvsRun;
 const SVS_COLUMNS: Column[] = [
   { label: 'Date', cell: row => dateCell(row.date) },
-  { label: 'Opponent', cell: row => text(row.opponent) },
-  { label: 'Result', cell: row => outcomeText(row.result) },
-  { label: 'Preparation', cell: row => outcomeText(row.preparation) },
-  { label: 'Castle battle', cell: row => outcomeText(row.castle) },
-  { label: 'Castle held by', cell: row => text(row.castleAlliance ? allianceTag(String(row.castleAlliance)) : '') }
+  { label: 'Opponent', cell: row => runOf(row).opponentState ? '#' + runOf(row).opponentState : '—' },
+  { label: 'Preparation', cell: row => outcomeText(runOf(row).preparation) },
+  { label: 'Battle', cell: row => outcomeText(runOf(row).battle) },
+  { label: 'State of Power', cell: row => outcomeText(runOf(row).result) },
+  { label: 'President', cell: row => presidentCell(runOf(row)) }
 ];
 
 // The whole SvS history, for the State page.
@@ -128,39 +130,48 @@ export function svsHistorySection(context: WorkContext): string {
 
 // An SvS event's Results tab: this SvS, drawn like the game's screens, and the way to
 // the whole history. Opened from Preparation or from the Battle it shows only that part.
+// Only the owner changes it: the edit icon on the tabs' line swaps it to editing in
+// place (svsResultsActions), and Save goes back to the results.
 function svsResults(options: ResultsOptions): string {
   const { context } = options;
   const recorded = resultsOf(context, 'svs');
   if (!recorded) return '<p class="work-empty">Loading…</p>';
   const existing = recorded.find(one => one.row.event_date === options.runDate);
-  // A run already in the history collected before the site fills the form until it is
-  // recorded here.
   const known = (svsHistory as Record<string, unknown>[]).find(one => one.date === options.runDate);
-  const start = (detail: string, fromHistory: unknown) => existing?.details.get(detail) ?? String(fromHistory ?? '');
-  const form = context.isAdmin ? rowForm({
-    form: 'result', key: formKey('svs', options.runDate, '', existing),
-    title: `SvS of ${longDayText(dayFromText(options.runDate))}`,
-    fields: [
-      { name: 'opponent_state', label: 'Opponent state', kind: 'number',
-        value: existing ? existing.opponents[0]?.opponent_state ?? '' : known?.opponentState ?? '' },
-      // Written as text: an opponent alliance is not one of ours, so it is not on the site's list.
-      { name: 'opponent_alliance', label: 'Opponent alliance', kind: 'text', value: existing?.opponents[0]?.opponent_alliance ?? '' },
-      { name: 'detail_result', label: 'Result', kind: 'select', value: start('result', known?.result),
-        choices: [['', 'Not known'], ['win', 'Win'], ['loss', 'Loss'], ['draw', 'Draw']] },
-      { name: 'detail_preparation', label: 'Preparation', kind: 'select', value: start('preparation', known?.preparation), choices: OUTCOMES },
-      { name: 'detail_castle_battle', label: 'Castle battle', kind: 'select', value: start('castle_battle', known?.castleBattle), choices: OUTCOMES },
-      { name: 'state_alliance_id', label: 'Castle held by', kind: 'select',
-        value: existing ? existing.row.state_alliance_id ?? '' : known?.castleAllianceId ?? '',
-        choices: [['', 'Nobody'], ...context.alliances.map(one => [one.id, one.tag] as [string, string])] },
-      { name: 'note', label: 'Note', kind: 'text', value: existing?.row.note ?? '' }
-    ]
-  }) : '';
   const run = existing ? svsRunOf(existing, known) : known ? svsRunFromHistory(known) : null;
+  if (context.isOwner && context.editing === svsEditKey(options.runDate)) {
+    return svsResultEditor({
+      run: run ?? EMPTY_RUN, ourState: options.stateNumber, dayNameOf: day => dayNameOf('svs-prep', day),
+      formKey: formKey('svs', options.runDate, '', existing),
+      castleAllianceId: String(existing ? existing.row.state_alliance_id ?? '' : known?.castleAllianceId ?? '')
+    });
+  }
   const part: SvsPart = options.eventTypeId === 'svs-prep' ? 'preparation'
     : options.eventTypeId === 'svs-battle' || options.eventTypeId === 'castle-battle' ? 'battle' : 'whole';
-  return form + (run
+  return run
     ? svsResult({ run, part, ourState: options.stateNumber, dayNameOf: day => dayNameOf('svs-prep', day) })
-    : historyLink());
+    : historyLink();
+}
+
+const EMPTY_RUN: SvsRun = { opponentState: null, result: '', preparation: '', battle: '', points: null, holds: [], president: null };
+
+function svsEditKey(runDate: string): string {
+  return 'svs-result|' + runDate;
+}
+
+// The key the edit button opens on an event's Results tab, for the one who may change
+// those results (only the owner, for an SvS); empty when nobody here may.
+export function resultsEditKey(options: ResultsOptions): string {
+  return SVS_FAMILY.includes(options.eventTypeId) && options.context.isOwner ? svsEditKey(options.runDate) : '';
+}
+
+// At the right of the tabs' line: the edit button for the one who may change these
+// results, and Cancel and Save in its place while they are being edited.
+export function resultsTabActions(options: ResultsOptions): string {
+  const key = resultsEditKey(options);
+  if (!key) return '';
+  if (options.context.editing !== key) return editButton(key);
+  return cancelWord() + saveWord('Save').replace('type="submit"', `type="submit" form="${SVS_EDIT_FORM_ID}"`);
 }
 
 function outcomeOf(value: unknown): Outcome {

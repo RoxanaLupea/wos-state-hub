@@ -645,6 +645,9 @@ export interface EventPanelOptions {
   headPencils: string;
   // The form a pencil opened, shown in place at the top of the event's page.
   editFormHtml: string;
+  // What sits at the right of the tabs' line while a tab is open, by tab: its edit icon,
+  // or Cancel and Save while it is being edited.
+  tabActions?: Record<string, string>;
 }
 
 
@@ -752,11 +755,15 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
   ].filter(tab => tab.html);
 
   const openTab = tabs.find(tab => tab.id === options.openTab) ?? tabs[0];
-  const tabsHtml = tabs.length > 1
+  const tabActions = openTab ? options.tabActions?.[openTab.id] ?? '' : '';
+  const tabRow = tabs.length > 1
     ? `<div class="info-tabs" role="tablist" style="--tab-color:${escapeForPage(color)}">` + tabs.map(tab =>
         `<button type="button" class="info-tab" role="tab" data-info-tab="${tab.id}"` +
         ` aria-selected="${tab === openTab}">${escapeForPage(tab.label)}</button>`).join('') + '</div>'
     : '';
+  const tabsHtml = tabActions
+    ? `<div class="info-tab-line">${tabRow}<span class="tab-actions">${tabActions}</span></div>`
+    : tabRow;
   const openHtml = !openTab ? ''
     : openTab.id === 'timeline' ? timelineHtml
       : `<div class="event-folds" style="--fold-color:${escapeForPage(color)}">` +

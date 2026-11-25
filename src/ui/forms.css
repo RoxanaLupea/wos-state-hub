@@ -43,3 +43,21 @@ select.text-input option { color: #1C2333; }
 .guest-link { margin-top: 8px; padding: 16px 8px 4px; border: none; border-top: 1px solid var(--glass-border);
   background: none; color: var(--accent); font: inherit; font-weight: 700; cursor: pointer; }
 .sign-in .form-message:empty { display: none; }
+
+/* The edit button, as on the profile's "Update skill level" (owner's example, 24 Nov): the
+   edit icon in one stroke from the page's colour into white, with a soft glow, then the
+   word. It swaps what everyone sees to editing in place; Cancel and Save take its place. */
+.edit-button { --edit-colour: var(--accent); --words-tint: 55%;
+  display: inline-flex; align-items: center; gap: 7px; padding: 4px 0; border: none; background: none;
+  font: inherit; font-size: 12.5px; font-weight: 700; letter-spacing: 0; text-transform: none; line-height: 1;
+  color: var(--text); cursor: pointer; }
+.edit-button > span { position: relative; text-box: trim-both cap alphabetic; }
+.edit-button .words { background: linear-gradient(90deg, color-mix(in srgb, var(--edit-colour) var(--words-tint), var(--text)), var(--text) 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.edit-button .edit-icon { width: 17px; height: 17px; flex: none; overflow: visible;
+  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--edit-colour) 50%, transparent)); }
+.edit-button:hover { opacity: .85; }
+@media (min-width: 900px) {
+  .edit-button { font-size: 13.5px; }
+  .edit-button .edit-icon { width: 18px; height: 18px; }
+}

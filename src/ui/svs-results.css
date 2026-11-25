@@ -87,3 +87,52 @@
 .svs-president span { font-size: 15px; font-weight: 600; }
 .svs-president .ours { color: var(--ours); }
 .svs-president .theirs { color: var(--theirs); }
+
+/* Editing in place (owner only): nothing moves. Each value gets a light glass box that
+   fits in the space the value already takes, so it is plain what can be changed and that
+   editing is on; where the value would not fit inside, its font is a little smaller. */
+.svs-field {
+  box-sizing: border-box; min-width: 0; margin: 0; padding: 0 5px; border: 1px solid var(--glass-border); border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06); outline: none; color: inherit; color-scheme: dark;
+  font: inherit; font-variant-numeric: tabular-nums; letter-spacing: inherit;
+}
+.svs-field:focus { border-color: var(--section); background: rgba(255, 255, 255, 0.1); }
+.svs-field::placeholder { color: var(--text-faint); font-weight: 600; }
+.svs-state .svs-field { width: 3.6em; height: 22px; margin-left: -6px; padding: 0 4px; font-size: 18px; line-height: 1; text-align: right; }
+.svs-totals .svs-field { width: 46%; height: 31.5px; font-size: 25px; font-weight: 800; line-height: 1; color: var(--text); }
+/* While editing every number is the same colour: who led a day, or held the castle
+   longest, is only known once the numbers are saved (the ranking is sorted then). */
+.svs-day-values .svs-field { flex: none; width: 80px; height: 20px; font-size: 14px; font-weight: 800; line-height: 1; color: var(--text); }
+.svs-field[name*="theirs"] { text-align: right; }
+.svs-time-field.svs-field { width: 100%; height: 16px; padding: 0 4px; text-align: right; font-size: 11.5px; font-weight: 800; line-height: 1; color: var(--text); }
+.svs-hold.first .svs-time-field.svs-field { height: 17px; }
+/* A pill is typed in as the pill it is. */
+.svs-pill-field.svs-field { width: 50px; height: 20px; padding: 0; border: none; border-radius: 999px; text-align: center; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; line-height: 1; color: #FFFFFF; }
+.svs-hold.ours .svs-pill-field { background: linear-gradient(90deg, rgba(79, 120, 200, 0.85), rgba(124, 157, 214, 0.7)); box-shadow: inset 0 0 0 1px rgba(150, 180, 230, 0.55); }
+.svs-hold.theirs .svs-pill-field { background: linear-gradient(90deg, rgba(194, 74, 82, 0.85), rgba(224, 122, 127, 0.7)); box-shadow: inset 0 0 0 1px rgba(235, 150, 155, 0.55); }
+.svs-hold.blank .svs-pill-field { background: rgba(255, 255, 255, 0.06); box-shadow: inset 0 0 0 1px var(--glass-border); }
+.svs-president .svs-field { flex: 1; height: 20px; font-size: 14px; font-weight: 600; line-height: 1; }
+
+/* WIN and LOSS as words in place: the chosen one white, the other faint. */
+.svs-choices { display: inline-flex; align-items: center; height: 18px; gap: 14px; letter-spacing: inherit; margin-right: -0.14em; }
+.svs-choices label { cursor: pointer; }
+.svs-choices input { position: absolute; opacity: 0; pointer-events: none; }
+.svs-choices span { color: var(--text-faint); }
+.svs-choices input:checked + span { color: var(--text); }
+.svs-choices input:focus-visible + span { outline: 1px solid var(--section); outline-offset: 3px; border-radius: 4px; }
+
+/* The Battle starts with one field and a + button under its rank. */
+.svs-plus-row { display: grid; grid-template-columns: 18px 1fr; }
+.svs-plus {
+  width: 28px; height: 28px; margin-left: -5px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+  border-radius: 999px; border: 1px solid var(--glass-border); background: var(--glass); color: var(--text-muted);
+}
+.svs-plus:hover { color: var(--text); }
+.svs-plus svg { width: 14px; height: 14px; }
+.svs-result.editing .form-message { margin: -12px 0 0; color: var(--danger); font-size: 13px; }
+.svs-result.editing .form-message:empty { display: none; }
+.svs-result.editing .svs-day-name { position: relative; top: 0.5px; }
+
+/* A president's name in the SvS history: blue for ours, red for theirs. */
+.svs-name.ours { color: #7C9DD6; }
+.svs-name.theirs { color: #E07A7F; }

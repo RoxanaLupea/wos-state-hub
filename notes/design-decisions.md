@@ -281,6 +281,25 @@ there before discussing it again.
   saying they are not recorded (25 Nov).
 - Part titles and their results (PREPARATION, BATTLE, WIN, LOSS) are the same height and
   aligned (25 Nov).
+- SvS results are entered from Roxanne's screenshots of the game; editing from the page is
+  for when someone wants to change them. No form: editing is in place, in the same layout
+  as the results, tapping the numbers or selecting them to change them (25 Nov).
+- Only the owner (Roxanne) can change SvS results, so nobody else can ruin these entries
+  (25 Nov).
+- Editing the SvS results: the # stays outside the opponent's field (it is always added in
+  front of the number); the Battle starts with one field and a + button (25 Nov).
+- Rule for the entire site: no page or panel opens in editing mode showing a Save button,
+  ever. Every editable page or panel has an edit icon that swaps from what everyone sees
+  to editing in place, in the same layout, like the SvS results; Save goes back to what
+  everyone sees. That is how we can tell what we are doing (25 Nov).
+- The edit icon is not the pencil: it is the edit button from the profile ("Update skill
+  level": the edit icon and a word), now shared by every page (edit-forms.ts, forms.css).
+  In place means the design doesn't shift up or down or in any way: the numbers get
+  edited in place. Each value gets a box that fits in the space it already has (not huge
+  boxes), otherwise we don't know anything happened when we pressed it or forget to save;
+  a slightly smaller font if the value doesn't fit (25 Nov).
+- While editing, every number is the same colour: we only know the winner of a day after,
+  same for the Battle. We add the numbers and they get sorted when we save (25 Nov).
 - The Battle's times are in a smaller font; the winner's stays bigger than the rest, but
   only a little (25 Nov).
 - Each SvS also has one overall result: win (Preparation and Battle), loss (both lost)
