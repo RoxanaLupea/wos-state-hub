@@ -1,9 +1,9 @@
 // The app's logo: the state number large, with "STATE" over "HUB" to its right. The two
 // stacked words are the same width, and together exactly as tall as the number.
-// The sizes come from Manrope's capital letters and digits: both are 0.72 of the font
-// size, so a 100px number is 72px tall, and the two stacked lines add up to the same 72px.
+// The sizes come from Roboto's capital letters and digits: both are 0.71 of the font
+// size, so a 100px number is 71px tall, and the two stacked lines add up to the same 71px.
 
-const CAPITAL_HEIGHT_RATIO = 0.72;
+const CAPITAL_HEIGHT_RATIO = 0.71;
 const NUMBER_FONT_SIZE = 100;
 const BLOCK_HEIGHT = NUMBER_FONT_SIZE * CAPITAL_HEIGHT_RATIO;
 // How wide one digit is drawn. The number's width is set from it, so a state number of

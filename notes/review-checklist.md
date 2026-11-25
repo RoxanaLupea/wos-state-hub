@@ -6,7 +6,8 @@ has had to point out before. When she points out a new kind of fault, it is adde
 ## The flow
 - Go through the page as a player would: what they see first, what they tap, where
   they end up. Every step is obvious without being explained.
-- A link to another page carries an arrow that says it jumps there.
+- A link to another page is the edit button's style with the open icon (a square with an
+  arrow leaving it), as "SvS Records" (owner, 25 Nov): pageButton in edit-forms.ts.
 - Nothing opens in editing mode or shows Save on its own: a page or panel opens as a
   member sees it, and the edit button (the profile's) swaps it to editing (site-wide rule,
   25 Nov). Editing moves nothing: measure every element's position in both modes; each
@@ -48,3 +49,5 @@ has had to point out before. When she points out a new kind of fault, it is adde
 ## The states
 - Rendered and checked: empty, filled, editing, long names, errors, every kind of item,
   phone and computer.
+- A section title in an event's panel is the generic .panel-title (almost white, 14px
+  capitals); the event's colours go in the background, lines and icons, never the titles.

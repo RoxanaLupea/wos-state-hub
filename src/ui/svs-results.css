@@ -3,10 +3,21 @@
 .svs-result {
   --ours: #7C9DD6; --ours-deep: #4F78C8;
   --theirs: #E07A7F; --theirs-deep: #C24A52;
-  display: flex; flex-direction: column; gap: 26px; padding-top: 10px;
+  display: flex; flex-direction: column; gap: calc(var(--panel-section-gap) - 3px); margin-top: calc(var(--panel-top) - 15.5px); padding-bottom: calc(var(--panel-bottom) - 5.5px);
+  /* Preparation's totals are as large as the two fit side by side (11,028,870,560); no
+     other number is bigger than they are. Read where it is used, against the width. */
+  container-type: inline-size;
+  --total-size: clamp(12px, calc((100cqi - 18px) / 16.5 - 2px), 20px);
 }
-/* The parts' gap is enough above the link. */
-.svs-result .history-link { margin-top: -10px; }
+/* The panels' spaces (event-panel.css), measured on what is drawn. Digits and text leave
+   room over and under them that a bar, a pill or an icon does not, so each part takes
+   off or adds a little to match. */
+.svs-part.matchmaking { margin-bottom: -4px; }
+.svs-part.matchmaking .part-title + .svs-states { padding-top: 1px; }
+.svs-part.preparation .part-title + .svs-totals { padding-top: 1px; }
+.svs-part .part-title + .svs-holds { padding-top: 2px; }
+.svs-part.state-of-power .part-title + .svs-president { padding-top: 2px; }
+.svs-result > .page-button { align-self: flex-start; margin-top: -2.5px; }
 
 /* The two states, like the game's head: ours on the left, theirs on the right. The
    castle logo is as tall as the digits and sits on the inside of the state where the
@@ -21,21 +32,13 @@
 .svs-castle { display: block; height: 0.93em; transform: translateY(-1px); }
 .svs-vs { padding: 0 8px; font-size: 15px; font-weight: 900; font-style: italic; letter-spacing: 0.04em; color: var(--text-faint); }
 
-/* A part's title and its result: the same size, on one line, the result on the right. */
-.svs-part .part-title {
-  display: flex; align-items: center; justify-content: space-between; margin: 0 0 14px;
-  font-size: 14px; line-height: 18px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
-  color: color-mix(in srgb, var(--part) 60%, var(--text-muted));
-}
-.svs-part .part-title:last-child { margin-bottom: 0; }
-.svs-part .part-title b { font: inherit; letter-spacing: inherit; color: var(--text); margin-right: -0.14em; }
-.svs-part.preparation { --part: var(--ours); }
-.svs-part.battle { --part: var(--theirs); }
-.svs-part.state-of-power, .svs-part.matchmaking { --part: #A9B6D8; }
+/* A part's title is the panels' section title (event-panel.css), its result on the right. */
+.svs-part .panel-title:last-child { margin-bottom: 0; }
 
 /* Preparation: the two totals, then a bar for each day. */
+/* The totals in full (11,028,870,560), a little closer to their bar. */
 .svs-totals { display: flex; justify-content: space-between; }
-.svs-totals strong { font-size: 30px; font-weight: 800; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.svs-totals strong { font-size: var(--total-size); font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
 
 /* One bar shared by the two sides, with a white line where they meet. On the total the
    line pulses a little light. */
@@ -50,7 +53,7 @@
   width: 2px; height: calc(var(--height) + 6px); transform: translate(-50%, -50%);
   border-radius: 1px; background: #FFFFFF;
 }
-.svs-split.total { --height: 8px; margin-top: 12px; }
+.svs-split.total { --height: 8px; margin-top: 9px; }
 .svs-split.total::after { height: 18px; animation: svs-meet-pulse 2.4s ease-in-out infinite; }
 @keyframes svs-meet-pulse {
   0%, 100% { box-shadow: 0 0 2px 0 rgba(255, 255, 255, 0.5); }
@@ -60,10 +63,10 @@
 
 .svs-days { display: flex; flex-direction: column; gap: 14px; margin-top: 22px; }
 .svs-day-values { display: flex; align-items: baseline; }
-.svs-day-values span { min-width: 80px; font-size: 16px; font-weight: 800; color: var(--text-faint); font-variant-numeric: tabular-nums; }
+.svs-day-values span { min-width: 80px; font-size: min(16px, var(--total-size)); line-height: 20px; font-weight: 800; color: var(--text-faint); font-variant-numeric: tabular-nums; }
 .svs-day-values span:last-child { text-align: right; }
 .svs-day-values span.led { color: var(--text); }
-.svs-day-values .svs-day-name { flex: 1; min-width: 0; font-size: 12.5px; font-weight: 700; color: var(--text-muted); text-align: center; }
+.svs-day-values .svs-day-name { flex: 1; min-width: 0; font-size: 12.5px; line-height: normal; font-weight: 700; color: var(--text-muted); text-align: center; }
 
 /* Battle: the game's Occupation Ranking. The time column has one width, so every bar
    ends on the same line; the longest hold is a little bigger and white. */
@@ -77,8 +80,8 @@
 .svs-track i { display: block; height: 100%; width: calc(var(--share) * 1%); border-radius: 999px; }
 .svs-hold.ours .svs-track i { background: linear-gradient(90deg, var(--ours-deep), var(--ours)); }
 .svs-hold.theirs .svs-track i { background: linear-gradient(90deg, var(--theirs-deep), var(--theirs)); }
-.svs-hold time { text-align: right; font-size: 13px; font-weight: 800; color: var(--text-muted); font-variant-numeric: tabular-nums; }
-.svs-hold.first time { font-size: 14px; color: var(--text); }
+.svs-hold time { text-align: right; font-size: min(13px, var(--total-size)); font-weight: 800; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.svs-hold.first time { font-size: min(14px, var(--total-size)); color: var(--text); }
 
 /* State of Power: the president's icon (President or Supreme President), then the
    alliance and name as the game writes them, blue for ours and red for theirs. */
@@ -99,7 +102,7 @@
 .svs-field:focus { border-color: var(--section); background: rgba(255, 255, 255, 0.1); }
 .svs-field::placeholder { color: var(--text-faint); font-weight: 600; }
 .svs-state .svs-field { width: 3.6em; height: 22px; margin-left: -6px; padding: 0 4px; font-size: 18px; line-height: 1; text-align: right; }
-.svs-totals .svs-field { width: 46%; height: 31.5px; font-size: 15.5px; font-weight: 500; line-height: 1; color: var(--text); }
+.svs-totals .svs-field { width: 46%; height: 20px; font-size: 13px; font-weight: 500; line-height: 1; color: var(--text); }
 /* While editing every number is the same colour: who led a day, or held the castle
    longest, is only known once the numbers are saved (the ranking is sorted then). */
 /* While editing, the stage names share one column as wide as the widest (Hero
@@ -145,7 +148,7 @@
 .svs-plus svg { width: 14px; height: 14px; }
 .svs-result.editing .form-message { margin: -12px 0 0; color: var(--danger); font-size: 13px; }
 .svs-result.editing .form-message:empty { display: none; }
-.svs-result.editing .svs-day-name { position: relative; top: 4px; }
+.svs-result.editing .svs-day-name { position: relative; top: 3.5px; }
 
 /* A president's name in the SvS history: blue for ours, red for theirs. */
 .svs-name.ours { color: #7C9DD6; }
@@ -153,7 +156,7 @@
 
 /* Sunfire Castle: every alliance is ours, so each keeps its own colours (its banner, as on
    the Fortress page). The title takes Sunfire's gold. */
-.svs-part.sunfire { --part: #E0A050; }
+
 .svs-pill.own, .svs-hold.own .svs-pill-field { color: #FFFFFF; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35); background: var(--banner-fill); box-shadow: inset 0 0 0 1px var(--banner-edge); }
 .svs-hold.own .svs-track i { background: linear-gradient(90deg, var(--banner-base), color-mix(in srgb, var(--banner-base) 70%, #FFFFFF)); }
 .svs-president .own { color: color-mix(in srgb, var(--banner-base, #7C9DD6) 70%, #FFFFFF); }

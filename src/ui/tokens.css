@@ -67,7 +67,7 @@
   --gap-large: 20px;
 
   /* Type */
-  --font: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font: 'Roboto', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
 /* On a wide screen the weekend days need less extra room. */

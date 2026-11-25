@@ -7,6 +7,7 @@ import './svs-results.css';
 import { escapeForPage } from './escape.ts';
 import { imageUrl } from './event-icon.ts';
 import { allianceByTag } from '../data/alliances.ts';
+import { pageButton } from './edit-forms.ts';
 
 export type Outcome = 'win' | 'loss' | 'draw' | '';
 export type Side = 'ours' | 'theirs';
@@ -42,13 +43,10 @@ export interface SvsResultOptions {
   dayNameOf: (dayNumber: number) => string;
 }
 
-const ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" ' +
-  'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
-
-// The way from one SvS to the whole history on the State page.
+// The way from one SvS, or one Sunfire Castle, to all of them on the State page.
 export function historyLink(historyId = 'svs-history'): string {
-  return `<button type="button" class="history-link" data-page="state" data-scroll-to="${historyId}">` +
-    `Check history${ARROW}</button>`;
+  const words = historyId === 'sunfire-history' ? 'Sunfire Records' : 'SvS Records';
+  return pageButton(words, `data-page="state" data-scroll-to="${historyId}"`);
 }
 
 export function svsResult(options: SvsResultOptions): string {
@@ -58,6 +56,11 @@ export function svsResult(options: SvsResultOptions): string {
   if (part !== 'preparation') parts.push(battlePart(run));
   if (part === 'whole') parts.push(stateOfPowerPart(run));
   return '<div class="svs-result">' + parts.join('') + historyLink() + '</div>';
+}
+
+// Preparation's totals in full, as the game writes them: 11,028,870,560.
+export function fullPoints(value: number): string {
+  return value.toLocaleString('en-US');
 }
 
 // Points as the game's big numbers read at a glance: 11.03B, 645.9M.
@@ -72,7 +75,7 @@ function outcomeWord(outcome: Outcome): string {
 }
 
 function partTitle(name: string, outcome: Outcome): string {
-  return `<h3 class="part-title">${escapeForPage(name)}<b>${outcomeWord(outcome)}</b></h3>`;
+  return `<h3 class="panel-title part-title">${escapeForPage(name)}<b>${outcomeWord(outcome)}</b></h3>`;
 }
 
 // The battle is fought in the state that lost Preparation.
@@ -110,7 +113,7 @@ function preparationPart(options: SvsResultOptions): string {
   if (run.points) {
     const { ours, theirs, days } = run.points;
     body += '<div class="svs-totals">' +
-      `<strong>${shortPoints(ours)}</strong><strong>${shortPoints(theirs)}</strong></div>` +
+      `<strong>${fullPoints(ours)}</strong><strong>${fullPoints(theirs)}</strong></div>` +
       splitBar(ours, theirs, true);
     // The side that led the day is written in white.
     body += '<div class="svs-days">' + days.map(([ourDay, theirDay], index) =>
@@ -239,14 +242,14 @@ export function svsResultEditor(options: SvsEditOptions): string {
       `<span class="svs-state theirs">${foughtIn === 'theirs' ? castle : ''}#` +
         numberField('opponent_state', run.opponentState) + '</span>' +
     '</div></section>' +
-    `<section class="svs-part preparation${points?.days.length ? ' computed' : ''}"><h3 class="part-title">Preparation` +
+    `<section class="svs-part preparation${points?.days.length ? ' computed' : ''}"><h3 class="panel-title part-title">Preparation` +
       outcomeChoice('detail_preparation', run.preparation) + '</h3>' +
       '<div class="svs-totals">' + pointsField('detail_points_ours', points?.ours) + pointsField('detail_points_theirs', points?.theirs) +
-        `<strong data-sum="ours">${points ? shortPoints(points.ours) : ''}</strong>` +
-        `<strong data-sum="theirs">${points ? shortPoints(points.theirs) : ''}</strong></div>` +
+        `<strong data-sum="ours">${points ? fullPoints(points.ours) : ''}</strong>` +
+        `<strong data-sum="theirs">${points ? fullPoints(points.theirs) : ''}</strong></div>` +
       splitBar(points?.ours ?? 0, points?.theirs ?? 0, true) +
       `<div class="svs-days">${days}</div></section>` +
-    `<section class="svs-part battle${run.holds.length ? ' computed' : ''}"><h3 class="part-title">Battle` +
+    `<section class="svs-part battle${run.holds.length ? ' computed' : ''}"><h3 class="panel-title part-title">Battle` +
       outcomeChoice('detail_castle_battle', run.battle) + '</h3>' +
       `<div class="svs-holds">${holds}` +
       `<template data-row-template>${holdRow(0, null)}</template>` +
@@ -331,8 +334,8 @@ export function updateSvsEditor(form: HTMLFormElement): void {
       const ours = days.reduce((sum, [day]) => sum + (Number.isFinite(day) ? day : 0), 0);
       const theirs = days.reduce((sum, [, day]) => sum + (Number.isFinite(day) ? day : 0), 0);
       const sums = preparation.querySelectorAll<HTMLElement>('[data-sum]');
-      if (sums[0]) sums[0].textContent = shortPoints(ours);
-      if (sums[1]) sums[1].textContent = shortPoints(theirs);
+      if (sums[0]) sums[0].textContent = fullPoints(ours);
+      if (sums[1]) sums[1].textContent = fullPoints(theirs);
       setShare(preparation.querySelector('.svs-split.total'), ours, theirs);
       preparationResult = preparationOutcome(days);
       const word = preparation.querySelector('.svs-computed');

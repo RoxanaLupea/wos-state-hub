@@ -87,3 +87,21 @@ parts, never from glass sections, browser dropdowns, filled buttons or filled pi
 - One first and one second colour per page (design-decisions.md, Navigation). The player
   page takes its alliance's colour, evened.
 - Red only for a notice and Cancel, green only for Save.
+
+## Event panels (owner, 25 Nov: "we need the same rules for panels and we design using them")
+
+Set once in event-panel.css and taken by every panel; a panel with an exception keeps
+only what makes it one (the room its letters, digits or bars leave over and under them).
+- Spaces, measured on what is drawn: --panel-top 15px from the tabs to the first thing,
+  --panel-title-gap 15px from a section's title to its content, --panel-section-gap 25px
+  between sections, --panel-bottom 15px after the last thing.
+- A section's title: .panel-title, 14px bold capitals with wide spacing, almost white
+  (--text). A result (WIN, LOSS) on the right of the same line. A title inside a section
+  is one step lower: the words as written, white, bold, 14px.
+- The event's colours are in the panel's background (both of its colours, tintedPanelStyle),
+  its lines and its icons, never in the titles.
+- A way to another page: pageButton (the edit button's style with the open icon), as
+  "SvS Records".
+- Timelines: phases and stages 13px capitals; days, steps and openings 12px; the current
+  row has the pin; lines as soft as State of Power's.
+- Font: Roboto everywhere; the short form of an event (SvS, TAL) stays Montserrat.

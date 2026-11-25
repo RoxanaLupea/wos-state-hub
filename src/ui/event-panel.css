@@ -93,10 +93,11 @@
 /* Where the event's line ends during a day: a short bar across the line. */
 .tree-cap { position: relative; z-index: 1; width: 15px; height: 3px; border-radius: 2px; }
 .tree-label { padding-left: 8px; font-size: 14px; color: var(--text); min-width: 0; }
-.tree-label.main { font-size: 15px; font-weight: 700; }
-/* A stage of the event (State of Power: Matchmaking, Preparation, Battle, Field Triage)
-   is written in capitals, as on its bar. */
-.tree-label.main.stage { font-size: 14px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+.tree-label.main { font-size: 12px; font-weight: 600; }
+/* A stage or phase of the event (State of Power's Matchmaking, Preparation, Battle, Field
+   Triage; Tundra Arms League's Preview to Championship) is written in capitals, as on
+   its bar, a little bigger than the days and steps under it (owner, 25 Nov). */
+.tree-label.main.stage { font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
 .tree-label.side-row { color: var(--text-muted); font-weight: 700; }
 /* Instructions of a phase or step: open from its row (same arrow as points), smaller text. */
 .tree-instructions { margin: 2px 0 6px; font-size: 13px; line-height: 1.4; color: var(--text-muted); }
@@ -472,3 +473,48 @@
 .tree-line.lit-above::before, .tree-line.lit-below::after { left: 9.5px; width: 5px; }
 .tree-line.play-now.lit-above::before, .tree-line.play-now.lit-below::after { box-shadow: 0 0 6px var(--play-glow, rgba(255, 255, 255, 0.4)); }
 .tree-row.play-now .tree-label { color: #FFFFFF; }
+
+/* A section's title in an event's panel (owner, 25 Nov), the same in every panel: in
+   capitals, almost white so it reads first; the event's colours are in the panel's
+   background, its lines and its icons. 15px from the title to what is under it, as
+   drawn. A result (WIN, LOSS) sits on the right of the same line. */
+.event-page .panel-title {
+  display: flex; align-items: center; justify-content: space-between; margin: 0 0 calc(var(--panel-title-gap) - 7px);
+  font-size: 14px; line-height: 18px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text);
+}
+.event-page .panel-title b { font: inherit; letter-spacing: inherit; color: var(--text); margin-right: -0.14em; }
+
+/* The same rules for every event panel (owner, 25 Nov: "we need the same rules for
+   panels and we design using them"). They are set once here, as the four spaces below,
+   and every panel takes them; a panel with an exception keeps only what makes it one.
+   They are measured on what is drawn, so each place takes off the room its letters or
+   bars leave over and under them (the small numbers in the calc()s).
+   A section's title is the .panel-title look; a title inside a section is one step
+   lower: the words as written, white and bold. */
+.event-page {
+  --panel-top: 15px;           /* from the tabs to the first thing */
+  --panel-title-gap: 15px;     /* from a section's title to what is under it */
+  --panel-section-gap: 25px;   /* from one section to the next title */
+  --panel-bottom: 15px;        /* after the last thing */
+}
+.event-folds .tab-page.rules-tab, .event-folds .tab-page.rewards-tab,
+.event-folds .tab-page.missions-tab, .event-folds .tab-page.points-tab {
+  padding-top: calc(var(--panel-top) - 11.5px); padding-bottom: var(--panel-bottom);
+}
+.event-folds .tab-page > :first-child { margin-top: 0; }
+.event-folds .tab-page > details.points-list { border-top: none; padding-bottom: 0; margin-top: calc(var(--panel-section-gap) - 9px); }
+.event-folds .tab-page > details.points-list:first-child { margin-top: 0; }
+.event-folds .tab-page > details.points-list > summary,
+.event-folds .rewards-tab > .points-note.titled:first-child > .note-title {
+  display: flex; min-height: 18px; padding: 0; margin: 0 0 calc(var(--panel-title-gap) - 5px); line-height: 18px;
+  font-size: 14px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text);
+}
+.event-folds .rewards-tab > .points-note.titled:first-child > .note-title { margin-bottom: calc(var(--panel-title-gap) - 7px); }
+.event-folds .tab-page > details.points-list:not([open]) > summary { margin-bottom: 0; }
+.event-folds .tab-page > details.points-list > :not(summary) { margin-left: 0; margin-right: 0; }
+.event-folds .tab-page > details.points-list > p:first-of-type { margin-top: 0; }
+.event-folds .tab-page details .points-note.titled .note-title,
+.event-folds .rewards-tab .reward-sub {
+  font-size: 14px; font-weight: 700; letter-spacing: 0; text-transform: none; color: var(--text);
+}

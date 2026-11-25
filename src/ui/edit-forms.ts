@@ -19,6 +19,21 @@ export const EDIT_ICON = '<svg class="edit-icon" viewBox="0 0 24 24" aria-hidden
   '<path d="M11 3.5H7A3.5 3.5 0 0 0 3.5 7v10A3.5 3.5 0 0 0 7 20.5h10a3.5 3.5 0 0 0 3.5-3.5v-4.5"/>' +
   '<path d="M17.6 3.2a2.3 2.3 0 0 1 3.2 3.2L12 15.2l-4.2 1 1-4.2z"/></g></svg>';
 
+// The way to another page (owner, 25 Nov: "SvS Records"), drawn like the edit button: a
+// rounded square open at the top right with an arrow leaving it, in one stroke from the
+// event's colour into white, then the words.
+export const OPEN_ICON = '<svg class="edit-icon" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="open-icon-colour" x1="0" y1="0" x2="1" y2="1">' +
+  '<stop offset="0" style="stop-color: var(--edit-colour)"/><stop offset="1" style="stop-color: var(--text)"/></linearGradient></defs>' +
+  '<g fill="none" stroke="url(#open-icon-colour)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+  '<path d="M10 3.5H7A3.5 3.5 0 0 0 3.5 7v10A3.5 3.5 0 0 0 7 20.5h10a3.5 3.5 0 0 0 3.5-3.5v-3"/>' +
+  '<path d="M14.5 3.5h6v6"/><path d="M20.5 3.5L11.5 12.5"/></g></svg>';
+
+// A button to another page, in the edit button's style: `attributes` say where it goes.
+export function pageButton(words: string, attributes: string): string {
+  return `<button type="button" class="edit-button page-button" ${attributes}>${OPEN_ICON}` +
+    `<span><span class="words">${escapeForPage(words)}</span></span></button>`;
+}
+
 // The pin in front of the row an event is at (owner, 25 Nov): drawn like the edit icon,
 // one stroke from the event's colour into white. Its tip stands on the text's baseline.
 export const PIN_ICON = '<svg class="pin-icon" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="pin-icon-colour" x1="0" y1="0" x2="1" y2="1">' +

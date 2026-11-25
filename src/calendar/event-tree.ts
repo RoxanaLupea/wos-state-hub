@@ -237,9 +237,10 @@ export function buildEventTree(
 
     if (isSingle && phaseRows.length) {
       // The phases are the main line; the days and steps of each phase sit under it.
+      // A phase is written like State of Power's stages (owner, 25 Nov).
       const inside = content.concat(partsHere);
       phaseRows.forEach((phaseRow, phaseIndex) => {
-        rows.push(phaseRow);
+        rows.push({ ...phaseRow, isStage: true });
         const isLastPhase = phaseIndex === phaseRows.length - 1;
         inside
           .filter(row => row.minute >= phaseRow.minute &&

@@ -3500,14 +3500,20 @@ async function start(): Promise<void> {
       const clock = document.getElementById('clockTime');
       if (clock) clock.textContent = gameClockText(nowMinute());
     }, 30000);
-    window.addEventListener('resize', () => {
+    // The bars and the cards are measured on their letters, so they are laid out again
+    // when the window changes width and when the site's font has arrived (the page is
+    // often drawn before it has, in a stand-in font of another width).
+    const layOutCalendarAgain = () => {
       fitNextTiles(document);
       const panel = document.querySelector<HTMLElement>('.calendar-panel');
       if (!panel || view.calendarView === 'year') return;
       layoutBars(panel);
       fitBarLabels(panel);
       sizeLanes(panel);
-    });
+    };
+    window.addEventListener('resize', layOutCalendarAgain);
+    document.fonts?.addEventListener('loadingdone', layOutCalendarAgain);
+    void document.fonts?.ready.then(layOutCalendarAgain);
     draw();
   } catch (problem) {
     const message = problem instanceof Error ? problem.message : String(problem);

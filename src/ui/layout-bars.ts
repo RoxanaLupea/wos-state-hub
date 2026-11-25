@@ -151,8 +151,8 @@ function placeFirstPart(bar: HTMLElement): void {
 //   a short part on line two shows its logo instead of its name;
 //   a white line or a logo never sits on top of a name.
 // Where a text's capitals sit inside its bar: from the top of a capital letter down to
-// the line the letters stand on. A capital is 0.72 of the text size in Manrope.
-const CAPITAL_HEIGHT_RATIO = 0.72;
+// the line the letters stand on. A capital is 0.71 of the text size in Roboto.
+const CAPITAL_HEIGHT_RATIO = 0.71;
 
 function capitalsOf(text: HTMLElement, bar: HTMLElement): { top: number; height: number } {
   const marker = document.createElement('span');

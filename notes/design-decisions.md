@@ -361,6 +361,44 @@ there before discussing it again.
   sure we have the correct total and the short numbers are unchanged, this will only
   happen for those results, we're gonna record them properly moving forward and won't
   take them from wosoracle.com" (25 Nov). Done in the database; their source says so.
+- Preparation's totals are shown in full (11,028,870,560): "if the font is a little
+  smaller and the text closer to the totals bar it would probably look better" (25 Nov).
+  "Then the other numbers for the daily totals and the time from battle have to match
+  that font size, it's ok if they're smaller, but not bigger" (25 Nov): the totals' size
+  is --total-size; the days and the times never go above it.
+- Font (25 Nov): "let's keep roboto everywhere, decision made - except for the event short
+  form, that stays unchanged" (Montserrat). Roboto is installed in the workspace, so
+  screenshots are what the site shows.
+- The SvS panel (25 Nov): "15px from the title to the content, 25px in between sections,
+  15 from the top and 15 on the bottom", measured on what is drawn. "In the timeline the
+  blue and red from the bar should match the blue and red used in the results tab, with
+  peak red in battle going to green for triage" (lineColor in the catalog). "MATCHMAKING,
+  PREPARATION, BATTLE, FIELD TRIAGE in a smaller font, bigger than the others but not
+  this big" (13px).
+- "The section titles in the panels should be the same too, size, colour, padding,
+  weight, this is the part where we make sure we make the panel a generic item" (25 Nov).
+  Then: "I like the accents but i think we should keep the titles a generic almost white
+  colour, it's better to read it like that, the accents are in the background of the
+  panel, the lines and icons" (.panel-title in event-panel.css).
+- "Keep the same style for SvS Records/Sunfire Records instead of check history" (25 Nov,
+  with a picture of the open-in-new icon): the edit button's style with an open icon.
+- "The panel background, for svs doesn't seem to use the event colours like sunfire or
+  others, all of them should" (25 Nov): every panel and card is tinted with the event's
+  two colours as its bar runs, the first from the top left, the second (colorEnd) from
+  the bottom right (tintedPanelStyle).
+- "Also the same size for things, king of icefield days seem quite big and the colour of
+  the timeline bar is too intense, follow the svs example" (25 Nov): a timeline's row
+  names are 12px like the SvS days (the stages stay 13px capitals), and every line is as
+  soft as State of Power's (softLineColor in event-panel.ts).
+- An event's phases are bigger sections: written like State of Power's stages, 13px
+  capitals ("Yes, much better", 25 Nov, on Tundra Arms League). Built for every event with
+  phases in event-phases.json (event-tree.ts marks phase rows as stages). Day themes such
+  as King of Icefield's stay 12px, like the SvS days.
+- "The space before matchmaking is a little too big, the space between phases,
+  matchmaking and prep and then prep and battle has to be equal" and "the space between
+  a phase title and the content has to be the same too" (25 Nov). Measured on what is
+  drawn, not on the boxes. "I am a fan of round numbers, so the spacing between sections
+  30 px, the space between the title and the content 20 px" (25 Nov).
 - "State so far has alliances, presidency, leaderboards, the results from svs and sunfire
   will be in presidency, we'll design a way to see both" (25 Nov): ours and the
   opponent's state. Still to design.

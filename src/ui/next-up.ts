@@ -3,7 +3,7 @@
 // count, because those are the ones everyone has to be somewhere for.
 import './next-up.css';
 import { clockText, nowMinute, shownDayOf } from '../calendar/time-mode.ts';
-import { categoryOf, eventTypeColor, eventTypeName, eventTypeShortName, eventTypeStageName, eventTypeTag, partOfByEventTypeId, sortOrderOf, wholeEventTypeOf } from '../data/catalog.ts';
+import { categoryOf, eventTypeColor, eventTypeColorEnd, eventTypeName, eventTypeShortName, eventTypeStageName, eventTypeTag, partOfByEventTypeId, sortOrderOf, wholeEventTypeOf } from '../data/catalog.ts';
 import { familyOccurrences } from '../calendar/event-tree.ts';
 import { colorWithAlpha } from './colors.ts';
 import { shortDayText } from './day-names.ts';
@@ -11,9 +11,13 @@ import { escapeForPage } from './escape.ts';
 import { eventBadge } from './event-icon.ts';
 import type { Occurrence } from '../calendar/occurrences.ts';
 
-// A panel tinted with an event's own colour, lit from the top left.
-export function tintedPanelStyle(color: string): string {
-  return `background:linear-gradient(135deg,${colorWithAlpha(color, 0.36)},${colorWithAlpha(color, 0.04)} 65%),var(--glass);` +
+// A panel tinted with an event's own colours, as its bar runs (owner, 25 Nov: every
+// panel uses them): the first lit from the top left, the second, where the event has
+// one, rising from the bottom right.
+export function tintedPanelStyle(color: string, colorEnd = color): string {
+  const end = colorEnd.toLowerCase() === color.toLowerCase() ? ''
+    : `linear-gradient(315deg,${colorWithAlpha(colorEnd, 0.3)},${colorWithAlpha(colorEnd, 0)} 60%),`;
+  return `background:${end}linear-gradient(135deg,${colorWithAlpha(color, 0.36)},${colorWithAlpha(color, 0.04)} 65%),var(--glass);` +
     'box-shadow:inset 0 1px 0 rgba(255,255,255,0.14),' +
     `inset 0 -3px 0 ${colorWithAlpha(color, 0.7)},0 10px 26px ${colorWithAlpha(color, 0.12)};`;
 }
@@ -70,7 +74,7 @@ export function nextUpTiles(occurrences: Occurrence[]): string {
       ? 'Until ' + shortDayText(shownDayOf(tile.endMinute - (endText === '00:00' ? 1 : 0))) +
         (endText === '00:00' ? '' : ' · ' + endText)
       : shortDayText(shownDayOf(tile.startMinute)) + (startText === '00:00' ? '' : ' · ' + startText);
-    return `<div class="next-tile glass" style="${tintedPanelStyle(color)}">` +
+    return `<div class="next-tile glass" style="${tintedPanelStyle(color, eventTypeColorEnd(tile.eventTypeId))}">` +
       `<div class="next-tile-head">${eventBadge(tile.eventTypeId)}` +
       `<div class="next-tile-names"><span class="next-tile-label">${label}</span>` +
       (tile.stageId

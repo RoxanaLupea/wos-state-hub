@@ -51,6 +51,10 @@ before she finds them. The notes give the site's look; they do not design the pa
 5. Design with quick mockups first (25 Nov): less building, more thinking, faster
    delivery. Build it properly in the code only once she lands on an idea.
 
+Panels follow the same rules, set once and inherited (notes/page-style.md, "Event
+panels"): we design using them, and an exception changes only what makes it one
+(Roxanne, 25 Nov).
+
 Each page is designed on its own, but never varies from the elements the site already
 has (Roxanne, 25 Nov). The same element is never drawn in different ways; sizes may adapt
 to where it sits. A new element is fine, but say it is new. Before showing anything,

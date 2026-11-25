@@ -23,7 +23,7 @@ function colourOf(tag: string): { style: string; side: string } {
 }
 
 function title(): string {
-  return '<h3 class="part-title">Occupation Ranking<b></b></h3>';
+  return '<h3 class="panel-title part-title">Occupation Ranking<b></b></h3>';
 }
 
 export function sunfireResult(run: SunfireRun): string {

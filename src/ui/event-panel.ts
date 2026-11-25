@@ -6,7 +6,7 @@
 
 import './event-panel.css';
 import {
-  allianceRequirement, eventNotes, eventOtherName, eventTypeColor, eventTypeName, hasLogoColors, logoColors,
+  allianceRequirement, eventNotes, eventOtherName, eventTypeById, eventTypeColor, eventTypeColorEnd, eventTypeName, hasLogoColors, logoColors,
   eventTypeLabel, itemImageFile, itemLabel, itemName, phaseName, playerRequirement,
   pointSourceDayName, pointSourceTask, pointSourcesForDay, pointSourcesInList, pointsNote,
   pointsTitle, rewardsOf, type PointSource, type RewardRow
@@ -21,7 +21,7 @@ import {
   EXPERT_CHEST_HOSTS, NUMBERED_REWARD_LISTS, rewardBandName, rewardListName,
   rewardListsOf, rewardSectionName
 } from './reward-names.ts';
-import { colorWithAlpha, hexToRgb, mixColors } from './colors.ts';
+import { colorWithAlpha, hexToHsl, hslToHex, mixColors } from './colors.ts';
 import { tintedPanelStyle } from './next-up.ts';
 import { PIN_ICON } from './edit-forms.ts';
 import type { EventTree } from '../calendar/event-tree.ts';
@@ -56,9 +56,15 @@ function fadeColorAt(eventTypeId: string, position: number): string {
   const from = at <= 0.4 ? fade.dark : fade.middle;
   const to = at <= 0.4 ? fade.middle : fade.light;
   const share = at <= 0.4 ? at / 0.4 : (at - 0.4) / 0.6;
-  const start = hexToRgb(from), end = hexToRgb(to);
-  const mix = (one: number, other: number) => Math.round(one + (other - one) * share);
-  return `rgb(${mix(start.red, end.red)},${mix(start.green, end.green)},${mix(start.blue, end.blue)})`;
+  return mixColors(from, to, share);
+}
+
+// A timeline's line in tones as soft as State of Power's (owner, 25 Nov: the line was
+// "too intense, follow the svs example"): never more saturated than those, never darker
+// or brighter.
+function softLineColor(hex: string): string {
+  const { hue, saturation, lightness } = hexToHsl(hex);
+  return hslToHex(hue, Math.min(saturation, 0.55), Math.min(0.7, Math.max(0.58, lightness)));
 }
 
 function fadePiece(eventTypeId: string, from: number, to: number): string {
@@ -496,6 +502,26 @@ export function renderEventTree(tree: EventTree): string {
 
   const mainEventTypeId = rows.length ? rows[0].eventTypeId : '';
 
+  // A whole event whose parts have their own line colour (State of Power): each row
+  // takes the colour of the part it is in, and the line blends from one part's colour
+  // into the next between their rows. The other events fade along their bar's colours.
+  const lineColorOf = (index: number): string => {
+    for (let place = Math.min(index, rows.length - 1); place >= 0; place--) {
+      const color = eventTypeById(rows[place].eventTypeId)?.lineColor;
+      if (color) return color;
+    }
+    return '';
+  };
+  const hasPartColors = rows.some(row => Boolean(eventTypeById(row.eventTypeId)?.lineColor));
+  const partColorAt = (place: number): string => {
+    const at = Math.min(rows.length - 1, Math.max(0, place));
+    const above = Math.floor(at), below = Math.ceil(at);
+    return above === below ? lineColorOf(above) : mixColors(lineColorOf(above), lineColorOf(below), at - above);
+  };
+  const lineColorAt = (place: number): string =>
+    hasPartColors ? partColorAt(place) : softLineColor(fadeColorAt(mainEventTypeId, lineAt(place)));
+  const linePiece = (from: number, to: number): string => `linear-gradient(${lineColorAt(from)},${lineColorAt(to)})`;
+
   // An event played at set times each day (Wild Brawl): the line is quiet, and lit in
   // the event's light colour from where a window opens to where it closes. Nothing here
   // is dimmed (dimming is only for the line in the day's panel); while the event runs,
@@ -528,12 +554,12 @@ export function renderEventTree(tree: EventTree): string {
     const isLitBelow = isPlayTimeline && row.playOpensUntil !== undefined;
     const isLitAbove = isPlayTimeline && Boolean(row.isPlayClose);
     const playState = playStateOf(index);
-    const lineAbove = !isPlayTimeline ? fadePiece(mainEventTypeId, lineAt(index - 0.5), lineAt(index))
+    const lineAbove = !isPlayTimeline ? linePiece(index - 0.5, index)
       : isLitAbove ? litLine() : quietLine;
-    const lineBelow = !isPlayTimeline ? fadePiece(mainEventTypeId, lineAt(index), lineAt(index + 0.5))
+    const lineBelow = !isPlayTimeline ? linePiece(index, index + 0.5)
       : isLitBelow ? litLine() : quietLine;
-    const dotColor = !isPlayTimeline ? fadeColorAt(row.isSideRow ? row.eventTypeId : mainEventTypeId, lineAt(index))
-      : playState ? playLight : 'rgba(255,255,255,0.35)';
+    const dotColor = isPlayTimeline ? (playState ? playLight : 'rgba(255,255,255,0.35)')
+      : row.isSideRow ? fadeColorAt(row.eventTypeId, lineAt(index)) : lineColorAt(index);
     const lineClass = (index === 0 ? ' first' : index === rows.length - 1 ? ' last' : '') +
       (isLitAbove ? ' lit-above' : '') + (isLitBelow ? ' lit-below' : '') +
       (playState === 'now' ? ' play-now' : '');
@@ -701,6 +727,7 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
   heroDay = occurrence.startDay;
   // A part shown as its whole event wears the whole event's colour.
   const color = eventTypeColor(options.wholeEvent?.eventTypeId ?? eventTypeId);
+  const colorEnd = eventTypeColorEnd(options.wholeEvent?.eventTypeId ?? eventTypeId);
 
   // What players need to know about this particular run.
   const facts: string[] = [];
@@ -789,7 +816,7 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
   const headStart = options.wholeEvent?.startMinute ?? occurrence.startMinute;
   const headEnd = options.wholeEvent?.endMinute ?? occurrence.endMinute;
   let html = backLinks(options.backToDay) +
-    `<section class="day-section glass event-page" style="${tintedPanelStyle(color)}--event-color:${escapeForPage(color)};">` +
+    `<section class="day-section glass event-page" style="${tintedPanelStyle(color, colorEnd)}--event-color:${escapeForPage(color)};">` +
     `<div class="event-page-head">${eventBadge(headEventTypeId, 'large')}` +
     '<div class="event-page-title"><h2>' +
     (occurrence.wasCancelled ? '<span class="cancelled-mark" aria-label="Cancelled">&times;</span> ' : '') +
@@ -831,7 +858,7 @@ export interface GroupPanelOptions {
 export function groupPanel(options: GroupPanelOptions): string {
   const color = eventTypeColor(options.eventTypeId);
   return backLinks(options.backToDay) +
-    `<section class="day-section glass event-page" style="${tintedPanelStyle(color)}--event-color:${escapeForPage(color)};">` +
+    `<section class="day-section glass event-page" style="${tintedPanelStyle(color, eventTypeColorEnd(options.eventTypeId))}--event-color:${escapeForPage(color)};">` +
     `<div class="event-page-head">${eventBadge(options.eventTypeId, 'large')}` +
     `<div class="event-page-title"><h2>${escapeForPage(eventTypeName(options.eventTypeId))}</h2>` +
     `<span class="event-note">${escapeForPage(shortDayText(options.day))}</span></div></div>` +

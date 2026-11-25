@@ -19,4 +19,4 @@ screenshots, with what the workspace already has: esbuild, Chrome and Playwright
 What this does not prove: the workspace's TypeScript is newer than the build's
 TypeScript 5, so a clean check here can still fail on GitHub. Check the GitHub build
 after every push (`gh run list -R RoxanaLupea/wos-state-hub -L 1`). The site's fonts
-(Manrope, Montserrat) cannot load here, so screenshots use a stand-in font.
+(Roboto, Montserrat) are installed here, so screenshots use the site's own fonts.
