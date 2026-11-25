@@ -23,6 +23,7 @@ import {
 } from './reward-names.ts';
 import { colorWithAlpha, hexToRgb, mixColors } from './colors.ts';
 import { tintedPanelStyle } from './next-up.ts';
+import { PIN_ICON } from './edit-forms.ts';
 import type { EventTree } from '../calendar/event-tree.ts';
 import type { Occurrence } from '../calendar/occurrences.ts';
 
@@ -581,6 +582,7 @@ export function renderEventTree(tree: EventTree): string {
       // rows beside the event use the light end of their bar.
       (row.openingPartKey ? ` style="color:${logoColors(row.eventTypeId).light}"`
         : row.isSideRow ? ` style="color:${barFadeColors(row.eventTypeId).light}"` : '') + '>' +
+      (row.isCurrent ? PIN_ICON : '') +
       (row.isCancelled ? '<span class="cancelled-mark" aria-label="Cancelled">&times;</span> ' : '') +
       escapeForPage(row.label) +
       (row.subLabel ? `<span class="tree-sub">${escapeForPage(row.subLabel)}</span>` : '') +
@@ -593,17 +595,16 @@ export function renderEventTree(tree: EventTree): string {
       (row.level === 0 ? ' main' : row.isSideRow ? ' side' : ' nested') +
       (row.isCurrent ? ' current' : '') +
       (playState === 'now' ? ' play-now' : '');
-    const currentStyle = row.isCurrent ? ` style="--current-color:${dotColor}"` : '';
     const rowKey = ` data-row-key="${escapeForPage(row.key ?? '')}"`;
 
     if (!hasPoints && !noteHtml) {
-      return `<div class="${rowClass}"${currentStyle}${rowKey}>${inside}</div>`;
+      return `<div class="${rowClass}"${rowKey}>${inside}</div>`;
     }
     const sources = pointSourcesForDay(row.eventTypeId, row.dayNumber ?? 1)
       .filter(source => row.pointSourceIds.includes(source.id));
     const pointsKey = row.key || 'row-' + index;
     return `<details class="tree-item" data-points-key="${escapeForPage(pointsKey)}"` +
-      `${openPointRows.has(pointsKey) ? ' open' : ''}><summary class="${rowClass}"${currentStyle}${rowKey}>` +
+      `${openPointRows.has(pointsKey) ? ' open' : ''}><summary class="${rowClass}"${rowKey}>` +
       `${inside}</summary>` +
       `<div class="tree-points${sideGoesOn ? ' with-side' : ''}` +
       `${sideGoesOn && isDashedBelow(index) ? ' dash-side' : ''}"` +

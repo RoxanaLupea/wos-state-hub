@@ -63,7 +63,7 @@ import {
   ALLIANCE_RESULT_EVENTS, allianceResultsPage, championshipStars, opponentNotesPage, resultsTab, resultsTabActions, showdownScoreOf,
   svsHistorySection, sunfireHistorySection
 } from './ui/results.ts';
-import { shortPoints } from './ui/svs-results.ts';
+import { SVS_EDIT_FORM_ID, preparationOutcome, typeHoldTime, updateSvsEditor } from './ui/svs-results.ts';
 import { personalEntryForm, personalEntryOf } from './ui/personal-entry.ts';
 import {
   academiesPage, availabilityPage, facilitiesPage, membersPage, planPage, requestsPage, rolesPage,
@@ -1058,6 +1058,8 @@ function draw(): void {
   app.classList.toggle('sheet-open', view.isPanelOpen && view.openPage === 'calendar');
   watchScrollEdges(app);
   showOpenTab(app);
+  const svsEditor = document.getElementById(SVS_EDIT_FORM_ID);
+  if (svsEditor instanceof HTMLFormElement) updateSvsEditor(svsEditor);
   watchTableEdges(app);
   syncHistory();
   rememberChoices();
@@ -1876,18 +1878,16 @@ function secondsFromText(value: string): number {
   return parts.reduce((total, part) => total * 60 + part, 0);
 }
 
-// The SvS editor's fields turned into what an SvS keeps: points as whole numbers, each
+// The SvS editor's fields turned into what an SvS keeps: points as whole numbers, the
+// totals and the two parts' results worked out from them where they are in, each
 // Occupation Ranking row as detail hold_N ("ours|DVL|7090", ours when the tag is one of
 // our alliances), the State of Power result from the two parts, and the president
 // ("[DVL]name") as our alliance or, for an outside one, the tag as a detail.
-function svsDetailsFromEdit(values: FormData): { allianceId: string | null; name: string | null } {
+function svsDetailsFromEdit(values: FormData, isSvs: boolean): { allianceId: string | null; name: string | null } {
   const pointFields: string[] = [];
   values.forEach((_value, name) => { if (name.startsWith('detail_points_')) pointFields.push(name); });
   for (const name of pointFields) {
-    // A short number left as it was keeps the exact one it stood for.
-    const exact = String(values.get('exact_' + name) ?? '');
-    const typed = String(values.get(name) ?? '').trim();
-    values.set(name, exact && typed === shortPoints(Number(exact)) ? exact : pointsFromText(typed));
+    values.set(name, pointsFromText(String(values.get(name) ?? '').trim()));
   }
   const tags = values.getAll('hold_tag').map(one => String(one).trim());
   const times = values.getAll('hold_time').map(one => String(one).trim());
@@ -1900,6 +1900,19 @@ function svsDetailsFromEdit(values: FormData): { allianceId: string | null; name
   });
   holds.sort((left, right) => right.seconds - left.seconds)
     .forEach((hold, index) => values.set('detail_hold_' + (index + 1), `${hold.side}|${hold.tag}|${hold.seconds}`));
+  if (isSvs) {
+    // Where the days are in, Preparation's totals are their sums, and its result follows
+    // from them once all five days are in. Where the ranking is in, the Battle is won
+    // when the longest hold is one of our alliances.
+    const days = [1, 2, 3, 4, 5].map(day =>
+      [Number(values.get('detail_points_ours_' + day) || NaN), Number(values.get('detail_points_theirs_' + day) || NaN)] as [number, number]);
+    if (days.some(([ours, theirs]) => Number.isFinite(ours) || Number.isFinite(theirs))) {
+      values.set('detail_points_ours', String(days.reduce((sum, [day]) => sum + (Number.isFinite(day) ? day : 0), 0)));
+      values.set('detail_points_theirs', String(days.reduce((sum, [, day]) => sum + (Number.isFinite(day) ? day : 0), 0)));
+      values.set('detail_preparation', preparationOutcome(days));
+    }
+    if (holds.length) values.set('detail_castle_battle', holds[0].side === 'ours' ? 'win' : 'loss');
+  }
   const preparation = String(values.get('detail_preparation') ?? '');
   const battle = String(values.get('detail_castle_battle') ?? '');
   if (preparation && battle) values.set('detail_result', preparation === battle ? preparation : 'draw');
@@ -2856,7 +2869,7 @@ async function saveWorkingForm(
     // An SvS or Sunfire Castle edited in place: its points, Occupation Ranking and
     // president are turned into the details and columns it is kept as, and the SvS's State
     // of Power result follows from its two parts.
-    const president = eventTypeId === 'svs' || eventTypeId === 'sunfire' ? svsDetailsFromEdit(values) : null;
+    const president = eventTypeId === 'svs' || eventTypeId === 'sunfire' ? svsDetailsFromEdit(values, eventTypeId === 'svs') : null;
     const saved = await saveRow('results', {
       id: existingId ? Number(existingId) : undefined, event_type_id: eventTypeId, event_date: date,
       alliance_id: allianceId, state_alliance_id: orNull('state_alliance_id'),
@@ -3449,6 +3462,19 @@ async function start(): Promise<void> {
     document.addEventListener('click', handleClicks);
     document.addEventListener('submit', handleSubmits);
     document.addEventListener('input', filterPlayerTyping);
+    // An SvS being edited works out its totals and results as the numbers are typed in.
+    const svsEditorOf = (target: EventTarget | null) =>
+      target instanceof HTMLElement ? target.closest<HTMLFormElement>('#' + SVS_EDIT_FORM_ID) : null;
+    // A time held (SvS Battle, Sunfire Castle) keeps its colons; only digits are typed.
+    document.addEventListener('input', event => {
+      if (event.target instanceof HTMLInputElement && event.target.classList.contains('svs-time-field')) typeHoldTime(event.target);
+    });
+    for (const kind of ['input', 'change'] as const) {
+      document.addEventListener(kind, event => {
+        const form = svsEditorOf(event.target);
+        if (form) updateSvsEditor(form);
+      });
+    }
     // Closing or reloading the tab with changes not saved: the browser asks in its own words.
     window.addEventListener('beforeunload', event => {
       if (view.openPage === 'player' && PLAYER_PARTS.some(partHasChanges)) event.preventDefault();

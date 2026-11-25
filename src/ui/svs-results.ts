@@ -6,6 +6,7 @@
 import './svs-results.css';
 import { escapeForPage } from './escape.ts';
 import { imageUrl } from './event-icon.ts';
+import { allianceByTag } from '../data/alliances.ts';
 
 export type Outcome = 'win' | 'loss' | 'draw' | '';
 export type Side = 'ours' | 'theirs';
@@ -81,18 +82,19 @@ function battleFoughtIn(run: SvsRun): Side | '' {
   return '';
 }
 
-// The two states, ours on the left and theirs on the right, with the castle logo on the
-// inside of the state where the battle was fought.
+// Matchmaking, as the other parts: its title, then the two states, ours on the left and
+// theirs on the right, with the castle logo on the inside of the state where the battle
+// was fought.
 function statesHead(options: SvsResultOptions): string {
   const { run } = options;
   if (!run.opponentState) return '';
   const castle = `<img class="svs-castle" src="${imageUrl('castle-battle')}" alt="">`;
   const foughtIn = battleFoughtIn(run);
-  return '<div class="svs-states">' +
+  return '<section class="svs-part matchmaking">' + partTitle('Matchmaking', '') + '<div class="svs-states">' +
     `<span class="svs-state ours">#${options.ourState}${foughtIn === 'ours' ? castle : ''}</span>` +
     '<span class="svs-vs">VS</span>' +
     `<span class="svs-state theirs">${foughtIn === 'theirs' ? castle : ''}#${run.opponentState}</span>` +
-    '</div>';
+    '</div></section>';
 }
 
 // One bar shared by the two sides, split by their shares, with a light line where they meet.
@@ -187,20 +189,19 @@ function numberField(name: string, value: number | null | undefined): string {
     ' inputmode="numeric"');
 }
 
-// Points read as on the results (11.03B), so the layout stays the same. The exact number
-// goes with it, and is kept when the short one is left as it was.
+// Points are typed in and read in full while editing (2483456789), so nothing is
+// confused; the results show them short (2.48B).
 function pointsField(name: string, value: number | null | undefined): string {
-  const className = 'svs-field';
-  if (value === null || value === undefined || !Number.isFinite(value)) return field(name, '', ' inputmode="decimal"', className);
-  return field(name, shortPoints(value), ' inputmode="decimal"', className) +
-    `<input type="hidden" name="exact_${name}" value="${value}" data-short="${shortPoints(value)}">`;
+  const known = value !== null && value !== undefined && Number.isFinite(value);
+  return field(name, known ? String(value) : '', ' inputmode="numeric" data-points');
 }
 
-// WIN and LOSS as words in place; the chosen one is white.
+// Where the part's numbers are in, its WIN or LOSS follows from them instead.
 function outcomeChoice(name: string, outcome: Outcome): string {
   return '<span class="svs-choices">' + (['win', 'loss'] as const).map(choice =>
     `<label><input type="radio" name="${name}" value="${choice}"${outcome === choice ? ' checked' : ''}>` +
-    `<span>${outcomeWord(choice)}</span></label>`).join('') + '</span>';
+    `<span>${outcomeWord(choice)}</span></label>`).join('') + '</span>' +
+    `<b class="svs-computed">${outcomeWord(outcome)}</b>`;
 }
 
 function holdRow(place: number, hold: SvsHold | null, longest = 1): string {
@@ -232,18 +233,21 @@ export function svsResultEditor(options: SvsEditOptions): string {
   const isSupreme = !!run.preparation && run.preparation === run.battle;
   return `<form class="svs-result editing" id="${SVS_EDIT_FORM_ID}" data-form="result" data-key="${escapeForPage(options.formKey)}">` +
     `<input type="hidden" name="state_alliance_id" value="${escapeForPage(options.castleAllianceId)}">` +
-    '<div class="svs-states">' +
+    '<section class="svs-part matchmaking">' + partTitle('Matchmaking', '') + '<div class="svs-states">' +
       `<span class="svs-state ours">#${options.ourState}${foughtIn === 'ours' ? castle : ''}</span>` +
       '<span class="svs-vs">VS</span>' +
       `<span class="svs-state theirs">${foughtIn === 'theirs' ? castle : ''}#` +
         numberField('opponent_state', run.opponentState) + '</span>' +
-    '</div>' +
-    '<section class="svs-part preparation"><h3 class="part-title">Preparation' +
+    '</div></section>' +
+    `<section class="svs-part preparation${points?.days.length ? ' computed' : ''}"><h3 class="part-title">Preparation` +
       outcomeChoice('detail_preparation', run.preparation) + '</h3>' +
-      '<div class="svs-totals">' + pointsField('detail_points_ours', points?.ours) + pointsField('detail_points_theirs', points?.theirs) + '</div>' +
+      '<div class="svs-totals">' + pointsField('detail_points_ours', points?.ours) + pointsField('detail_points_theirs', points?.theirs) +
+        `<strong data-sum="ours">${points ? shortPoints(points.ours) : ''}</strong>` +
+        `<strong data-sum="theirs">${points ? shortPoints(points.theirs) : ''}</strong></div>` +
       splitBar(points?.ours ?? 0, points?.theirs ?? 0, true) +
       `<div class="svs-days">${days}</div></section>` +
-    '<section class="svs-part battle"><h3 class="part-title">Battle' + outcomeChoice('detail_castle_battle', run.battle) + '</h3>' +
+    `<section class="svs-part battle${run.holds.length ? ' computed' : ''}"><h3 class="part-title">Battle` +
+      outcomeChoice('detail_castle_battle', run.battle) + '</h3>' +
       `<div class="svs-holds">${holds}` +
       `<template data-row-template>${holdRow(0, null)}</template>` +
       `<div class="svs-plus-row"><button type="button" class="svs-plus" data-add-row aria-label="Add an alliance">${PLUS}</button></div>` +
@@ -251,9 +255,123 @@ export function svsResultEditor(options: SvsEditOptions): string {
     // The State of Power result follows from the two parts when saved.
     '<section class="svs-part state-of-power">' + partTitle('State of Power', run.result) +
       '<div class="svs-president">' +
-        `<img src="${imageUrl(isSupreme ? 'supreme-president' : 'president')}" alt="">` +
+        `<img src="${imageUrl(isSupreme ? 'supreme-president' : 'president')}" alt="" data-president-icon>` +
         field('president', president, ' placeholder="[Tag]name" aria-label="President"') +
       '</div></section>' +
     '<p class="form-message" data-form-message></p>' +
   '</form>';
+}
+
+// ---------------------------------------------------------------------------
+// While editing, what follows from the numbers is worked out as they are typed in:
+// Preparation's totals from its days, and its WIN or LOSS once the last day is in;
+// the Battle's WIN when the longest hold is one of our alliances, LOSS when it is not;
+// the State of Power result from the two. Saving works them out the same way.
+// ---------------------------------------------------------------------------
+
+// Points as typed: "2,483,456,789", "2483456789", or the short "2.48B".
+export function pointsOf(text: string): number {
+  const clean = text.replace(/[\s,]/g, '');
+  if (!clean) return NaN;
+  const short = /^(\d+(?:\.\d+)?)([BMK])$/i.exec(clean);
+  if (short) return Math.round(Number(short[1]) * { B: 1e9, M: 1e6, K: 1e3 }[short[2].toUpperCase() as 'B' | 'M' | 'K']);
+  return /^\d+$/.test(clean) ? Number(clean) : NaN;
+}
+
+// "02:14:01", "2:14:01" or "53:39" as seconds.
+export function secondsOf(text: string): number {
+  const parts = text.trim().split(':').map(Number);
+  if (!text.trim() || parts.length > 3 || parts.some(part => !Number.isInteger(part) || part < 0)) return NaN;
+  return parts.reduce((total, part) => total * 60 + part, 0);
+}
+
+// A time held is typed as digits only, on a phone's number pad: the colons are always
+// there, and each digit comes in from the right, as on a timer (2, 1, 4, 0, 1 reads
+// 00:21:40, then 02:14:01). Deleting a digit takes it back out.
+export function typeHoldTime(input: HTMLInputElement): void {
+  const digits = input.value.replace(/\D/g, '');
+  if (!digits) { input.value = ''; return; }
+  const six = digits.slice(-6).padStart(6, '0');
+  input.value = `${six.slice(0, 2)}:${six.slice(2, 4)}:${six.slice(4)}`;
+  input.setSelectionRange(input.value.length, input.value.length);
+}
+
+// Preparation is won on the totals, once all five days are in.
+export function preparationOutcome(days: [number, number][]): Outcome {
+  if (days.length < 5 || days.some(([ours, theirs]) => !Number.isFinite(ours) || !Number.isFinite(theirs))) return '';
+  const ours = days.reduce((sum, [day]) => sum + day, 0);
+  const theirs = days.reduce((sum, [, day]) => sum + day, 0);
+  return ours > theirs ? 'win' : ours < theirs ? 'loss' : '';
+}
+
+function typedPoints(form: HTMLFormElement, name: string): number {
+  return pointsOf(form.querySelector<HTMLInputElement>(`input[name="${name}"]`)?.value ?? '');
+}
+
+function setShare(bar: Element | null | undefined, ours: number, theirs: number): void {
+  if (bar instanceof HTMLElement) bar.style.setProperty('--share', (ours + theirs > 0 ? (100 * ours) / (ours + theirs) : 50).toFixed(1));
+}
+
+export function updateSvsEditor(form: HTMLFormElement): void {
+  const preparation = form.querySelector('.svs-part.preparation');
+  const battle = form.querySelector('.svs-part.battle');
+  const chosen = (name: string) => (form.querySelector<HTMLInputElement>(`input[name="${name}"]:checked`)?.value ?? '') as Outcome;
+
+  // Preparation.
+  const days = [1, 2, 3, 4, 5].map(day =>
+    [typedPoints(form, `detail_points_ours_${day}`), typedPoints(form, `detail_points_theirs_${day}`)] as [number, number]);
+  const anyDay = days.some(([ours, theirs]) => Number.isFinite(ours) || Number.isFinite(theirs));
+  let preparationResult = chosen('detail_preparation');
+  if (preparation) {
+    preparation.classList.toggle('computed', anyDay);
+    const dayRows = Array.from(preparation.querySelectorAll('.svs-day'));
+    days.forEach(([ours, theirs], index) =>
+      setShare(dayRows[index]?.querySelector('.svs-split'), Number.isFinite(ours) ? ours : 0, Number.isFinite(theirs) ? theirs : 0));
+    if (anyDay) {
+      const ours = days.reduce((sum, [day]) => sum + (Number.isFinite(day) ? day : 0), 0);
+      const theirs = days.reduce((sum, [, day]) => sum + (Number.isFinite(day) ? day : 0), 0);
+      const sums = preparation.querySelectorAll<HTMLElement>('[data-sum]');
+      if (sums[0]) sums[0].textContent = shortPoints(ours);
+      if (sums[1]) sums[1].textContent = shortPoints(theirs);
+      setShare(preparation.querySelector('.svs-split.total'), ours, theirs);
+      preparationResult = preparationOutcome(days);
+      const word = preparation.querySelector('.svs-computed');
+      if (word) word.textContent = outcomeWord(preparationResult);
+    }
+  }
+
+  // Battle: each pill takes its state's colour, and the longest hold decides.
+  let battleResult = chosen('detail_castle_battle');
+  if (battle) {
+    const rows = Array.from(battle.querySelectorAll<HTMLElement>('.svs-holds [data-row]'));
+    const holds = rows.map(row => {
+      const tag = row.querySelector<HTMLInputElement>('input[name="hold_tag"]')?.value.trim() ?? '';
+      const seconds = secondsOf(row.querySelector<HTMLInputElement>('input[name="hold_time"]')?.value ?? '');
+      const side: Side | 'blank' = !tag ? 'blank' : allianceByTag(tag) ? 'ours' : 'theirs';
+      row.classList.remove('ours', 'theirs', 'blank');
+      row.classList.add(side);
+      return { row, tag, seconds: Number.isFinite(seconds) ? seconds : 0, side };
+    }).filter(hold => hold.tag);
+    const longest = Math.max(1, ...holds.map(hold => hold.seconds));
+    for (const hold of holds) {
+      const track = hold.row.querySelector<HTMLElement>('.svs-track i');
+      if (track) track.style.setProperty('--share', ((100 * hold.seconds) / longest).toFixed(1));
+    }
+    battle.classList.toggle('computed', holds.length > 0);
+    if (holds.length) {
+      const first = holds.reduce((best, hold) => hold.seconds > best.seconds ? hold : best);
+      battleResult = first.side === 'ours' ? 'win' : 'loss';
+      const word = battle.querySelector('.svs-computed');
+      if (word) word.textContent = outcomeWord(battleResult);
+    }
+  }
+
+  // State of Power, and the president's icon with it.
+  const stateOfPower = form.querySelector('.svs-part.state-of-power');
+  const result: Outcome = preparationResult && battleResult
+    ? (preparationResult === battleResult ? preparationResult : 'draw') : '';
+  const resultWord = stateOfPower?.querySelector('.part-title b');
+  if (resultWord) resultWord.textContent = outcomeWord(result);
+  const icon = stateOfPower?.querySelector<HTMLImageElement>('[data-president-icon]');
+  if (icon) icon.src = imageUrl(preparationResult && preparationResult === battleResult ? 'supreme-president' : 'president');
 }

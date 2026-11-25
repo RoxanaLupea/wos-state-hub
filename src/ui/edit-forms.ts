@@ -19,6 +19,13 @@ export const EDIT_ICON = '<svg class="edit-icon" viewBox="0 0 24 24" aria-hidden
   '<path d="M11 3.5H7A3.5 3.5 0 0 0 3.5 7v10A3.5 3.5 0 0 0 7 20.5h10a3.5 3.5 0 0 0 3.5-3.5v-4.5"/>' +
   '<path d="M17.6 3.2a2.3 2.3 0 0 1 3.2 3.2L12 15.2l-4.2 1 1-4.2z"/></g></svg>';
 
+// The pin in front of the row an event is at (owner, 25 Nov): drawn like the edit icon,
+// one stroke from the event's colour into white. Its tip stands on the text's baseline.
+export const PIN_ICON = '<svg class="pin-icon" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="pin-icon-colour" x1="0" y1="0" x2="1" y2="1">' +
+  '<stop offset="0" style="stop-color: var(--event-color)"/><stop offset="1" style="stop-color: var(--text)"/></linearGradient></defs>' +
+  '<g fill="none" stroke="url(#pin-icon-colour)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+  '<path d="M12 21.6c-.6-.5-7-6.3-7-11.6a7 7 0 0 1 14 0c0 5.3-6.4 11.1-7 11.6z"/><circle cx="12" cy="10" r="2.8"/></g></svg>';
+
 // The edit button, as on the profile's "Update skill level": the edit icon, then the word.
 // It swaps what everyone sees to editing in place; Cancel and Save take its place there.
 export function editButton(edit: string, words = 'Edit'): string {

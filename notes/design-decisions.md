@@ -331,6 +331,36 @@ there before discussing it again.
   state we need to see the data, as soon as that is set we will request the other's state
   data" (25 Nov). Prepared in supabase/svs-opponent-state.sql: the opponent's state is
   read within the minute, then daily until Field Triage ends.
+- "During preparation, I will insert the full numbers for each day, even if they're
+  displayed in short form, we'll keep the full numbers in the database, and the total is
+  calculated from that, so for the first day the total will be the first day score, the
+  win or loss will also be added based on the total after we put in the result of the
+  last day of prep, so where we have the daily detail the phase totals and win/loss is not
+  an input but a result, same for battle, we put in the times for all alliances and if
+  the alliance with the biggest hold is from our state then it's a win, if not, it's a
+  loss" (25 Nov). Built: worked out live while editing and again on saving; a full number
+  typed in shows in a slightly smaller font in its box, and its short form once left.
+- "Make the font small enough or normal weight to fit the billions we're gonna insert,
+  the box can be slightly wider as long as it has a small padding from the widest stage,
+  it doesn't change the way we display it, but it will be less confusing when we insert
+  it" (25 Nov). Built: while editing, the days show the full numbers in boxes up to a
+  small gap from the widest day name, in a normal-weight font that fits ten digits.
+- "Instead of having a highlight on the current stage or substage, I was thinking we can
+  draw a pin in the same style of the edit, the event colours, that goes in front of the
+  current stage" (25 Nov). Accepted ("I love it"), with "the position has to be
+  adjusted, aligned to the bottom with the text, it's ok if it's taller than the text".
+  Built: the pin replaces the row's tint and the dot's halo.
+- The SvS results: "the #1458 vs # should be moved lower and MATCHMAKING added above, to
+  be consistent, there's plenty unused space there that makes that part a little
+  awkward" (25 Nov).
+- "When we edit from the phone, the time, make sure the : are there and we insert the
+  number only" (25 Nov). Built: a time held takes digits only and keeps its colons, each
+  digit coming in from the right as on a timer (SvS Battle and Sunfire Castle).
+- The 7 Nov and 10 Oct SvS days came rounded from WoS Oracle: "add the missing amount to
+  the days without changing the rounded numbers, so split that between the 5 days to make
+  sure we have the correct total and the short numbers are unchanged, this will only
+  happen for those results, we're gonna record them properly moving forward and won't
+  take them from wosoracle.com" (25 Nov). Done in the database; their source says so.
 - "State so far has alliances, presidency, leaderboards, the results from svs and sunfire
   will be in presidency, we'll design a way to see both" (25 Nov): ours and the
   opponent's state. Still to design.

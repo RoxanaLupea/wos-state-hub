@@ -81,7 +81,6 @@
 /* A step inside the event: a smaller circle on the line, smaller words on the same row (no connector lines). */
 .tree-row.nested .tree-label { font-size: 12px; font-weight: 600; color: var(--text-muted); }
 .tree-step-dot { position: relative; z-index: 1; width: 9px; height: 9px; border-radius: 50%; }
-.tree-row.current .tree-step-dot { box-shadow: 0 0 0 4px color-mix(in srgb, var(--current-color) 35%, transparent); }
 .tree-when { text-align: right; padding-right: 8px; line-height: 1.2; }
 .tree-when b { display: block; font-size: 14px; font-weight: 700; white-space: nowrap; }
 .tree-when span { display: block; font-size: 13px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
@@ -143,10 +142,13 @@
 .tree-item > summary { list-style: none; cursor: pointer; }
 .tree-item > summary::-webkit-details-marker { display: none; }
 @media (hover: hover) { .tree-item > summary:hover { background: rgba(255, 255, 255, 0.04); } }
-/* Where you are: tinted row, bigger dot with a soft halo in its colour, bold text. */
-.tree-row.current { background: rgba(255, 255, 255, 0.07); }
+/* Where the event is: a pin in front of the row's name, in the event's colour, its tip on
+   the text's baseline and a little taller than the text; the name bold and white. */
 .tree-row.current .tree-label { font-weight: 800; color: #FFFFFF; }
-.tree-row.current .tree-dot { box-shadow: 0 0 0 4px color-mix(in srgb, var(--current-color) 35%, transparent); }
+.tree-label .pin-icon {
+  display: inline-block; width: 1.3em; height: 1.3em; margin: 0 0.35em 0 -0.15em; vertical-align: -0.13em; overflow: visible;
+  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--event-color) 55%, transparent));
+}
 /* A day's points open under its row; the main line keeps going on their left. */
 .tree-points { position: relative; padding: 2px 8px 8px 116px; }
 .tree-points::before { content: ''; position: absolute; left: 94.5px; top: 0; bottom: 0; width: 3px; background: var(--line-below); }
