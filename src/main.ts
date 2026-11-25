@@ -1292,6 +1292,11 @@ function drawPage(app: HTMLElement): void {
     if (profile && evened) profile.style.setProperty('--ally', evened);
     setPageColour(evened);
     fitPlayerPage();
+    // Pictures change the widths the fitting goes by (the alliance badge), so it runs again
+    // as each one arrives.
+    for (const picture of Array.from(app.querySelectorAll<HTMLImageElement>('.pp .chief img'))) {
+      if (!picture.complete) picture.addEventListener('load', () => fitPlayerPage(), { once: true });
+    }
     return;
   }
 

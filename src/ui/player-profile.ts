@@ -774,6 +774,22 @@ export function fitPlayerPage(root: ParentNode = document): void {
   if (window.innerWidth < 1000) {
     if (caps.length) shrinkTogether(caps, (caps[0].parentElement as HTMLElement).getBoundingClientRect().width - 4, 9);
   } else for (const one of caps) one.style.fontSize = '';
+  // On a phone the lines beside the badge keep clear of it by its own width and a gap,
+  // and "Add foundry power" steps down in size until it fits its line, never cut.
+  if (window.innerWidth < 1000) {
+    for (const page of Array.from(root.querySelectorAll<HTMLElement>('.pp'))) {
+      const side = page.querySelector<HTMLElement>('.chief .side');
+      if (side && !page.querySelector('.move')) page.style.setProperty('--badge-room', Math.ceil(side.getBoundingClientRect().width + 12) + 'px');
+      else page.style.removeProperty('--badge-room');
+      const line = page.querySelector<HTMLElement>('.chief .foundry');
+      const words = line?.querySelector<HTMLElement>('.add-foundry');
+      if (line && words) {
+        words.style.fontSize = '';
+        let size = parseFloat(getComputedStyle(words).fontSize);
+        while (line.scrollWidth > line.clientWidth + 0.5 && size > 10) { size -= 0.25; words.style.fontSize = size + 'px'; }
+      }
+    }
+  }
   // On a phone the alliance badge sits with its foot on the foundry line (owner, 25 Nov):
   // the text is centred on the picture, so the badge is raised by the space under the text.
   for (const page of Array.from(root.querySelectorAll<HTMLElement>('.pp'))) {

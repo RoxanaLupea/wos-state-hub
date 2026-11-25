@@ -36,12 +36,13 @@
 .pp .foundry { display: flex; align-items: center; gap: 5px; font-size: 14px; font-weight: 700; line-height: 1.1; color: var(--text-muted);
   font-variant-numeric: tabular-nums; }
 .pp .foundry span { text-box: trim-both cap alphabetic; }
-.pp .foundry img { height: 18px; margin: -4px 0; }
+.pp .foundry img { width: 18px; height: 18px; margin: -4px 0; }
 /* On the person's own character (owner, 25 Nov): Add foundry power, or the edit icon alone
    after the number, red with a dot while out of date; editing in place, a small box where
    the number is (its digits where they were) and Cancel and Save as icons. */
 .pp .foundry .remind { margin: -6px 0 -6px 3px; }
-.pp .foundry .add-foundry { margin-left: 2px; }
+.pp .foundry .add-foundry { margin-left: 2px; white-space: nowrap; }
+.pp .foundry > * { flex: none; }
 .pp .remind.icon-only { gap: 0; padding: 4px 2px; }
 .pp .remind.icon-only > span { align-self: flex-start; }
 .pp .foundry-field { width: 4.6em; height: 22px; margin: -4px 0 -4px -3px; font-size: 14px; font-weight: 700; color: var(--text); }
@@ -334,7 +335,7 @@
   .pp .power .pr { font-size: 15px; }
   .pp .foundry { font-size: 17px; }
   .pp .foundry-field { font-size: 17px; height: 26px; }
-  .pp .foundry img { height: 21px; }
+  .pp .foundry img { width: 21px; height: 21px; }
   .pp .pic { font-size: 50px; border-radius: 26px; }
   /* On a computer the details and the side keep their own columns. */
   .pp .chief .who { grid-column: 2; }

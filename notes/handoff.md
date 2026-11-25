@@ -12,6 +12,11 @@ Do CLAUDE.md's setup first. Updated 25 Nov 2026.
     (removeGameAccount; its availability answers go with it). The main is not in the
     editing list; the picked photo grows a little on a computer (19:55 push).
   - Labyrinth stages set in from both sides (16 px phone, 48 px computer).
+  - 20:05 push: "Add foundry power" never cut (the badge room is the badge's own width
+    plus 12 px, measured in fitPlayerPage, which runs again as pictures load; the words
+    shrink to fit on narrow phones). The top bar keeps logo, clock and player on one row
+    on every phone: under 390 px the logo and clock get smaller, under 360 px the name
+    is cut short last (shell.css). 390 px and up unchanged.
   - Menu: Admin, Profile, Sign out. "Account" is "character" wherever players see it.
   - Foundry power in place (part 'foundry' in main.ts): "Add foundry power" when empty,
     the edit icon after the number, red with a dot a month after it was set (that month
