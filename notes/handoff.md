@@ -4,45 +4,38 @@ Do CLAUDE.md's setup first. Updated 25 Nov 2026.
 
 ## Now
 
-- main is the live site, built and checked on GitHub (25 Nov, commit bb7afa5). Only main
+- main is the live site, built and checked on GitHub (25 Nov, commit a2326eb). Only main
   is on GitHub.
-- Live on 25 Nov: the SvS results panel (src/ui/svs-results.ts and .css, called from
-  results.ts), designed with Roxanne from the game screens and accepted ("Ok, I like
-  it"). Her decisions for it are in design-decisions.md under "SvS results panel".
-  - Opened from SvS preparation it shows only Preparation; from SvS Battle or Castle
-    Battle only the Battle; from matchmaking and Field Triage the whole SvS (Claude's
-    reading: there is no panel for the whole SvS; she has not said otherwise).
-  - The SvS timeline writes its stages in capitals (stageName in data/text/en.json).
-  - Check history carries an arrow (data-table.css), as every link to another page must.
-  - seed/svs-results.json holds every SvS's president (presidentTag, presidentName) from
-    data/captures/sunfire-hall-of-fame.md. The title is worked out from the two results:
-    Supreme when one side won both, the invader's when they won both.
-- Records: an SvS's points are details points_ours, points_theirs, points_ours_1..5,
-  points_theirs_1..5; the Occupation Ranking is hold_1, hold_2… as "ours|DVL|7090"
-  (side, tag, seconds held); an outside president's tag is detail president_tag. No run
-  has points or a ranking recorded yet, so the live panel shows the results and the
-  president only.
-- The president icons (public/images/events/president.png, supreme-president.png) are
-  cut out of her screenshot; the real files are on her list in rules-and-open-items.md.
-- Live on 25 Nov (2ae8599): editing the SvS results in place, owner only (changed to admins
-  in the workspace after, not pushed yet). The profile's
-  edit button (now shared: editButton and EDIT_ICON in edit-forms.ts, .edit-button in
-  forms.css) sits on the tabs' line (event panel option tabActions); Cancel and Save take
-  its place. Each value gets a small glass box in the space it already has, nothing
-  moves, all numbers one colour while editing; the ranking is sorted and the State of
-  Power result worked out on saving (svsDetailsFromEdit in main.ts). The SvS history on
-  the State page shows every president.
+- SvS results panel (src/ui/svs-results.ts and .css, called from results.ts), designed
+  with Roxanne from the game screens and accepted. Her decisions are in
+  design-decisions.md under "SvS results panel". Every SvS stage opens the whole State of
+  Power (dates, timeline, results); the timeline writes its stages in capitals.
+- Sunfire Castle results (src/ui/sunfire-results.ts): Occupation Ranking in each
+  alliance's colours, then the president. History on the State page from
+  seed/sunfire-results.json. A timeline with nothing in it is not shown.
+- seed/svs-results.json holds every SvS's president. The title is worked out from the two
+  results: Supreme when one side won both, the invader's when they won both.
+- Records: points_ours, points_theirs, points_ours_1..5, points_theirs_1..5; holds hold_1,
+  hold_2… as "ours|DVL|7090"; an outside president's tag is detail president_tag.
+- Editing results in place (SvS and Sunfire), admins only: the profile's edit button
+  (editButton, EDIT_ICON in edit-forms.ts; .edit-button in forms.css) on the tabs' line
+  (event panel option tabActions); Cancel and Save take its place; svsDetailsFromEdit in
+  main.ts sorts and saves.
+- SvS, its parts and Sunfire have locked dates (datesLocked in event-types.json): no edit
+  in their head. Other events have the edit button in the head instead of the round
+  pencil; every edit button in an event panel takes the event's colour (--event-color).
+  The head's button still opens the old forms (to convert, see below).
 - Site-wide rule (25 Nov): no page opens in editing mode or shows Save; every editable
-  page or panel gets the edit button and edits in place. Still open: every other page
-  with a form open (results of TAL, Tyrant and the alliance events, My alliance results,
-  Opponents, rosters, plans, Link an academy, Give a role, transfers, blacklist, Fortress
-  planning, personal entries, availability). Each one: quick mockup first.
-- Admins write results, on the page and in the database: "me" means admins (25 Nov).
-- In the database since 25 Nov: 7 Nov SvS with WoS Oracle's points and the LLC and DVL
-  holds, 10 Oct SvS (results and Oracle points), 21 Nov Sunfire Castle (ranking and
-  president, from her screenshots), each with a "source" detail. Every SvS stage opens State of Power (live, de4e02b). Sunfire Castle results
-  (src/ui/sunfire-results.ts) and its history on the State page (seed/sunfire-results.json,
-  from the Hall of Fame capture) are built in the workspace.
+  page or panel gets the edit button and edits in place. Still to convert, each with a
+  quick mockup first: the head's date/repeat/alliance-time forms, results of TAL, Tyrant
+  and the alliance events, My alliance results, Opponents, rosters, plans, Link an
+  academy, Give a role, transfers, blacklist, Fortress planning, personal entries,
+  availability.
+- Open: the "Next up / Then" cards still name SvS phases (flagged, no answer yet). The
+  president icons are cut out of her screenshot; the real files are to come from her.
+- In the database since 25 Nov: 7 Nov SvS (WoS Oracle's points, LLC and DVL holds), 10 Oct
+  SvS, 21 Nov Sunfire Castle (ranking and president from her screenshots), each with a
+  "source" detail.
 - Roxanne's and Tif's accounts are in 1252 (DUB) until their transfer to 1458.
 
 ## The database
