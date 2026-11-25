@@ -129,7 +129,7 @@ export function svsHistorySection(context: WorkContext): string {
 }
 
 // An SvS event's Results tab: this SvS, drawn like the game's screens, and the way to
-// the whole history. Opened from Preparation or from the Battle it shows only that part.
+// the whole history.
 // Admins change it: the edit button on the tabs' line swaps it to editing in place
 // (resultsTabActions), and Save goes back to the results.
 function svsResults(options: ResultsOptions): string {
@@ -146,8 +146,8 @@ function svsResults(options: ResultsOptions): string {
       castleAllianceId: String(existing ? existing.row.state_alliance_id ?? '' : known?.castleAllianceId ?? '')
     });
   }
-  const part: SvsPart = options.eventTypeId === 'svs-prep' ? 'preparation'
-    : options.eventTypeId === 'svs-battle' || options.eventTypeId === 'castle-battle' ? 'battle' : 'whole';
+  // Every part of the SvS opens the whole event, so its results are always the whole SvS.
+  const part: SvsPart = 'whole';
   return run
     ? svsResult({ run, part, ourState: options.stateNumber, dayNameOf: day => dayNameOf('svs-prep', day) })
     : historyLink();

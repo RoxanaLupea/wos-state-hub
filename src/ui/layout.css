@@ -1,3 +1,6 @@
+/* No coloured flash on tap (phones paint a blue box over whatever is tapped). */
+* { -webkit-tap-highlight-color: transparent; }
+
 /* Every page is a column: the section tabs at the top, then the page itself filling
    what is left. */
 .page { display: flex; flex-direction: column; flex: 1 0 auto; padding-bottom: 14px; }

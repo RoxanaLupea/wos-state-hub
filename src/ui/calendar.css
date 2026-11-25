@@ -25,7 +25,7 @@
 .day-box.weekend { background: var(--weekend-tint); }
 .day-box .day-number { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; }
 .day-box.other-month { color: var(--text-faint); font-weight: 500; }
-.day-box:hover { background: rgba(255, 255, 255, 0.06); }
+@media (hover: hover) { .day-box:hover { background: rgba(255, 255, 255, 0.06); } }
 /* Today: a short line along the top of the day. The selected day: a soft tint, no border. */
 .day-box.today::before { content: ''; position: absolute; top: 0; left: 10px; right: 10px; height: 3px; border-radius: 0 0 3px 3px; background: var(--accent); }
 /* The chosen day: a little white fading in at its top and bottom, so it stands out
@@ -199,8 +199,10 @@
   padding: 2px 6px; border-radius: 6px; background: #0E1424; border: 1px solid rgba(255, 255, 255, 0.25);
   color: #FFFFFF; font-size: 11px; font-weight: 700; line-height: 16px; white-space: nowrap; text-shadow: none;
 }
-.bar-mark:hover::after, .bar-mark.show-time::after { display: block; }
-.bar:hover, .bar.raised { z-index: 5; }
+.bar-mark.show-time::after { display: block; }
+@media (hover: hover) { .bar-mark:hover::after { display: block; } }
+.bar.raised { z-index: 5; }
+@media (hover: hover) { .bar:hover { z-index: 5; } }
 
 /* A part running for days inside the bar (Trade Route): a line under the bar in its colour, its logo, and a white line where it ends. */
 .bar-stripe { position: absolute; bottom: -6px; height: 3px; border-radius: 2px; pointer-events: none; }
@@ -209,7 +211,7 @@
 
 /* Every bar opens its event (or, for "Bear ×4", the list of times). */
 .bar.clickable { pointer-events: auto; cursor: pointer; }
-.bar.clickable:hover { filter: brightness(1.12); }
+@media (hover: hover) { .bar.clickable:hover { filter: brightness(1.12); } }
 @media (min-width: 1000px) {
   .grid7 { column-gap: 4px; }
   .week-row { min-height: 96px; padding: 32px 0 6px; }
@@ -260,4 +262,5 @@
   padding: 2px 6px; border-radius: 6px; background: #0E1424; border: 1px solid rgba(255, 255, 255, 0.25);
   color: #FFFFFF; font-size: 11px; font-weight: 700; line-height: 16px; white-space: nowrap; text-shadow: none;
 }
-.bar-window:hover::after, .bar-window.show-time::after { display: block; }
+.bar-window.show-time::after { display: block; }
+@media (hover: hover) { .bar-window:hover::after { display: block; } }

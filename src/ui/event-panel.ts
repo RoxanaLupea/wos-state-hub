@@ -648,6 +648,9 @@ export interface EventPanelOptions {
   // What sits at the right of the tabs' line while a tab is open, by tab: its edit icon,
   // or Cancel and Save while it is being edited.
   tabActions?: Record<string, string>;
+  // A stage (State of Power's Matchmaking, Preparation, Battle, Field Triage) opens its
+  // whole event: the head names the event and spans all of it.
+  wholeEvent?: { eventTypeId: string; startMinute: number; endMinute: number };
 }
 
 
@@ -771,13 +774,16 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
         (tabs.length === 1 ? `<h3 class="tab-page-title">${escapeForPage(openTab.label)}</h3>` : '') +
         `${openTab.html}</div></div>`;
 
+  const headEventTypeId = options.wholeEvent?.eventTypeId ?? eventTypeId;
+  const headStart = options.wholeEvent?.startMinute ?? occurrence.startMinute;
+  const headEnd = options.wholeEvent?.endMinute ?? occurrence.endMinute;
   let html = backLinks(options.backToDay) +
     `<section class="day-section glass event-page" style="${tintedPanelStyle(color)}">` +
-    `<div class="event-page-head">${eventBadge(eventTypeId, 'large')}` +
+    `<div class="event-page-head">${eventBadge(headEventTypeId, 'large')}` +
     '<div class="event-page-title"><h2>' +
     (occurrence.wasCancelled ? '<span class="cancelled-mark" aria-label="Cancelled">&times;</span> ' : '') +
-    escapeForPage(eventTypeName(eventTypeId) + options.allianceTags) + '</h2>' +
-    `<span class="event-note">${escapeForPage(spanText(occurrence.startMinute, occurrence.endMinute))}</span>` +
+    escapeForPage(eventTypeName(headEventTypeId) + options.allianceTags) + '</h2>' +
+    `<span class="event-note">${escapeForPage(spanText(headStart, headEnd))}</span>` +
     `</div><div class="row-buttons">${options.headPencils}</div></div>` +
     // The other name, the event's note and this date's note go with the name, not in a tab.
     (notes.length ? `<div class="event-notes">${notes.join('')}</div>` : '') +

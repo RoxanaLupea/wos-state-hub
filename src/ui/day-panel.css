@@ -36,7 +36,7 @@
   border: none; border-radius: 10px; background: transparent; color: inherit;
   font: inherit; text-align: left; cursor: pointer;
 }
-.all-day-item:hover { background: rgba(255, 255, 255, 0.05); }
+@media (hover: hover) { .all-day-item:hover { background: rgba(255, 255, 255, 0.05); } }
 .all-day-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
 .all-day-text .event-title { font-size: 14px; }
 .cancelled-mark { color: var(--danger); font-weight: 800; }
@@ -50,7 +50,7 @@
   column-gap: 8px; padding: 0; border: none; background: transparent;
   color: inherit; font: inherit; text-align: left; border-radius: 10px; cursor: pointer;
 }
-.moment-button:hover { background: rgba(255, 255, 255, 0.05); }
+@media (hover: hover) { .moment-button:hover { background: rgba(255, 255, 255, 0.05); } }
 .moment-time { display: flex; flex-direction: column; align-items: flex-end; padding: 6px 0 10px; text-align: right; }
 .moment-time .time-main { font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; }
 /* The rail is the line the dots sit on. It stops short at the first and last dot so

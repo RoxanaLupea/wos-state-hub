@@ -519,6 +519,16 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
 
   const dayInEvent = Math.min(Math.max(day - occurrence.startDay + 1, 1), occurrence.lengthDays);
 
+  // A stage of an event (State of Power's Matchmaking, Preparation, Battle, Field Triage)
+  // opens the whole event, whichever part was tapped.
+  const wholeEventTypeId = eventTypeStageName(occurrence.eventTypeId) ? partOfByEventTypeId.get(occurrence.eventTypeId) ?? '' : '';
+  const wholeMembers = wholeEventTypeId ? familyOccurrences(occurrence, nearby, partOfByEventTypeId) : [];
+  const wholeEvent = wholeMembers.length ? {
+    eventTypeId: wholeEventTypeId,
+    startMinute: Math.min(...wholeMembers.map(member => member.startMinute)),
+    endMinute: Math.max(...wholeMembers.map(member => member.endMinute))
+  } : undefined;
+
   view.rewardView.ownBand = ownRewardBands();
   const resultsOptions = {
     context: workContext(), eventTypeId: occurrence.eventTypeId, runDate: resultRunDate(occurrence, nearby),
@@ -542,6 +552,7 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
       ? fortBattlesHtmlOf(occurrence.startDay, occurrence.endDay, myAllianceIds) : '',
     resultsHtml: resultsTab(resultsOptions),
     tabActions: { results: resultsTabActions(resultsOptions) },
+    wholeEvent,
     personalHtml: personalEntryForm({
       occurrence, category: categoryOf(occurrence.eventTypeId), userId: person?.userId ?? null,
       entries: person ? rowsOf('personal_entries') : []

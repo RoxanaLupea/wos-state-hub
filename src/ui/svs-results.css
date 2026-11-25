@@ -127,7 +127,7 @@
   width: 28px; height: 28px; margin-left: -5px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
   border-radius: 999px; border: 1px solid var(--glass-border); background: var(--glass); color: var(--text-muted);
 }
-.svs-plus:hover { color: var(--text); }
+@media (hover: hover) { .svs-plus:hover { color: var(--text); } }
 .svs-plus svg { width: 14px; height: 14px; }
 .svs-result.editing .form-message { margin: -12px 0 0; color: var(--danger); font-size: 13px; }
 .svs-result.editing .form-message:empty { display: none; }

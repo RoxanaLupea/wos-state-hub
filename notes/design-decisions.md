@@ -302,7 +302,10 @@ there before discussing it again.
 - While editing, every number is the same colour: we only know the winner of a day after,
   same for the Battle. We add the numbers and they get sorted when we save (25 Nov).
 - She can't check the full SvS on a phone: tapping its parts shouldn't open the phase but
-  the entire event, in the panel on the right (25 Nov; design not settled yet).
+  the entire event, in the panel on the right (25 Nov). Castle Battle opened with the SvS
+  timeline under a Castle Battle header: "it's not correct, if it opens only castle battle
+  then it will show only the results from castle battle during svs, otherwise it's svs".
+  Built: every stage opens State of Power, its whole dates, timeline and results.
 - Sunfire Castle gets the same results as the SvS (Occupation Ranking and president). It is
   entered only from the screenshots she sends; Claude updates the database (25 Nov).
 - The Battle's times are in a smaller font; the winner's stays bigger than the rest, but

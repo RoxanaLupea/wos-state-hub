@@ -85,7 +85,7 @@
 .pp .acc .kinds { display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .pp .acc .lvl { padding: 0 4px; }
 .pp .acc .lvl:disabled { opacity: .35; cursor: default; }
-.pp .acc .lvl:disabled:hover { color: var(--text-faint); }
+@media (hover: hover) { .pp .acc .lvl:disabled:hover { color: var(--text-faint); } }
 .pp .items { display: grid; column-gap: 8px; }
 .pp .items.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .pp .items.five { grid-template-columns: repeat(5, minmax(0, 1fr)); }
@@ -144,7 +144,7 @@
   -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 .pp .remind .edit-icon { width: 17px; height: 17px; flex: none; overflow: visible;
   filter: drop-shadow(0 0 3px color-mix(in srgb, var(--edit-colour) 50%, transparent)); }
-.pp .remind:hover { opacity: .85; }
+@media (hover: hover) { .pp .remind:hover { opacity: .85; } }
 .pp .remind.due > span::after { content: ''; position: absolute; top: -2px; left: calc(100% + 3px); width: 5px; height: 5px; border-radius: 50%;
   background: radial-gradient(circle at 32% 30%, color-mix(in srgb, var(--notice-red) 35%, #FFFFFF) 0, var(--notice-red) 55%,
     color-mix(in srgb, var(--notice-red) 80%, #000000) 100%);
@@ -175,7 +175,7 @@
 .pp .pick.plain { display: block; text-align: center; font-size: 11px; font-weight: 700; color: var(--text-faint); white-space: nowrap; }
 .pp .lvl { height: 12px; padding: 0 8px; border: none; background: none; font: inherit; font-size: 10.5px; font-weight: 700;
   line-height: 12px; white-space: nowrap; color: var(--text-faint); cursor: pointer; }
-.pp .lvl:hover { color: var(--text); }
+@media (hover: hover) { .pp .lvl:hover { color: var(--text); } }
 .pp .lvl.on { font-weight: 800; color: var(--text); }
 .pp .lvl.on { background: linear-gradient(90deg, color-mix(in srgb, var(--ally) 55%, var(--text)), var(--text));
   -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
@@ -186,7 +186,7 @@
 .pp .edit-actions { display: inline-flex; align-items: center; gap: 16px; margin: -6px 0 -6px 16px; }
 .pp .quiet { display: inline-flex; align-items: center; gap: 6px; padding: 4px 0; border: none; background: none; font: inherit; font-size: 12.5px; font-weight: 700; letter-spacing: 0;
   text-transform: none; line-height: 1; color: var(--text-muted); cursor: pointer; }
-.pp .quiet:hover { opacity: .85; }
+@media (hover: hover) { .pp .quiet:hover { opacity: .85; } }
 .pp .quiet .words { background: linear-gradient(90deg, color-mix(in srgb, var(--quiet-tint) 45%, var(--text)), var(--text));
   -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 .pp .quiet.cancel { --quiet-tint: var(--notice-red); }
@@ -236,7 +236,7 @@
 .info-field { box-sizing: border-box; width: 100%; max-width: 240px; height: 44px; padding: 0 12px; border-radius: 11px;
   border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.06); color: var(--text); letter-spacing: 0.04em;
   font: inherit; font-size: 18px; font-weight: 800; text-align: center; font-variant-numeric: tabular-nums; outline: none; }
-.info-field:hover { border-color: color-mix(in srgb, var(--text) 35%, transparent); }
+@media (hover: hover) { .info-field:hover { border-color: color-mix(in srgb, var(--text) 35%, transparent); } }
 .info-field:focus { border-color: var(--accent); background: rgba(255, 255, 255, 0.09); }
 .info-field::placeholder { color: var(--text-faint); font-weight: 600; }
 .info-field.has-problem { border-color: var(--danger); }
@@ -253,7 +253,7 @@
 .kind-words { align-self: center; display: flex; padding: 2px; gap: 2px; border-radius: 8px; background: rgba(255, 255, 255, 0.06); }
 .kind-word { height: 30px; padding: 0 14px; border: none; border-radius: 7px; background: none; cursor: pointer;
   font: inherit; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); }
-.kind-word:hover { color: var(--text); }
+@media (hover: hover) { .kind-word:hover { color: var(--text); } }
 .kind-word.selected { color: var(--text); background: var(--glass-strong); }
 .pp .add .saverow { margin-top: 0; }
 
