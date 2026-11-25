@@ -26,8 +26,9 @@ notes/rules-and-open-items.md (game rules).
 - Her words win over everything: over the notes, over an example she sends, over your own
   habits. If something she said seems wrong, say so in one or two sentences and ask.
 - When she sends an example, follow it closely. What she liked in it is the point.
-- Never reinterpret a clear instruction (25 Nov: "blue for winning, red for losing" was
-  changed to one colour per state; it cost her a night).
+- Never reinterpret a clear instruction silently. A rule set while working on a design is
+  a working rule: when a better design needs something else, think, say so and bring the
+  better design (25 Nov). Don't just agree.
 - One question at a time, and only when it is truly open.
 
 ## How to design

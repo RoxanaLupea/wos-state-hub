@@ -690,8 +690,10 @@ Game accounts (from 23 Nov, still holds)
     makes the match clear. The opponent is named as the opponent, once.
   - Our style: the logo colours, upper and lower case played against each other. First of
     all the information is easy to read.
-  - The event's colours, not dimmed: blue for winning, red for losing. Only blue and red,
-    no grey. Never one colour per state.
+  - The event's colours, not dimmed, only blue and red, no grey. "Blue for winning, red
+    for losing" was a working rule for a design, not a permanent one (25 Nov); the game's
+    own screens (data/captures/svs-prep-points-*.jpg) put our state blue on the left and
+    the opponent red on the right, whoever is ahead.
   - A bar is not split in two pieces.
   - No bare words or numbers the reader has to decode ("Repelled", "Attack", a state
     number on its own, "In #1385"). No sentences to say what a mark (a pin) can show.
