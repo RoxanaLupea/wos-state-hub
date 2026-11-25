@@ -17,6 +17,18 @@ export function weekdayNamesRow(): string {
     `<span class="desktop-only-text">${WEEKDAY_NAMES[index].slice(name.length)}</span></div>`).join('') + '</div>';
 }
 
+// The dates held under the day names while the month scrolls (owner, 25 Nov): once a
+// week's dates have scrolled up to the day names, that week's numbers stay there, and only
+// the numbers change when the next week reaches them. Filled in by holdDayNames in main.ts.
+export function heldDatesRow(): string {
+  let cells = '';
+  for (let column = 0; column < 7; column++) {
+    cells += `<button type="button" class="held-date${column > 4 ? ' weekend' : ''}" tabindex="-1">` +
+      '<span class="day-number"></span></button>';
+  }
+  return `<div class="grid7 held-dates" aria-hidden="true">${cells}</div>`;
+}
+
 export interface WeekRowOptions {
   pieceOptions: WeekPieceOptions;
   barOptions: Omit<BarRenderOptions, 'weekStart'>;

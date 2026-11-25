@@ -939,3 +939,21 @@ All nine are built.
   we make that pic bigger a little? and the main stays out of it unless we make another one
   a main and save it". "labyrinth stages can have bigger left and right padding to show
   it's a subsection".
+- Phone calendar controls (25 Nov): the one line accepted as shown ("I like how the one
+  line looks"): the date, the views, Filters and UTC; Filters and Today as icons; a week
+  without its year. "but i don't like how the background changes, we should still see the
+  top like we do here" (her screenshot: the line on the page, the calendar's rounded top
+  with the day names on its glass).
+- Calendar icons (25 Nov): UTC's swap and Filters' funnel from her two pictures ("Use these
+  as inspiration and the style of icons we used in other pages, and the page colours
+  too"); "for consistency today should have the pin icon we use in the panel".
+- Phone calendar (25 Nov): icons accepted ("I like this"). "next and then at the top and
+  when we scroll they will dissappear and the calendar stays full page, so when we scroll
+  first they get smaller and fade away and the calendar with the filters go stick to the
+  top, then we scroll through the calendar".
+- Calendar on a computer (25 Nov): "the filters should be up to the right edge of the
+  calendar, the rest will stay free for notifications like, update skill level/foundry
+  power".
+- Phone calendar opening (25 Nov, replaces "today's week in sight" on a phone): "Top. If
+  we press on today they get smaller, calendar goes to the top and then it's scrolled, a
+  tiny animation, not too long, but we need the user to understand what's happening".

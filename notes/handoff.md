@@ -29,12 +29,23 @@ Do CLAUDE.md's setup first. Updated 25 Nov 2026.
   - Edit icons share one colour per page (the first SVG gradient of that name wins); the
     red ones on the profile have their own (DUE_EDIT_ICON, NEUTRAL_CANCEL_ICON). Other
     pages with edit icons in different colours still have this bug.
-- Not pushed, in the workspace only (not accepted): the calendar's held dates (a week's
-  numbers kept under the day names, heldDatesRow, holdDayNames), the phone's calendar
-  controls held at the top, and the week-to-month glide (glideDownToToday). Roxanne
-  disliked the phone version; the open question is the one-line phone header (date,
-  views, Filters, UTC), shown as a mockup only (/tmp CSS, not in the code): Filters and
-  Today as icons, the week title without its year, 18 px.
+- 20:35 push, the calendar:
+  - Phone: the controls are one line (date, views, Filters, UTC; Today and Filters as
+    icons; a week's title without its year, the date shrinking on narrow phones,
+    fitToolbar in main.ts). Next up and Then open the page above them (next-up.css,
+    display: contents on the layout) and shrink and fade as the page scrolls
+    (holdDayNames). The controls, then the calendar's top with the day names, stay put on
+    the page's own background (fixed page background, the panel's glass drawn in
+    .weekday-names.stuck::before); the dates of the week scrolled into stay under the
+    day names (heldDatesRow, .held-dates). The phone opens at the top; Today glides down
+    to this week (glideDownToToday, 750 ms), as does switching from week to month.
+  - Icons in the site's style (one stroke from --section into white, own gradient ids):
+    Today is the pin, UTC two curved arrows, Filters a funnel with drops, the views'
+    calendar pages; all centred on one line.
+  - Computer: the controls end at the calendar's right edge (the space above the right
+    column is kept for reminders), Filters opens under its button; held dates on the
+    calendar's glass.
+  - A bar that is only its logo (Sunfire Castle) no longer shows its short name.
 - Earlier on 25 Nov: new-version notice, top bar across the window and held at the top on
   a phone, day names held on a phone.
 - New version live: src/ui/new-version.ts checks version.json (written by vite.config.ts)

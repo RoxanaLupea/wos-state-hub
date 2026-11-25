@@ -1,7 +1,7 @@
 // The month: a row of weekday names, then one row per week.
 import './calendar.css';
 import { daysInMonth, startOfMonth, startOfWeek } from '../calendar/days.ts';
-import { weekRow, weekdayNamesRow, type WeekRowOptions } from './week-row.ts';
+import { heldDatesRow, weekRow, weekdayNamesRow, type WeekRowOptions } from './week-row.ts';
 import { MONTH_NAMES } from './day-names.ts';
 import type { Bar } from '../calendar/bars.ts';
 
@@ -18,7 +18,8 @@ export function monthView(
     weeks += weekRow(weekStart, bars, { ...options, firstOfMonth, lastOfMonth });
   }
   // The weeks in their own box: on a computer only they scroll, under the day names.
-  return weekdayNamesRow() + `<div class="weeks">${weeks}</div>`;
+  // The held dates come first: once a week's dates reach the day names, its numbers stay there.
+  return weekdayNamesRow() + `<div class="weeks">${heldDatesRow()}${weeks}</div>`;
 }
 
 // The first and last day a month's grid needs, including the days either side that

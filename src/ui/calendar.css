@@ -6,19 +6,51 @@
 /* Month grid: 5 weekdays and 2 slightly wider weekend days */
 .grid7 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) repeat(2, minmax(0, var(--weekend-width))); column-gap: 2px; }
 .weekday-names { padding-bottom: 6px; }
-/* On a phone the window scrolls, so the day names stay under the top bar while the weeks
-   scroll under them (owner, 25 Nov); a computer already scrolls only the weeks. Once
-   they are held there, they take the top bar's tone so the weeks do not show through. */
+/* On a phone the window scrolls, so the day names stay under the top bar and the
+   calendar's controls while the weeks scroll under them (owner, 25 Nov); a computer
+   already scrolls only the weeks. Held there, they keep the calendar's own top: its
+   glass on the page's background, its rounded corners and edge, so nothing changes but
+   that the weeks pass under them. */
 @media (max-width: 999px) {
   .weekday-names {
-    position: sticky; top: var(--top-bar-height, 0px); z-index: 5;
+    position: sticky; top: calc(var(--top-bar-height, 0px) + var(--toolbar-height, 0px) + 5px); z-index: 5;
     margin: -6px -4px 0; padding: 6px 4px 6px;
   }
-  .weekday-names.stuck {
-    background: rgba(24, 30, 43, 0.94); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.10); margin-bottom: -1px;
+  .weekday-names.stuck::before {
+    content: ''; position: absolute; z-index: -1; top: -5px; left: -1px; right: -1px; bottom: 0;
+    border: 1px solid var(--glass-border); border-bottom: none; border-radius: var(--radius) var(--radius) 0 0;
+    background-color: var(--page-color); background-image: linear-gradient(var(--glass), var(--glass)), var(--page-background);
+    background-attachment: fixed; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  }
+  /* Behind the rounded corners, the page itself, so the weeks never show in them. */
+  .weekday-names.stuck::after {
+    content: ''; position: absolute; z-index: -2; top: -5px; left: -2px; right: -2px; height: calc(var(--radius) + 6px);
+    background-color: var(--page-color); background-image: var(--page-background); background-attachment: fixed;
   }
 }
+/* The held dates (owner, 25 Nov): once a week's dates have scrolled up to the day names,
+   that week's numbers stay under them, drawn exactly where the week's own numbers were, so
+   only the numbers change when the next week arrives. They take no room in the month, and
+   they are drawn on the calendar's own glass, with its edges at the sides. */
+.held-dates {
+  position: sticky; top: var(--held-dates-top, 0px); z-index: 4; flex: none;
+  height: 24px; margin: 0 -5px -24px; padding: 0 4px; visibility: hidden;
+  border: 1px solid transparent; border-top: none; border-bottom: none;
+}
+.held-dates.showing {
+  visibility: visible; border-color: var(--glass-border);
+  background-color: var(--page-color); background-image: linear-gradient(var(--glass), var(--glass)), var(--page-background);
+  background-attachment: fixed;
+}
+.held-date {
+  position: relative; display: flex; justify-content: center; align-items: flex-start; margin-top: 3px; padding: 2px 0 0;
+  border: none; border-radius: var(--radius-small) var(--radius-small) 0 0; background: transparent;
+  color: var(--text); font: inherit; font-size: 12px; font-weight: 700; cursor: pointer;
+}
+.held-date.weekend { background: var(--weekend-tint); }
+.held-date.other-month { color: var(--text-faint); font-weight: 500; }
+.held-date .day-number { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; }
+.held-date.today::before { content: ''; position: absolute; top: 0; left: 10px; right: 10px; height: 3px; border-radius: 0 0 3px 3px; background: var(--accent); }
 .weekday-name { text-align: center; font-size: 10.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
   color: var(--text-muted); }
 @media (min-width: 1000px) { .weekday-name { font-size: 12px; } }
@@ -29,7 +61,7 @@
 /* Each week: a row of full-height day boxes behind, the event bars on top. */
 /* On a phone the dates are small (12 px) and take little room above the bars. */
 .week-row { position: relative; min-height: 54px; padding: 23px 0 6px; border-top: 1px solid var(--glass-border); }
-.weeks > .week-row:first-child { border-top: none; }
+.weeks > .week-row:first-child, .weeks > .held-dates + .week-row { border-top: none; }
 .day-boxes { position: absolute; inset: 3px 0; }
 .day-box {
   position: relative; display: flex; justify-content: center; align-items: flex-start; padding: 2px 0 0; border: none; background: transparent;
@@ -98,7 +130,7 @@
 .bar.too-narrow .bar-head { justify-content: flex-start; }
 /* Narrower than its logo: the logo shrinks to fit. */
 .bar.tiny { padding: 2px 0; }
-.bar.tiny .bar-label, .bar.tiny .bar-time { display: none; }
+.bar.tiny .bar-label, .bar.tiny .bar-time, .bar.tiny .bar-tag { display: none; }
 .bar.tiny svg.event-icon { margin: 0; }
 /* A bar too short for anything but its logo (Sunfire Castle, a few hours) is drawn like
    a followed time: the logo at full size, centred on its time, with no bar behind it. */
@@ -230,6 +262,9 @@
   .week-row { min-height: 96px; padding: 32px 0 6px; }
   .day-box { padding: 4px 0 0; font-size: 15px; }
   .day-box .day-number { min-width: 26px; height: 26px; }
+  .held-dates { height: 34px; }
+  .held-date { padding-top: 4px; font-size: 15px; }
+  .held-date .day-number { min-width: 26px; height: 26px; }
   .bars { grid-auto-rows: 30px; row-gap: 3px; }
   .bar { --bar-logo: 24px; --head-height: 26px; --line-two-height: 16px; height: 30px; padding: 2px 6px; border-radius: 8px; font-size: 14px; line-height: 26px; }
   .bar-head { gap: 6px; }

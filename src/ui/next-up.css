@@ -13,6 +13,14 @@
 .next-tile-tag { font-family: var(--tag-font); font-size: 0.72em; font-weight: 700; letter-spacing: 0.08em; opacity: 0.9; }
 .next-tile-title.fitted { white-space: nowrap; overflow: hidden; }
 .next-tile-stage { margin-top: 2px; font-size: 9.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+/* On a phone the two tiles open the calendar page, above its controls (owner, 25 Nov); as
+   the page scrolls they get smaller and fade away (main.ts, holdDayNames), and the
+   controls and the calendar take the whole screen. */
+@media (max-width: 999px) {
+  .page[data-section="calendar"] > .calendar-layout,
+  .page[data-section="calendar"] .side-column { display: contents; }
+  .page[data-section="calendar"] .next-up { order: -1; margin: 0 12px 14px; transform-origin: center top; }
+}
 @media (min-width: 1000px) {
   .next-up { margin: 0; }
   .next-tile { padding: 10px 12px; }

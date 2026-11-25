@@ -1010,22 +1010,64 @@ async function removeCharacter(id: string): Promise<void> {
   draw();
 }
 
+// Set when the month opens from the week: it starts at its top and glides down to this week.
+let glideToToday = false;
+
+// Moves the window (phone) or the weeks' box (computer) to a place in a short, easing glide.
+function glide(scroller: HTMLElement | null, to: number): void {
+  const from = scroller ? scroller.scrollTop : window.scrollY;
+  const length = 750;
+  let started = 0;
+  const stepTo = (place: number) => { if (scroller) scroller.scrollTop = place; else window.scrollTo(0, place); };
+  const frame = (time: number) => {
+    if (!started) started = time;
+    const done = Math.min(1, (time - started) / length);
+    const eased = done < 0.5 ? 4 * done * done * done : 1 - Math.pow(-2 * done + 2, 3) / 2;
+    stepTo(from + (to - from) * eased);
+    if (done < 1) requestAnimationFrame(frame);
+  };
+  requestAnimationFrame(frame);
+}
+
+// The month opened from the week: at its top first, then down to this week, which ends
+// right under the day names.
+function glideDownToToday(calendar: HTMLElement, weeks: HTMLElement | null): void {
+  const todayRow = calendar.querySelector<HTMLElement>('.day-box.today')?.closest<HTMLElement>('.week-row');
+  if (!todayRow) return;
+  if (weeks && weeks.scrollHeight > weeks.clientHeight + 1) {
+    weeks.scrollTop = 0;
+    const most = weeks.scrollHeight - weeks.clientHeight;
+    glide(weeks, Math.min(most, todayRow.getBoundingClientRect().top - weeks.getBoundingClientRect().top));
+    return;
+  }
+  window.scrollTo(0, 0);
+  glide(null, phonePlaceOfWeek(calendar, todayRow));
+}
+
+// On a phone: where the window scrolls to so a week sits right under the calendar's held
+// top (the top bar, the controls and the day names), as far as the page goes.
+function phonePlaceOfWeek(calendar: HTMLElement, row: HTMLElement): number {
+  const names = calendar.querySelector<HTMLElement>('.weekday-names');
+  const top = document.querySelector<HTMLElement>('.top-bar')?.getBoundingClientRect().height ?? 0;
+  const toolbar = document.querySelector<HTMLElement>('.page > .toolbar')?.getBoundingClientRect().height ?? 0;
+  const under = top + toolbar + 5 + (names?.offsetHeight ?? 0);
+  const most = document.documentElement.scrollHeight - window.innerHeight;
+  return Math.max(0, Math.min(most, window.scrollY + row.getBoundingClientRect().top - under));
+}
+
 // Whether the calendar has been drawn yet in this visit: its first drawing shows today.
 let calendarShownBefore = false;
 
 // Today's week in sight when the calendar opens (24 Nov): on a computer the weeks' box
-// scrolls so today's week is the first one, or as far as it goes near the month's end; on
-// a phone, where the window scrolls, the window moves down only if today's week is below
-// the screen. A month without today starts at its top.
+// scrolls so today's week is the first one, or as far as it goes near the month's end. A
+// month without today starts at its top.
 function showToday(calendar: HTMLElement, weeks: HTMLElement | null): void {
   const todayRow = calendar.querySelector<HTMLElement>('.day-box.today')?.closest<HTMLElement>('.week-row');
   if (weeks && weeks.scrollHeight > weeks.clientHeight + 1) {
     weeks.scrollTop = todayRow ? weeks.scrollTop + todayRow.getBoundingClientRect().top - weeks.getBoundingClientRect().top : 0;
-    return;
   }
-  if (!todayRow) return;
-  const bottom = todayRow.getBoundingClientRect().bottom;
-  if (bottom > window.innerHeight) window.scrollBy(0, bottom - window.innerHeight + 16);
+  // On a phone the calendar opens at its top, with Next up and Then showing (owner, 25 Nov);
+  // Today glides down to this week (glideDownToToday).
 }
 
 function putBackScrollPlaces(app: HTMLElement, places: ScrollPlaces): void {
@@ -1048,7 +1090,9 @@ function putBackScrollPlaces(app: HTMLElement, places: ScrollPlaces): void {
     if (eventBody) eventBody.scrollTop = startAtTop.panel ? 0 : places.eventBody;
   }
   if (calendar) {
-    if (showsToday) showToday(calendar, weeks);
+    if (showsToday && glideToToday) glideDownToToday(calendar, weeks);
+    else if (showsToday) showToday(calendar, weeks);
+    glideToToday = false;
     calendarShownBefore = true;
   }
   startAtTop.calendar = false;
@@ -1382,6 +1426,8 @@ function placeFiltersPanel(app: HTMLElement): void {
   const button = app.querySelector<HTMLElement>('.filters-button');
   if (!sheet || !button || !window.matchMedia('(min-width: 1000px)').matches) return;
   sheet.style.top = Math.round(button.getBoundingClientRect().bottom + 10) + 'px';
+  // Under its button: its right edge on the button's, the calendar's right edge.
+  sheet.style.right = Math.round(document.documentElement.clientWidth - button.getBoundingClientRect().right) + 'px';
 }
 
 // The event the Event section is named after: the one running now, or the next one.
@@ -1646,6 +1692,10 @@ function handleClicks(event: MouseEvent): void {
 
   const stepButton = target.closest<HTMLElement>('[data-step]');
   if (stepButton) {
+    // Today on a phone (owner, 25 Nov): from the top, the page glides down to this week,
+    // the Next up tiles shrinking away and the calendar's top holding, so it is plain
+    // where the calendar went.
+    if (Number(stepButton.dataset.step) === 0 && window.innerWidth < 1000) glideToToday = true;
     step(Number(stepButton.dataset.step));
     startAtTop.calendar = true;
     draw();
@@ -1654,7 +1704,10 @@ function handleClicks(event: MouseEvent): void {
 
   const viewButton = target.closest<HTMLElement>('[data-view]');
   if (viewButton) {
-    view.calendarView = viewButton.dataset.view as CalendarView;
+    const nextView = viewButton.dataset.view as CalendarView;
+    // From the week to the month: the month opens at its top and moves down to this week (owner, 25 Nov).
+    glideToToday = view.calendarView === 'week' && nextView === 'month';
+    view.calendarView = nextView;
     startAtTop.calendar = true;
     draw();
     return;
@@ -3617,11 +3670,68 @@ async function start(): Promise<void> {
       const height = bar ? bar.getBoundingClientRect().height : 0;
       document.documentElement.style.setProperty('--top-bar-height', height + 'px');
       const names = document.querySelector<HTMLElement>('.calendar-panel .weekday-names');
-      if (names) names.classList.toggle('stuck', window.innerWidth < 1000 && names.getBoundingClientRect().top <= height + 0.5);
+      if (!names) return;
+      const onPhone = window.innerWidth < 1000;
+      // On a phone the Next up tiles above the calendar get smaller and fade as they
+      // scroll away (owner, 25 Nov).
+      const tiles = document.querySelector<HTMLElement>('.page > .calendar-layout .next-up');
+      if (tiles) {
+        const gone = onPhone ? Math.min(1, Math.max(0, window.scrollY / Math.max(1, tiles.offsetHeight + 14))) : 0;
+        tiles.style.transform = gone ? `scale(${1 - 0.15 * gone})` : '';
+        tiles.style.opacity = gone ? String(1 - gone) : '';
+      }
+      // On a phone the calendar's controls stay under the top bar too, and the day names under them.
+      const toolbar = document.querySelector<HTMLElement>('.page > .toolbar');
+      const toolbarHeight = onPhone && toolbar ? toolbar.getBoundingClientRect().height : 0;
+      document.documentElement.style.setProperty('--toolbar-height', toolbarHeight + 'px');
+      if (toolbar) toolbar.classList.toggle('stuck', onPhone && toolbar.getBoundingClientRect().top <= height + 0.5);
+      names.classList.toggle('stuck', onPhone && names.getBoundingClientRect().top <= height + toolbarHeight + 5.5);
+      // The held dates: the week whose dates have scrolled up to the day names shows its
+      // numbers there, until the next week's dates reach them.
+      const weeks = names.parentElement?.querySelector<HTMLElement>('.weeks');
+      const held = weeks?.querySelector<HTMLElement>('.held-dates');
+      if (!weeks || !held) return;
+      if (!weeks.dataset.holdsDates) {
+        weeks.dataset.holdsDates = 'yes';
+        weeks.addEventListener('scroll', holdDayNames, { passive: true });
+      }
+      if (onPhone) document.documentElement.style.setProperty('--held-dates-top', (height + toolbarHeight + 5 + names.offsetHeight) + 'px');
+      const line = onPhone ? names.getBoundingClientRect().bottom : weeks.getBoundingClientRect().top;
+      let passedWeek: HTMLElement | null = null;
+      for (const row of Array.from(weeks.querySelectorAll<HTMLElement>('.week-row'))) {
+        if (row.getBoundingClientRect().top < line - 0.5) passedWeek = row;
+      }
+      held.classList.toggle('showing', passedWeek !== null);
+      if (!passedWeek) return;
+      const days = Array.from(passedWeek.querySelectorAll<HTMLElement>('.day-box'));
+      Array.from(held.querySelectorAll<HTMLElement>('.held-date')).forEach((cell, column) => {
+        const day = days[column];
+        if (!day) return;
+        cell.dataset.day = day.dataset.day ?? '';
+        cell.classList.toggle('other-month', day.classList.contains('other-month'));
+        cell.classList.toggle('today', day.classList.contains('today'));
+        const number = cell.querySelector('.day-number');
+        if (number) number.textContent = day.querySelector('.day-number')?.textContent ?? '';
+      });
     };
     window.addEventListener('scroll', holdDayNames, { passive: true });
     window.addEventListener('resize', holdDayNames);
     afterEachDraw.push(holdDayNames);
+    // On a narrow phone the date steps down in size until the calendar's line fits.
+    const fitToolbar = () => {
+      const toolbar = document.querySelector<HTMLElement>('.page > .toolbar');
+      const title = toolbar?.querySelector<HTMLElement>('.period-title');
+      if (!toolbar || !title) return;
+      title.style.fontSize = '';
+      if (window.innerWidth >= 1000) return;
+      let size = parseFloat(getComputedStyle(title).fontSize);
+      // The date's own box gives way first, so it is the one that shows the overflow.
+      const box = title.parentElement as HTMLElement;
+      const overflows = () => box.scrollWidth > box.clientWidth + 0.5 || toolbar.scrollWidth > toolbar.clientWidth + 0.5;
+      while (overflows() && size > 14) { size -= 0.5; title.style.fontSize = size + 'px'; }
+    };
+    afterEachDraw.unshift(fitToolbar);
+    window.addEventListener('resize', fitToolbar);
     document.fonts?.addEventListener('loadingdone', layOutCalendarAgain);
     void document.fonts?.ready.then(layOutCalendarAgain);
     draw();

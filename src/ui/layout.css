@@ -27,6 +27,15 @@
 @media (min-width: 1800px) {
   .side-column { flex-basis: 500px; max-width: 500px; }
 }
+/* On a computer the calendar's controls end at the calendar's right edge (owner, 25 Nov);
+   the space above the right column is kept free for reminders (skill levels, foundry
+   power). */
+@media (min-width: 1000px) {
+  .page[data-section="calendar"] > .toolbar { margin-right: calc(440px + 16px); }
+}
+@media (min-width: 1800px) {
+  .page[data-section="calendar"] > .toolbar { margin-right: calc(500px + 16px); }
+}
 /* Computers: the app fills the screen and the window never scrolls (its scrollbar would narrow the calendar
    and make it jump). The calendar and the right panel each scroll in their own box; other pages scroll on their own. */
 @media (min-width: 1000px) {
@@ -41,6 +50,8 @@
   .calendar-panel .weeks { min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin;
     scrollbar-color: color-mix(in srgb, var(--accent) 35%, transparent) transparent; }
   .calendar-panel .weekday-names { scrollbar-gutter: stable; overflow-y: hidden; }
+  /* The held dates on the panel's glass, the width of the weeks. */
+  .calendar-panel .held-dates { margin: 0 0 -34px; padding: 0; border: none; }
   .side-column { min-height: 0; }
   .next-up { flex: none; }
   /* Its scrollbar sits in the page's margin, so the panel lines up with the tiles above it. */

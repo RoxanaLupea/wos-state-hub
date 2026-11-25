@@ -177,26 +177,42 @@ const ARROW_RIGHT = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"
 export type CalendarView = 'week' | 'month' | 'year';
 
 // An arrow curling back round to a dot: Today takes you back to now.
-const TODAY_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
-  ' stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-  '<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>';
-// Two arrows passing each other: UTC swaps to your own time and back.
-const SWAP_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
-  ' stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg>';
-const FUNNEL_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
-  ' stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16l-6 7.5V19l-4 1.5v-8z"/></svg>';
+// The calendar's line icons drawn as the site's other icons are (the edit icon, the pin):
+// one stroke running from the page's colour into white, with a soft glow (owner, 25 Nov).
+// Each has its own colour name, since an icon's colour is set by the first of that name.
+function lineIcon(id: string, body: string, strokeWidth = 2.2): string {
+  return `<svg class="line-icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1">` +
+    '<stop offset="0" style="stop-color: var(--section)"/><stop offset="1" style="stop-color: var(--text)"/></linearGradient></defs>' +
+    `<g fill="none" stroke="url(#${id})" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round">${body}</g></svg>`;
+}
+// Today: the pin that marks where we are in an event's timeline.
+const TODAY_ICON = lineIcon('today-icon-colour',
+  '<path d="M12 21.6c-.6-.5-7-6.3-7-11.6a7 7 0 0 1 14 0c0 5.3-6.4 11.1-7 11.6z"/><circle cx="12" cy="10" r="2.8"/>');
+// Two curved arrows going round: UTC swaps to your own time and back.
+const SWAP_ICON = lineIcon('swap-icon-colour',
+  '<path d="M4 12.5V11a5 5 0 0 1 5-5h10.5"/><path d="M16 2.5L19.5 6 16 9.5"/>' +
+  '<path d="M20 11.5V13a5 5 0 0 1-5 5H4.5"/><path d="M8 21.5L4.5 18 8 14.5"/>');
+// A funnel with what it sorts falling in.
+const FUNNEL_ICON = lineIcon('funnel-icon-colour',
+  '<rect x="3.5" y="8" width="17" height="3.2" rx="1.6"/><path d="M5 11.2l5.2 6V22l3.6-2.2v-2.6l5.2-6"/>' +
+  '<circle cx="9" cy="4.2" r="1.5" fill="url(#funnel-icon-colour)" stroke="none" opacity=".8"/>' +
+  '<circle cx="14.6" cy="3" r="1.9" fill="url(#funnel-icon-colour)" stroke="none" opacity=".8"/>', 2);
 
 // The three views as calendar pages: Week one row of days, Month two, Year a stack of pages.
-function calendarPage(body: string): string {
-  return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"' +
-    ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + body + '</svg>';
+// Drawn in the site's icon style (owner, 25 Nov), one stroke from the page's colour into
+// white, each with its own colour name.
+function calendarPage(id: string, body: string): string {
+  return `<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1">` +
+    '<stop offset="0" style="stop-color: var(--section)"/><stop offset="1" style="stop-color: var(--text)"/></linearGradient></defs>' +
+    `<g fill="none" stroke="url(#${id})" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">` +
+    body.replace(/DOT_FILL/g, `url(#${id})`) + '</g></svg>';
 }
-const dayDot = (x: number, y: number) => `<circle cx="${x}" cy="${y}" r="1.05" fill="currentColor" stroke="none"/>`;
+const dayDot = (x: number, y: number) => `<circle cx="${x}" cy="${y}" r="1.05" fill="DOT_FILL" stroke="none"/>`;
 const PAGE_OUTLINE = '<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/>';
 const VIEW_ICONS: Record<CalendarView, string> = {
-  week: calendarPage(PAGE_OUTLINE + [7, 10.3, 13.7, 17].map(x => dayDot(x, 15.2)).join('')),
-  month: calendarPage(PAGE_OUTLINE + [13.2, 16.7].map(y => [7, 10.3, 13.7, 17].map(x => dayDot(x, y)).join('')).join('')),
-  year: calendarPage('<rect x="2.5" y="8" width="13.5" height="13" rx="2.2"/><path d="M6 6.5v3M12.5 6.5v3M2.5 12h13.5"/>' +
+  week: calendarPage('view-week-colour', PAGE_OUTLINE + [7, 10.3, 13.7, 17].map(x => dayDot(x, 15.2)).join('')),
+  month: calendarPage('view-month-colour', PAGE_OUTLINE + [13.2, 16.7].map(y => [7, 10.3, 13.7, 17].map(x => dayDot(x, y)).join('')).join('')),
+  year: calendarPage('view-year-colour', '<rect x="2.5" y="8" width="13.5" height="13" rx="2.2"/><path d="M6 6.5v3M12.5 6.5v3M2.5 12h13.5"/>' +
     '<path d="M6.5 5.5V5a2 2 0 0 1 2-2H19a2.5 2.5 0 0 1 2.5 2.5V14a2 2 0 0 1-2 2h-.5"/>' + dayDot(6, 16) + dayDot(9.2, 16) + dayDot(12.5, 16))
 };
 const VIEW_NAMES: Record<CalendarView, string> = { week: 'Week', month: 'Month', year: 'Year' };
@@ -211,11 +227,11 @@ export interface ToolbarOptions {
   filtersOpen: boolean;
 }
 
-// The calendar's controls. On a phone: the month in the middle of the first row, Today on
-// its left only when today is out of sight, and UTC on its right; the second row has the
-// three views on the left and Filters on the right. On a computer the two rows are one:
-// the month with its arrows on the left, the views, UTC and Filters on the right. Nothing
-// is boxed: the open view is bright with a line under it.
+// The calendar's controls. On a phone, one line (owner, 25 Nov): the date, the three
+// views, Filters and UTC, with Today's icon before the date only when today is out of
+// sight; Today and Filters are their icons alone, and a week's title has no year. On a
+// computer: the month with its arrows on the left, the views, UTC and Filters on the
+// right. Nothing is boxed: the open view is bright with a line under it.
 export function calendarToolbar(options: ToolbarOptions): string {
   const mode = currentTimeMode();
   const viewButton = (id: CalendarView) =>
@@ -224,14 +240,18 @@ export function calendarToolbar(options: ToolbarOptions): string {
   // The word says which time is shown; tapping it swaps to the other.
   const timeWord = mode === 'game' ? 'UTC' : 'Mine';
   const today = options.todayInView ? '<span class="today-slot"></span>'
-    : `<button type="button" class="quiet-button today-button" data-step="0">${TODAY_ICON}Today</button>`;
+    : `<button type="button" class="quiet-button today-button" data-step="0" aria-label="Today">${TODAY_ICON}<span class="phone-hidden">Today</span></button>`;
+  // A week's year is left out on a phone, so the line fits (owner, 25 Nov); a month keeps it.
+  const year = options.view === 'week' ? / \d{4}$/.exec(options.title)?.[0] ?? '' : '';
+  const title = year ? `<span class="title-long">${escapeForPage(options.title)}</span>` +
+    `<span class="title-short">${escapeForPage(options.title.slice(0, options.title.length - year.length))}</span>` : escapeForPage(options.title);
 
   return `<div class="toolbar">
     <div class="toolbar-month">
       ${today}
       <div class="month-steps">
         <button type="button" class="step-arrow" data-step="-1" aria-label="Previous">${ARROW_LEFT}</button>
-        <h1 class="period-title">${escapeForPage(options.title)}</h1>
+        <h1 class="period-title">${title}</h1>
         <button type="button" class="step-arrow" data-step="1" aria-label="Next">${ARROW_RIGHT}</button>
       </div>
       <button type="button" class="quiet-button time-word" data-time-mode="${mode === 'game' ? 'local' : 'game'}"` +
@@ -240,7 +260,7 @@ export function calendarToolbar(options: ToolbarOptions): string {
     <div class="toolbar-views">
       <div class="view-icons" role="group" aria-label="Calendar view">${viewButton('week')}${viewButton('month')}${viewButton('year')}</div>
       ${options.showFilters ? `<button type="button" class="quiet-button filters-button${options.filtersOpen ? ' open' : ''}"` +
-        ` data-filters-open aria-expanded="${options.filtersOpen}">${FUNNEL_ICON}Filters</button>` : ''}
+        ` data-filters-open aria-expanded="${options.filtersOpen}" aria-label="Filters">${FUNNEL_ICON}<span class="phone-hidden">Filters</span></button>` : ''}
     </div>
   </div>`;
 }

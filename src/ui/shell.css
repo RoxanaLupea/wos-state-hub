@@ -164,6 +164,27 @@
 .toolbar-month > :first-child { justify-self: start; }
 .toolbar-month > .time-word { justify-self: end; }
 .toolbar-views { display: flex; align-items: center; justify-content: space-between; }
+/* On a phone the controls are one line (owner, 25 Nov): the date, the three views,
+   Filters and UTC. They stay under the top bar while the calendar scrolls, on the page's
+   own background, so nothing about them changes when they are held there (their padding
+   covers the gap under the top bar). */
+@media (max-width: 999px) {
+  .page > .toolbar { display: flex; align-items: center; gap: 14px; margin-top: -8px; padding: 8px 14px 10px;
+    position: sticky; top: var(--top-bar-height, 0px); z-index: 6; }
+  .page > .toolbar.stuck { background-color: var(--page-color); background-image: var(--page-background); background-attachment: fixed; }
+  .toolbar-month, .toolbar-views { display: contents; }
+  .today-slot { display: none; }
+  .today-button { order: 0; margin-right: -4px; }
+  .month-steps { order: 1; margin-right: auto; min-width: 0; }
+  .page > .toolbar .period-title { font-size: 18px; }
+  .view-icons { order: 2; gap: 8px; }
+  .filters-button { order: 3; }
+  .time-word { order: 4; }
+  .phone-hidden { display: none; }
+  /* Today and Filters are their icons alone on a phone, so a little bigger. */
+  .page > .toolbar .today-button svg, .page > .toolbar .filters-button svg { width: 20px; height: 20px; }
+  .page > .toolbar .time-word svg { width: 18px; height: 18px; }
+}
 .month-steps { display: inline-flex; align-items: center; gap: 4px; }
 .period-title { margin: 0; font-size: 20px; font-weight: 800; line-height: 1; white-space: nowrap; }
 .period-title .title-long { display: none; }
@@ -180,10 +201,15 @@
 @media (hover: hover) { .step-arrow:hover { color: var(--text); background: rgba(255, 255, 255, 0.06); } }
 /* The views: calendar pages, the open one bright with a line under it in the section's colour. */
 .view-icons { display: inline-flex; gap: 14px; }
-.view-icon { display: inline-flex; padding: 3px 2px 5px; border: none; background: none; color: var(--text-faint);
+.view-icon { display: inline-flex; padding: 5px 2px 3px; border: none; background: none; color: var(--text-faint);
   border-bottom: 2px solid transparent; cursor: pointer; }
 @media (hover: hover) { .view-icon:hover { color: var(--text-muted); } }
 .view-icon[aria-pressed="true"] { color: var(--text); border-bottom-color: var(--section); }
+/* The views' icons in the site's icon style: the open one lit, with the glow, the others
+   quieter. */
+.view-icon svg { opacity: .5; transition: opacity .15s; }
+@media (hover: hover) { .view-icon:hover svg { opacity: .75; } }
+.view-icon[aria-pressed="true"] svg { opacity: 1; filter: drop-shadow(0 0 3px color-mix(in srgb, var(--section) 55%, transparent)); }
 @media (min-width: 1000px) {
   .toolbar { display: flex; align-items: center; gap: 26px; padding: 0 0 14px; }
   .toolbar-month, .toolbar-views { display: contents; }
