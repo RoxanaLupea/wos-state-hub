@@ -8,8 +8,14 @@
 .next-tile-names { display: flex; flex-direction: column; min-width: 0; }
 .next-tile-label { font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
 .next-tile-title { font-size: 16px; font-weight: 800; line-height: 1.2; }
+/* The whole event's short form, as on its calendar bar; the part under it, as the
+   timeline writes its stages. */
+.next-tile-tag { font-family: var(--tag-font); font-size: 0.72em; font-weight: 700; letter-spacing: 0.08em; opacity: 0.9; }
+.next-tile-title.fitted { white-space: nowrap; overflow: hidden; }
+.next-tile-stage { margin-top: 2px; font-size: 9.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
 @media (min-width: 1000px) {
   .next-up { margin: 0; }
   .next-tile { padding: 10px 12px; }
   .next-tile-title { font-size: 15px; }
+  .next-tile-stage { font-size: 10.5px; }
 }

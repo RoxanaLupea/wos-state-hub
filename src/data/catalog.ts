@@ -153,6 +153,16 @@ export const partOfByEventTypeId = new Map<string, string | null>(
   eventTypes.map(eventType => [eventType.id, eventType.partOf ?? null])
 );
 
+// The event a part belongs to when that event is shown whole: State of Power, whose
+// parts include stages (Matchmaking, Preparation, Battle, Field Triage). Any of its
+// parts, Castle Battle too, stands for the whole event. Empty for everything else.
+export function wholeEventTypeOf(id: string): string {
+  const parentId = partOfByEventTypeId.get(id);
+  if (!parentId) return '';
+  const hasStages = eventTypes.some(eventType => eventType.partOf === parentId && eventTypeStageName(eventType.id));
+  return hasStages ? parentId : '';
+}
+
 export const phasesByEventType = (() => {
   const rows = eventPhaseRows as PhaseRow[];
   const byEventType = new Map<string, EventPhase[]>();

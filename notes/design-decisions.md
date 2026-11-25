@@ -317,6 +317,23 @@ there before discussing it again.
 - The round pencil in an event's head is replaced "with the edit button I already sent
   in the colours of the event" (25 Nov). Every edit button in an event panel takes its
   event's colour.
+- The Next up / Then cards say State of Power for its parts, "the stage can be under, so
+  State of Power SvS / MATCHMAKING" (25 Nov). "Only where there's space we will write
+  the full thing" (as on the calendar's bars: otherwise SvS), and "the size of the stage
+  font will be considerably smaller" (25 Nov). Castle Battle opens the whole State of
+  Power too, in its colour (her 25 Nov rule that a part opens the whole SvS).
+- The cards go per event: "we're not gonna show all of them, it will be shown per event,
+  so it will show next up svs matchmaking then it will turn into now svs matchmaking and
+  then it will be now svs preparation" (25 Nov). Built: State of Power has one card from
+  Next up to its end, "Now" while it runs with its current stage and when that stage
+  ends; the other card is the next event. Other events keep Next up / Then.
+- "In matchmaking we will record the opponent, so the line with vs, that will give us the
+  state we need to see the data, as soon as that is set we will request the other's state
+  data" (25 Nov). Prepared in supabase/svs-opponent-state.sql: the opponent's state is
+  read within the minute, then daily until Field Triage ends.
+- "State so far has alliances, presidency, leaderboards, the results from svs and sunfire
+  will be in presidency, we'll design a way to see both" (25 Nov): ours and the
+  opponent's state. Still to design.
 - The Battle's times are in a smaller font; the winner's stays bigger than the rest, but
   only a little (25 Nov).
 - Each SvS also has one overall result: win (Preparation and Battle), loss (both lost)

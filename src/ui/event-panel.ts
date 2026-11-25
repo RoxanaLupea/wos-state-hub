@@ -698,7 +698,8 @@ let heroDay = NaN;
 export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): string {
   const eventTypeId = occurrence.eventTypeId;
   heroDay = occurrence.startDay;
-  const color = eventTypeColor(eventTypeId);
+  // A part shown as its whole event wears the whole event's colour.
+  const color = eventTypeColor(options.wholeEvent?.eventTypeId ?? eventTypeId);
 
   // What players need to know about this particular run.
   const facts: string[] = [];

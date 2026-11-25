@@ -26,7 +26,7 @@ import {
 import { allianceTimesPage, statePage } from './ui/state-page.ts';
 import { loadDateChanges, loadSchedules, loadSettings } from './data/schedules.ts';
 import {
-  categoryOf, dayNameOf, eventStepsByEventType, eventTypeById, eventTypeName, eventTypeShortName, eventTypeStageName,
+  categoryOf, dayNameOf, eventStepsByEventType, eventTypeById, eventTypeName, eventTypeShortName, eventTypeStageName, wholeEventTypeOf,
   isDetailsOnly, partOfByEventTypeId, phaseName, phaseNameForDay, phaseShortName, phasesByEventType,
   phaseNote, pointSourcesForDay, showsTimesInLine, sortOrderOf, stepLabel, stepNote
 } from './data/catalog.ts';
@@ -83,7 +83,7 @@ import { yearOverview } from './ui/year-overview.ts';
 import { dayPanel } from './ui/day-panel.ts';
 import { eventPanel, groupPanel, type RewardViewState, setOpenPointRows } from './ui/event-panel.ts';
 import { partOpenings } from './ui/bar.ts';
-import { nextUpTiles } from './ui/next-up.ts';
+import { fitNextTiles, nextUpTiles } from './ui/next-up.ts';
 import { problemPanel } from './ui/problem-panel.ts';
 import { installIconFallback } from './ui/event-icon.ts';
 import { fitBarLabels, layoutBars, sizeLanes } from './ui/layout-bars.ts';
@@ -307,7 +307,7 @@ function calendarBody(range: { from: number; to: number }): string {
 // up over the calendar on a phone, whatever is in it.
 function sideColumn(): string {
   const today = todayNumber();
-  const nextUp = `<div class="next-up">${nextUpTiles(runsBetween(today, today + 60))}</div>`;
+  const nextUp = `<div class="next-up">${nextUpTiles(runsBetween(today - 14, today + 60))}</div>`;
   const contents = panelContents();
   // An open event keeps its way back and its head in place; only its body scrolls.
   const holdsEvent = contents.includes('class="event-page-body"');
@@ -520,9 +520,9 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
 
   const dayInEvent = Math.min(Math.max(day - occurrence.startDay + 1, 1), occurrence.lengthDays);
 
-  // A stage of an event (State of Power's Matchmaking, Preparation, Battle, Field Triage)
-  // opens the whole event, whichever part was tapped.
-  const wholeEventTypeId = eventTypeStageName(occurrence.eventTypeId) ? partOfByEventTypeId.get(occurrence.eventTypeId) ?? '' : '';
+  // Any part of State of Power (its stages and Castle Battle) opens the whole event,
+  // whichever part was tapped.
+  const wholeEventTypeId = wholeEventTypeOf(occurrence.eventTypeId);
   const wholeMembers = wholeEventTypeId ? familyOccurrences(occurrence, nearby, partOfByEventTypeId) : [];
   const wholeEvent = wholeMembers.length ? {
     eventTypeId: wholeEventTypeId,
@@ -1302,6 +1302,7 @@ function drawPage(app: HTMLElement): void {
     '</main>';
 
   placeFiltersPanel(app);
+  fitNextTiles(app);
   const panel = app.querySelector<HTMLElement>('.calendar-panel');
   if (panel && view.calendarView !== 'year') {
     layoutBars(panel);
@@ -3474,6 +3475,7 @@ async function start(): Promise<void> {
       if (clock) clock.textContent = gameClockText(nowMinute());
     }, 30000);
     window.addEventListener('resize', () => {
+      fitNextTiles(document);
       const panel = document.querySelector<HTMLElement>('.calendar-panel');
       if (!panel || view.calendarView === 'year') return;
       layoutBars(panel);
