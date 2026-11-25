@@ -5,19 +5,8 @@ Do CLAUDE.md's setup first. Updated 25 Nov 2026.
 ## Now
 
 - main is the live site, built and checked on GitHub. Only main is on GitHub.
-- Next: the SvS results on the SvS event's Results tab. Her decisions are in
-  notes/design-decisions.md ("SvS results", her words only). Oracle's Prep screen she
-  sent as the good example is data/captures/oracle-prep-7nov.png.
-- The 25 Nov chat's versions were all rejected and are not kept. Kept from it, on main:
-  the data in seed/svs-results.json: each SvS's chief (Hall of Fame names and tags,
-  Oracle's spelling for styled names), the 10 Oct and 7 Nov prep points per day (rounded
-  from Oracle's B and M figures) and the 7 Nov castle holds.
-- SvS results design, 25 Nov: not accepted. Her notes, in order and in her words, are in
-  notes/svs-results-notes.md; follow them all, the latest winning. The one thing still
-  wrong at the end: the division between blue and red (who won and who lost) on the
-  bars, which she wants exactly as in the game screen (data/captures/svs-prep-points-*.jpg).
-  Start from her notes and the game screens, not from earlier mockups.
-- The State page still has the old SvS history table; where the history goes is open.
+- Next: the SvS results panel on the SvS event's Results tab, designed from the game
+  screens Roxanne sends.
 - Roxanne's and Tif's accounts are in 1252 (DUB) until their transfer to 1458.
 
 ## The database
