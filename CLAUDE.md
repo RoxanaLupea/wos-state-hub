@@ -45,6 +45,8 @@ before she finds them. The notes give the site's look; they do not design the pa
    hierarchy, what the eye sees first, whether it feels like its subject. Act on that
    critique before she sees it; show it only when the honest answer is yes (25 Nov).
 4. Show one result, phone first, full-screen screenshots, the fewest that show it.
+5. Design with quick mockups first (25 Nov): less building, more thinking, faster
+   delivery. Build it properly in the code only once she lands on an idea.
 
 Each page is designed on its own, but never varies from the elements the site already
 has (Roxanne, 25 Nov). The same element is never drawn in different ways; sizes may adapt
