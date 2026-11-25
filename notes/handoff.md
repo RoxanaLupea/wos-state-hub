@@ -4,8 +4,32 @@ Do CLAUDE.md's setup first. Updated 25 Nov 2026.
 
 ## Now
 
-- main is the live site (25 Nov, evening: new-version notice, top bar across the window
-  and held at the top on a phone, day names held on a phone).
+- main is the live site. Last push 25 Nov, 19:45 (09e8f0f), the profile:
+  - No CHARACTERS title: Edit and Add under the photos on a phone, as two dashed places
+    after the last photo on a computer. Editing: every character, tap one (ringed), its
+    line Main / Alt / Farm (round marks), then Cancel (grey), Remove (bin, red), Save.
+    Remove asks "Are you sure you want to remove x?" and removes at once
+    (removeGameAccount; its availability answers go with it).
+  - Menu: Admin, Profile, Sign out. "Account" is "character" wherever players see it.
+  - Foundry power in place (part 'foundry' in main.ts): "Add foundry power" when empty,
+    the edit icon after the number, red with a dot a month after it was set (that month
+    is not confirmed by her yet: ask).
+  - Leaderboards in her order (Research, Gear, Charms / Hero, Pet, Expert / Exploration,
+    Island, Labyrinth); on a computer the groups spread evenly. LABYRINTH STAGES a part
+    of its own, capitals, arrow; closed at first on a phone, open on a computer.
+  - Picture 128 px on a phone, 160 on a computer; another state written "#1252"; the
+    alliance badge sits by the foundry line on a phone, level with the name on a computer.
+  - Edit icons share one colour per page (the first SVG gradient of that name wins); the
+    red ones on the profile have their own (DUE_EDIT_ICON, NEUTRAL_CANCEL_ICON). Other
+    pages with edit icons in different colours still have this bug.
+- Not pushed, in the workspace only (not accepted): the calendar's held dates (a week's
+  numbers kept under the day names, heldDatesRow, holdDayNames), the phone's calendar
+  controls held at the top, and the week-to-month glide (glideDownToToday). Roxanne
+  disliked the phone version; the open question is the one-line phone header (date,
+  views, Filters, UTC), shown as a mockup only (/tmp CSS, not in the code): Filters and
+  Today as icons, the week title without its year, 18 px.
+- Earlier on 25 Nov: new-version notice, top bar across the window and held at the top on
+  a phone, day names held on a phone.
 - New version live: src/ui/new-version.ts checks version.json (written by vite.config.ts)
   every 5 minutes and on coming back; reloads in the background, offers Reload on screen,
   never reloads while editing. A page opened before this needs one manual reload.
