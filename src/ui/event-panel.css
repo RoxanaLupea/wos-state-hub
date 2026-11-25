@@ -441,6 +441,8 @@
 .info-tab-line:has(.quiet-word) .info-tabs { padding-right: 170px; }
 .tab-actions { position: absolute; right: 2px; top: 0; bottom: 1px; display: flex; align-items: center; gap: 14px; }
 .tab-actions .edit-button { transform: translateY(1px); }
+/* The edit button takes the colour of its event. */
+.event-page .edit-button { --edit-colour: var(--event-color); }
 .info-tab {
   flex: none; padding: 8px 0 7px; border: none; background: none; cursor: pointer;
   border-bottom: 2px solid transparent; margin-bottom: -1px;

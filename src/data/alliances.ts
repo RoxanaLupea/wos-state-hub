@@ -57,6 +57,11 @@ export function allianceById(id: string): Alliance | undefined {
   return allianceList.find(alliance => alliance.id === id);
 }
 
+// One of our alliances by its tag, written exactly as the game does (DVL and dvl differ).
+export function allianceByTag(tag: string): Alliance | undefined {
+  return allianceList.find(alliance => alliance.tag === tag);
+}
+
 export function allianceTag(id: string): string {
   return allianceById(id)?.tag ?? id;
 }

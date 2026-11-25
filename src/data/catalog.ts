@@ -36,6 +36,9 @@ export interface EventType {
   // The stretches a part is open, counted from the first day of its own event.
   openWindows?: { fromDay: number; fromTime: string; toDay: number; toTime: string }[];
   // How an opening is marked on the bar: by its label, or only where it ends.
+  // The game sets this event's dates and times, and nobody changes them on the site (no
+  // date, repeat or alliance-time pencil): State of Power and Sunfire Castle (25 Nov).
+  datesLocked?: boolean;
   windowMark?: string;
   // The times a player can pick from ("02:00,05:00,..."), such as Frostfire's slots.
   slotTimes?: string;

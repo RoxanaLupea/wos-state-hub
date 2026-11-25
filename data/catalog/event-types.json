@@ -1,6 +1,7 @@
 [
   {
     "id": "svs",
+    "datesLocked": true,
     "category": "state",
     "color": "#5C8FE8",
     "logoColors": ["#146EE0", "#F23134"],
@@ -12,6 +13,7 @@
   },
   {
     "id": "svs-matchmaking",
+    "datesLocked": true,
     "category": "state",
     "color": "#6E87B8",
     "logoColors": ["#146EE0", "#F23134"],
@@ -25,6 +27,7 @@
   },
   {
     "id": "svs-prep",
+    "datesLocked": true,
     "category": "state",
     "color": "#5C8FE8",
     "logoColors": ["#146EE0", "#F23134"],
@@ -39,6 +42,7 @@
   },
   {
     "id": "svs-battle",
+    "datesLocked": true,
     "category": "state",
     "color": "#5C8FE8",
     "logoColors": ["#146EE0", "#F23134"],
@@ -53,6 +57,7 @@
   },
   {
     "id": "castle-battle",
+    "datesLocked": true,
     "category": "state",
     "color": "#9B6AD0",
     "colorEnd": "#E8484C",
@@ -67,6 +72,7 @@
   },
   {
     "id": "svs-triage",
+    "datesLocked": true,
     "category": "state",
     "color": "#5FB8A8",
     "logoColors": ["#146EE0", "#F23134"],
@@ -87,6 +93,7 @@
   },
   {
     "id": "sunfire",
+    "datesLocked": true,
     "category": "state",
     "color": "#E8B85A",
     "colorEnd": "#E07A3C",

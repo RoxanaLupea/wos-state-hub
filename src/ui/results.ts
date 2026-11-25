@@ -12,8 +12,10 @@ import { longDayText, shortDayText } from './day-names.ts';
 import { dayFromText } from '../calendar/days.ts';
 import type { WorkContext } from './working-pages.ts';
 import type { ShowdownScore } from './showdown-score.ts';
+import { SUNFIRE_EDIT_FORM_ID, sunfireResult, sunfireResultEditor, type SunfireRun } from './sunfire-results.ts';
 import { SVS_EDIT_FORM_ID, historyLink, svsResult, svsResultEditor, type Outcome, type SvsHold, type SvsPart, type SvsRun } from './svs-results.ts';
 import svsHistory from '../../seed/svs-results.json';
+import sunfireHistory from '../../seed/sunfire-results.json';
 import talHistory from '../../seed/tal-results.json';
 
 const SVS_FAMILY = ['svs', 'svs-matchmaking', 'svs-prep', 'svs-battle', 'castle-battle', 'svs-triage'];
@@ -79,6 +81,7 @@ function formKey(eventTypeId: string, date: string, allianceId: string, existing
 export function resultsTab(options: ResultsOptions): string {
   const eventTypeId = options.eventTypeId;
   if (SVS_FAMILY.includes(eventTypeId)) return svsResults(options);
+  if (eventTypeId === 'sunfire') return sunfireResults(options);
   if (eventTypeId === 'hellfire') return talResults(options);
   if (eventTypeId === 'tyrant') return tyrantResults(options);
   if (ALLIANCE_RESULT_EVENTS.includes(eventTypeId)) return allianceResults(options);
@@ -162,7 +165,10 @@ function svsEditKey(runDate: string): string {
 // The key the edit button opens on an event's Results tab, for those who may change
 // those results (admins, for an SvS); empty when nobody here may.
 export function resultsEditKey(options: ResultsOptions): string {
-  return SVS_FAMILY.includes(options.eventTypeId) && options.context.isAdmin ? svsEditKey(options.runDate) : '';
+  if (!options.context.isAdmin) return '';
+  if (SVS_FAMILY.includes(options.eventTypeId)) return svsEditKey(options.runDate);
+  if (options.eventTypeId === 'sunfire') return 'sunfire-result|' + options.runDate;
+  return '';
 }
 
 // At the right of the tabs' line: the edit button for the one who may change these
@@ -171,7 +177,8 @@ export function resultsTabActions(options: ResultsOptions): string {
   const key = resultsEditKey(options);
   if (!key) return '';
   if (options.context.editing !== key) return editButton(key);
-  return cancelWord() + saveWord('Save').replace('type="submit"', `type="submit" form="${SVS_EDIT_FORM_ID}"`);
+  const formId = options.eventTypeId === 'sunfire' ? SUNFIRE_EDIT_FORM_ID : SVS_EDIT_FORM_ID;
+  return cancelWord() + saveWord('Save').replace('type="submit"', `type="submit" form="${formId}"`);
 }
 
 function outcomeOf(value: unknown): Outcome {
@@ -215,6 +222,56 @@ function svsRunOf(view: ResultView, known: Record<string, unknown> | undefined):
     points, holds,
     president: view.row.president_name ? { tag: presidentTag, name: String(view.row.president_name) } : fromHistory?.president ?? null
   };
+}
+
+// ---------------------------------------------------------------------------
+// Sunfire Castle: the Occupation Ranking and the president, from the game's screenshots.
+// ---------------------------------------------------------------------------
+
+function sunfireRunOf(view: ResultView | undefined, known: Record<string, unknown> | undefined): SunfireRun {
+  const holds: SvsHold[] = [];
+  for (let place = 1; view?.details.has('hold_' + place); place++) {
+    const [side, tag, seconds] = String(view.details.get('hold_' + place)).split('|');
+    holds.push({ side: side === 'theirs' ? 'theirs' : 'ours', tag: tag ?? '', seconds: Number(seconds) || 0 });
+  }
+  const recordedTag = view?.row.president_alliance_id ? allianceTag(String(view.row.president_alliance_id))
+    : view?.details.get('president_tag') ?? '';
+  const president = view?.row.president_name ? { tag: recordedTag, name: String(view.row.president_name) }
+    : known?.presidentName ? { tag: String(known.presidentTag ?? ''), name: String(known.presidentName) } : null;
+  return { holds, president };
+}
+
+function sunfireResults(options: ResultsOptions): string {
+  const recorded = resultsOf(options.context, 'sunfire');
+  if (!recorded) return '<p class="work-empty">Loading…</p>';
+  const existing = recorded.find(one => one.row.event_date === options.runDate);
+  const known = (sunfireHistory as Record<string, unknown>[]).find(one => one.date === options.runDate);
+  const run = sunfireRunOf(existing, known);
+  const key = resultsEditKey(options);
+  if (key && options.context.editing === key) {
+    return sunfireResultEditor(run, formKey('sunfire', options.runDate, '', existing));
+  }
+  return run.holds.length || run.president ? sunfireResult(run) : historyLink('sunfire-history');
+}
+
+// Every Sunfire Castle's president: those recorded here, and the Hall of Fame before.
+export function sunfireHistorySection(context: WorkContext): string {
+  const recorded = resultsOf(context, 'sunfire');
+  if (!recorded) return '<section class="work-section" id="sunfire-history"><p class="work-empty">Loading…</p></section>';
+  const dates = new Set(recorded.map(one => String(one.row.event_date)));
+  const rows: Row[] = recorded.map(one => ({ date: one.row.event_date, run: sunfireRunOf(one, undefined) } as Row))
+    .concat((sunfireHistory as Record<string, unknown>[]).filter(one => !dates.has(String(one.date)))
+      .map(one => ({ date: one.date, run: sunfireRunOf(undefined, one) } as Row)))
+    .sort((left, right) => String(right.date).localeCompare(String(left.date)));
+  const columns: Column[] = [
+    { label: 'Date', cell: row => dateCell(row.date) },
+    { label: 'President', cell: row => {
+      const president = (row.run as SunfireRun).president;
+      return president ? `[${escapeForPage(president.tag)}]${escapeForPage(president.name)}` : '—';
+    } }
+  ];
+  return '<section class="work-section" id="sunfire-history"><div class="work-head"><h2>Sunfire Castle history</h2></div>' +
+    dataTable(columns, rows, 'No Sunfire Castle is recorded yet.') + '</section>';
 }
 
 // ---------------------------------------------------------------------------

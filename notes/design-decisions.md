@@ -308,6 +308,15 @@ there before discussing it again.
   Built: every stage opens State of Power, its whole dates, timeline and results.
 - Sunfire Castle gets the same results as the SvS (Occupation Ranking and president). It is
   entered only from the screenshots she sends; Claude updates the database (25 Nov).
+- Sunfire results accepted as mocked ("this looks good", 25 Nov): Occupation Ranking with
+  each alliance in its own colours, then the President icon and name. A timeline with
+  nothing in it is removed: "we have the date and time at the top anyway" (25 Nov).
+- The head's date, repeat and alliance-time forms "don't apply to svs or sunfire, they're
+  locked" (25 Nov): no edit in the head of SvS, its parts or Sunfire (datesLocked in
+  the catalog).
+- The round pencil in an event's head is replaced "with the edit button I already sent
+  in the colours of the event" (25 Nov). Every edit button in an event panel takes its
+  event's colour.
 - The Battle's times are in a smaller font; the winner's stays bigger than the rest, but
   only a little (25 Nov).
 - Each SvS also has one overall result: win (Preparation and Battle), loss (both lost)

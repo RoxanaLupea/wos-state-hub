@@ -45,8 +45,8 @@ const ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
   'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 
 // The way from one SvS to the whole history on the State page.
-export function historyLink(): string {
-  return '<button type="button" class="history-link" data-page="state" data-scroll-to="svs-history">' +
+export function historyLink(historyId = 'svs-history'): string {
+  return `<button type="button" class="history-link" data-page="state" data-scroll-to="${historyId}">` +
     `Check history${ARROW}</button>`;
 }
 
@@ -121,7 +121,7 @@ function preparationPart(options: SvsResultOptions): string {
   return '<section class="svs-part preparation">' + partTitle('Preparation', run.preparation) + body + '</section>';
 }
 
-function holdTime(seconds: number): string {
+export function holdTime(seconds: number): string {
   const two = (value: number) => String(value).padStart(2, '0');
   return `${two(Math.floor(seconds / 3600))}:${two(Math.floor((seconds % 3600) / 60))}:${two(seconds % 60)}`;
 }
@@ -175,10 +175,10 @@ export interface SvsEditOptions {
   castleAllianceId: string;
 }
 
-const PLUS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" ' +
+export const PLUS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" ' +
   'stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
 
-function field(name: string, value: string, extra = '', className = 'svs-field'): string {
+export function field(name: string, value: string, extra = '', className = 'svs-field'): string {
   return `<input class="${className}" name="${name}" value="${escapeForPage(value)}" autocomplete="off"${extra}>`;
 }
 

@@ -136,3 +136,10 @@
 /* A president's name in the SvS history: blue for ours, red for theirs. */
 .svs-name.ours { color: #7C9DD6; }
 .svs-name.theirs { color: #E07A7F; }
+
+/* Sunfire Castle: every alliance is ours, so each keeps its own colours (its banner, as on
+   the Fortress page). The title takes Sunfire's gold. */
+.svs-part.sunfire { --part: #E0A050; }
+.svs-pill.own, .svs-hold.own .svs-pill-field { color: #FFFFFF; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35); background: var(--banner-fill); box-shadow: inset 0 0 0 1px var(--banner-edge); }
+.svs-hold.own .svs-track i { background: linear-gradient(90deg, var(--banner-base), color-mix(in srgb, var(--banner-base) 70%, #FFFFFF)); }
+.svs-president .own { color: color-mix(in srgb, var(--banner-base, #7C9DD6) 70%, #FFFFFF); }

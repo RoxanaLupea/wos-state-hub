@@ -51,7 +51,7 @@ import {
 import {
   cleanTime, saveAllianceTime, saveDateChange, saveFortAssignment, saveScheduleRepeat
 } from './data/editing.ts';
-import { PENCIL_ICON, allianceTimeForm, dateChangeForm, fortForm, pencilButton, scheduleForm } from './ui/edit-forms.ts';
+import { PENCIL_ICON, allianceTimeForm, dateChangeForm, editButton, fortForm, pencilButton, scheduleForm } from './ui/edit-forms.ts';
 import { deleteRow, loadRows, saveRow, type Row } from './data/records.ts';
 import { saveGameAccount, setGameAccountKinds } from './data/player-profile.ts';
 import {
@@ -61,7 +61,7 @@ import {
 import { askGameRefresh, lookUpGameAccount, readGamePlayers, readGameRosters, readPlayerAlliances, readStateRanks, readSkillLevels, setSkillLevel, settleAllianceMove } from './data/game-data.ts';
 import {
   ALLIANCE_RESULT_EVENTS, allianceResultsPage, championshipStars, opponentNotesPage, resultsTab, resultsTabActions, showdownScoreOf,
-  svsHistorySection
+  svsHistorySection, sunfireHistorySection
 } from './ui/results.ts';
 import { shortPoints } from './ui/svs-results.ts';
 import { personalEntryForm, personalEntryOf } from './ui/personal-entry.ts';
@@ -447,16 +447,17 @@ function allianceTimeFormFor(occurrence: Occurrence): string {
   return schedule ? allianceTimeForm(schedule, nameOfAllianceTime(occurrence)) : '';
 }
 
-// One pencil in an event's head, for anyone who may change something about it. It
+// One edit button in an event's head, for anyone who may change something about it. It
 // opens every form they may use: this date (admins), the event's dates and repeat
 // (the owner), or their alliance's own time (its R4 or R5).
 function headPencilsOf(occurrence: Occurrence): string {
+  if (eventTypeById(occurrence.eventTypeId)?.datesLocked) return '';
   const ownTime = occurrence.allianceIds.length > 0;
   const mayEdit = isAdmin(person) || (ownTime && mayChangeAllianceTime(occurrence));
-  return mayEdit ? pencilButton('head|' + occurrence.key, 'Change this event') : '';
+  return mayEdit ? editButton('head|' + occurrence.key) : '';
 }
 
-// The forms the head pencil opened, for this event.
+// The forms the head's edit button opened, for this event.
 function headFormOf(occurrence: Occurrence): string {
   if (view.editing !== 'head|' + occurrence.key) return '';
   const schedule = schedules.find(one => one.id === occurrence.scheduleId);
@@ -1265,7 +1266,7 @@ function drawPage(app: HTMLElement): void {
       view.openPage === 'fortress' && subPage === 'rewards' ? fortressRewardsMarkup() :
       view.openPage === 'state'
         ? '<div class="work-page">' + statePage({ stateNumber: STATE_NUMBER, alliances: alliancesStillHere(alliances), schedules }) +
-          svsHistorySection(workContext()) + '</div>' :
+          svsHistorySection(workContext()) + sunfireHistorySection(workContext()) + '</div>' :
       view.openPage === 'alliance' && subPage === 'times'
         ? allianceTimesPage(view.myAllianceId ? allianceById(view.myAllianceId) : undefined, schedules) :
       view.openPage === 'transfers' && subPage === 'timeline' ? predictionsMarkup() :
@@ -2851,10 +2852,10 @@ async function saveWorkingForm(
     const outcome = orNull('outcome') ?? (['win', 'loss'].includes(text('detail_outcome')) ? text('detail_outcome') : null);
     const before = (tableRows.get('results') ?? []).find(one => String(one.id) === existingId);
     const rank = whole('rank');
-    // An SvS edited in place: its points, Occupation Ranking and president are turned into
-    // the details and columns it is kept as, and its State of Power result follows from
-    // its two parts.
-    const president = eventTypeId === 'svs' ? svsDetailsFromEdit(values) : null;
+    // An SvS or Sunfire Castle edited in place: its points, Occupation Ranking and
+    // president are turned into the details and columns it is kept as, and the SvS's State
+    // of Power result follows from its two parts.
+    const president = eventTypeId === 'svs' || eventTypeId === 'sunfire' ? svsDetailsFromEdit(values) : null;
     const saved = await saveRow('results', {
       id: existingId ? Number(existingId) : undefined, event_type_id: eventTypeId, event_date: date,
       alliance_id: allianceId, state_alliance_id: orNull('state_alliance_id'),

@@ -40,9 +40,9 @@ Do CLAUDE.md's setup first. Updated 25 Nov 2026.
 - Admins write results, on the page and in the database: "me" means admins (25 Nov).
 - In the database since 25 Nov: 7 Nov SvS with WoS Oracle's points and the LLC and DVL
   holds, 10 Oct SvS (results and Oracle points), 21 Nov Sunfire Castle (ranking and
-  president, from her screenshots), each with a "source" detail. Sunfire results are not
-  shown anywhere yet: next, a mockup of Sunfire's results like the SvS's, and tapping an
-  SvS bar opening the whole State of Power (both her decisions, design-decisions.md).
+  president, from her screenshots), each with a "source" detail. Every SvS stage opens State of Power (live, de4e02b). Sunfire Castle results
+  (src/ui/sunfire-results.ts) and its history on the State page (seed/sunfire-results.json,
+  from the Hall of Fame capture) are built in the workspace.
 - Roxanne's and Tif's accounts are in 1252 (DUB) until their transfer to 1458.
 
 ## The database

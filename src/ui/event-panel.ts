@@ -756,10 +756,19 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
     { id: 'results', label: 'Results', html: options.resultsHtml },
     { id: 'mine', label: 'Mine', html: options.personalHtml }
   ].filter(tab => tab.html);
+  // A timeline that says no more than the head (the event's own start and end, nothing
+  // inside) is left out when the event has other tabs: the date and time are at the top.
+  const saysMoreThanHead = options.tree.rows.filter(row => !row.isEndRow).length > 1 ||
+    options.tree.rows.some(row => row.pointSourceIds.length > 0) || Boolean(options.tree.side) ||
+    options.tree.openingSides.length > 0;
+  if (!saysMoreThanHead && tabs.length > 1 && tabs[0].id === 'timeline') tabs.shift();
 
   const openTab = tabs.find(tab => tab.id === options.openTab) ?? tabs[0];
   const tabActions = openTab ? options.tabActions?.[openTab.id] ?? '' : '';
-  const tabRow = tabs.length > 1
+  // A timeline alone draws no tab line; any other tab names itself on the tab line, as
+  // it does beside other tabs (and its edit button sits there).
+  const showsTabLine = tabs.length > 1 || Boolean(tabActions) || (tabs.length === 1 && tabs[0].id !== 'timeline');
+  const tabRow = showsTabLine
     ? `<div class="info-tabs" role="tablist" style="--tab-color:${escapeForPage(color)}">` + tabs.map(tab =>
         `<button type="button" class="info-tab" role="tab" data-info-tab="${tab.id}"` +
         ` aria-selected="${tab === openTab}">${escapeForPage(tab.label)}</button>`).join('') + '</div>'
@@ -771,14 +780,14 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
     : openTab.id === 'timeline' ? timelineHtml
       : `<div class="event-folds" style="--fold-color:${escapeForPage(color)}">` +
         `<div class="points-list tab-page ${openTab.id}-tab">` +
-        (tabs.length === 1 ? `<h3 class="tab-page-title">${escapeForPage(openTab.label)}</h3>` : '') +
+        (showsTabLine ? '' : `<h3 class="tab-page-title">${escapeForPage(openTab.label)}</h3>`) +
         `${openTab.html}</div></div>`;
 
   const headEventTypeId = options.wholeEvent?.eventTypeId ?? eventTypeId;
   const headStart = options.wholeEvent?.startMinute ?? occurrence.startMinute;
   const headEnd = options.wholeEvent?.endMinute ?? occurrence.endMinute;
   let html = backLinks(options.backToDay) +
-    `<section class="day-section glass event-page" style="${tintedPanelStyle(color)}">` +
+    `<section class="day-section glass event-page" style="${tintedPanelStyle(color)}--event-color:${escapeForPage(color)};">` +
     `<div class="event-page-head">${eventBadge(headEventTypeId, 'large')}` +
     '<div class="event-page-title"><h2>' +
     (occurrence.wasCancelled ? '<span class="cancelled-mark" aria-label="Cancelled">&times;</span> ' : '') +
@@ -820,7 +829,7 @@ export interface GroupPanelOptions {
 export function groupPanel(options: GroupPanelOptions): string {
   const color = eventTypeColor(options.eventTypeId);
   return backLinks(options.backToDay) +
-    `<section class="day-section glass event-page" style="${tintedPanelStyle(color)}">` +
+    `<section class="day-section glass event-page" style="${tintedPanelStyle(color)}--event-color:${escapeForPage(color)};">` +
     `<div class="event-page-head">${eventBadge(options.eventTypeId, 'large')}` +
     `<div class="event-page-title"><h2>${escapeForPage(eventTypeName(options.eventTypeId))}</h2>` +
     `<span class="event-note">${escapeForPage(shortDayText(options.day))}</span></div></div>` +
