@@ -41,6 +41,9 @@ before she finds them. The notes give the site's look; they do not design the pa
    earns its place; nothing is said twice.
 3. Before showing anything, check it line by line against her words and her example,
    and against notes/review-checklist.md. Fix what fails.
+   Then critique it as a designer would if she asked "is this great?": fonts, colours,
+   hierarchy, what the eye sees first, whether it feels like its subject. Act on that
+   critique before she sees it; show it only when the honest answer is yes (25 Nov).
 4. Show one result, phone first, full-screen screenshots, the fewest that show it.
 
 Each page is designed on its own, but never varies from the elements the site already
