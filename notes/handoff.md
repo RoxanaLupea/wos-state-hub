@@ -12,6 +12,11 @@ Do CLAUDE.md's setup first. Updated 25 Nov 2026.
   the data in seed/svs-results.json: each SvS's chief (Hall of Fame names and tags,
   Oracle's spelling for styled names), the 10 Oct and 7 Nov prep points per day (rounded
   from Oracle's B and M figures) and the 7 Nov castle holds.
+- SvS results design, 25 Nov: not accepted. Her notes, in order and in her words, are in
+  notes/svs-results-notes.md; follow them all, the latest winning. The one thing still
+  wrong at the end: the division between blue and red (who won and who lost) on the
+  bars, which she wants exactly as in the game screen (data/captures/svs-prep-points-*.jpg).
+  Start from her notes and the game screens, not from earlier mockups.
 - The State page still has the old SvS history table; where the history goes is open.
 - Roxanne's and Tif's accounts are in 1252 (DUB) until their transfer to 1458.
 
