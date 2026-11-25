@@ -571,8 +571,7 @@ const ACCOUNT_KIND_WORDS: [string, string][] = [['main', 'Main'], ['alt', 'Alt']
 
 function accountsEditor(editing: NonNullable<ProfileOptions['kindsEditing']>): string {
   const kindOf = (account: BarAccount) => editing.kinds[String(account.row.id)] ?? String(account.row.kind);
-  const picked = editing.accounts.find(account => String(account.row.id) === editing.picked) ??
-    editing.accounts.find(account => kindOf(account) !== 'main') ?? editing.accounts[0];
+  const picked = editing.accounts.find(account => String(account.row.id) === editing.picked) ?? editing.accounts[0];
   const items = editing.accounts.map(account => {
     const id = String(account.row.id);
     const isPicked = account === picked;

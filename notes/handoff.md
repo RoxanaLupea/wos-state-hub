@@ -9,7 +9,9 @@ Do CLAUDE.md's setup first. Updated 25 Nov 2026.
     after the last photo on a computer. Editing: every character, tap one (ringed), its
     line Main / Alt / Farm (round marks), then Cancel (grey), Remove (bin, red), Save.
     Remove asks "Are you sure you want to remove x?" and removes at once
-    (removeGameAccount; its availability answers go with it).
+    (removeGameAccount; its availability answers go with it). The main is not in the
+    editing list; the picked photo grows a little on a computer (19:55 push).
+  - Labyrinth stages set in from both sides (16 px phone, 48 px computer).
   - Menu: Admin, Profile, Sign out. "Account" is "character" wherever players see it.
   - Foundry power in place (part 'foundry' in main.ts): "Add foundry power" when empty,
     the edit icon after the number, red with a dot a month after it was set (that month

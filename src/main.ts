@@ -2260,7 +2260,9 @@ function profileOptions(): ProfileOptions | null {
     alliances: alliancesStillHere(alliances), homeState: Number(STATE_NUMBER), now: Date.now(),
     others: allMyAccounts().filter(one => one.id !== row.id).map(barAccountOf),
     kindsEditing: playerEditing.has('kinds') ? {
-      accounts: allMyAccounts().map(barAccountOf),
+      // The main stays out of the list (owner, 25 Nov): another character becomes the main
+      // by picking Main on it and saving, and then that one leaves the list instead.
+      accounts: allMyAccounts().filter(one => one.kind !== 'main').map(barAccountOf),
       kinds: Object.fromEntries(allMyAccounts().map(one => [String(one.id), String(draftValue('kind:' + String(one.id), 'kinds'))])),
       changed: partHasChanges('kinds'), picked: pickedCharacter, removing: removingCharacter
     } : null,

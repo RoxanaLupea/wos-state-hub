@@ -935,3 +935,7 @@ All nine are built.
 - Spacing (25 Nov): "I don't like how you add a bunch of space everywhere, same distance
   above and below a row, when some things are connected then it doesn't make sense to
   have them so distanced from each other".
+- Editing characters (25 Nov): "on pc it's not obvious which character we're editing, maybe
+  we make that pic bigger a little? and the main stays out of it unless we make another one
+  a main and save it". "labyrinth stages can have bigger left and right padding to show
+  it's a subsection".
