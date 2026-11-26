@@ -1407,3 +1407,11 @@ All nine are built.
     font, same spot too, and the size of the icon has to be the same ... I would put all 4
     rows aligned to the left and make the icon bigger." Built on the computer; the phone
     tiles are as approved.
+- Calendar controls on a computer (Roxanne, 26 Nov): "The entire bar from above the calendar
+  can have bigger everything ... the month, I like that it's not as big as before, but this
+  is ridiculous. This is way too small. It should still have space at the top, but like be
+  positioned better in general, like lower and bigger font ... all the icons to be bigger.
+  They're so tiny that you don't even know what you're clicking ... make sure all of those
+  are aligned with the arrows, and filters in UTC should be at least as big as the selected
+  view". Built: the month 22px, every icon 24px (arrows and pin 22px), Filters and UTC 15px,
+  all centred on one line; 22px under the band, 12px over the calendar.

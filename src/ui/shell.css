@@ -377,3 +377,21 @@
   .me-button .me-pic { width: 34px; height: 34px; border-radius: 9px; font-size: 15px; }
   .clock-time { font-size: 26px; font-weight: 900; }
 }
+/* The calendar's controls bigger and lower, closer to the calendar they belong to, with
+   room above them under the band (Roxanne, 26 Nov: "this is way too small ... positioned
+   better in general, like lower and bigger font"; the icons "so tiny that you don't even
+   know what you're clicking"; Filters and UTC "at least as big as the selected view").
+   The month between its old 24px and the 20px she found too small; every icon on the line
+   24px, all centred on one line with the arrows. */
+@media (min-width: 1000px) {
+  .page > .toolbar { padding: 8px 0 12px; }
+  .page > .toolbar .period-title { font-size: 22px; }
+  .page > .toolbar .step-arrow { width: 30px; height: 30px; }
+  .page > .toolbar .step-arrow svg, .page > .toolbar .month-steps .today-button svg { width: 22px; height: 22px; }
+  .page > .toolbar .view-icon svg { width: 24px; height: 24px; }
+  .page > .toolbar .filters-button svg, .page > .toolbar .time-word svg { width: 24px; height: 24px; }
+  .page > .toolbar .filters-button, .page > .toolbar .time-word { gap: 8px; font-size: 15px; }
+  .page > .toolbar .control-divider { height: 30px; }
+  .toolbar[data-view="month"] .period-title { min-width: 168px; }
+  .toolbar[data-view="week"] .period-title { min-width: 209px; }
+}
