@@ -139,3 +139,9 @@ only what makes it one (the room its letters, digits or bars leave over and unde
   bar the days under the parts stay as written, centred in their days.
 - In the day's card a phase under an event's name is in capitals too, and the logos are
   sized to the two lines beside them (32px; 24px in the timeline).
+
+## Room around text (standard, Roxanne 26 Nov)
+- Any box holding text, above all one that cuts what does not fit, keeps at least 3px
+  above and below the letters and 5px after them, so no letter or shadow is clipped (a
+  B's or a T's edge). The layout keeps its place: the room is taken back with a negative
+  margin. Spaces between things are measured from the letters, not from that room.

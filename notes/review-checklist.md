@@ -63,3 +63,5 @@ has had to point out before. When she points out a new kind of fault, it is adde
   phone and computer.
 - A section title in an event's panel is the generic .panel-title (almost white, 14px
   capitals); the event's colours go in the background, lines and icons, never the titles.
+- Every box with text keeps at least 3px above and below its letters and 5px after them;
+  look for cut shadows and letter edges at the right of names (26 Nov).

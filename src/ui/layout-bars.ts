@@ -168,7 +168,10 @@ function capitalsOf(text: HTMLElement, bar: HTMLElement): { top: number; height:
 function nameEnd(bar: HTMLElement, label: HTMLElement): number {
   const tag = bar.querySelector<HTMLElement>('.bar-head .bar-tag');
   const shown = tag && tag.style.display !== 'none' ? tag : label;
-  return shown.getBoundingClientRect().right;
+  // Where its letters end, not its box: the box keeps room after the letters.
+  const range = document.createRange();
+  range.selectNodeContents(shown);
+  return Math.min(shown.getBoundingClientRect().right, range.getBoundingClientRect().right);
 }
 
 // Where a piece of text's first letter is drawn on screen.
@@ -196,7 +199,8 @@ function placeAfterName(bar: HTMLElement, fits: (element: HTMLElement) => boolea
   const sub = bar.querySelector<HTMLElement>('.bar-head .bar-sub-inline');
   if (sub && sub.getBoundingClientRect().width < 24) sub.style.display = 'none';
   const shownSub = sub && sub.style.display !== 'none' ? sub : null;
-  const nameRight = (shownSub ? shownSub.getBoundingClientRect().right : nameEnd(bar, label)) - barLeft;
+  const subEnd = () => { const range = document.createRange(); range.selectNodeContents(shownSub as HTMLElement); return range.getBoundingClientRect().right; };
+  const nameRight = (shownSub ? subEnd() : nameEnd(bar, label)) - barLeft;
   bar.querySelectorAll<HTMLElement>('.bar-segment').forEach(segment => {
     const left = parseFloat(segment.style.left) || 0;
     const right = left + (parseFloat(segment.style.width) || 0);

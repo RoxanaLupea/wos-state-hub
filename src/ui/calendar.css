@@ -400,3 +400,15 @@
   }
   .bar.phase-lines.one-line-wide .bar-sub-inline { margin-left: 12px; }
 }
+
+/* ---------- Standard: room around text in a box (Roxanne, 26 Nov) ----------
+   A box that cuts what does not fit (a name, a phase) keeps at least 3px above and below
+   its letters and 5px after them, so no letter or its shadow is clipped (a B's or a T's
+   edge). The room is taken back with a negative margin, so nothing moves. */
+.bar .bar-label, .bar .bar-sub-inline, .bar-segment-name, .bar-part, .bar .bar-tag {
+  padding-top: 3px; padding-bottom: 3px; margin-top: -3px; margin-bottom: -3px;
+}
+.bar .bar-label, .bar .bar-sub-inline { padding-right: 5px; margin-right: -5px; }
+.bar-segment-name { padding-right: 5px; }
+.bar-head { overflow: visible; }
+.bar { overflow: visible; }

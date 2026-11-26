@@ -1360,3 +1360,6 @@ All nine are built.
   Heroes). The top band "takes up a lot of the screen, and it shouldn't"; the sections in
   the site's font; no scrollbar on the calendar ("I never asked for a scroll bar"); equal
   edges on both sides; day names never cut; dates a little smaller.
+- Text in boxes (26 Nov): "make sure you have at least 2-3 pixels of padding around the
+  text in the box ... At least 5 pixels to the right, so you can either center it if it's
+  centered or align it to the left and still have room for it to grow."
