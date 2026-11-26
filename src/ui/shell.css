@@ -381,19 +381,19 @@
    room above them under the band (Roxanne, 26 Nov: "this is way too small ... positioned
    better in general, like lower and bigger font"; the icons "so tiny that you don't even
    know what you're clicking"; Filters and UTC "at least as big as the selected view").
-   The month between its old 24px and the 20px she found too small; every icon on the line
+   The month 28px (Roxanne, 26 Nov: "I need like 28"); every icon on the line
    24px, all centred on one line with the arrows. */
 @media (min-width: 1000px) {
   /* The row keeps its height, so the calendar starts where it did (Roxanne, 26 Nov: "The
      space between the calendar and the top needs to be exactly the same"). */
   .page > .toolbar { padding: 4px 0 6px; }
-  .page > .toolbar .period-title { font-size: 22px; }
+  .page > .toolbar .period-title { font-size: 28px; }
   .page > .toolbar .step-arrow { width: 30px; height: 30px; }
   .page > .toolbar .step-arrow svg, .page > .toolbar .month-steps .today-button svg { width: 22px; height: 22px; }
   .page > .toolbar .view-icon svg { width: 24px; height: 24px; }
   .page > .toolbar .filters-button svg, .page > .toolbar .time-word svg { width: 24px; height: 24px; }
   .page > .toolbar .filters-button, .page > .toolbar .time-word { gap: 8px; font-size: 15px; }
   .page > .toolbar .control-divider { height: 30px; }
-  .toolbar[data-view="month"] .period-title { min-width: 168px; }
-  .toolbar[data-view="week"] .period-title { min-width: 209px; }
+  .toolbar[data-view="month"] .period-title { min-width: 212px; }
+  .toolbar[data-view="week"] .period-title { min-width: 265px; }
 }
