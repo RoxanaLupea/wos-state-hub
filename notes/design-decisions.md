@@ -1416,3 +1416,11 @@ All nine are built.
   view". Built: the month 28px ("I need like 28, I think"), every icon 24px (arrows and pin 22px), Filters and UTC 15px,
   all centred on one line, lower in the same row: "The space between the calendar and the top
   needs to be exactly the same" (the calendar starts where it did).
+- Calendar views on a computer (Roxanne, 26 Nov): "two icons for weekly and monthly are too
+  close together ... put a little space in between now and in between them and the rest":
+  12px between them, 20px on each side of the line after them.
+- The day's card head on a computer (Roxanne, 26 Nov): "what is that game time UTC note? I
+  don't think I asked for it, and maybe we wanna write timeline in caps, and then the day,
+  like the date after that on the same line. There's no point in having like 1, 2, 3, 4 of
+  them". Built: "TIMELINE" in capitals in the section's colour and the date after it on one
+  line, then All day; the "Game time (UTC)" line is gone there (the UTC button says it).

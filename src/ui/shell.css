@@ -397,3 +397,9 @@
   .toolbar[data-view="month"] .period-title { min-width: 212px; }
   .toolbar[data-view="week"] .period-title { min-width: 265px; }
 }
+/* Room between the two views and around them (Roxanne, 26 Nov: "too close together ... put
+   a little space in between now and in between them and the rest"). */
+@media (min-width: 1000px) {
+  .page > .toolbar .view-icons { gap: 12px; }
+  .page > .toolbar .control-divider { margin: 0 -6px; }
+}

@@ -115,8 +115,10 @@
 .day-card-head { display: none; }
 @media (min-width: 1000px) {
   .day-panel > .day-heading { display: none; }
-  .day-card-head { display: flex; flex-direction: column; gap: 2px; margin: 0 0 15px; }
-  .day-card-head h2 { margin: 0; font-size: 20px; font-weight: 800; }
+  .day-card-head { display: flex; align-items: baseline; gap: 12px; margin: 0 0 10px; }
+  .day-card-label { font-size: 15px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--section); }
+  .day-card-head h2 { margin: 0; font-size: 19px; font-weight: 800; }
+  .day-card > h3 { display: none; }
   .day-card {
     background: linear-gradient(315deg, rgba(245, 201, 160, 0.3), rgba(245, 201, 160, 0) 60%),
       linear-gradient(135deg, rgba(139, 183, 244, 0.36), rgba(139, 183, 244, 0.04) 65%), var(--glass);

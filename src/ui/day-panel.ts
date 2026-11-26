@@ -79,8 +79,10 @@ export function dayPanel(day: number, contents: DayContents, options: DayPanelOp
   // On a computer the date is the card's own head and the card moves up (Roxanne, 26 Nov:
   // "if we have timeline and all day, why can't we have the date included in that and the
   // panel go higher a little?"). The phone keeps its heading above the card.
-  const cardHead = `<div class="day-card-head"><h2>${escapeForPage(longDayText(day))}</h2>` +
-    `<span class="event-note">${escapeForPage(timeModeText())}</span></div>`;
+  // One line: TIMELINE in capitals, then the date (Roxanne, 26 Nov: "write timeline in caps,
+  // and then the day ... on the same line"); no "Game time (UTC)" note, the UTC button says it.
+  const cardHead = `<div class="day-card-head"><span class="day-card-label">Timeline</span>` +
+    `<h2>${escapeForPage(longDayText(day))}</h2></div>`;
   const alliancePrompt = options.needsAlliancePick
     ? `<div class="day-empty glass day-card">${cardHead}Pick your alliance to see its times.` +
       `<div class="chips alliance-pick">${options.allianceChoices.map(one =>
