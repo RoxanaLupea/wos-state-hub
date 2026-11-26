@@ -441,24 +441,29 @@
    "everything seems to be too high ... Preparation, Battle, Field Triage is higher than
    State of Power. That shouldn't be possible ... City, Basic Skills ... should be centered
    with those lines ... the entire line can still display all of this, but be less tall."
-   One layout for every two-line bar: 32px tall, the name and the parts on line 1 standing
+   One layout for every two-line bar: 30px tall ("1 or 2 more pixels in between them, but
+   also they have too much padding on the top and the bottom"), the name and the parts on line 1 standing
    on the same baseline, line 2 close under it, and each white line centred on the letters
    of its own line. A phase under the name is a phase word, in capitals ("You forgot to
    make matchmaking uppercase"), and sits as close under the name as line 2 does on every
    other bar ("State of Power and Matchmaking are a pair"). */
 @media (max-width: 999.98px) {
-  .bar.phase-lines, .bar.phase-lines.day-lines { height: 32px; }
-  .bar.phase-lines.day-lines { padding-top: 3px; }
-  .bar.phase-lines:not(.day-lines) { justify-content: flex-start; padding-top: 3px; }
-  .bar.phase-lines.day-lines .bar-segment, .bar.phase-lines.day-lines .bar-inside { bottom: 1px; }
+  .bar.phase-lines, .bar.phase-lines.day-lines { height: 30px; }
+  .bar.phase-lines.day-lines { padding-top: 1px; }
+  .bar.phase-lines:not(.day-lines) { justify-content: flex-start; padding-top: 1px; }
+  .bar.phase-lines.day-lines .bar-segment, .bar.phase-lines.day-lines .bar-inside { bottom: -1px; }
   .bar.one-line-wide .bar-sub { text-transform: uppercase; font-weight: 800; letter-spacing: 0.04em; }
-  .bar.parts-bar .bar-part { top: 6px; }
-  .bar.day-lines .bar-mark.divider { top: auto; bottom: 6px; height: 8px; }
-  .bar.day-lines .bar-mark.part-line { top: 7px; height: 9px; }
-  .bar.phase-lines:not(.day-lines) .bar-sub { margin-top: -3px; }
+  .bar.parts-bar .bar-part { top: 4px; }
+  .bar.day-lines .bar-mark.divider { top: auto; bottom: 4px; height: 8px; }
+  .bar.day-lines .bar-mark.part-line { top: 5px; height: 9px; }
+  .bar.phase-lines:not(.day-lines) .bar-sub { margin-top: -1px; }
   .bar.phase-lines.too-narrow, .bar.phase-lines.day-lines.too-narrow { height: 24px; }
   .bar .bar-mark.own-time, .bar .bar-inside.own-time { display: none; }
   .bar.phase-lines.day-lines .bar-inside.in-part-middle { bottom: auto; top: 15px; height: 14px; align-items: center; }
+  /* Every smaller word on a phone bar the same size (Roxanne, 26 Nov: "Make sure all the
+     subfaces and everything have the same size"): the parts, the days, a phase under the
+     name and the second name, all 9px, as the computer has one size for them. */
+  .bar.parts-bar .bar-part-text, .bar .bar-head .bar-tag { font-size: 9px; }
   .bar .bar-inside.in-part-middle img.event-icon { --logo-size: 14px; width: 14px; height: 14px; }
 }
 /* The castle's own lines and logo at its own time are the computer's; the phone has the

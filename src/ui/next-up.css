@@ -52,13 +52,3 @@
    more space"). */
 .next-tile { padding-left: 5px; column-gap: 5px; }
 @media (min-width: 1000px) { .next-tile { padding-left: 5px; column-gap: 5px; } }
-/* The label (Next up, Then) above the logo, whiter; under it the logo centred on the three
-   lines beside it: the name, the phase and the date (Roxanne, 26 Nov: "next up and then are
-   actually above, are written above the logo and in a whiter font, and then the 3 rows and
-   the logo are centered under that"). */
-.next-tile-names { display: contents; }
-.next-tile-label { grid-column: 1 / -1; grid-row: 1; color: var(--text); margin-bottom: 4px; }
-.next-tile-title { grid-column: 2; grid-row: 2; }
-.next-tile-stage { grid-column: 2; grid-row: 3; }
-.next-tile > .event-note { grid-column: 2; grid-row: 4; }
-.next-tile-head > .event-badge { grid-row: 2 / span 3; align-self: center; }

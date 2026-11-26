@@ -1453,6 +1453,15 @@ All nine are built.
   line centred on its letters, a phase under the name in capitals; the castle 14px in the
   middle of Battle, level with line 2, without its own lines (no room on a phone; the
   computer keeps them).
-- Next up / Then (Roxanne, 26 Nov): "What if next up and then are actually above, are
-  written above the logo and in a whiter font, and then the 3 rows and the logo are
-  centered under that." Built on the phone and the computer.
+- Next up / Then, an idea kept for later (Roxanne, 26 Nov): "What if next up and then are
+  actually above, are written above the logo and in a whiter font, and then the 3 rows and
+  the logo are centered under that." Tried and taken back the same evening: "I like the
+  idea, but everything is too low and too much to the left ... I want to put the cards
+  layout back and just keep this as an idea for the future when I have time to go over it
+  ... it looked better before." The tiles stay label, name, phase and date beside the logo.
+- Phone bars, second pass (Roxanne, 26 Nov): "I think we need like 1 or 2 more pixels in
+  between them, but also they have too much padding on the top and the bottom right now.
+  Make sure all the subfaces and everything have the same size. Like battle and field
+  triage in preparation in SVS are for sure smaller than the others." Built: two-line bars
+  30px, 2px more between the lines and less above and below; every smaller word 9px (the
+  parts were 7.5px, the second names 7.9px).
