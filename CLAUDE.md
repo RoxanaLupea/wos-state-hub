@@ -32,6 +32,8 @@ notes/rules-and-open-items.md (game rules).
 - Never reinterpret a clear instruction silently. A rule set while working on a design is
   a working rule: when a better design needs something else, think, say so and bring the
   better design (25 Nov). Don't just agree.
+- When she points out a problem ("too narrow", "looks wrong"), ask how she wants it fixed
+  before building anything; never pick a fix and build it on your own (26 Nov).
 - One question at a time, and only when it is truly open.
 - What she asked for is decided. Never list it as open or waiting for her ok, and never ask
   her a question her own words already answer (26 Nov).
@@ -52,6 +54,13 @@ before she finds them. The notes give the site's look; they do not design the pa
    hierarchy, what the eye sees first, whether it feels like its subject. Act on that
    critique before she sees it; show it only when the honest answer is yes (25 Nov).
 4. Show one result, phone first, full-screen screenshots, the fewest that show it.
+   For how pages look on real screens (laptop 1920 x 1080 at 125%, monitor 2560 x 1440 at
+   100%), ask her for screenshots from her two monitors and judge from those, not from
+   renders (26 Nov: "I don't trust"). Check with players who have no game data yet, as the
+   live lists have.
+   The goal is a site that looks the same on every screen, not one made for her devices:
+   her two monitors and her phone only show her the gaps (26 Nov). Spacing and sizes are
+   set so their proportions hold on every screen size.
 5. Design with quick mockups first (25 Nov): less building, more thinking, faster
    delivery. Build it properly in the code only once she lands on an idea.
 
