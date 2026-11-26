@@ -142,12 +142,16 @@ export function topBar(options: TopBarOptions): string {
       <span class="clock-zone">UTC</span>
       <span class="clock-time" id="clockTime" aria-live="off">${gameClockText(nowMinute())}</span>
     </div>
+    <span class="top-divider" aria-hidden="true"></span>
     ${options.playerName
       ? `<div class="account-menu-wrap"><button type="button" class="ghost-button me-button" data-account-menu` +
         ` aria-haspopup="menu" aria-expanded="false" aria-label="${escapeForPage(options.playerName)}">` +
         `<span class="me-pic" aria-hidden="true">${options.playerPicture ? `<img src="${escapeForPage(options.playerPicture)}" alt="">`
           : escapeForPage((Array.from(options.playerName).find(letter => /[\p{L}\p{N}]/u.test(letter)) ?? '').toUpperCase())}</span>` +
         `<span class="me-name">${escapeForPage(options.playerName)}</span>` +
+        // The arrow to the menu, drawn as the site's icons are (computer only).
+        '<svg class="me-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"' +
+        ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>' +
         `</button>${options.accountMenu ?? ''}</div>`
       : '<button type="button" class="ghost-button" data-page="player">Sign in</button>'}
   </header>`;

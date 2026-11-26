@@ -336,3 +336,26 @@
 }
 /* The name on the account button in the site's font, not the browser's own for buttons. */
 .me-button { font-family: inherit; }
+
+/* ---------- Computers: the clock and the account (Roxanne, 26 Nov) ----------
+   The clock as it was (UTC over the time), sized for the band; a thin line; then the
+   account as its picture and name only, with no box around it, and an arrow to its menu
+   drawn like the site's icons. Phones keep theirs. */
+.top-divider, .me-arrow { display: none; }
+@media (min-width: 1000px) {
+  .clock-time { font-size: 20px; }
+  .clock-zone { font-size: 12px; }
+  .top-divider { display: block; flex: none; width: 1px; height: 30px; background: var(--glass-border); }
+  .top-bar #meButton, .top-bar .me-button {
+    min-height: 0; padding: 0; gap: 12px; border: none; background: none; box-shadow: none;
+    -webkit-backdrop-filter: none; backdrop-filter: none; font-size: 17px; font-weight: 800;
+  }
+  .top-bar .me-button:has(.me-pic) { padding-left: 0; }
+  .me-button .me-pic {
+    width: 40px; height: 40px; border-radius: 50%; font-size: 17px; color: var(--text);
+    box-shadow: 0 0 0 2px var(--page-color, #141B2C), 0 0 0 4px var(--section),
+      0 0 12px 2px color-mix(in srgb, var(--section) 45%, transparent);
+  }
+  .me-arrow { display: block; flex: none; width: 18px; height: 18px; margin-left: -2px; color: var(--section);
+    filter: drop-shadow(0 0 3px color-mix(in srgb, var(--section) 55%, transparent)); }
+}

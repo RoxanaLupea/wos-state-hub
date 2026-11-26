@@ -1373,3 +1373,8 @@ All nine are built.
 - Top bar (26 Nov): "the logo can be bigger. It does not need that much space in between
   the top and the bottom ... Half of it maybe. And the calendar fortress, the navigation,
   they cannot possibly be that small ... at least as big as ... the state hub."
+- Clock and account (26 Nov), from three versions: "The name is enough ... I have the
+  picture and the name ... I like the UTC exactly how it was before, so just adjust it for
+  the size. And I like how the line looks. Oh, and the arrow down, but ... make it look
+  like the site and like icons." Built: UTC over the time (12px / 20px), the thin line,
+  the round picture with the page's ring, the name, the arrow in the icons' style; no box.
