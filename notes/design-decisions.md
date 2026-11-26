@@ -174,6 +174,8 @@ there before discussing it again.
   The Migrant Score is labelled SCORE on the rows: "I think I want to replace transfer with
   SCORE" (Roxanne, 26 Nov).
   The place number is the row's position in its list (1, 2, 3…), not a stored field.
+- New players on a list (Roxanne, 26 Nov): "my interest is that when we add new people they
+  get the info without me having to tell you we didn't receive it or refresh it".
 - Blacklist (Roxanne, 26 Nov): "we will have a blacklist for sure", probably created from
   this page and kept separate; nobody has to look at it, but if an ID is on it, the
   entire row gets flagged.

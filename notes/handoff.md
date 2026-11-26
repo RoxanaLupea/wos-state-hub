@@ -64,6 +64,10 @@ candidate tables were empty) and everything was pushed.
   during the Pre-transfer." Replaces "1 from <date>". Her ok on:
   icon-only Cancel and Save on the card, "Ordinary state", the Records profile pop-up, grips
   on every row, 16-character names cut on 360 px phones ("they can buy better phones").
+- 18:50 (not pushed, SQL not run): New group's lists scroll on the phone (they were cut at
+  300 px) and the pop-up never runs past the screen; the letter pictures there are centred.
+  refresh_players puts the current list's players without data first (the import had
+  queued 232 players and reads take up to 15 s each, so the 6 Dec list waited).
 - 18:40: the old sheet imported (her yes): 11 transfers (4 Jan to 6 Dec 2026), 286 rows with
   source "Old transfer sheet "1458 transfer December", <tab> tab" and updated_by her account;
   statuses by her rules (ticked Migration or "ok" Transferred; "Declined"/"rejected" Rejected;

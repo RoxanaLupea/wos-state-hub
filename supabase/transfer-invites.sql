@@ -280,7 +280,12 @@ begin
           or player.player_id::text in (select member->>'chief_id' from game_alliances, jsonb_array_elements(data->'members') member)
           or player.player_id in (select player_id from transfer_invites
             where (window_id = admin_tools.current_transfer_window() and status is distinct from 'transferred') or game_read_at is null))
-      order by (player.stale_since > now() - interval '10 minutes') desc nulls last,
+      -- A player just put on the current transfer's list comes first, so their row fills
+      -- within a minute or two even when many others wait (Roxanne, 26 Nov: "when we add new
+      -- people they get the info without me having to tell you").
+      order by (player.player_id in (select invite.player_id from transfer_invites invite
+          where invite.window_id = admin_tools.current_transfer_window() and invite.game_read_at is null)) desc,
+        (player.stale_since > now() - interval '10 minutes') desc nulls last,
         player.refresh_asked_at nulls last, player.read_at
       limit 40 loop
     exit when clock_timestamp() - started > interval '45 seconds';

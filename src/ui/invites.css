@@ -656,7 +656,7 @@
 .inv .av > img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
 .inv .av > span { color: var(--text-muted); }
 .inv .mp > img, .inv .gfaces i > img, .inv .ng-pick i > img, .inv .ng-p i > img, .inv .found .pic > img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-.inv .mp > span, .inv .gfaces i > span, .inv .ng-pick i > span, .inv .ng-p i > span { flex: none; font: inherit; color: inherit; white-space: nowrap; }
+.inv .mp > span, .inv .gfaces i > span, .inv .ng-pick i > span:not(.in-card *), .inv .ng-p i > span { flex: none; width: auto; text-align: center; font: inherit; color: inherit; white-space: nowrap; }
 .inv .mp { overflow: hidden; }
 .inv .nm .on-site-name { color: var(--text-muted); }
 /* The status: tappable for the transfer manager and admins, plain for everyone else. */
@@ -853,3 +853,13 @@
 .inv .rmg b, .inv .tstat .mgr-line b { padding-block: 4px; margin-block: -4px; line-height: 1.3; }
 /* Records: the transfer manager's name a little smaller (Roxanne, 26 Nov). */
 .inv .rmg b:not(.in-card *) { font-size: 13px; }
+/* New group: the list of players scrolls inside the pop-up (it was cut at 300px); the fade
+   at its bottom stays, with room under the last player so it can be scrolled clear of it. */
+.inv .ng-list:not(.in-card *) { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--section) 35%, transparent) transparent; padding-bottom: 22px; }
+/* The players found by State or Contact scroll the same way, and the pop-up never runs past
+   the screen. */
+.inv .ng-who:not(.in-card *) { max-height: 300px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--section) 35%, transparent) transparent; }
+.inv .leave-prompt-box.ng { max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior: contain; }
+.inv .ng .ng-list + .saverow:not(.in-card *) { margin-top: 0 !important; }
