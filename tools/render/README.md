@@ -8,7 +8,9 @@ screenshots, with what the workspace already has: esbuild, Chrome and Playwright
    as tools/render/data/main.json. That folder is never committed; the repo is public.
    For the player profile, also run `python3 tools/render/add-test-player.py`: the
    database query does not fetch accounts, so this adds a made-up signed-in player
-   (main, alt, two farms, owner role) from test-player.json.
+   (main, alt, two farms, owner role) from test-player.json. For Transfers · Invites and
+   Records, then run `python3 tools/render/add-test-transfers.py`: made-up transfers with the
+   mockup's players (shoot at a fixed clock, e.g. 2026-12-10, to see the invitation phase).
 2. Build: `tools/render/build.sh /tmp/render-build`
 3. Screenshot: `python3 tools/render/shoot.py /tmp/render-build '[{"width":1440,"height":900,"file":"/tmp/pc.png"},{"width":390,"height":844,"file":"/tmp/phone.png"}]'`
 

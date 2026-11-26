@@ -11,7 +11,7 @@ select json_build_object(
   'event_occurrences',   coalesce((select json_agg(t) from event_occurrences t), '[]'),
   'settings',            coalesce((select json_agg(t) from settings t), '[]'),
   'transfer_windows',    coalesce((select json_agg(t) from transfer_windows t), '[]'),
-  'transfer_candidates', coalesce((select json_agg(t) from transfer_candidates t), '[]'),
+  'transfer_invites',    coalesce((select json_agg(t) from transfer_invites t), '[]'),
   'fort_assignments',    coalesce((select json_agg(t) from fort_assignments t), '[]'),
   'rally_leads',         coalesce((select json_agg(t) from rally_leads t), '[]'),
   'buff_allocations',    coalesce((select json_agg(t) from buff_allocations t), '[]'),

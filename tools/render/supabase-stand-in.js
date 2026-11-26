@@ -135,6 +135,10 @@ async function rpc(name, args) {
     return { data: (tables.game_alliances ?? []).map(one => ({ state_number: one.state_number, tag: one.tag, read_at: one.read_at,
       game_read_at: one.game_read_at ?? null, data: { members: one.data?.members ?? [] } })), error: null };
   }
+  if (name === 'site_player_ids') {
+    const onSite = new Set((tables.game_accounts ?? []).map(one => Number(one.in_game_id)));
+    return { data: (args.player_ids ?? []).filter(id => onSite.has(id)), error: null };
+  }
   if (name === 'transfer_dates') {
     const dates = [...new Set((tables.transfer_groups ?? []).map(one => one.transfer_date))].sort();
     return { data: dates, error: null };

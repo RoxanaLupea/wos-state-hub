@@ -6,12 +6,12 @@ import { escapeForPage } from './escape.ts';
 import { imageUrl } from './event-icon.ts';
 import { bannerStyle } from './fortress.ts';
 import { allianceByTag } from '../data/alliances.ts';
-import { PLUS, field, historyLink, holdTime, type SvsHold } from './svs-results.ts';
+import { PLUS, field, historyLink, holdTime, presidentSearch, type SvsHold, type President } from './svs-results.ts';
 
 export interface SunfireRun {
   // The Occupation Ranking, longest hold first.
   holds: SvsHold[];
-  president: { tag: string; name: string } | null;
+  president: President | null;
 }
 
 export const SUNFIRE_EDIT_FORM_ID = 'sunfire-result-form';
@@ -48,7 +48,7 @@ function presidentPart(run: SunfireRun, editing: boolean): string {
   return `<section class="svs-part sunfire"><div class="svs-president" style="${colour.style}">` +
     `<img src="${imageUrl('president')}" alt="President">` +
     (editing
-      ? field('president', name, ' placeholder="[Tag]name" aria-label="President"')
+      ? presidentSearch(run.president)
       : `<span class="${colour.side}">${escapeForPage(name)}</span>`) +
     '</div></section>';
 }

@@ -320,117 +320,118 @@
    only as wide as its pictures, the troop block exactly as tall as the hero block; the
    nine leaderboards on one line in their three groups, the Labyrinth's stages opening
    under the whole line; Updated and Refresh at the top right under the badge. */
+/* A profile shown in a card beside a list (the Invites page) keeps the phone's layout. */
 @media (min-width: 900px) {
-  .pp .troops { --art-h: var(--troop); --shrink: .6; --pick-gap: 8px; }
-  .pp .pick { gap: 3px; }
-  .pp .lvl { height: 16px; font-size: 13px; line-height: 16px; }
-  .pp .quiet, .pp .kind-pick { font-size: 13.5px; }
-  .pp { --edge: 32px; --pic: 160px; max-width: 1180px; padding-top: 40px; padding-bottom: 48px; }
-  .pp .chief { column-gap: 26px; }
-  .pp .who { gap: 16px; }
-  .pp .name { font-size: 34px; }
-  .pp .name .rank { font-size: 13px; }
-  .pp .id { font-size: 16px; }
-  .pp .power { font-size: 36px; }
-  .pp .power .pr { font-size: 15px; }
-  .pp .foundry { font-size: 17px; }
-  .pp .foundry-field { font-size: 17px; height: 26px; }
-  .pp .foundry img { width: 21px; height: 21px; }
-  .pp .pic { font-size: 50px; border-radius: 26px; }
+  .pp:where(:not(.in-card)) .troops { --art-h: var(--troop); --shrink: .6; --pick-gap: 8px; }
+  .pp:where(:not(.in-card)) .pick { gap: 3px; }
+  .pp:where(:not(.in-card)) .lvl { height: 16px; font-size: 13px; line-height: 16px; }
+  .pp:where(:not(.in-card)) .quiet, .pp:where(:not(.in-card)) .kind-pick { font-size: 13.5px; }
+  .pp:where(:not(.in-card)) { --edge: 32px; --pic: 160px; max-width: 1180px; padding-top: 40px; padding-bottom: 48px; }
+  .pp:where(:not(.in-card)) .chief { column-gap: 26px; }
+  .pp:where(:not(.in-card)) .who { gap: 16px; }
+  .pp:where(:not(.in-card)) .name { font-size: 34px; }
+  .pp:where(:not(.in-card)) .name .rank { font-size: 13px; }
+  .pp:where(:not(.in-card)) .id { font-size: 16px; }
+  .pp:where(:not(.in-card)) .power { font-size: 36px; }
+  .pp:where(:not(.in-card)) .power .pr { font-size: 15px; }
+  .pp:where(:not(.in-card)) .foundry { font-size: 17px; }
+  .pp:where(:not(.in-card)) .foundry-field { font-size: 17px; height: 26px; }
+  .pp:where(:not(.in-card)) .foundry img { width: 21px; height: 21px; }
+  .pp:where(:not(.in-card)) .pic { font-size: 50px; border-radius: 26px; }
   /* On a computer the details and the side keep their own columns. */
-  .pp .chief .who { grid-column: 2; }
+  .pp:where(:not(.in-card)) .chief .who { grid-column: 2; }
   /* On a computer the badge's tag starts level with the name (owner, 25 Nov: lower). */
-  .pp .chief .side { grid-column: 3; align-self: start; margin-bottom: 0; }
-  .pp .side .badge { margin-top: 18px; }
-  .pp .who .id, .pp .who .power, .pp .who .foundry { margin-right: 0; }
+  .pp:where(:not(.in-card)) .chief .side { grid-column: 3; align-self: start; margin-bottom: 0; }
+  .pp:where(:not(.in-card)) .side .badge { margin-top: 18px; }
+  .pp:where(:not(.in-card)) .who .id, .pp:where(:not(.in-card)) .who .power, .pp:where(:not(.in-card)) .who .foundry { margin-right: 0; }
   /* The side: the badge at the top, as big as the room down to Updated and Refresh
      allows, its tag larger too; during a move the pair fills that room with Dismiss and
      Confirm under it. The logos' heights are what is left of the picture's height after
      the tag, the buttons, Updated and Refresh and the gaps between them. */
-  .pp .side { height: var(--pic); display: flex; flex-direction: column; align-items: flex-end; gap: 14px; }
-  .pp .chief:has(.move) .side { display: flex; }
-  .pp .tag { font-size: 16px; }
-  .pp .side .badge { gap: 8px; }
-  .pp .side .badge .logo { height: 85px; }
-  .pp .side .badge .logo.none { width: 85px; font-size: 34px; border-radius: 18px; }
-  .pp .move { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
-  .pp .move-pair { gap: 8px; }
-  .pp .side .move .badge { gap: 6px; }
-  .pp .side .move .badge .logo { height: 58px; }
-  .pp .side .move .badge .logo.none { width: 58px; font-size: 24px; border-radius: 14px; }
-  .pp .move-arrow { width: 18px; height: 18px; margin-bottom: 21px; }
-  .pp .move-actions { margin-top: 0; }
-  .pp .move .quiet { font-size: 13px; }
-  .pp .fresh.top { margin-top: auto; }
-  .pp .fresh.top { display: block; margin-bottom: 0; }
-  .pp .fresh.end { display: none; }
-  .pp .accbar { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
-  .pp .accbar .ph { width: 48px; }
-  .pp .characters { margin-top: 26px; }
+  .pp:where(:not(.in-card)) .side { height: var(--pic); display: flex; flex-direction: column; align-items: flex-end; gap: 14px; }
+  .pp:where(:not(.in-card)) .chief:has(.move) .side { display: flex; }
+  .pp:where(:not(.in-card)) .tag { font-size: 16px; }
+  .pp:where(:not(.in-card)) .side .badge { gap: 8px; }
+  .pp:where(:not(.in-card)) .side .badge .logo { height: 85px; }
+  .pp:where(:not(.in-card)) .side .badge .logo.none { width: 85px; font-size: 34px; border-radius: 18px; }
+  .pp:where(:not(.in-card)) .move { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+  .pp:where(:not(.in-card)) .move-pair { gap: 8px; }
+  .pp:where(:not(.in-card)) .side .move .badge { gap: 6px; }
+  .pp:where(:not(.in-card)) .side .move .badge .logo { height: 58px; }
+  .pp:where(:not(.in-card)) .side .move .badge .logo.none { width: 58px; font-size: 24px; border-radius: 14px; }
+  .pp:where(:not(.in-card)) .move-arrow { width: 18px; height: 18px; margin-bottom: 21px; }
+  .pp:where(:not(.in-card)) .move-actions { margin-top: 0; }
+  .pp:where(:not(.in-card)) .move .quiet { font-size: 13px; }
+  .pp:where(:not(.in-card)) .fresh.top { margin-top: auto; }
+  .pp:where(:not(.in-card)) .fresh.top { display: block; margin-bottom: 0; }
+  .pp:where(:not(.in-card)) .fresh.end { display: none; }
+  .pp:where(:not(.in-card)) .accbar { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+  .pp:where(:not(.in-card)) .accbar .ph { width: 48px; }
+  .pp:where(:not(.in-card)) .characters { margin-top: 26px; }
   /* On a computer Edit and Add (or Cancel and Save) follow the last character. */
-  .pp .char-row { flex-direction: row; align-items: center; gap: 10px; }
+  .pp:where(:not(.in-card)) .char-row { flex-direction: row; align-items: center; gap: 10px; }
   /* After the photos, Edit and Add are two more places in the row (owner, 25 Nov: the
      words beside the photos looked awkward): the photo's size and corners, a faint dashed
      edge, their icon in the middle. */
-  .pp .char-row .char-actions { gap: 10px; }
-  .pp .char-row .char-actions .remind { width: 48px; height: 48px; justify-content: center; padding: 0; border-radius: 13px;
+  .pp:where(:not(.in-card)) .char-row .char-actions { gap: 10px; }
+  .pp:where(:not(.in-card)) .char-row .char-actions .remind { width: 48px; height: 48px; justify-content: center; padding: 0; border-radius: 13px;
     border: 1.5px dashed color-mix(in srgb, var(--ally) 35%, var(--glass-border)); }
-  .pp .char-row .char-actions .remind > span { display: none; }
-  .pp .char-row .char-actions .remind .edit-icon { width: 20px; height: 20px; }
+  .pp:where(:not(.in-card)) .char-row .char-actions .remind > span { display: none; }
+  .pp:where(:not(.in-card)) .char-row .char-actions .remind .edit-icon { width: 20px; height: 20px; }
 
   /* Editing: the photos 18 px apart, so the picked one has room to grow, each name
      centred under its photo; the first photo starts where it does outside editing. */
-  .pp .accgrid { display: flex; flex-wrap: wrap; gap: 18px 0; margin-left: -9px; }
-  .pp .acc { width: 66px; }
+  .pp:where(:not(.in-card)) .accgrid { display: flex; flex-wrap: wrap; gap: 18px 0; margin-left: -9px; }
+  .pp:where(:not(.in-card)) .acc { width: 66px; }
   /* The picked character a little bigger (owner, 25 Nov), without moving the others: the
      photo grows over the gaps and its name moves down with it. */
-  .pp .acc .ph { transition: transform .15s; }
-  .pp .acc.picked .ph { transform: scale(1.17); }
-  .pp .acc.picked .acc-name { transform: translateY(4px); }
-  .pp .kind-line { gap: 16px; }
-  .pp .acc .ph { width: 48px; }
-  .pp .acc-name { font-size: 11.5px; }
-  .pp .ph { font-size: 20px; border-radius: 13px; }
-  .pp { --row: 170px; --name-line: 22px; --troop: calc(var(--row) - var(--name-line)); }
-  .pp .body { margin-top: 44px; display: grid; justify-content: space-between;
+  .pp:where(:not(.in-card)) .acc .ph { transition: transform .15s; }
+  .pp:where(:not(.in-card)) .acc.picked .ph { transform: scale(1.17); }
+  .pp:where(:not(.in-card)) .acc.picked .acc-name { transform: translateY(4px); }
+  .pp:where(:not(.in-card)) .kind-line { gap: 16px; }
+  .pp:where(:not(.in-card)) .acc .ph { width: 48px; }
+  .pp:where(:not(.in-card)) .acc-name { font-size: 11.5px; }
+  .pp:where(:not(.in-card)) .ph { font-size: 20px; border-radius: 13px; }
+  .pp:where(:not(.in-card)) { --row: 170px; --name-line: 22px; --troop: calc(var(--row) - var(--name-line)); }
+  .pp:where(:not(.in-card)) .body { margin-top: 44px; display: grid; justify-content: space-between;
     grid-template-columns: calc(3 * var(--troop) * 120 / 147 + 36px) calc(5 * var(--row) * 232 / 408 + 80px);
     grid-template-areas: "troops arena" "boards boards"; column-gap: 64px; row-gap: 44px; }
-  .pp .troops { grid-area: troops; }
-  .pp .arena { grid-area: arena; }
-  .pp .boards { grid-area: boards; }
-  .pp .items.three { grid-template-columns: repeat(3, calc(var(--troop) * 120 / 147)); column-gap: 18px; }
-  .pp .items.five { grid-template-columns: repeat(5, calc(var(--row) * 232 / 408)); column-gap: 20px; }
-  .pp .art.troop { width: calc(var(--troop) * 120 / 147); height: var(--troop); }
-  .pp .art.troop .p { height: var(--troop); }
-  .pp .art.troop .fc { height: 44px; top: 4px; left: -4px; }
-  .pp .troops .tname { height: 15px; font-size: 15px; line-height: 15px; }
-  .pp .art.hero { width: 100%; height: var(--row); }
-  .pp .art.hero .hlv { font-size: 15px; bottom: 26px; -webkit-text-stroke-width: 3px; }
-  .pp .art.hero .stars { bottom: 8px; }
-  .pp .art.hero .stars svg { width: 17px; height: 17px; }
-  .pp .art.hero .cm-badge { width: 24px; height: 24px; top: 5px; left: 5px; border-radius: 7px; }
-  .pp .art.hero .cm { height: 16px; }
-  .pp .detail, .pp .arena .detail { font-size: 13px; }
+  .pp:where(:not(.in-card)) .troops { grid-area: troops; }
+  .pp:where(:not(.in-card)) .arena { grid-area: arena; }
+  .pp:where(:not(.in-card)) .boards { grid-area: boards; }
+  .pp:where(:not(.in-card)) .items.three { grid-template-columns: repeat(3, calc(var(--troop) * 120 / 147)); column-gap: 18px; }
+  .pp:where(:not(.in-card)) .items.five { grid-template-columns: repeat(5, calc(var(--row) * 232 / 408)); column-gap: 20px; }
+  .pp:where(:not(.in-card)) .art.troop { width: calc(var(--troop) * 120 / 147); height: var(--troop); }
+  .pp:where(:not(.in-card)) .art.troop .p { height: var(--troop); }
+  .pp:where(:not(.in-card)) .art.troop .fc { height: 44px; top: 4px; left: -4px; }
+  .pp:where(:not(.in-card)) .troops .tname { height: 15px; font-size: 15px; line-height: 15px; }
+  .pp:where(:not(.in-card)) .art.hero { width: 100%; height: var(--row); }
+  .pp:where(:not(.in-card)) .art.hero .hlv { font-size: 15px; bottom: 26px; -webkit-text-stroke-width: 3px; }
+  .pp:where(:not(.in-card)) .art.hero .stars { bottom: 8px; }
+  .pp:where(:not(.in-card)) .art.hero .stars svg { width: 17px; height: 17px; }
+  .pp:where(:not(.in-card)) .art.hero .cm-badge { width: 24px; height: 24px; top: 5px; left: 5px; border-radius: 7px; }
+  .pp:where(:not(.in-card)) .art.hero .cm { height: 16px; }
+  .pp:where(:not(.in-card)) .detail, .pp:where(:not(.in-card)) .arena .detail { font-size: 13px; }
   /* On a computer the nine boards are one line in their three groups (owner, 25 Nov): the
      boards of a group the same distance apart, edge to edge, and the groups spread evenly
      over the width. */
-  .pp .grid { grid-template-columns: repeat(3, auto) 1fr repeat(3, auto) 1fr repeat(3, auto); column-gap: 32px; }
-  .pp .grid > * { grid-row: 1; }
-  .pp .grid > :nth-child(1) { grid-column: 1; } .pp .grid > :nth-child(2) { grid-column: 2; } .pp .grid > :nth-child(3) { grid-column: 3; }
-  .pp .grid > :nth-child(4) { grid-column: 5; } .pp .grid > :nth-child(5) { grid-column: 6; } .pp .grid > :nth-child(6) { grid-column: 7; }
-  .pp .grid > :nth-child(7) { grid-column: 9; } .pp .grid > :nth-child(8) { grid-column: 10; } .pp .grid > :nth-child(9) { grid-column: 11; }
-  .pp .board .cap { font-size: 13px; }
-  .pp .board .v { font-size: 22px; }
-  .pp .board .r { font-size: 12px; }
-  .pp .areas { grid-template-columns: repeat(6, auto); justify-content: space-between; }
-  .pp .stages:not(.closed) .areas { display: grid; }
-  .pp .stages:not(.closed) .chev { transform: rotate(180deg); }
+  .pp:where(:not(.in-card)) .grid { grid-template-columns: repeat(3, auto) 1fr repeat(3, auto) 1fr repeat(3, auto); column-gap: 32px; }
+  .pp:where(:not(.in-card)) .grid > * { grid-row: 1; }
+  .pp:where(:not(.in-card)) .grid > :nth-child(1) { grid-column: 1; } .pp:where(:not(.in-card)) .grid > :nth-child(2) { grid-column: 2; } .pp:where(:not(.in-card)) .grid > :nth-child(3) { grid-column: 3; }
+  .pp:where(:not(.in-card)) .grid > :nth-child(4) { grid-column: 5; } .pp:where(:not(.in-card)) .grid > :nth-child(5) { grid-column: 6; } .pp:where(:not(.in-card)) .grid > :nth-child(6) { grid-column: 7; }
+  .pp:where(:not(.in-card)) .grid > :nth-child(7) { grid-column: 9; } .pp:where(:not(.in-card)) .grid > :nth-child(8) { grid-column: 10; } .pp:where(:not(.in-card)) .grid > :nth-child(9) { grid-column: 11; }
+  .pp:where(:not(.in-card)) .board .cap { font-size: 13px; }
+  .pp:where(:not(.in-card)) .board .v { font-size: 22px; }
+  .pp:where(:not(.in-card)) .board .r { font-size: 12px; }
+  .pp:where(:not(.in-card)) .areas { grid-template-columns: repeat(6, auto); justify-content: space-between; }
+  .pp:where(:not(.in-card)) .stages:not(.closed) .areas { display: grid; }
+  .pp:where(:not(.in-card)) .stages:not(.closed) .chev { transform: rotate(180deg); }
   /* The section titles larger on a computer (owner, 25 Nov), the stages' a little smaller. */
-  .pp h2 { font-size: 16px; }
-  .pp .stages-title { font-size: 14px; }
+  .pp:where(:not(.in-card)) h2 { font-size: 16px; }
+  .pp:where(:not(.in-card)) .stages-title { font-size: 14px; }
   /* The stages set in from both sides, a part of the leaderboards (owner, 25 Nov). */
-  .pp .stages { padding: 0 48px; }
-  .pp .remind { font-size: 13.5px; }
-  .pp .remind .edit-icon { width: 18px; height: 18px; }
-  .pp.adding { padding-top: 40px; }
+  .pp:where(:not(.in-card)) .stages { padding: 0 48px; }
+  .pp:where(:not(.in-card)) .remind { font-size: 13.5px; }
+  .pp:where(:not(.in-card)) .remind .edit-icon { width: 18px; height: 18px; }
+  .pp:where(:not(.in-card)).adding { padding-top: 40px; }
 }

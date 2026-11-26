@@ -4,7 +4,104 @@ Do CLAUDE.md's setup first. Updated 26 Nov 2026.
 
 ## Now
 
-Next job: build the Invites and Records pages in the code.
+### Invites and Records live (26 Nov, second chat)
+
+On her yes (18:20) supabase/transfer-invites.sql and supabase/blacklist.sql were run (the
+candidate tables were empty) and everything was pushed.
+- Code: src/ui/invites-page.ts (both pages, pop-ups, editing, moving rows), src/ui/invite-row.ts
+  (the player row, used by both), src/ui/invites.css (generated from the mockup's CSS by a
+  script, scoped to .inv and kept out of the profile card with :not(.in-card *); the page's own
+  additions at the end), src/data/transfer-invites.ts (reads and writes), src/data/invite-rules.ts
+  (phases, countdown, specials, cap estimate, statuses, group colours; tests/invite-rules.test.ts).
+- Only the phone's or the computer's parts are drawn (onComputer): an SVG gradient in a hidden
+  part left the visible icons of the same name blank.
+- The profile shown in a card keeps the phone layout: player-profile.css's computer rules now
+  apply to .pp:where(:not(.in-card)) (no change to the profile page, checked by pixels).
+- The old window and candidate forms and the blacklist form left the Invites page (not in the
+  mockup); src/ui/transfers.ts, transfers.css and src/data/transfers.ts are gone.
+- Renders: tools/render/add-test-transfers.py adds made-up transfers (run after add-test-player.py).
+- Every page rendered before and after: only Invites and Records changed.
+- Compact rows (16:20): a normal 16-character name fits on a 390 px phone and the computer,
+  in view and editing (columns 40 / name / 20 / 92 / 44 on the phone, the same in both modes;
+  the computer's FC column 24 px). On a 360 px phone such a name is still cut.
+- Computer (16:30, "the computer is the primary target"): the rows start on the list's line,
+  the group shade and grips inside it, the picture 30 px in; the number columns gave the room.
+  The phone keeps the shade a little left of the list ("it's fine"); on the phone the
+  row's visible edges (the shade on the left, the contact on the right) sit 12 px from the
+  screen's edges, just outside the list's 16 px; columns 40 / name / 20 / 84 / 42, Group in
+  place of Add to group (16:35).
+- Records (16:45): rows sit where the Invites rows do: phone 12 px from the screen's edges,
+  computer pictures 30 px in. "Leave group" is now
+  Ungroup, in the group's colour; each row's icons have their own gradient.
+- 17:00: the phone page's content runs 12 px from both edges (list titles' lines as wide as
+  the rows). The card's values share one 30 px line (Group and the Power cap box, the manager),
+  view and editing alike. Ordinary / Leading only as wide as its words, the chosen one in the
+  page's gold (a variant on this card only; the Add pop-ups' kind-words are unchanged). The
+  transfer manager is found by name among the state's roster players, or by in-game ID in
+  the game; Save asks to pick one. supabase/transfer-invites.sql now also lets anyone signed
+  in ask for a Refresh (the hour limit stays).
+- 17:20: the card has its own Edit (admins), top corner; Cancel and Save (icons) take its
+  place; the lists' Edit no longer edits the card. "Ordinary state" / "Leading state" shows
+  to everyone under Group and Power cap; editing adds the other word, so nothing moves down.
+  The manager line: value right after its label, the box in its place with the picture.
+- The player search is one element, src/ui/player-search.ts and .css (typing never redraws
+  the page): the transfer manager on the card, the president in the SvS and Sunfire results.
+  The president keeps its in-game ID and picture as details president_id / president_avatar;
+  saving a new president of the battle (SvS, or Sunfire if the Transfers setting says so)
+  right before a transfer sets that transfer's manager. The card changes the manager only
+  when that battle's Preparation was won and its Battle lost; then the former president (the
+  newest SvS or Sunfire president before that battle) is set, until edited on the card.
+  The manager is set again only when the president or the two results change.
+- 17:30: the card's order is the countdown, Group and Power cap, the state, then "Transfer
+  manager" as a gold part title like Available invites, 19 px between the parts (phone too).
+  The state word is gold text without a fill; the chosen word while editing has a thin gold
+  frame.
+- Computer, Compact: the first row has the same 5 px above its picture as the others (it had
+  2, so a group's shade started right above it); the column heads moved up 3 px instead.
+- 17:45: the special invite restored during the transfer is marked only when it adds a place
+  (a test covers it); 17:50: as a gold star after "of N", its note on a tap or under the
+  pointer (the rows' .tip): "The 2nd special invite is only generated on Monday 1 Feb 2027,
+  during the Pre-transfer." Replaces "1 from <date>". Her ok on:
+  icon-only Cancel and Save on the card, "Ordinary state", the Records profile pop-up, grips
+  on every row, 16-character names cut on 360 px phones ("they can buy better phones").
+- 18:10: a name cut with "…" (Records manager, card manager, search list) keeps 4 px above and
+  below so tall characters are not clipped; the Records manager's name is 13 px (was 14.5).
+- 18:05: Records show the president of that time where a transfer's manager was not recorded
+  (main.ts presidentAtTransfer, by the manager's rule, from the results and seed/ histories),
+  with a gold star after the name and its note; admins change a past manager with Edit after
+  the date (the player search). The stars are one element (.star-tip). Only one good (fresh)
+  read fills an imported record. New supabase/blacklist.sql (state_blacklist: ID, name, reason,
+  source), not run; the flag and the State page come later.
+- 17:55: supabase/transfer-invites.sql: only the current transfer's list
+  (admin_tools.current_transfer_window(), current until its eighth day) is read and copied;
+  an older record keeps its data, one that never had any (imported) is filled once with its
+  read time (game_read_at). Tested on local Postgres. Still to build with the import: the
+  tiny star on a record whose data was read after its transfer ("received on <date>").
+- Next: import "1458 transfer December" (Google Drive, id 1Rx3hPpOL2Y9LgDzh0_wHnTT2Cda_Lx0tBoNd2ixx-jw,
+  month tabs, read through the Sheets connector): the December tab is the current 6 Dec list
+  (Invites, with the "Terry+Norr group"), the others go to Records. The March tab is the
+  29 March transfer. Still to ask her: invited but not migrated with no note (Rejected or
+  Expired), tabs without statuses (February, January), November's empty Migration column. Then contact editing, flags, the page after the transfer, Add problems.
+- 17:40: the phone's back: every page and part (Timeline, Invites, Records…) is a step of the
+  history (main.ts placeKey is page|part|level); on Invites and Records each pop-up, Details
+  or profile open is a level. Leaving Invites with changes asks first. The calendar's own
+  steps work as before (checked against the last commit). Group / Ungroup and Remove sit at
+  the right of their column while editing (centred in Details on the computer).
+  The phase header stays as it is for now (her choice).
+- 17:35: the lists' views (Invites and Records): the chosen view's mark is a short, thicker,
+  glowing piece of the list's own line (no underline of its own); both icons in the list's
+  colour, each list with its own gradient id.
+
+Mine, not hers, to show her (say so, ask one at a time):
+- Before the invitation phase the title reads "INVITATION TRANSFER IN" with the countdown.
+- Editing (admins) makes the card's transfer manager (name search, ID as backup), power cap and
+  Ordinary / Leading editable in place; nothing else sets them.
+- A special restored during a transfer's own days shows "1 from <date>" under the Special ring.
+- The profile from Records opens as a pop-up on a computer, from the bottom on a phone.
+- The grips show on every row on a computer for those who may move players.
+- Not built (still to design with her): contact editing, flags, statistics swap on the phone,
+  the page once the transfer is over beyond the card's Arrived and invites sent, Add problems
+  beyond "already in a list" and a full list greyed. The phone's back does not close the sheets.
 
 ### The spec: tools/mockups/invites/invites_status.py
 

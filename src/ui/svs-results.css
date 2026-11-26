@@ -121,6 +121,8 @@
 .svs-hold.theirs .svs-pill-field { background: linear-gradient(90deg, rgba(194, 74, 82, 0.85), rgba(224, 122, 127, 0.7)); box-shadow: inset 0 0 0 1px rgba(235, 150, 155, 0.55); }
 .svs-hold.blank .svs-pill-field { background: rgba(255, 255, 255, 0.06); box-shadow: inset 0 0 0 1px var(--glass-border); }
 .svs-president .svs-field { flex: 1; height: 20px; font-size: 14px; font-weight: 600; line-height: 1; }
+/* The president is found by name (player-search.ts): the box fills the line as the field did. */
+.svs-president .player-search { flex: 1; min-width: 0; }
 
 /* WIN and LOSS as words in place: the chosen one white, the other faint. */
 .svs-choices { display: inline-flex; align-items: center; height: 18px; gap: 14px; letter-spacing: inherit; margin-right: -0.14em; }

@@ -8,6 +8,7 @@ import { escapeForPage } from './escape.ts';
 import { imageUrl } from './event-icon.ts';
 import { allianceByTag } from '../data/alliances.ts';
 import { pageButton } from './edit-forms.ts';
+import { playerSearchField } from './player-search.ts';
 
 export type Outcome = 'win' | 'loss' | 'draw' | '';
 export type Side = 'ours' | 'theirs';
@@ -28,7 +29,22 @@ export interface SvsRun {
   points: { ours: number; theirs: number; days: [number, number][] } | null;
   // The Occupation Ranking, longest hold first.
   holds: SvsHold[];
-  president: { tag: string; name: string } | null;
+  president: President | null;
+}
+
+// A president as recorded: the alliance's tag and the name, and the in-game ID and picture
+// once picked from the players found.
+export interface President { tag: string; name: string; id?: string; avatar?: string }
+
+// The president is found like the transfer manager: by name among the state's players, or
+// by in-game ID in the game (Roxanne, 26 Nov). It is kept as the game writes it ([DVL]name),
+// with its ID and picture, which set the transfer manager.
+export function presidentSearch(president: President | null): string {
+  return playerSearchField({
+    key: 'president', label: 'President', placeholder: 'Name or ID', fieldClass: 'svs-field', gameWriting: true,
+    shown: president ? { id: president.id ?? '', name: president.name, avatar: president.avatar ?? null, alliance: president.tag || null } : null,
+    formNames: { text: 'president', id: 'detail_president_id', avatar: 'detail_president_avatar' }
+  });
 }
 
 // Which part of the SvS the panel is open on. Preparation and Battle show only their
@@ -232,7 +248,6 @@ export function svsResultEditor(options: SvsEditOptions): string {
   // The Battle starts with one field and a + button.
   const longest = Math.max(1, ...run.holds.map(hold => hold.seconds));
   const holds = run.holds.length ? run.holds.map((hold, index) => holdRow(index + 1, hold, longest)).join('') : holdRow(1, null);
-  const president = run.president ? `[${run.president.tag}]${run.president.name}` : '';
   const isSupreme = !!run.preparation && run.preparation === run.battle;
   return `<form class="svs-result editing" id="${SVS_EDIT_FORM_ID}" data-form="result" data-key="${escapeForPage(options.formKey)}">` +
     `<input type="hidden" name="state_alliance_id" value="${escapeForPage(options.castleAllianceId)}">` +
@@ -259,7 +274,7 @@ export function svsResultEditor(options: SvsEditOptions): string {
     '<section class="svs-part state-of-power">' + partTitle('State of Power', run.result) +
       '<div class="svs-president">' +
         `<img src="${imageUrl(isSupreme ? 'supreme-president' : 'president')}" alt="" data-president-icon>` +
-        field('president', president, ' placeholder="[Tag]name" aria-label="President"') +
+        presidentSearch(run.president) +
       '</div></section>' +
     '<p class="form-message" data-form-message></p>' +
   '</form>';

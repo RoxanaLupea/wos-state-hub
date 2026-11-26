@@ -9,12 +9,18 @@ import { escapeForPage } from './ui/escape.ts';
 import { battleDayOf, phaseOf, seasonNumberOf, seasonStartFor, FORT_PHASES } from './calendar/fort-season.ts';
 import { fortressBoard, seasonTable, seasonTotals, type InPlaceEditing } from './ui/fortress.ts';
 import { loadGenerationsOfState, loadTransferDates, loadTransferGroups } from './data/transfer-groups.ts';
-import { setFortRewardsGeneration, setGenerationSteps } from './data/heroes.ts';
+import { generationOnDay, setFortRewardsGeneration, setGenerationSteps } from './data/heroes.ts';
 import {
-  loadTransferWindows, loadCandidatesOf,
-  type TransferWindow, type TransferCandidate
-} from './data/transfers.ts';
-import { nextTransferPage, pastTransfersPage } from './ui/transfers.ts';
+  loadTransfers, loadInvites, currentTransferDate, changeTransfer, type Transfer, type Invite
+} from './data/transfer-invites.ts';
+import {
+  invitesPage, recordsPage, handleInvitesClick, handleInvitesInput, stepTransfer, invitesMayLeave, startInviteDrag,
+  moveInviteDrag, endInviteDrag, afterInvitesDrawn, inviteDragActive, invitesOverlayCount, closeInvitesOverlays, type InvitesContext
+} from './ui/invites-page.ts';
+import { handlePlayerSearchInput, handlePlayerSearchClick, type FoundPlayer, type PlayerSources } from './ui/player-search.ts';
+import { allianceTagPill } from './ui/invite-row.ts';
+import svsSeed from '../seed/svs-results.json';
+import sunfireSeed from '../seed/sunfire-results.json';
 import { layoutPredictions } from './ui/layout-predictions.ts';
 import {
   bigGroupsOf, followsOf, groupOfState,
@@ -55,7 +61,7 @@ import { PENCIL_ICON, allianceTimeForm, dateChangeForm, editButton, fortForm, pe
 import { deleteRow, loadRows, saveRow, type Row } from './data/records.ts';
 import { removeGameAccount, saveGameAccount, setGameAccountKinds } from './data/player-profile.ts';
 import {
-  accountColour, accountMenu, accountQuestion, filterFoundryPower, fitPlayerPage, foundryText, filterId, gameReadOf, idProblem, rosterEntriesOf, stateBoardsOf, TROOP_KINDS, withRoster,
+  accountColour, accountMenu, accountQuestion, playerProfile, filterFoundryPower, fitPlayerPage, foundryText, filterId, gameReadOf, idProblem, rosterEntriesOf, stateBoardsOf, TROOP_KINDS, withRoster,
   type AllianceMove, type BarAccount, type BoardEntry, type GameRead, type LookUpState, type RosterEntry, type SkillLevels, type TroopKind
 } from './ui/player-profile.ts';
 import { askGameRefresh, lookUpGameAccount, readGamePlayers, readGameRosters, readPlayerAlliances, readStateRanks, readSkillLevels, setSkillLevel, settleAllianceMove } from './data/game-data.ts';
@@ -67,7 +73,7 @@ import { SVS_EDIT_FORM_ID, preparationOutcome, typeHoldTime, updateSvsEditor } f
 import { personalEntryForm, personalEntryOf } from './ui/personal-entry.ts';
 import {
   academiesPage, availabilityPage, facilitiesPage, membersPage, planPage, requestsPage, rolesPage,
-  rosterPage, settingsPage, territoryPage, transferWorkSections, type WorkContext
+  rosterPage, settingsPage, territoryPage, type WorkContext
 } from './ui/working-pages.ts';
 import { yearRunSteps, yearViewRuns, type YearRun } from './calendar/year-runs.ts';
 import { evenColour } from './ui/even-colour.ts';
@@ -180,10 +186,12 @@ let rallyLeads: RallyLead[] = [];
 let buffAllocations: BuffAllocation[] = [];
 // Every date the predictions hold, and the groups of the one on screen.
 let transferDates: string[] = [];
-let transferWindows: TransferWindow[] = [];
-let transferCandidates: TransferCandidate[] = [];
+let transfers: Transfer[] = [];
+let invites: Invite[] = [];
+// 1458's group on each transfer date ("1428–1491"), read when a transfer is shown.
+const ourGroupByDate = new Map<string, string | null>();
+const groupDatesBeingRead = new Set<string>();
 // The published ranges on the next window's date, for the group this state is in.
-let nextWindowGroups: TransferGroup[] = [];
 let transferGroups: TransferGroup[] = [];
 // The days the SvS battle and Sunfire Castle fall on, so each transfer can say which
 // of them it follows.
@@ -753,46 +761,183 @@ function predictionsControlsMarkup(): string {
   return options ? predictionsControls(options) : '';
 }
 
-// The window being planned is the first one that has not passed, or the last there is.
-function nextWindow(): TransferWindow | null {
-  const todayText = textFromDay(todayNumber());
-  const coming = transferWindows.filter(one => one.transferDate >= todayText);
-  if (coming.length) return coming[coming.length - 1];
-  return transferWindows[0] ?? null;
+// Every transfer date known: the published groups' and the transfers kept.
+// 1458 transfers after the battle the Transfers setting names (SvS unless set to Sunfire);
+// a transfer kept on the site counts whatever it followed.
+function allTransferDates(): string[] {
+  const ours = transferDates.filter(date => followsOfDate(date) === transferFollows);
+  return Array.from(new Set([...ours, ...transfers.map(one => one.date)])).sort();
 }
 
-function candidatesOf(windowId: number): TransferCandidate[] {
-  return transferCandidates.filter(one => one.windowId === windowId);
+// 1458's group on a date, read once per date and drawn again when it arrives.
+function ourGroupOf(date: string): string | null {
+  if (ourGroupByDate.has(date)) return ourGroupByDate.get(date) ?? null;
+  if (!groupDatesBeingRead.has(date)) {
+    groupDatesBeingRead.add(date);
+    void loadTransferGroups([date]).then(groups => {
+      const ours = groupOfState(bigGroupsOf(groups), Number(STATE_NUMBER));
+      ourGroupByDate.set(date, ours ? `${ours.fromState}–${ours.toState}` : null);
+      draw();
+    }).catch(() => ourGroupByDate.set(date, null));
+  }
+  return null;
 }
 
-const FOLLOWS_TEXT: Record<string, string> = { svs: 'After SvS', sunfire: 'After Sunfire' };
-
-function nextTransferMarkup(): string {
-  const window = nextWindow();
-  const todayText = textFromDay(todayNumber());
-  // The date comes from the published groups, so it is known before anyone sets up
-  // a window for it.
-  const date = window?.transferDate ??
-    transferDates.find(one => one >= todayText) ?? '';
-  if (!date) return '';
-  const work = person ? transferWorkSections(workContext(), date) : '';
-  return '<div class="work-page">' + nextTransferPage({
-    date,
-    window,
-    candidates: window ? candidatesOf(window.id) : [],
-    alliances,
-    ourGroup: groupOfState(bigGroupsOf(nextWindowGroups), Number(STATE_NUMBER)) ?? null,
-    follows: FOLLOWS_TEXT[followsOfDate(date)] ?? ''
-  }) + work + '</div>';
+// The profile of a player on the lists, as the profile page draws it: what the game says
+// of them when the site can read it, otherwise the list's own copy.
+const invitedGameAsked = new Set<string>();
+function inviteProfileMarkup(invite: Invite): string {
+  const id = invite.playerId;
+  if (person && !gameReads.has(id) && !invitedGameAsked.has(id)) {
+    invitedGameAsked.add(id);
+    void readGamePlayers([id]).then(rows => {
+      const read = gameReadOf(rows[0]);
+      if (read) { gameReads.set(id, read); draw(); }
+    }).catch(() => undefined);
+  }
+  const game: GameRead = gameReads.get(id) ?? {
+    name: invite.name, avatar: invite.avatar, power: invite.power, powerRank: null, state: invite.state,
+    allianceTag: null, allianceRank: null, troops: invite.troops, heroes: [], boards: {},
+    readAt: null, shownAt: null, asked: false
+  };
+  return playerProfile({
+    account: { in_game_id: id }, game, countedIn: null, move: null, stateBoards: stateBoards.get(id) ?? {},
+    alliances: alliancesStillHere(alliances), homeState: Number(STATE_NUMBER), now: Date.now(), others: [],
+    kindsEditing: null, ownAccount: false, foundryEditing: null, foundryDue: false, labyrinthOpen,
+    skills: invite.skills, skillDraft: {}, editingTroops: false, troopsMotion: null, troopsChanged: false, skillsDue: false
+  }).replace('<div class="pp"', '<div class="pp in-card"');
 }
 
-function pastTransfersMarkup(): string {
-  const todayText = textFromDay(todayNumber());
-  const past = transferWindows.filter(one => one.transferDate < todayText);
-  return pastTransfersPage({
-    windows: past.map(one => ({ window: one, candidates: candidatesOf(one.id) })),
-    alliances
-  });
+// The state's players from its alliances' rosters, to find the transfer manager by name.
+// The rosters are read the first time they are needed.
+function statePlayers(): FoundPlayer[] | null {
+  if (!rostersRead) {
+    if (person && !rostersAsked) {
+      rostersAsked = true;
+      void readGameRosters().then(rosters => { rosterEntries = rosterEntriesOf(rosters); rostersRead = true; draw(); })
+        .catch(() => { rostersAsked = false; });
+    }
+    return null;
+  }
+  return Array.from(rosterEntries.entries()).filter(([, entry]) => entry.state === Number(STATE_NUMBER))
+    .map(([id, entry]) => ({ id, name: String(entry.member.nick_name ?? ''), avatar: entry.member.avatar_url ?? null, alliance: entry.tag }))
+    .filter(one => one.name);
+}
+let rostersAsked = false;
+
+// Where a player is picked by name (the transfer manager, the president), the players come
+// from the rosters and an in-game ID from the game.
+const playerSources: PlayerSources = {
+  statePlayers,
+  lookUp: async id => {
+    const found = await lookUpGameAccount(id);
+    return found ? { id, name: found.name, avatar: found.avatar, alliance: found.alliance } : null;
+  },
+  tagPill: tag => allianceTagPill(tag, alliancesStillHere(alliances))
+};
+
+// The SvS (or Sunfire, as the Transfers setting says) that comes before a transfer, as
+// recorded: its Preparation and Battle results and its president.
+function battleBeforeTransfer(date: string): Map<string, string> | null {
+  const results = rowsOf('results');
+  const details = rowsOf('result_details');
+  if (!results || !details) return null;
+  const battleDay = battleDayBefore(date);
+  if (!battleDay) return null;
+  const before = results.find(one => one.event_type_id === transferFollows && !one.alliance_id && String(one.event_date) === battleDay);
+  if (!before) return null;
+  return new Map(details.filter(one => one.result_id === before.id).map(one => [String(one.detail_key), String(one.detail_value ?? '')]));
+}
+
+// The president in office before a battle: the newest SvS or Sunfire Castle before it with
+// a president recorded.
+function formerPresident(date: string): { id: string; name: string; avatar: string; alliance: string } | null {
+  const details = tableRows.get('result_details') ?? [];
+  const before = (tableRows.get('results') ?? [])
+    .filter(one => (one.event_type_id === 'svs' || one.event_type_id === 'sunfire') && !one.alliance_id && one.president_name && String(one.event_date) < date)
+    .sort((left, right) => String(right.event_date).localeCompare(String(left.event_date)))[0];
+  if (!before) return null;
+  const detail = (key: string) => String(details.find(one => one.result_id === before.id && one.detail_key === key)?.detail_value ?? '');
+  const alliance = before.president_alliance_id ? alliances.find(one => one.id === before.president_alliance_id)?.tag ?? '' : detail('president_tag');
+  return { id: detail('president_id'), name: String(before.president_name), avatar: detail('president_avatar'), alliance };
+}
+
+// Every president known, oldest first: the SvS and Sunfire Castle results kept on the site,
+// and before them the history collected before the site (seed/).
+function presidentsKnown(): { date: string; eventTypeId: string; name: string; tag: string; id: string; avatar: string; preparation: string; battle: string }[] {
+  const results = rowsOf('results') ?? [];
+  const details = rowsOf('result_details') ?? [];
+  const detail = (row: Row, key: string) => String(details.find(one => one.result_id === row.id && one.detail_key === key)?.detail_value ?? '');
+  const kept = results.filter(one => (one.event_type_id === 'svs' || one.event_type_id === 'sunfire') && !one.alliance_id).map(row => ({
+    date: String(row.event_date), eventTypeId: String(row.event_type_id), name: String(row.president_name ?? ''),
+    tag: row.president_alliance_id ? alliances.find(one => one.id === row.president_alliance_id)?.tag ?? '' : detail(row, 'president_tag'),
+    id: detail(row, 'president_id'), avatar: detail(row, 'president_avatar'),
+    preparation: detail(row, 'preparation'), battle: detail(row, 'castle_battle')
+  }));
+  const keptKeys = new Set(kept.map(one => one.eventTypeId + one.date));
+  const seeded = ([['svs', svsSeed], ['sunfire', sunfireSeed]] as [string, Record<string, unknown>[]][]).flatMap(([eventTypeId, list]) =>
+    list.filter(one => !keptKeys.has(eventTypeId + String(one.date))).map(one => ({
+      date: String(one.date), eventTypeId, name: String(one.presidentName ?? ''), tag: String(one.presidentTag ?? ''), id: '', avatar: '',
+      preparation: String(one.preparation ?? ''), battle: String(one.castleBattle ?? '')
+    })));
+  return [...kept, ...seeded].sort((left, right) => left.date.localeCompare(right.date));
+}
+
+// The president in office for a transfer, by the transfer manager's rule (Roxanne, 26 Nov):
+// the president of the battle right before it, or, when we won its Preparation and lost
+// its Battle, the president before that.
+function presidentAtTransfer(date: string): FoundPlayer | null {
+  const battleDay = battleDayBefore(date);
+  if (!battleDay) return null;
+  const known = presidentsKnown();
+  const battle = known.find(one => one.eventTypeId === transferFollows && one.date === battleDay);
+  if (!battle) return null;
+  const holder = battle.preparation === 'win' && battle.battle === 'loss'
+    ? known.filter(one => one.date < battleDay && one.name).pop()
+    : battle;
+  return holder?.name ? { id: holder.id, name: holder.name, avatar: holder.avatar || null, alliance: holder.tag || null } : null;
+}
+
+// The day of the battle right before a transfer (an SvS is kept under its battle day).
+function battleDayBefore(date: string): string | null {
+  const transferDay = dayFromText(date);
+  const battleDay = Array.from(transferFollows === 'sunfire' ? sunfireDays : svsBattleDays)
+    .filter(day => day < transferDay).sort((left, right) => right - left)[0];
+  return battleDay === undefined ? null : textFromDay(battleDay);
+}
+
+// The transfer manager is the president of the SvS before the transfer; it is changed on
+// the Invites card only when we won its Preparation and lost its Battle (Roxanne, 26 Nov).
+function managerChangeable(date: string): boolean {
+  const battle = battleBeforeTransfer(date);
+  return !!battle && battle.get('preparation') === 'win' && battle.get('castle_battle') === 'loss';
+}
+
+function invitesContext(): InvitesContext {
+  const roles = person ? person.roles : [];
+  const leads = !!person && (isAdmin(person) || roles.some(one => one.role === 'alliance_manager'));
+  const myIds = new Set(myGameAccounts().map(one => String(one.in_game_id ?? '')));
+  return {
+    now: Date.now(),
+    dates: allTransferDates(),
+    transfers, invites,
+    alliances: alliancesStillHere(alliances),
+    groupOf: ourGroupOf,
+    generationOf: date => generationOnDay(dayFromText(date)),
+    signedIn: !!person,
+    isAdmin: !!person && isAdmin(person),
+    mayChangeLists: leads,
+    managesTransfer: transfer => !!person && (isAdmin(person) || (!!transfer?.managerId && myIds.has(transfer.managerId))),
+    profileOf: inviteProfileMarkup,
+    lookUp: async id => {
+      const found = await lookUpGameAccount(id);
+      return found;
+    },
+    managerChangeable,
+    presidentAtTransfer,
+    redraw: () => draw(),
+    reload: reloadTransfers
+  };
 }
 
 // The working pages: what is not designed yet, shown as tables of what we have.
@@ -969,6 +1114,7 @@ interface ScrollPlaces {
   panel: number;
   eventBody: number;
   weeks: number;
+  inviteBoxes: number[];
 }
 
 function scrollPlaces(app: HTMLElement): ScrollPlaces {
@@ -977,7 +1123,9 @@ function scrollPlaces(app: HTMLElement): ScrollPlaces {
     calendar: app.querySelector<HTMLElement>('.calendar-panel')?.scrollTop ?? 0,
     weeks: app.querySelector<HTMLElement>('.calendar-panel .weeks')?.scrollTop ?? 0,
     panel: app.querySelector<HTMLElement>('.day-panel')?.scrollTop ?? 0,
-    eventBody: app.querySelector<HTMLElement>('.event-page-body')?.scrollTop ?? 0
+    eventBody: app.querySelector<HTMLElement>('.event-page-body')?.scrollTop ?? 0,
+    // The Invites lists, Records and a profile scroll in boxes of their own on a computer.
+    inviteBoxes: Array.from(app.querySelectorAll<HTMLElement>('.inv .lists, .inv .rscroll, .inv .prof-card, .inv .sheet')).map(box => box.scrollTop)
   };
 }
 
@@ -1092,6 +1240,8 @@ function putBackScrollPlaces(app: HTMLElement, places: ScrollPlaces): void {
     if (weeks) weeks.scrollTop = places.weeks;
     if (panel) panel.scrollTop = startAtTop.panel ? 0 : places.panel;
     if (eventBody) eventBody.scrollTop = startAtTop.panel ? 0 : places.eventBody;
+    Array.from(app.querySelectorAll<HTMLElement>('.inv .lists, .inv .rscroll, .inv .prof-card, .inv .sheet'))
+      .forEach((box, index) => { box.scrollTop = places.inviteBoxes[index] ?? 0; });
   }
   // The site's first drawing on a phone starts at the top, whatever the browser kept
   // from before a reload (owner, 25 Nov).
@@ -1383,14 +1533,15 @@ function drawPage(app: HTMLElement): void {
       view.openPage === 'alliance' && subPage === 'times'
         ? allianceTimesPage(view.myAllianceId ? allianceById(view.myAllianceId) : undefined, schedules) :
       view.openPage === 'transfers' && subPage === 'timeline' ? predictionsMarkup() :
-      view.openPage === 'transfers' && subPage === 'invites' ? nextTransferMarkup() :
-      view.openPage === 'transfers' && subPage === 'records' ? pastTransfersMarkup() :
+      view.openPage === 'transfers' && subPage === 'invites' ? invitesPage(invitesContext()) :
+      view.openPage === 'transfers' && subPage === 'records' ? recordsPage(invitesContext()) :
       workingPageMarkup(view.openPage, subPage);
     app.innerHTML = bar +
       `<main class="page" data-section="${view.openPage}">` +
       `${sectionNav(view.openPage, subPage, pageControls(view.openPage, subPage))}` +
       `${built || pagePlan(view.openPage, subPage)}</main>`;
     layoutPredictions(app);
+    if (view.openPage === 'transfers') afterInvitesDrawn(app);
     return;
   }
 
@@ -1520,6 +1671,25 @@ function handleClicks(event: MouseEvent): void {
   const target = event.target as HTMLElement | null;
   if (!target) return;
   if (answerWhichAccount(target)) return;
+  if (handlePlayerSearchClick(target)) return;
+
+  // Transfers · Invites and Records handle their own taps; leaving Invites with changes
+  // not saved asks first.
+  const transfersPage = view.openPage === 'transfers' ? view.openSubPage || 'timeline' : '';
+  if (transfersPage === 'invites' || transfersPage === 'records') {
+    const leaving = target.closest<HTMLElement>('[data-page], [data-sub-page], [data-sign-out]');
+    if (leaving && transfersPage === 'invites' && !leaving.closest('.leave-prompt, .inv')) {
+      const page = leaving.dataset.page;
+      const sub = leaving.dataset.subPage;
+      const mayGo = invitesMayLeave(() => {
+        if (page) { view.openPage = page; view.openSubPage = ''; } else if (sub) view.openSubPage = sub;
+        startAtTop.wholePage = true;
+        draw();
+      });
+      if (!mayGo) { draw(); return; }
+    }
+    if (handleInvitesClick(target, invitesContext(), transfersPage)) return;
+  }
 
   // A pick shown as words, and a switch, in a form: they set the form's hidden value in
   // place, without drawing the page again (what is typed in the form stays).
@@ -1972,8 +2142,7 @@ function handleClicks(event: MouseEvent): void {
 }
 
 const WORKING_FORMS = ['rally-lead', 'fort-reserve', 'buff-share', 'availability', 'roster', 'roster-member', 'plan', 'academy', 'facility', 'setting', 'role',
-  'result', 'personal', 'alliance-records', 'opponent-note', 'transfer-window', 'candidate', 'candidate-status',
-  'candidate-flag', 'blacklist'];
+  'result', 'personal', 'alliance-records', 'opponent-note', 'blacklist'];
 
 // An SvS's points as whole numbers: "7,480,314,895" and "7480314895" are the same; "11.03B"
 // and "645.9M" are read too.
@@ -2038,17 +2207,19 @@ function svsDetailsFromEdit(values: FormData, isSvs: boolean): { allianceId: str
   if (preparation && battle) values.set('detail_result', preparation === battle ? preparation : 'draw');
   const president = String(values.get('president') ?? '').trim();
   const match = /^\[([^\]]+)\]\s*(.+)$/.exec(president);
-  if (president && !match) throw new Error('Write the president as in the game: [DVL]name.');
+  if (president && !match) throw new Error('Pick the president from the players found.');
   if (!match) return { allianceId: null, name: null };
   const ours = alliances.find(one => one.tag === match[1]);
   if (!ours) values.set('detail_president_tag', match[1]);
   return { allianceId: ours?.id ?? null, name: match[2].trim() };
 }
 
-// The transfer pages read their own copy of the windows and candidates.
+// The transfer pages read their own copy of the transfers and their lists.
 async function reloadTransfers(): Promise<void> {
-  transferWindows = await loadTransferWindows().catch(() => transferWindows);
-  transferCandidates = await loadCandidatesOf(transferWindows.map(one => one.id)).catch(() => transferCandidates);
+  [transfers, invites] = await Promise.all([
+    loadTransfers().catch(() => transfers),
+    loadInvites().catch(() => invites)
+  ]);
 }
 
 // Forms: the player's account, a farm or alt to add, and the forms the pencils open.
@@ -3079,6 +3250,31 @@ async function saveWorkingForm(
         }, 'alliance_id');
       }
     }
+    // The transfer after this battle gets its transfer manager (Roxanne, 26 Nov): the new
+    // president ("setting the president also sets the transfer manager"), or, when we won
+    // Preparation and lost the Battle, the former president ("the former president is the
+    // transfer manager unless we edit it"). Only when the president or the two results
+    // changed, so a manager changed on the card stays.
+    if (president && eventTypeId === transferFollows) {
+      const oldDetail = (key: string) => String((tableRows.get('result_details') ?? [])
+        .find(one => String(one.result_id) === existingId && one.detail_key === key)?.detail_value ?? '');
+      const preparation = String(values.get('detail_preparation') ?? '');
+      const battle = String(values.get('detail_castle_battle') ?? '');
+      const presidentId = text('detail_president_id');
+      const changed = presidentId !== oldDetail('president_id') || president.name !== String(before?.president_name ?? '') ||
+        preparation !== oldDetail('preparation') || battle !== oldDetail('castle_battle');
+      const transferDate = allTransferDates().find(one => one > date);
+      if (changed && transferDate && battleDayBefore(transferDate) === date) {
+        const manager = preparation === 'win' && battle === 'loss' ? formerPresident(date)
+          : president.name ? { id: presidentId, name: president.name, avatar: text('detail_president_avatar'),
+              alliance: String(values.get('president') ?? '').match(/^\[([^\]]+)\]/)?.[1] ?? '' } : null;
+        if (manager) {
+          await changeTransfer(transferDate, { manager_id: manager.id ? Number(manager.id) : null, manager_name: manager.name,
+            manager_avatar: manager.avatar || null, manager_alliance: manager.alliance || null });
+          await reloadTransfers();
+        }
+      }
+    }
     await deleteRow('result_details', 'result_id', saved.id);
     // The site's build knows FormData's forEach, not its entries.
     const details: [string, string][] = [];
@@ -3126,39 +3322,6 @@ async function saveWorkingForm(
       opponent_state: state, opponent_tag: text('opponent_tag'), alliance_id: key, note: text('note'), written_by: userId
     });
     return ['opponent_notes'];
-  }
-  if (formName === 'transfer-window') {
-    const isNew = !/^\d+$/.test(key);
-    await saveRow('transfer_windows', {
-      id: isNew ? undefined : Number(key), ...(isNew ? { transfer_date: key } : {}),
-      state_type: text('state_type') || 'ordinary', power_cap: decimal('power_cap'),
-      special_invites_available: decimal('special_invites_available') ?? 0, status: text('status') || 'planning',
-      note: orNull('note'), updated_by: userId, updated_at: now
-    });
-    await reloadTransfers();
-    return ['transfer_windows'];
-  }
-  if (formName === 'candidate') {
-    await saveRow('transfer_candidates', {
-      window_id: Number(key), in_game_name: text('in_game_name'), in_game_id: text('in_game_id'),
-      player_power: decimal('player_power'), fc_level: orNull('fc_level'), current_state: decimal('current_state'),
-      destination_alliance_id: orNull('destination_alliance_id'), stage: orNull('stage'),
-      priority: decimal('priority') ?? 0, note: orNull('note'), added_by: userId, added_at: now, updated_at: now
-    });
-    await reloadTransfers();
-    return ['transfer_candidates'];
-  }
-  if (formName === 'candidate-status') {
-    await saveRow('transfer_candidates', {
-      id: Number(key), stage: orNull('stage'), invite_status: orNull('invite_status'), outcome: orNull('outcome'),
-      note: orNull('note'), updated_at: now
-    });
-    await reloadTransfers();
-    return ['transfer_candidates'];
-  }
-  if (formName === 'candidate-flag') {
-    await saveRow('candidate_flags', { candidate_id: Number(key), flagged_by: userId, reason: text('reason'), created_at: now });
-    return ['candidate_flags'];
   }
   if (formName === 'blacklist') {
     await saveRow('blacklist', { in_game_id: text('in_game_id'), in_game_name: orNull('in_game_name'),
@@ -3350,6 +3513,10 @@ function stepFortressPhases(phases: number): void {
   view.fortressBattleDay = next === playedFortBattleDay() ? null : next;
 }
 
+function isOnInvitesOrRecords(): boolean {
+  return view.openPage === 'transfers' && (view.openSubPage === 'invites' || view.openSubPage === 'records');
+}
+
 function startSwipe(event: TouchEvent): void {
   const target = event.target as HTMLElement | null;
   swipeStart = null;
@@ -3358,6 +3525,11 @@ function startSwipe(event: TouchEvent): void {
   // The fortress phase moves on any screen a finger can swipe.
   if (isOnFortressPhase() && target?.closest('.fort-board')) {
     swipeStart = { ...touch, onFortressPhase: true };
+    return;
+  }
+  // The transfers on Invites and Records change by swiping on a phone (Roxanne, 26 Nov).
+  if (isOnInvitesOrRecords() && window.innerWidth < PHONE_WIDTH && target?.closest('.inv') && !target.closest('.leave-prompt')) {
+    swipeStart = { ...touch, onFortressPhase: false };
     return;
   }
   if (window.innerWidth >= PHONE_WIDTH || view.openPage !== 'calendar' || view.isPanelOpen) return;
@@ -3375,6 +3547,10 @@ function endSwipe(event: TouchEvent): void {
   // Swiping to the left brings in what comes next, as turning a page does.
   if (onFortressPhase) {
     stepFortressPhases(across < 0 ? 1 : -1);
+  } else if (isOnInvitesOrRecords()) {
+    if (inviteDragActive()) return;
+    if (!stepTransfer(invitesContext(), across < 0 ? 1 : -1, view.openSubPage as 'invites' | 'records')) return;
+    startAtTop.wholePage = true;
   } else {
     step(across < 0 ? 1 : -1);
     startAtTop.calendar = true;
@@ -3401,6 +3577,8 @@ function stepWithKeys(event: KeyboardEvent): void {
 // opened from a day's timeline is one more, on a computer as well, because it has its
 // own way back to the day there too.
 function backLevel(): number {
+  // Invites and Records: each pop-up, Details or profile open over the page is a step.
+  if (isOnInvitesOrRecords()) return invitesOverlayCount();
   if (view.openPage !== 'calendar') return 0;
   // Open filters are one step above whatever is under them, so back closes them first.
   const filters = view.filtersOpen ? 1 : 0;
@@ -3412,8 +3590,19 @@ function backLevel(): number {
   return level + filters;
 }
 
+// A place in the phone's back: the page, its part and what is open in it. Back goes to the
+// page before, as on any site, never out of the site while there is one (Roxanne, 26 Nov:
+// "phone back should actually go to the previous page").
 function placeKey(): string {
-  return String(backLevel());
+  return `${view.openPage}|${view.openSubPage}|${backLevel()}`;
+}
+
+function pageOfKey(key: string): string {
+  return key.slice(0, key.lastIndexOf('|'));
+}
+
+function levelOfKey(key: string): number {
+  return Number(key.slice(key.lastIndexOf('|') + 1)) || 0;
 }
 
 // What is put back when the phone's back lands on a place.
@@ -3495,11 +3684,13 @@ function syncHistory(): void {
     history.replaceState({ placeIndex, place: placeSnapshot() }, '', placeAddress());
     return;
   }
-  // The site's own Back took us to a place we came through (one step back, or more:
-  // on a phone Back closes the whole panel), so the history steps back to it too.
-  // Otherwise the phone's back would reopen what was just closed.
+  // The site's own Back (or a close) took us to a place we came through on this page (one
+  // step back, or more: on a phone Back closes the whole panel), so the history steps back
+  // to it too. Otherwise the phone's back would reopen what was just closed. Another page
+  // is always a new step, even one visited before.
   const earlier = placeKeys.lastIndexOf(key, placeIndex - 1);
-  if (placeIndex > 0 && earlier >= 0) {
+  const samePageSince = earlier >= 0 && placeKeys.slice(earlier, placeIndex + 1).every(one => pageOfKey(one) === pageOfKey(key));
+  if (placeIndex > 0 && earlier >= 0 && samePageSince) {
     isSteppingBackOurselves = true;
     history.go(earlier - placeIndex);
     return;
@@ -3508,6 +3699,14 @@ function syncHistory(): void {
   placeKeys.length = placeIndex;
   placeKeys.push(key);
   history.pushState({ placeIndex, place: placeSnapshot() }, '', placeAddress());
+}
+
+// A page the phone's back (or forward) lands on, as it was left.
+function goToPlace(place: PlaceSnapshot): void {
+  Object.assign(view, place, { tappedMinute: place.tappedMinute === null ? NaN : place.tappedMinute });
+  placeKeys[placeIndex] = placeKey();
+  startAtTop.wholePage = true;
+  draw();
 }
 
 function returnToPlace(event: PopStateEvent): void {
@@ -3521,13 +3720,38 @@ function returnToPlace(event: PopStateEvent): void {
     return;
   }
   const place = state.place;
+  const targetKey = placeKeys[placeIndex] ?? `${place.openPage}|${place.openSubPage}|0`;
+  const otherPage = place.openPage !== view.openPage || place.openSubPage !== view.openSubPage;
+  if (otherPage) {
+    // Leaving Invites with changes not saved asks first; the history stays on Invites
+    // until the answer.
+    if (view.openPage === 'transfers' && view.openSubPage === 'invites') {
+      const target = place;
+      const mayGo = invitesMayLeave(() => { goToPlace(target); });
+      if (!mayGo) {
+        placeIndex += 1;
+        placeKeys.length = placeIndex;
+        placeKeys.push(placeKey());
+        history.pushState({ placeIndex, place: placeSnapshot() }, '', placeAddress());
+        draw();
+        return;
+      }
+    }
+    // Another page: it comes back as it was left.
+    while (closeInvitesOverlays()) { /* everything open over Invites closes */ }
+    goToPlace(place);
+    return;
+  }
   if (isGoingBack) {
     // Going back does exactly what the site's own Back does, and nothing more: an
     // event opened from a day goes back to that day, and otherwise the panel closes
     // and the calendar shows. The picked day and the open section stay as they are.
-    const targetLevel = Number(placeKeys[placeIndex] ?? 0);
+    // On Invites and Records it closes what is open over the page, the top one first.
+    const targetLevel = levelOfKey(targetKey);
     while (backLevel() > targetLevel) {
-      if (view.filtersOpen) {
+      if (isOnInvitesOrRecords()) {
+        if (!closeInvitesOverlays()) break;
+      } else if (view.filtersOpen) {
         view.filtersOpen = false;
       } else if (view.openEventKey && view.openedFromDay !== null) {
         view.openEventKey = null;
@@ -3601,7 +3825,7 @@ async function start(): Promise<void> {
       loadTransferDates().catch(() => []),
       // The state's hero generation on each transfer date, for the heroes named in texts.
       loadGenerationsOfState(Number(STATE_NUMBER)).catch(() => []),
-      loadTransferWindows().catch(() => []),
+      loadTransfers().catch(() => []),
       // Who is signed in, with the choices kept with their login. Their alliance follows
       // the account they are on, once the game has been read for it (drawPage).
       signedInPerson().catch(() => null)
@@ -3618,7 +3842,7 @@ async function start(): Promise<void> {
     rallyLeads = loadedLeads;
     transferDates = loadedDates;
     setGenerationSteps(loadedGenerations);
-    transferWindows = loadedWindows;
+    transfers = loadedWindows;
     // The runs are worked out from these, so they are set before the battle days are
     // read; without them every transfer followed neither battle and the SvS and
     // Sunfire filters emptied the page.
@@ -3638,22 +3862,37 @@ async function start(): Promise<void> {
     const shownDates = datesInFilter();
     view.predictionFirstDate = shownDates.find(date => date >= todayText) ??
       shownDates[shownDates.length - 1] ?? '';
-    const comingDate = nextWindow()?.transferDate ??
-      transferDates.find(one => one >= todayText) ?? '';
+    const comingDate = currentTransferDate(allTransferDates(), Date.now()) ||
+      (transferDates.find(one => one >= todayText) ?? '');
     // What depends on the first reads, again all at once.
     const [loadedBuffs, loadedCandidates, loadedComingGroups, loadedGroups] = await Promise.all([
       loadBuffAllocations(fortAssignments.map(one => one.id)).catch(() => []),
-      loadCandidatesOf(transferWindows.map(one => one.id)).catch(() => []),
+      loadInvites().catch(() => []),
       comingDate ? loadTransferGroups([comingDate]).catch(() => []) : Promise.resolve(null),
       view.predictionFirstDate ? loadTransferGroups(shownPredictionDates()).catch(() => []) : Promise.resolve(null)
     ]);
     buffAllocations = loadedBuffs;
-    transferCandidates = loadedCandidates;
-    if (loadedComingGroups) nextWindowGroups = loadedComingGroups;
+    invites = loadedCandidates;
+    if (loadedComingGroups) {
+      const ours = groupOfState(bigGroupsOf(loadedComingGroups), Number(STATE_NUMBER));
+      if (comingDate) ourGroupByDate.set(comingDate, ours ? `${ours.fromState}–${ours.toState}` : null);
+    }
     if (loadedGroups) transferGroups = loadedGroups;
     document.addEventListener('click', handleClicks);
     document.addEventListener('submit', handleSubmits);
     document.addEventListener('input', filterPlayerTyping);
+    document.addEventListener('input', event => {
+      if (event.target instanceof HTMLElement) handlePlayerSearchInput(event.target, playerSources);
+    });
+    document.addEventListener('input', event => {
+      if (isOnInvitesOrRecords() && event.target instanceof HTMLElement) handleInvitesInput(event.target, invitesContext());
+    });
+    // Moving players on the Invites lists.
+    document.addEventListener('pointerdown', event => { if (isOnInvitesOrRecords()) startInviteDrag(event, invitesContext()); });
+    document.addEventListener('pointermove', moveInviteDrag, { passive: false });
+    document.addEventListener('touchmove', event => { if (inviteDragActive()) event.preventDefault(); }, { passive: false });
+    document.addEventListener('pointerup', () => { if (isOnInvitesOrRecords()) endInviteDrag(invitesContext()); });
+    document.addEventListener('pointercancel', () => { if (isOnInvitesOrRecords()) endInviteDrag(invitesContext()); });
     // An SvS being edited works out its totals and results as the numbers are typed in.
     const svsEditorOf = (target: EventTarget | null) =>
       target instanceof HTMLElement ? target.closest<HTMLFormElement>('#' + SVS_EDIT_FORM_ID) : null;
@@ -3682,6 +3921,14 @@ async function start(): Promise<void> {
     // The profile's names and board names are sized to their columns once drawn, and again
     // when the window changes width or the site's fonts arrive.
     window.addEventListener('resize', () => { if (view.openPage === 'player') fitPlayerPage(); });
+    // Invites and Records draw only the phone's or the computer's parts, so crossing from
+    // one to the other draws them again.
+    let invitesOnComputer = window.innerWidth >= 1000;
+    window.addEventListener('resize', () => {
+      const now = window.innerWidth >= 1000;
+      if (now !== invitesOnComputer && isOnInvitesOrRecords()) draw();
+      invitesOnComputer = now;
+    });
     void document.fonts?.ready.then(() => { if (view.openPage === 'player') fitPlayerPage(); });
     document.addEventListener('touchstart', startSwipe, { passive: true });
     document.addEventListener('touchend', endSwipe, { passive: true });
@@ -3694,6 +3941,8 @@ async function start(): Promise<void> {
     window.setInterval(() => {
       const clock = document.getElementById('clockTime');
       if (clock) clock.textContent = gameClockText(nowMinute());
+      // The countdown on Invites, while nothing is being typed or moved there.
+      if (isOnInvitesOrRecords() && !document.querySelector('.inv .leave-prompt:not(.sheet-wrap), .inv.editing, .inv.dragging')) draw();
     }, 30000);
     // The bars and the cards are measured on their letters, so they are laid out again
     // when the window changes width and when the site's font has arrived (the page is

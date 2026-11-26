@@ -219,7 +219,8 @@ function svsRunOf(view: ResultView, known: Record<string, unknown> | undefined):
     preparation: outcomeOf(view.details.get('preparation')) || (fromHistory?.preparation ?? ''),
     battle: outcomeOf(view.details.get('castle_battle')) || (fromHistory?.battle ?? ''),
     points, holds,
-    president: view.row.president_name ? { tag: presidentTag, name: String(view.row.president_name) } : fromHistory?.president ?? null
+    president: view.row.president_name ? { tag: presidentTag, name: String(view.row.president_name),
+      id: view.details.get('president_id'), avatar: view.details.get('president_avatar') } : fromHistory?.president ?? null
   };
 }
 
@@ -235,7 +236,8 @@ function sunfireRunOf(view: ResultView | undefined, known: Record<string, unknow
   }
   const recordedTag = view?.row.president_alliance_id ? allianceTag(String(view.row.president_alliance_id))
     : view?.details.get('president_tag') ?? '';
-  const president = view?.row.president_name ? { tag: recordedTag, name: String(view.row.president_name) }
+  const president = view?.row.president_name ? { tag: recordedTag, name: String(view.row.president_name),
+      id: view.details.get('president_id'), avatar: view.details.get('president_avatar') }
     : known?.presidentName ? { tag: String(known.presidentTag ?? ''), name: String(known.presidentName) } : null;
   return { holds, president };
 }

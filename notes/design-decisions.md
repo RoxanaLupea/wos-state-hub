@@ -171,6 +171,8 @@ there before discussing it again.
   profile. The row also shows the current state, the Labyrinth total and the Migrant
   Score (Roxanne, 26 Nov). No passes on the row: "just the migration scores".
   Kills on the row too: "very low means inactive, high means a concern".
+  The Migrant Score is labelled SCORE on the rows: "I think I want to replace transfer with
+  SCORE" (Roxanne, 26 Nov).
   The place number is the row's position in its list (1, 2, 3…), not a stored field.
 - Blacklist (Roxanne, 26 Nov): "we will have a blacklist for sure", probably created from
   this page and kept separate; nobody has to look at it, but if an ID is on it, the
@@ -266,6 +268,60 @@ there before discussing it again.
   out after about 160px, starting a little left of the list so the picture has room, the
   group's first and last rows rounded on the left; the picture's ring in the same colour.
   Each group has its own colour.
+- The group buttons while editing (Roxanne, 26 Nov): not "Leave group" ("we are removing them
+  from the group, we need better text and gray is not the go to colour"): Ungroup, in the
+  group's colour (her "ok"); and "add to group can be smaller, just say Group".
+- The transfer manager while editing (Roxanne, 26 Nov): "transfer manager should handle
+  typing the name and selecting what the site finds, so a search, id as a backup". The
+  state's players come from its alliances' rosters; an in-game ID is looked up in the game.
+- The transfer's settings (Roxanne, 26 Nov): "those settings are for the state transfer, not
+  for the invitation transfer only".
+- The card's own Edit (Roxanne, 26 Nov): "we are gonna have an edit button for the state
+  transfer, right? Then we edit in place. Like we normally do, we also need to show the
+  ordinary/leading label".
+- The president and the transfer manager (Roxanne, 26 Nov): "Setting the president also sets
+  the transfer manager and should have the same search system, we are allowed to change it in
+  one case only, then we win prep but lose battle".
+  And: "if we win the prep and lose the battle then the former president is the transfer
+  manager unless we edit it".
+- The transfer manager on the card (Roxanne, 26 Nov): "maybe we want to move it before
+  available invites and write transfer manager in that yellow, ordinary state looks muddy".
+- The lists' views (Roxanne, 26 Nov): the underline under the chosen view sat on top of the
+  list's line ("there it wasn't a line sitting on top of a line"); the chosen view's mark now
+  lies on the list's own line, "ok, but then the icons have to have the colour of the bar".
+- The phone's back (Roxanne, 26 Nov): it closes what is open over the page (Details, a
+  profile, a pop-up), and otherwise "phone back should actually go to the previous page, it's
+  counterintuitive to leave the page instead".
+- While editing, the row's Group (or Ungroup) and Remove end where the statuses end: on the
+  right of the column, centred in Details on the computer (her "ok", 26 Nov).
+- The phase header (Roxanne, 26 Nov): "I still don't know, we'll keep the phase for now".
+- A special invite generated during the transfer (Roxanne, 26 Nov): "i would prefer if we had
+  a star on the of 2 and on tab or hover it showed that the 2nd special will only be generated
+  on the 1st of the month: the day of the week and which phase of the transfer".
+- Reads of listed players (Roxanne, 26 Nov): "Only from the current list, we are not gonna mess
+  with older transfers, just this once, after we get the complete list we ask for their info
+  and the records will have a tiny star which tells us that the records were received at the
+  x date, not the date of transfer for the older ones, from now on we will have them monthly".
+  "until they get a fresh read you mean, one good read and we're good".
+- Past transfer managers (Roxanne, 26 Nov): "fill in past transfer managers too with a * and a
+  note that the transfer manager wasn't recorded so we're displaying the former president
+  instead, this should be editable for admins".
+- Importing the old transfer sheet (Roxanne, 26 Nov): Aunie, migrated without an invite:
+  "probably open if everyone else from the other transferred, but these are old records,
+  we'll get what we can". "Terry+Norr group": "this will be a group". "Declined" and
+  "Invitation rejected/decline": "so a status". March's arrival times: "we have this too on
+  the hover". "Reduce power": "our over cap" (a player left uninvited for being over the cap).
+  "replaced on request of onion": "then they didn't make it" (kept as not transferred).
+  The March tab is the 29 March 2026 transfer: the original sheet's version history shows
+  Angel Ryoko added to it on 17 March (Roxanne's screenshot, 26 Nov).
+  Groups: "we should be able to add names to the groups, optional" (to design).
+- Blacklist (Roxanne, 26 Nov): "we will add a blacklist, but it should be on the state page,
+  even if we don't have it yet, we can add it in the database so we can show the flag, it's
+  gonna start with id and reason and whatever else it has" (supabase/blacklist.sql).
+- Ordinary or Leading while editing (Roxanne, 26 Nov): "the row doesn't have to be that wide,
+  that doesn't mean that selected one can't have an accent colour".
+- Refresh (Roxanne, 26 Nov): "we will let anyone refresh, we still have the 1h limit so it
+  shouldn't matter if everyone gets refreshed by others too".
 - Making groups (Roxanne, 26 Nov): while editing, each row has Remove and a group button
   ("when we edit, we can remove [or] group"); the contact stays editable, the power gives way
   to the buttons, with their words. A group can be left or joined; joining asks which group.
@@ -342,6 +398,9 @@ there before discussing it again.
   the phone and the computer alike ("stop creating inconsistencies").
 - Records only: the group shade stays inside the list (the rows' content 10px in); the Invites
   page keeps the approved look, the shade starting a little left of the list (Roxanne, 26 Nov).
+  Later the same day: on the computer the rows of both pages start on the list's line, the
+  shade and grips inside it ("the computer is the primary target"); on the phone Records' rows
+  sit where the Invites rows do: "I want to not have the 4px difference" (Roxanne, 26 Nov).
   Records use slightly smaller type and tighter rows "to see more" (Roxanne, 26 Nov).
 - Records page, accepted (Roxanne, 26 Nov: "ok, i like this"): past transfers newest first,
   two side by side on the computer, scrolling down to older pairs (no paging), each pair

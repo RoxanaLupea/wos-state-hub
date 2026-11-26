@@ -4,6 +4,8 @@ Every screenshot is checked against this before Roxanne sees it. Each line is a 
 has had to point out before. When she points out a new kind of fault, it is added here.
 
 ## The flow
+- The phone's back closes what is open over the page first, then goes to the page before,
+  never out of the site while there is one (Roxanne, 26 Nov).
 - Go through the page as a player would: what they see first, what they tap, where
   they end up. Every step is obvious without being explained.
 - A link to another page is the edit button's style with the open icon (a square with an
@@ -30,8 +32,18 @@ has had to point out before. When she points out a new kind of fault, it is adde
 - Two different things never share a colour.
 - A change asked for (more space, smaller) is made in proportion, not swung to the other
   extreme.
+- Nothing is cut while there is empty space beside it: "having wide spacing when an element
+  doesn't fit when we could adjust it to properly show them is not justified" (Roxanne,
+  26 Nov). Test names of 16 characters (a normal wide one, like MrBoombastic1234) on the
+  phone and the computer, in every mode.
 
 ## The layout
+- Items next to each other share one line: their labels on one line and their values on one
+  line, whatever each value is (text, a box, a picture). Roxanne, 26 Nov: "we never ever allow
+  this kind of alignment for items that are next to each other, we're careful and
+  professional".
+- On the phone a list title's line is as wide as the rows under it (Roxanne, 26 Nov: no 4px
+  difference); everything on the page starts and ends at the same edges.
 - Nothing shown twice. Nothing touching or colliding. Nothing cramped.
 - Lines and edges align. A line under something sits right under it. Measure it in the
   screenshot's pixels: words on one line the same height, edges on the same x.
