@@ -416,3 +416,8 @@
 .bar { overflow: visible; }
 /* The dates are buttons: written in the site's font, not the browser's own for buttons. */
 .day-box { font-family: inherit; }
+/* A phase stands on the same line as the event's name (Roxanne, 26 Nov: the phases looked
+   a little higher): its letters were 1px above the name's. */
+@media (min-width: 1000px) {
+  .bar.phase-lines.one-line-wide .bar-segment-name { position: relative; top: 1px; }
+}
