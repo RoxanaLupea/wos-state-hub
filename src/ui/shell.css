@@ -325,10 +325,12 @@
 @media (min-width: 1000px) {
   .top-bar { min-height: 56px; height: 56px; }
   body::before { height: 56px; }
-  .brand .logo { height: 28px; }
-  .nav-tab { font: inherit; font-size: 15px; font-weight: 700; }
+  /* The logo as tall as before (36px) with about half the room above and below it; the
+     sections written as large as STATE in the logo (Roxanne, 26 Nov). */
+  .brand .logo { height: 36px; }
+  .nav-tab { font: inherit; font-size: 18px; font-weight: 700; }
   .nav-tab[aria-current="page"] { font-weight: 800; }
-  .nav-tab[aria-current="page"] .event-icon { width: 22px; height: 22px; }
+  .nav-tab[aria-current="page"] .event-icon { width: 26px; height: 26px; }
   .top-bar #meButton { min-height: 38px; }
   .period-title { font-size: 20px; }
 }

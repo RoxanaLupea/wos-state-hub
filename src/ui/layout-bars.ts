@@ -188,34 +188,74 @@ function drawnWidth(element: HTMLElement): number {
   return range.getBoundingClientRect().width;
 }
 
-// A one-line bar on a computer writes its phases after its name: each phase stays in its
-// own stretch, a stretch starting under the name starts after it, and a phase name that
+// A one-line bar on a computer writes its phases after its name, each centred in its own
+// stretch, or in the room after the name when its stretch starts under it. Its short form
+// (AC, TAL) is not written beside the full name: it is what the name becomes when the
+// phases do not fit after it (Roxanne, 26 Nov). The name is tried in full, then as its
+// short name (Championship), then as its short form in capitals (AC); a phase that still
 // does not fit takes its short name or is left out. The white lines under the name go.
 function placeAfterName(bar: HTMLElement, fits: (element: HTMLElement) => boolean): void {
   const headLogo = bar.querySelector<HTMLElement>('.bar-head .head-logo');
   const label = bar.querySelector<HTMLElement>('.bar-head .bar-label');
   if (!headLogo || !label || window.getComputedStyle(headLogo).display === 'none') return;
+  if (bar.classList.contains('too-narrow') || bar.classList.contains('tiny')) return;
+  const segments = Array.from(bar.querySelectorAll<HTMLElement>('.bar-segment'));
+  if (!segments.length) return;
+  // Where layout-bars put each stretch, kept so every try starts from it.
+  for (const segment of segments) {
+    if (segment.dataset.laidOut !== segment.style.left) {
+      segment.dataset.baseLeft = String(parseFloat(segment.style.left) || 0);
+      segment.dataset.baseWidth = String(parseFloat(segment.style.width) || 0);
+    }
+  }
   const barLeft = bar.getBoundingClientRect().left;
-  // Phases are centred in the room after the name, at least 12px from it.
-  const nameRight = nameEnd(bar, label) - barLeft + 12;
-  bar.querySelectorAll<HTMLElement>('.bar-segment').forEach(segment => {
-    const left = parseFloat(segment.style.left) || 0;
-    const right = left + (parseFloat(segment.style.width) || 0);
-    const name = segment.querySelector<HTMLElement>('.bar-segment-name');
-    if (left < nameRight) {
-      const from = Math.min(right, nameRight);
+  const tag = bar.querySelector<HTMLElement>('.bar-head .bar-tag');
+  if (tag) tag.style.display = 'none';
+
+  // How many phases show in full or by their short name; the name that shows them all,
+  // or else the most of them, wins, the longest name first.
+  const placePhases = (): number => {
+    const nameRight = nameEnd(bar, label) - barLeft + 12;
+    let shown = 0;
+    for (const segment of segments) {
+      const left = Number(segment.dataset.baseLeft);
+      const right = left + Number(segment.dataset.baseWidth);
+      const from = left < nameRight ? Math.min(right, nameRight) : left;
       segment.style.left = from + 'px';
       segment.style.width = (right - from) + 'px';
+      segment.dataset.laidOut = segment.style.left;
+      const name = segment.querySelector<HTMLElement>('.bar-segment-name');
+      if (!name) continue;
+      name.dataset.fullPhase ??= name.textContent ?? '';
+      name.textContent = name.dataset.fullPhase;
+      name.style.visibility = '';
+      if (fits(name)) { shown += 1; continue; }
+      const shorter = name.getAttribute('data-phase-short') || name.getAttribute('data-short');
+      if (shorter) {
+        name.textContent = shorter;
+        if (fits(name)) { shown += 1; continue; }
+      }
+      name.style.visibility = 'hidden';
     }
-    if (!name) return;
-    name.style.visibility = '';
-    if (fits(name)) return;
-    const shorter = name.getAttribute('data-phase-short') || name.getAttribute('data-short');
-    if (shorter) name.textContent = shorter;
-    if (!fits(name)) name.style.visibility = 'hidden';
-  });
+    return shown;
+  };
+
+  const fullName = label.dataset.fullName ?? label.textContent ?? '';
+  const names = [fullName, bar.getAttribute('data-short-name') ?? '', (tag?.textContent ?? '').toUpperCase()]
+    .filter((name, index, all) => name && all.indexOf(name) === index);
+  let best = names[0];
+  let bestShown = -1;
+  for (const name of names) {
+    label.textContent = name;
+    const shown = placePhases();
+    if (shown > bestShown) { best = name; bestShown = shown; }
+    if (shown === segments.length) break;
+  }
+  label.textContent = best;
+  placePhases();
+  const nameRight = nameEnd(bar, label) - barLeft;
   bar.querySelectorAll<HTMLElement>('.bar-mark.divider').forEach(mark => {
-    if ((parseFloat(mark.style.left) || 0) < nameRight) mark.style.display = 'none';
+    if ((parseFloat(mark.style.left) || 0) < nameRight + 6) mark.style.display = 'none';
   });
 }
 
@@ -345,6 +385,7 @@ export function fitBarLabels(panel: HTMLElement): void {
     // Only phases: a day's name is never swapped for "Day N".
     barsGrid.querySelectorAll<HTMLElement>('.bar-segment-name[data-phase-short]').forEach(name => {
       const shorter = name.getAttribute('data-phase-short');
+      name.dataset.fullPhase ??= name.textContent ?? '';
       if (shorter && !fits(name)) name.textContent = shorter;
     });
 

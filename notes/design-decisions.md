@@ -1365,3 +1365,11 @@ All nine are built.
   centered or align it to the left and still have room for it to grow."
 - Phases on one-line bars, after trying them 12px after the name (26 Nov): "I don't like
   this ... I want it centered ... Yeah, center it." Preview and Matchmaking too.
+- Short forms on bars with phases (26 Nov): "we have the AC there because in the case it
+  does not fit, then we will use the AC instead of Alliance Championship ... we should have
+  in uppercase AC and then the face ... Mobilization, Showdown, Championship are also
+  accepted." Built: the full name, then the short name, then the short form, whichever
+  shows the phases.
+- Top bar (26 Nov): "the logo can be bigger. It does not need that much space in between
+  the top and the bottom ... Half of it maybe. And the calendar fortress, the navigation,
+  they cannot possibly be that small ... at least as big as ... the state hub."
