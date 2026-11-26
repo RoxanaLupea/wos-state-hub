@@ -414,3 +414,5 @@
 .bar-segment-name { padding-right: 5px; }
 .bar-head { overflow: visible; }
 .bar { overflow: visible; }
+/* The dates are buttons: written in the site's font, not the browser's own for buttons. */
+.day-box { font-family: inherit; }
