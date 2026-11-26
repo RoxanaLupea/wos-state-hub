@@ -1424,3 +1424,9 @@ All nine are built.
   like the date after that on the same line. There's no point in having like 1, 2, 3, 4 of
   them". Built: "TIMELINE" in capitals in the section's colour and the date after it on one
   line, then All day; the "Game time (UTC)" line is gone there (the UTC button says it).
+- The phone too (Roxanne, 26 Nov): "apply these changes to the phone too, because we're also
+  defining like the panel ... By these I mean the logic changes in like where we moved
+  things, not sizes." Built on the phone: the day's card with TIMELINE and the date on one
+  line, no "Game time (UTC)" line, the calendar's two colours; Next up and Then with their
+  phase on both and the four lines beside the logo, the logos level from the top. Phone
+  sizes unchanged (logo, month, icons, spacing).

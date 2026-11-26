@@ -66,8 +66,7 @@ export function nextUpTiles(occurrences: Occurrence[]): string {
     const label = tile.isNow ? 'Now' : comingCount++ === 0 ? 'Next up' : 'Then';
     const tag = tile.stageId ? eventTypeTag(tile.eventTypeId) : '';
     // Every tile names its phase (Roxanne, 26 Nov: "We either put the face or we don't"): a
-    // whole event its stage, any other event the phase it opens with. On a phone only the
-    // stage shows, as approved there (next-up.css).
+    // whole event its stage, any other event the phase it opens with.
     const firstPhase = tile.stageId ? undefined
       : (phasesByEventType.get(tile.eventTypeId) ?? []).slice().sort((left, right) => left.fromDay - right.fromDay)[0];
     const stage = tile.stageId ? eventTypeStageName(tile.stageId) : '';
@@ -89,7 +88,7 @@ export function nextUpTiles(occurrences: Occurrence[]): string {
           (tag ? ` <span class="next-tile-tag">${escapeForPage(tag)}</span>` : '') + '</span>'
         : `<span class="next-tile-title fitted-wide" data-short-name="${escapeForPage(eventTypeShortName(tile.eventTypeId))}">` +
           `<span class="next-tile-name">${escapeForPage(eventTypeName(tile.eventTypeId))}</span></span>`) +
-      (phase ? `<span class="next-tile-stage${stage ? '' : ' computer-only'}">${escapeForPage(phase)}</span>` : '') + '</div></div>' +
+      (phase ? `<span class="next-tile-stage">${escapeForPage(phase)}</span>` : '') + '</div></div>' +
       `<span class="event-note">${escapeForPage(when)}</span></div>`;
   }).join('');
 }

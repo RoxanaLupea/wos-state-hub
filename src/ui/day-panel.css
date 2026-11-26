@@ -108,20 +108,19 @@
 }
 .all-day-text .phase-word { font-size: 12px; }
 
-/* On a computer the day's card holds its date as its head, like an event panel holds its
-   name, and takes the calendar's two colours: the blue and the peach of its logo
-   (Roxanne, 26 Nov: "the panel borrows the accent of the calendar"). The tint is the one
-   event panels get from their colours (tintedPanelStyle in next-up.ts). */
-.day-card-head { display: none; }
-@media (min-width: 1000px) {
-  .day-panel > .day-heading { display: none; }
-  .day-card-head { display: flex; align-items: baseline; gap: 12px; margin: 0 0 10px; }
-  .day-card-label { font-size: 15px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--section); }
-  .day-card-head h2 { margin: 0; font-size: 19px; font-weight: 800; }
-  .day-card > h3 { display: none; }
-  .day-card {
-    background: linear-gradient(315deg, rgba(245, 201, 160, 0.3), rgba(245, 201, 160, 0) 60%),
-      linear-gradient(135deg, rgba(139, 183, 244, 0.36), rgba(139, 183, 244, 0.04) 65%), var(--glass);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), inset 0 -3px 0 rgba(139, 183, 244, 0.7), 0 10px 26px rgba(139, 183, 244, 0.12);
-  }
+/* The day's card holds its head, like an event panel holds its name: TIMELINE in capitals
+   and the date after it on one line (Roxanne, 26 Nov), and takes the calendar's two
+   colours: the blue and the peach of its logo ("the panel borrows the accent of the
+   calendar"). The tint is the one event panels get from their colours (tintedPanelStyle
+   in next-up.ts). The same on a phone ("apply these changes to the phone too, because
+   we're also defining like the panel"). */
+.day-panel > .day-heading { display: none; }
+.day-card-head { display: flex; align-items: baseline; gap: 12px; margin: 0 0 10px; }
+.day-card-label { font-size: 15px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--section); }
+.day-card-head h2 { margin: 0; font-size: 19px; font-weight: 800; }
+.day-card > h3 { display: none; }
+.day-card {
+  background: linear-gradient(315deg, rgba(245, 201, 160, 0.3), rgba(245, 201, 160, 0) 60%),
+    linear-gradient(135deg, rgba(139, 183, 244, 0.36), rgba(139, 183, 244, 0.04) 65%), var(--glass);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), inset 0 -3px 0 rgba(139, 183, 244, 0.7), 0 10px 26px rgba(139, 183, 244, 0.12);
 }
