@@ -325,7 +325,7 @@
 @media (min-width: 1000px) {
   .inv.work-page:not(.in-card *) {overflow: visible !important; }
   .inv .two:not(.in-card *) {height: calc(100vh - 190px); align-items: start; }
-  .inv .lists:not(.in-card *) {height: 100%; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--accent) 35%, transparent) transparent; padding-right: 6px; margin-right: -14px; -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 22px), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 22px), transparent); padding-left: 12px; margin-left: -12px; }
+  .inv .lists:not(.in-card *) {height: 100%; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: transparent transparent; padding-right: 6px; margin-right: -14px; -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 22px), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 22px), transparent); padding-left: 12px; margin-left: -12px; }
   .inv .two:has(.prof):not(.in-card *) {align-items: stretch; }
   .inv .stats.prof:not(.in-card *) {height: 100%; }
   .inv .prof-card:not(.in-card *) {height: 100%; box-sizing: border-box; }
@@ -538,7 +538,11 @@
 .inv .rcol:not(.in-card *) {min-width: 0; }
 .inv .rcol .stw:not(.in-card *) {display: none !important; }
 @media (min-width: 1000px) {
-  .inv .rscroll:not(.in-card *) {height: calc(100vh - 150px); overflow-y: auto; margin: 3px -6px 0 -12px; padding: 0 6px 0 12px; scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--accent) 35%, transparent) transparent; -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 22px), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 22px), transparent); }
+  .inv .rscroll:not(.in-card *) {height: calc(100vh - 150px); overflow-y: auto; margin: 3px -6px 0 -12px; padding: 0 6px 0 12px; scrollbar-width: thin; scrollbar-color: transparent transparent; -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 22px), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 22px), transparent); }
+  /* The Invites lists and Records scroll with no scrollbar seen (Roxanne, 26 Nov); its space is kept
+     so nothing moves, and the fade at the bottom shows there is more. */
+  .inv .lists:not(.in-card *)::-webkit-scrollbar, .inv .rscroll:not(.in-card *)::-webkit-scrollbar {width: 8px; background: transparent; }
+  .inv .lists:not(.in-card *)::-webkit-scrollbar-thumb, .inv .rscroll:not(.in-card *)::-webkit-scrollbar-thumb {background: transparent; }
   .inv .rcols:not(.in-card *) {grid-template-columns: 1fr 1fr; column-gap: 44px; row-gap: 40px; align-items: start; }
   .inv .rcol:not(.in-card *) {overflow: visible; -webkit-mask-image: none !important; mask-image: none !important; padding: 0 !important; margin: 0 !important; }
   .inv .rnav:not(.in-card *) {margin-top: 3px !important; }
@@ -584,8 +588,6 @@
 @media (min-width: 1000px) {
   .inv .rscroll.more-above:not(.in-card *) {-webkit-mask-image: linear-gradient(to bottom, transparent, #000 22px, #000 calc(100% - 22px), transparent); mask-image: linear-gradient(to bottom, transparent, #000 22px, #000 calc(100% - 22px), transparent); }
 }
-.inv .rl1 .pin-cur:not(.in-card *) {margin: 0 0 0 -2px; padding: 0; }
-.inv .rl1 .pin-cur svg:not(.in-card *) {width: 20px; height: 20px; filter: drop-shadow(0 0 3px color-mix(in srgb, var(--section) 55%, transparent)); }
 .inv .idnew:not(.in-card *) {gap: 8px; }
 .inv .idnew .st8:not(.in-card *) {order: 0; }
 @media (min-width: 1000px) {
@@ -863,3 +865,4 @@
   scrollbar-color: color-mix(in srgb, var(--section) 35%, transparent) transparent; }
 .inv .leave-prompt-box.ng { max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior: contain; }
 .inv .ng .ng-list + .saverow:not(.in-card *) { margin-top: 0 !important; }
+

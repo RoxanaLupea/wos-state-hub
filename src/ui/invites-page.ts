@@ -575,7 +575,7 @@ export function invitesPage(context: InvitesContext): string {
 // ---------------------------------------------------------------------------
 // Records
 
-function recordHead(shown: Shown, context: InvitesContext, pin: boolean): string {
+function recordHead(shown: Shown, context: InvitesContext): string {
   const counts = (['transferred', 'rejected', 'expired'] as InviteStatus[]).map(status => {
     const count = INVITE_LISTS.reduce((sum, list) => sum + shown.lists[list].filter(invite => invite.setStatus === status).length, 0);
     return `<span class="rs s-${status}" title="${STATUS_WORDS[status]}">${statusIcon(status)}<b>${count}</b></span>`;
@@ -601,7 +601,7 @@ function recordHead(shown: Shown, context: InvitesContext, pin: boolean): string
       `${president.alliance ? allianceTagPill(president.alliance, context.alliances) : ''}</span>`;
   } else manager = '<span class="rmg"></span>';
   return '<div class="rhead">' +
-    `<div class="rl1"><b class="rd">${escapeForPage(dateText(shown.date))}</b>${pin ? PIN_BUTTON('data-records-recent') : ''}${recordActions(shown.date, context)}` +
+    `<div class="rl1"><b class="rd">${escapeForPage(dateText(shown.date))}</b>${recordActions(shown.date, context)}` +
     `<span class="rgc">${escapeForPage([group, capText(shown.cap)].filter(Boolean).join(' · '))}</span><span class="rst">${counts}</span></div>` +
     `<div class="rl2">${manager}<span class="rar">${arrived}<span class="rsent"><b>${sentOf(shown.lists)}</b> sent</span></span></div>` +
     (editing && state.problem ? `<p class="inv-problem">${escapeForPage(state.problem)}</p>` : '') + '</div>';
@@ -665,20 +665,19 @@ export function recordsPage(context: InvitesContext): string {
   const past = pastDates(context);
   if (!past.length) return '<div class="work-page inv inset records"><p class="empty">No transfer has been recorded yet.</p></div>';
   state.recordIndex = Math.max(0, Math.min(state.recordIndex, past.length - 1));
-  const block = (date: string, pin: boolean) => {
+  const block = (date: string) => {
     const shown = shownTransfer(context, date);
-    return `<div class="rcol">${recordHead(shown, context, pin)}${recordLists(shown, context)}</div>`;
+    return `<div class="rcol">${recordHead(shown, context)}${recordLists(shown, context)}</div>`;
   };
-  // Phone: one at a time, swiping; the pin after the date when away from the newest.
+  // Phone: one at a time, swiping.
   if (!onComputer()) {
-    return `<div class="work-page inv inset records" data-records-page><div class="rcols">${block(past[state.recordIndex], state.recordIndex > 0)}</div>` +
+    return `<div class="work-page inv inset records" data-records-page><div class="rcols">${block(past[state.recordIndex])}</div>` +
       `${state.profileFor !== null ? recordProfile(context) : ''}</div>`;
   }
-  // Computer: two side by side, scrolling down to older pairs; the pin on the left one of
-  // every pair but the first: those are only seen away from the newest.
+  // Computer: two side by side, scrolling down to older pairs.
   let pairs = '';
   for (let index = 0; index < past.length; index += 2) {
-    pairs += block(past[index], index > 0) + (past[index + 1] ? block(past[index + 1], false) : '<div class="rcol"></div>');
+    pairs += block(past[index]) + (past[index + 1] ? block(past[index + 1]) : '<div class="rcol"></div>');
   }
   const sheet = state.profileFor !== null ? recordProfile(context) : '';
   return `<div class="work-page inv inset records" data-records-page><div class="rscroll"><div class="rcols">${pairs}</div></div>${sheet}</div>`;
@@ -859,12 +858,6 @@ export function handleInvitesClick(target: HTMLElement, context: InvitesContext,
       return true;
     }
     if (state.tipFor !== null || state.receivedTipFor !== null) { state.tipFor = null; state.receivedTipFor = null; context.redraw(); }
-    if (target.closest('[data-records-recent]')) {
-      state.recordIndex = 0;
-      document.querySelector('.rscroll')?.scrollTo({ top: 0, behavior: 'smooth' });
-      context.redraw();
-      return true;
-    }
     return false;
   }
 
