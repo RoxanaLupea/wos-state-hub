@@ -1434,5 +1434,10 @@ All nine are built.
   but I don't understand why you didn't use AC for Alliance Championship ... I don't
   remember us setting like the title on 2 lines. So it's gonna be AC and registration, and
   like all 4 lines will be aligned and the entire panel should be narrower. It's way too
-  tall now for no reason." Built: on a phone the name is one line, the full name where it
-  fits, otherwise the event's short form (SvS, AC); both tiles' four lines level.
+  tall now for no reason." Built: on a phone the name is one line, the event's short form
+  where it has one (SvS, AC); both tiles' four lines level.
+- Tile logos (Roxanne, 26 Nov): "We care that they are the same in their own card ... maybe
+  5 pixel padding to the left and right, and then centered vertically would be better for
+  any icon we'll have from now on. That gives the text also more space, and I like it
+  centered on the left and with the date on the same alignment." Built: 5px from the card's
+  edge to the logo and from the logo to the text, the logo centred on the four lines.

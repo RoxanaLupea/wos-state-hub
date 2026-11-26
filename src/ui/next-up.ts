@@ -97,8 +97,9 @@ export function nextUpTiles(occurrences: Occurrence[]): string {
 
 // As on the calendar's bars, on a computer: the full name and its short form only where
 // they fit on one line; then the name alone; then only the short name. On a phone the
-// name is one line too: the full name where it fits, otherwise the event's short form, as
-// SvS (Roxanne, 26 Nov: "it's gonna be AC and registration").
+// event's short form where it has one, as SvS and AC (Roxanne, 26 Nov: "it's gonna be SVS
+// and matchmaking ... it's gonna be AC and registration"); otherwise the full name, or its
+// short name where that does not fit on one line.
 export function fitNextTiles(root: ParentNode): void {
   const titles = Array.from(root.querySelectorAll<HTMLElement>('.next-tile-title.fitted, .next-tile-title.fitted-wide'));
   const onPhone = window.innerWidth < 1000;
@@ -113,7 +114,8 @@ export function fitNextTiles(root: ParentNode): void {
     const fits = () => title.scrollWidth <= title.clientWidth + 0.5;
     if (onPhone) {
       if (tag) tag.style.display = 'none';
-      if (!fits()) name.textContent = title.dataset.tag || title.dataset.shortName || fullName;
+      if (title.dataset.tag) name.textContent = title.dataset.tag;
+      else if (!fits()) name.textContent = title.dataset.shortName || fullName;
       continue;
     }
     if (fits()) continue;
