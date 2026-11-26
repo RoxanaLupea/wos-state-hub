@@ -384,7 +384,9 @@
    The month between its old 24px and the 20px she found too small; every icon on the line
    24px, all centred on one line with the arrows. */
 @media (min-width: 1000px) {
-  .page > .toolbar { padding: 8px 0 12px; }
+  /* The row keeps its height, so the calendar starts where it did (Roxanne, 26 Nov: "The
+     space between the calendar and the top needs to be exactly the same"). */
+  .page > .toolbar { padding: 4px 0 6px; }
   .page > .toolbar .period-title { font-size: 22px; }
   .page > .toolbar .step-arrow { width: 30px; height: 30px; }
   .page > .toolbar .step-arrow svg, .page > .toolbar .month-steps .today-button svg { width: 22px; height: 22px; }

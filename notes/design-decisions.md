@@ -1414,4 +1414,5 @@ All nine are built.
   They're so tiny that you don't even know what you're clicking ... make sure all of those
   are aligned with the arrows, and filters in UTC should be at least as big as the selected
   view". Built: the month 22px, every icon 24px (arrows and pin 22px), Filters and UTC 15px,
-  all centred on one line; 22px under the band, 12px over the calendar.
+  all centred on one line, lower in the same row: "The space between the calendar and the top
+  needs to be exactly the same" (the calendar starts where it did).
