@@ -361,3 +361,44 @@ end $$;
 
 revoke all on function public.ask_game_refresh(bigint) from public, anon;
 grant execute on function public.ask_game_refresh(bigint) to authenticated;
+
+-- ---------------------------------------------------------------------------
+-- The states of the players on the current transfer's list are read too, once a day like
+-- the states where a site account plays, so their profiles show their places on their own
+-- state's boards (Roxanne, 26 Nov: "we also need that state's data to get the full
+-- profile"). As svs-opponent-state.sql (which replaced state-ranks.sql), with the list added.
+
+create or replace function admin_tools.refresh_other_states() returns integer
+language plpgsql set search_path = public, admin_tools as $$
+declare
+  state_to_read integer;
+  done integer := 0;
+begin
+  if not pg_try_advisory_lock(hashtext('refresh_other_states')) then return 0; end if;
+  for state_to_read in
+      select account_state from (
+        select player.state_number as account_state from game_players player
+          where player.state_number is not null and player.state_number <> admin_tools.home_state()
+            and (player.player_id::text in (select in_game_id from game_accounts where in_game_id is not null)
+              or player.player_id in (select invite.player_id from transfer_invites invite
+                where invite.window_id = admin_tools.current_transfer_window() and invite.status is distinct from 'transferred'))
+        union
+        select opponent.opponent_state from result_opponents opponent
+          join results result on result.id = opponent.result_id
+          where result.event_type_id = 'svs' and opponent.opponent_state is not null
+            and opponent.opponent_state <> admin_tools.home_state()
+            and result.event_date between current_date - 3 and current_date + 10) wanted
+        left join game_states kept on kept.state_number = wanted.account_state
+        where kept.state_number is null or kept.refresh_asked_at is not null or kept.read_at < now() - interval '24 hours'
+        order by kept.refresh_asked_at nulls last, kept.read_at nulls first loop
+    begin
+      perform admin_tools.refresh_state(state_to_read);
+      done := done + 1;
+    exception when others then
+      raise warning 'state % not read: %', state_to_read, sqlerrm;
+      update game_states set refresh_asked_at = null where state_number = state_to_read;
+    end;
+  end loop;
+  perform pg_advisory_unlock(hashtext('refresh_other_states'));
+  return done;
+end $$;

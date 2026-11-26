@@ -794,6 +794,11 @@ function inviteProfileMarkup(invite: Invite): string {
       const read = gameReadOf(rows[0]);
       if (read) { gameReads.set(id, read); draw(); }
     }).catch(() => undefined);
+    // Their places on their own state's boards, for the full profile (Roxanne, 26 Nov).
+    void readStateRanks([id]).then(rows => {
+      for (const [chief, boards] of stateBoardsOf(rows)) stateBoards.set(chief, boards);
+      draw();
+    }).catch(() => undefined);
   }
   const game: GameRead = gameReads.get(id) ?? {
     name: invite.name, avatar: invite.avatar, power: invite.power, powerRank: null, state: invite.state,
