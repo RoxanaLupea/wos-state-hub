@@ -96,15 +96,15 @@
 }
 @media (min-width: 1000px) {
   .calendar-panel .weeks.more-above {
-    -webkit-mask-image: linear-gradient(to bottom, #000 30px, transparent 30px, #000 50px);
-    mask-image: linear-gradient(to bottom, #000 30px, transparent 30px, #000 50px);
+    -webkit-mask-image: linear-gradient(to bottom, #000 26px, transparent 26px, #000 46px);
+    mask-image: linear-gradient(to bottom, #000 26px, transparent 26px, #000 46px);
   }
   .calendar-panel .weeks.more-above.more-below {
-    -webkit-mask-image: linear-gradient(to bottom, #000 30px, transparent 30px, #000 50px, #000 calc(100% - 48px), transparent);
-    mask-image: linear-gradient(to bottom, #000 30px, transparent 30px, #000 50px, #000 calc(100% - 48px), transparent);
+    -webkit-mask-image: linear-gradient(to bottom, #000 26px, transparent 26px, #000 46px, #000 calc(100% - 48px), transparent);
+    mask-image: linear-gradient(to bottom, #000 26px, transparent 26px, #000 46px, #000 calc(100% - 48px), transparent);
   }
 }
-@media (min-width: 1000px) { .calendar-panel .held-dates { margin-bottom: -30px; } }
+@media (min-width: 1000px) { .calendar-panel .held-dates { margin-bottom: -26px; } }
 /* The day names never give up height to the weeks (they were squeezed and cut on short
    screens). */
 @media (min-width: 1000px) { .calendar-panel .weekday-names { flex: none; } }

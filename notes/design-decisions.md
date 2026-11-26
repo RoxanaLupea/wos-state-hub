@@ -1378,3 +1378,6 @@ All nine are built.
   the size. And I like how the line looks. Oh, and the arrow down, but ... make it look
   like the site and like icons." Built: UTC over the time (12px / 20px), the thin line,
   the round picture with the page's ring, the name, the arrow in the icons' style; no box.
+- Calendar head (26 Nov): "a lot of spacing for Monday, Tuesday ... and then the numbers
+  ... that bar at the top for the dates becomes quite tall." Built: 8px from the day names
+  to the first dates, dates 6px under a week's line and 4px over its bars.

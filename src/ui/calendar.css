@@ -421,3 +421,14 @@
 @media (min-width: 1000px) {
   .bar.phase-lines.one-line-wide .bar-segment-name { position: relative; top: 1px; }
 }
+/* A shorter head on computers (Roxanne, 26 Nov: "a lot of spacing for Monday, Tuesday ...
+   and then the numbers"): the day names sit close over the first dates, and the dates
+   close over their bars. */
+@media (min-width: 1000px) {
+  .weekday-names { padding-bottom: 2px; }
+  .week-row { padding-top: 23px; }
+  .day-box { padding-top: 0; }
+  .day-box .day-number, .held-date .day-number { height: 18px; }
+  .held-dates { height: 26px; margin-bottom: -26px; }
+  .held-date { padding-top: 0; }
+}
