@@ -1363,3 +1363,5 @@ All nine are built.
 - Text in boxes (26 Nov): "make sure you have at least 2-3 pixels of padding around the
   text in the box ... At least 5 pixels to the right, so you can either center it if it's
   centered or align it to the left and still have room for it to grow."
+- Phases on one-line bars, after trying them 12px after the name (26 Nov): "I don't like
+  this ... I want it centered ... Yeah, center it." Preview and Matchmaking too.

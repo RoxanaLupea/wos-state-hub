@@ -383,8 +383,13 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
     `<span class="bar-head">${sideLogo ? (oneLineOnComputer ? `<span class="head-logo">${logo}</span>` : '') : logo}` +
     (bar.wasCancelled ? '<span class="cancelled-mark" aria-label="Cancelled">&times;</span>' : '') +
     `<span class="bar-label">${escapeForPage(headName)}</span>${tag}` +
-    (oneLineOnComputer && subtitle ? `<span class="bar-sub-inline">${escapeForPage(subtitle)}</span>` : '') +
     `${timeText}</span>` +
+    // On a computer the second name is written on the one line too, centred in the room
+    // after the name like every phase (Roxanne, 26 Nov: "center it").
+    (oneLineOnComputer && subtitle
+      ? `<span class="bar-segment wide-only" data-start-minute="${piece.start}" data-end-minute="${piece.end}">` +
+        `<span class="bar-segment-name">${escapeForPage(subtitle)}</span></span>`
+      : '') +
     lineTwo + stripes + windowLines + '</div>';
 }
 

@@ -196,11 +196,8 @@ function placeAfterName(bar: HTMLElement, fits: (element: HTMLElement) => boolea
   const label = bar.querySelector<HTMLElement>('.bar-head .bar-label');
   if (!headLogo || !label || window.getComputedStyle(headLogo).display === 'none') return;
   const barLeft = bar.getBoundingClientRect().left;
-  const sub = bar.querySelector<HTMLElement>('.bar-head .bar-sub-inline');
-  if (sub && sub.getBoundingClientRect().width < 24) sub.style.display = 'none';
-  const shownSub = sub && sub.style.display !== 'none' ? sub : null;
-  const subEnd = () => { const range = document.createRange(); range.selectNodeContents(shownSub as HTMLElement); return range.getBoundingClientRect().right; };
-  const nameRight = (shownSub ? subEnd() : nameEnd(bar, label)) - barLeft;
+  // Phases are centred in the room after the name, at least 12px from it.
+  const nameRight = nameEnd(bar, label) - barLeft + 12;
   bar.querySelectorAll<HTMLElement>('.bar-segment').forEach(segment => {
     const left = parseFloat(segment.style.left) || 0;
     const right = left + (parseFloat(segment.style.width) || 0);
@@ -255,8 +252,6 @@ export function fitBarLabels(panel: HTMLElement): void {
       }
       const tag = bar.querySelector<HTMLElement>('.bar-head .bar-tag');
       if (tag) tag.style.display = '';
-      const sub = bar.querySelector<HTMLElement>('.bar-head .bar-sub-inline');
-      if (sub) sub.style.display = '';
       bar.classList.remove('too-narrow', 'shows-initials');
     }
 

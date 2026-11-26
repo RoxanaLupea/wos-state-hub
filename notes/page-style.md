@@ -134,8 +134,9 @@ only what makes it one (the room its letters, digits or bars leave over and unde
   them: SvS (parts over its days) and a week with tickets.
 - Every event logo 22px; the name 14px, written as it is; the short form (SvS, TAL) 10px
   in Inter, on the name's line.
-- Every smaller word on a bar is 12px. A phase is in capitals (weight 800), 12px after
-  the name or after the white line before it, never centred in what is left. On a two-line
+- Every smaller word on a bar is 12px. A phase is in capitals (weight 800), centred in
+  its stretch, or in the room after the name when its stretch starts under the name, and
+  never closer than 12px to the name (Roxanne, 26 Nov: "center it"). On a two-line
   bar the days under the parts stay as written, centred in their days.
 - In the day's card a phase under an event's name is in capitals too, and the logos are
   sized to the two lines beside them (32px; 24px in the timeline).

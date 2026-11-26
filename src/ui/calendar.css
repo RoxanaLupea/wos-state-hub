@@ -387,18 +387,20 @@
 
 /* ---------- Standard: a phase on a one-line bar (Roxanne, 26 Nov) ----------
    The event's name is written as it is; a phase is written in capitals, like
-   PREPARATION on SvS. Every phase starts the same way: 12px after the name, or 12px
-   after the white line before it, never centred in what is left. On a two-line bar the
-   days under the parts (City Construction) stay as they are. */
+   PREPARATION on SvS. On a two-line bar the days under the parts (City Construction)
+   stay as they are. */
 .phase-word, .bar.one-line-wide .bar-segment-name, .bar.one-line-wide .bar-sub-inline {
   text-transform: uppercase; font-weight: 800; letter-spacing: 0.04em;
 }
+/* Centred (Roxanne, 26 Nov: "center it"): every phase sits in the middle of its stretch,
+   or of the room after the name, at least 12px from the name. */
+.bar .bar-segment.wide-only { display: none; }
 @media (min-width: 1000px) {
-  .bar.phase-lines.one-line-wide .bar-segment { justify-content: flex-start; }
+  .bar.phase-lines.one-line-wide .bar-segment, .bar.phase-lines.one-line-wide.one-segment .bar-segment { justify-content: center; }
   .bar.phase-lines.one-line-wide .bar-segment-name, .bar.phase-lines.day-lines.one-line-wide .bar-segment-name {
-    padding: 0 4px 0 12px; text-align: left;
+    padding: 3px 5px; text-align: center;
   }
-  .bar.phase-lines.one-line-wide .bar-sub-inline { margin-left: 12px; }
+  .bar.phase-lines.one-line-wide .bar-segment.wide-only { display: flex; }
 }
 
 /* ---------- Standard: room around text in a box (Roxanne, 26 Nov) ----------
