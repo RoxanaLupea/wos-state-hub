@@ -16,7 +16,7 @@ import { pictureOf, filterId } from './player-profile.ts';
 import { playerSearchField, playerSearchChoice, playerSearchTyped, forgetPlayerSearch, type FoundPlayer } from './player-search.ts';
 import { EDIT_ICON } from './edit-forms.ts';
 import {
-  inviteRow, allianceTagPill, shortNumber, statusIcon, lineIcon, COMPACT_HEAD, ADD_ICON, DETAILS_ICON, STATUS_WORDS
+  inviteRow, STAR, allianceTagPill, shortNumber, statusIcon, lineIcon, COMPACT_HEAD, ADD_ICON, DETAILS_ICON, STATUS_WORDS
 } from './invite-row.ts';
 import {
   INVITE_LISTS, INVITE_STATUSES, listOf, statusOf, phaseOf, timesOf, countdownText, currentTransferDate, placesOf,
@@ -82,6 +82,8 @@ const state = {
   tipFor: null as number | null,
   // Which past transfer's note is open on Records.
   recordTipDate: null as string | null,
+  // The record whose "received on" note is open.
+  receivedTipFor: null as number | null,
   copiedId: '',
   profileFor: null as number | null,
   detailsOpen: false,
@@ -396,8 +398,6 @@ function ordinal(number: number): string {
   return number + ends;
 }
 
-const STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.7 5.8 6.3.7-4.7 4.3 1.3 6.2L12 16.6l-5.6 3.2 1.3-6.2L3 9.3l6.3-.7z"/></svg>';
-
 function specialStar(shown: Shown): string {
   const day = shown.specialsFrom as string;
   const at = Date.parse(day + 'T00:00:00Z');
@@ -646,7 +646,9 @@ function recordLists(shown: Shown, context: InvitesContext): string {
         groupColour: group !== null ? colours.get(group) ?? null : null,
         groupFirst: group !== (rows[index - 1]?.groupNumber ?? null), groupLast: group !== (rows[index + 1]?.groupNumber ?? null),
         copied: state.copiedId === invite.playerId, viewing: false, extra: false, compact,
-        canMove: false, canSetStatus: false, editing: null, statusPickOpen: false, tipOpen: false
+        canMove: false, canSetStatus: false, editing: null, statusPickOpen: false, tipOpen: false,
+        received: invite.gameReadAt && Date.parse(invite.gameReadAt) > timesOf(shown.date).end
+          ? { date: dateText(invite.gameReadAt.slice(0, 10)), open: state.receivedTipFor === invite.id } : null
       });
     }).join('');
     return `<section class="il${compact ? ' cmp' : ''}" style="--lc: ${LIST_COLOURS[list]}"><h2><span>${LIST_TITLES[list]} · ${rows.length}/${shown.places[list]}</span>` +
@@ -850,7 +852,13 @@ export function handleInvitesClick(target: HTMLElement, context: InvitesContext,
       context.redraw();
       return true;
     }
-    if (state.tipFor !== null) { state.tipFor = null; context.redraw(); }
+    const received = attribute('data-record-received');
+    if (received !== null) {
+      state.receivedTipFor = state.receivedTipFor === Number(received) ? null : Number(received);
+      context.redraw();
+      return true;
+    }
+    if (state.tipFor !== null || state.receivedTipFor !== null) { state.tipFor = null; state.receivedTipFor = null; context.redraw(); }
     if (target.closest('[data-records-recent]')) {
       state.recordIndex = 0;
       document.querySelector('.rscroll')?.scrollTo({ top: 0, behavior: 'smooth' });

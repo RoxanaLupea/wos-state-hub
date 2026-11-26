@@ -64,6 +64,16 @@ candidate tables were empty) and everything was pushed.
   during the Pre-transfer." Replaces "1 from <date>". Her ok on:
   icon-only Cancel and Save on the card, "Ordinary state", the Records profile pop-up, grips
   on every row, 16-character names cut on 360 px phones ("they can buy better phones").
+- 18:40: the old sheet imported (her yes): 11 transfers (4 Jan to 6 Dec 2026), 286 rows with
+  source "Old transfer sheet "1458 transfer December", <tab> tab" and updated_by her account;
+  statuses by her rules (ticked Migration or "ok" Transferred; "Declined"/"rejected" Rejected;
+  invited with Migration unticked Expired, except November, whose column was never filled;
+  nothing written: Transferred when in 1458 on 26 Nov and on no later list, otherwise empty;
+  "Transferred elsewhere", "Reduce power", "replaced" empty). Aunie on April's Open list, the
+  three extras under April's 35 on its Open list; December is the 6 Dec list with the
+  Terry+Norr group as group 1. transfer_invites.source added. ITACHI on state_blacklist.
+  Code not pushed yet: the star on a record read after its transfer ("This record was
+  received on <date>, not on the date of the transfer.").
 - 18:10: a name cut with "…" (Records manager, card manager, search list) keeps 4 px above and
   below so tall characters are not clipped; the Records manager's name is 13 px (was 14.5).
 - 18:05: Records show the president of that time where a transfer's manager was not recorded
@@ -80,8 +90,10 @@ candidate tables were empty) and everything was pushed.
 - Next: import "1458 transfer December" (Google Drive, id 1Rx3hPpOL2Y9LgDzh0_wHnTT2Cda_Lx0tBoNd2ixx-jw,
   month tabs, read through the Sheets connector): the December tab is the current 6 Dec list
   (Invites, with the "Terry+Norr group"), the others go to Records. The March tab is the
-  29 March transfer. Still to ask her: invited but not migrated with no note (Rejected or
-  Expired), tabs without statuses (February, January), November's empty Migration column. Then contact editing, flags, the page after the transfer, Add problems.
+  29 March transfer. Invited but not migrated with no note is Expired. February and January: who was on
+  the list; those in 1458 now are Transferred (her rule). Still open: November's empty
+  Migration column, "Transferred elsewhere" (Rejected was suggested, not confirmed), the
+  tiny star on records read after their transfer (to build before the import). Then contact editing, flags, the page after the transfer, Add problems.
 - 17:40: the phone's back: every page and part (Timeline, Invites, Records…) is a step of the
   history (main.ts placeKey is page|part|level); on Invites and Records each pop-up, Details
   or profile open is a level. Leaving Invites with changes asks first. The calendar's own

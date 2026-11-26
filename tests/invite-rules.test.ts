@@ -9,7 +9,7 @@ const at = (text: string) => Date.parse(text);
 
 function invite(bits: Partial<Invite>): Invite {
   return {
-    id: 1, windowId: 1, playerId: '1', list: 'ordinary', position: 1, setStatus: null, transferredAt: null, groupNumber: null,
+    id: 1, windowId: 1, playerId: '1', list: 'ordinary', position: 1, setStatus: null, transferredAt: null, gameReadAt: null, groupNumber: null,
     contactTag: '', contactName: '', contactPlayerId: '', name: '', avatar: null, power: null, state: null, furnace: null,
     kills: null, labyrinth: null, migrantScore: null, troops: {}, skills: {}, onSite: false, ...bits
   };

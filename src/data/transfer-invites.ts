@@ -32,6 +32,7 @@ function toInvite(row: Record<string, unknown>, onSite: Set<string>): Invite {
     position: Number(row.position) || 0,
     setStatus: ['sent', 'transferred', 'rejected', 'expired'].includes(status) ? status as Invite['setStatus'] : null,
     transferredAt: row.transferred_at ? String(row.transferred_at) : null,
+    gameReadAt: row.game_read_at ? String(row.game_read_at) : null,
     groupNumber: numberOrNull(row.group_number),
     contactTag: String(row.contact_tag ?? ''),
     contactName: String(row.contact_name ?? ''),

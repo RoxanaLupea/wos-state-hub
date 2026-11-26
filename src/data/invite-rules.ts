@@ -21,6 +21,8 @@ export interface Invite {
   position: number;
   setStatus: 'sent' | 'transferred' | 'rejected' | 'expired' | null;
   transferredAt: string | null;
+  // When the game's copy on this row was read.
+  gameReadAt: string | null;
   groupNumber: number | null;
   contactTag: string;
   contactName: string;

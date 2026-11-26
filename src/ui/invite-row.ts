@@ -126,7 +126,14 @@ export interface RowOptions {
   // The status list opened under the status.
   statusPickOpen: boolean;
   tipOpen: boolean;
+  // Records: a row whose game copy was read after its transfer, with the date it was read
+  // (Roxanne, 26 Nov: "a tiny star which tells us that the records were received at the x
+  // date, not the date of transfer"), and whether its note is open.
+  received?: { date: string; open: boolean } | null;
 }
+
+// The site's small star; its note shows on a tap or under the pointer.
+export const STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.7 5.8 6.3.7-4.7 4.3 1.3 6.2L12 16.6l-5.6 3.2 1.3-6.2L3 9.3l6.3-.7z"/></svg>';
 
 function contactOf(invite: Invite, alliances: Alliance[]): string {
   const name = invite.contactName ? `<span class="via">${escapeForPage(invite.contactName)}</span>` : '';
@@ -166,6 +173,13 @@ function statusMarkup(options: RowOptions): string {
     `${statusIcon(status)}<span class="words">${STATUS_WORDS[status]}</span></${tappable ? 'button' : 'span'}>${pick}${tip}</span>`;
 }
 
+function receivedStar(options: RowOptions): string {
+  if (!options.received) return '';
+  const note = `This record was received on ${options.received.date}, not on the date of the transfer.`;
+  return `<span class="star-tip" role="button" tabindex="0" aria-label="${escapeForPage(note)}" data-record-received="${options.invite.id}">${STAR}` +
+    `<span class="tip${options.received.open ? ' shown' : ''}">${escapeForPage(note)}</span></span>`;
+}
+
 export function inviteRow(options: RowOptions): string {
   const { invite } = options;
   const fc = fcOf(invite.furnace);
@@ -194,7 +208,7 @@ export function inviteRow(options: RowOptions): string {
     (options.canMove ? `<i class="grp" data-invite-grip="${invite.id}" title="Drag to move">${GRIP_ICON}</i>` : '') +
     `<button type="button" class="av" data-invite-profile="${invite.id}" aria-label="${escapeForPage(name)}">${pictureOf(invite.avatar, name)}<i class="pf">${OPEN_ICON}</i></button>` +
     '<div class="who">' +
-      `<div class="nm"><b>${escapeForPage(name)}</b>${invite.onSite ? `<i class="on-site-name" title="On the site">${LINK_ICON}</i>` : ''}</div>` +
+      `<div class="nm"><b>${escapeForPage(name)}</b>${receivedStar(options)}${invite.onSite ? `<i class="on-site-name" title="On the site">${LINK_ICON}</i>` : ''}</div>` +
       `<div class="id idnew"><span class="idg">${escapeForPage(invite.playerId)}</span>${copy}</div>` +
       `<div class="pw">${power}${invite.state ? `<span class="pst">#${invite.state}</span>` : ''}</div>` +
     '</div>' +

@@ -314,6 +314,9 @@ there before discussing it again.
   "replaced on request of onion": "then they didn't make it" (kept as not transferred).
   The March tab is the 29 March 2026 transfer: the original sheet's version history shows
   Angel Ryoko added to it on 17 March (Roxanne's screenshot, 26 Nov).
+  Invited, not migrated and no note: "expired".
+  The February and January tabs (names and IDs only): imported as who was on the list ("that's
+  all we have, we'll figure it out after"); "if they're in the state then they transferred".
   Groups: "we should be able to add names to the groups, optional" (to design).
 - Blacklist (Roxanne, 26 Nov): "we will add a blacklist, but it should be on the state page,
   even if we don't have it yet, we can add it in the database so we can show the flag, it's
