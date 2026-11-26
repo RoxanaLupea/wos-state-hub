@@ -64,10 +64,17 @@ candidate tables were empty) and everything was pushed.
   during the Pre-transfer." Replaces "1 from <date>". Her ok on:
   icon-only Cancel and Save on the card, "Ordinary state", the Records profile pop-up, grips
   on every row, 16-character names cut on 360 px phones ("they can buy better phones").
-- 18:50 (not pushed, SQL not run): New group's lists scroll on the phone (they were cut at
-  300 px) and the pop-up never runs past the screen; the letter pictures there are centred.
-  refresh_players puts the current list's players without data first (the import had
-  queued 232 players and reads take up to 15 s each, so the 6 Dec list waited).
+- 19:00 pushed (her yes, build green) and run on the database: New group's lists scroll on
+  the phone (they were cut at 300 px) and the pop-up never runs past the screen; the letter
+  pictures there are centred. refresh_players puts the current list's players without data
+  first (the import had queued 232 players and reads take up to 15 s each, so the 6 Dec list
+  waited). refresh_other_states (now in transfer-invites.sql, built on svs-opponent-state.sql's
+  version, SvS opponent kept) also reads the states of the current list's players who have
+  not transferred, once a day; their profiles from the lists load those state ranks too
+  ("we also need that state's data to get the full profile"). The records star went live.
+- Not pushed yet: the pin after the date on Records is gone ("looks wrong, i think we'll
+  just remove it"); the Invites lists and Records scroll with no scrollbar seen (its space
+  kept, so nothing moves). Open: whether Invites' own pin goes too.
 - 18:40: the old sheet imported (her yes): 11 transfers (4 Jan to 6 Dec 2026), 286 rows with
   source "Old transfer sheet "1458 transfer December", <tab> tab" and updated_by her account;
   statuses by her rules (ticked Migration or "ok" Transferred; "Declined"/"rejected" Rejected;
