@@ -33,37 +33,21 @@ Next job: build the Invites and Records pages in the code.
 - The mockup also holds experiments she turned down. When the mockup and her words in the
   notes disagree, her words win; when unsure, ask her.
 
-### Waiting for her push yes (26 Nov)
+### Pushed 26 Nov, 15:30 (her yes)
 
-- The uncommitted work: the open section centred in the top menu (src/main.ts), the divider
-  in the controls row (shell.ts, shell.css), the notes, CLAUDE.md and the mockup.
-
-### Pushed 25 Nov, 23:30 (approved by her)
-
-- Timeline: the pin marks only the current stage; a picked stage gets a highlight
-  (event-tree.ts isPicked, event-panel.css .tree-row.picked).
-- Held dates: a week's own numbers hide once its dates are held at the top (dates-held).
-- Computer: the weeks box has 10 px room on the left so a picked Monday bar keeps its ring.
-- Bars run dark to light; events with two logo colours by real brightness (colors.ts
-  darkerFirst). SvS bars: Results blue against red, slanted split at 50%, darker ends
-  (tokens.css --ours/--theirs, SVS_FAMILY in catalog.ts).
-- A reload on a phone opens the calendar, not the day or event (openSharedAddress).
-- Foundry power asked for an update after two weeks (FOUNDRY_POWER_DAYS); replaced the same
-  night by "when registration opens" (not pushed yet).
-- The yellow events keep their colours (her words: "those stay as they are for now").
-
-### Not on main: branch wip-25-nov (only if she allowed it)
-
-- New categories Special events (9 festivals) and Packs (4 packs), Hero Ascension Training
-  in Deals, no short tag on special events and packs (catalog.ts eventTypeTag). Icons and
-  colours are placeholders. Files: data/catalog/event-types.json, data/text/en.json,
-  src/ui/category-chips.ts, src/data/catalog.ts.
-- Their dates: supabase/special-events-and-packs.sql, to run right after that push (the
-  live site must know the event types first).
+- Branch wip-25-nov merged into main and deleted: new categories Special events (9 festivals)
+  and Packs (4 packs), Hero Ascension Training in Deals, no short tag on special events and
+  packs (catalog.ts eventTypeTag); icons and colours are placeholders. Their dates from
+  supabase/special-events-and-packs.sql are in the database (run 26 Nov, 27 rows).
+- Foundry power is asked for an update once Foundry registration opens (main.ts
+  lastFoundryRegistrationStart), not every two weeks.
+- The open section is centred in the top menu unless the row was scrolled by hand
+  (main.ts centreOpenSection); the divider in the controls row, same order on both screens
+  (shell.ts, shell.css; notes/page-style.md "Controls row" and "Top band").
+- Notes for the Invites and Records build, and the mockup in tools/mockups/invites/.
 
 ### Still open (ask one at a time)
 
-- Push yes for the foundry reminder "when registration opens" (built, not pushed).
 - Her 1252 Foundry Legion 1 screenshot (25 Nov): Roxanne 16,480 (her 1252 main, game_accounts
   id 1), Lord Daddy Tif 32,315 (Tif's 1252 main, id 2), Lordy 20,752 (no site account).
   Asked whether to save the first two with her as the source; not answered. Foundry power
