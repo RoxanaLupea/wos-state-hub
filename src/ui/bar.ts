@@ -239,15 +239,19 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
       // A part inside a part (Castle Battle in SvS's Battle) is its logo, at its own time,
       // between its own white lines (Roxanne, 26 Nov: "just put the icon of the castle and
       // the lines where they need to be").
+      // On a phone there is no room for its own lines: the logo, bigger, sits in the middle
+      // of the part, level with the words on line 2 (Roxanne, 26 Nov: "make the Sunfire
+      // Castle logo bigger, center it in the battle space, and align it with the text").
       if (inside.length) {
         for (const one of inside) {
           const oneName = eventTypeName(one.eventTypeId);
-          if (one.startMinute > part.start) lineTwo += barMark(one.startMinute, 'divider', oneName + ' starts');
-          if (one.endMinute < part.end) lineTwo += barMark(one.endMinute, 'divider', oneName + ' ends');
-          lineTwo += `<span class="bar-inside" role="button" tabindex="0" data-open-event="${escapeForPage(one.key)}"` +
-            ` data-start-minute="${one.startMinute}" data-end-minute="${one.endMinute}"` +
-            ` title="${escapeForPage(oneName + ' · ' + spanText(one.startMinute, one.endMinute))}">` +
-            `${eventIcon(one.eventTypeId)}</span>`;
+          const title = ` title="${escapeForPage(oneName + ' · ' + spanText(one.startMinute, one.endMinute))}"`;
+          if (one.startMinute > part.start) lineTwo += barMark(one.startMinute, 'divider own-time', oneName + ' starts');
+          if (one.endMinute < part.end) lineTwo += barMark(one.endMinute, 'divider own-time', oneName + ' ends');
+          lineTwo += `<span class="bar-inside own-time" role="button" tabindex="0" data-open-event="${escapeForPage(one.key)}"` +
+            ` data-start-minute="${one.startMinute}" data-end-minute="${one.endMinute}"${title}>${eventIcon(one.eventTypeId)}</span>` +
+            `<span class="bar-inside in-part-middle" role="button" tabindex="0" data-open-event="${escapeForPage(one.key)}"` +
+            ` data-start-minute="${part.start}" data-end-minute="${part.end}"${title}>${eventIcon(one.eventTypeId)}</span>`;
         }
         return;
       }

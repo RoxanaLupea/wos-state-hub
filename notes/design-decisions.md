@@ -1441,3 +1441,18 @@ All nine are built.
   any icon we'll have from now on. That gives the text also more space, and I like it
   centered on the left and with the date on the same alignment." Built: 5px from the card's
   edge to the logo and from the logo to the text, the logo centred on the four lines.
+- Phone bars (Roxanne, 26 Nov): "make the Sunfire Castle logo bigger, center it in the
+  battle space, and align it with the text"; "Aren't like all the stages too high? ...
+  Preparation, Battle, Field Triage is higher than State of Power. That shouldn't be
+  possible. That should be centered. And then City, Basic Skills ... should be centered
+  with those lines ... the entire line can still display all of this, but be less tall";
+  "You forgot to make matchmaking uppercase ... State of Power and Matchmaking are a pair
+  ... they don't have to be so far apart, and second, they have to be centered in the
+  space they have. TAL and Preview, the same." Built: every two-line bar on a phone 32px
+  (was 34), the name and the parts on one baseline, line 2 close under it with each white
+  line centred on its letters, a phase under the name in capitals; the castle 14px in the
+  middle of Battle, level with line 2, without its own lines (no room on a phone; the
+  computer keeps them).
+- Next up / Then (Roxanne, 26 Nov): "What if next up and then are actually above, are
+  written above the logo and in a whiter font, and then the 3 rows and the logo are
+  centered under that." Built on the phone and the computer.
