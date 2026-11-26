@@ -83,27 +83,27 @@ export function nextUpTiles(occurrences: Occurrence[]): string {
       `<div class="next-tile-head">${eventBadge(tile.eventTypeId)}` +
       `<div class="next-tile-names"><span class="next-tile-label">${label}</span>` +
       (tile.stageId
-        ? `<span class="next-tile-title fitted" data-short-name="${escapeForPage(eventTypeShortName(tile.eventTypeId))}">` +
+        ? `<span class="next-tile-title fitted" data-short-name="${escapeForPage(eventTypeShortName(tile.eventTypeId))}"` +
+          ` data-tag="${escapeForPage(eventTypeTag(tile.eventTypeId))}">` +
           `<span class="next-tile-name">${escapeForPage(eventTypeName(tile.eventTypeId))}</span>` +
           (tag ? ` <span class="next-tile-tag">${escapeForPage(tag)}</span>` : '') + '</span>'
-        : `<span class="next-tile-title fitted-wide" data-short-name="${escapeForPage(eventTypeShortName(tile.eventTypeId))}">` +
+        : `<span class="next-tile-title fitted-wide" data-short-name="${escapeForPage(eventTypeShortName(tile.eventTypeId))}"` +
+          ` data-tag="${escapeForPage(eventTypeTag(tile.eventTypeId))}">` +
           `<span class="next-tile-name">${escapeForPage(eventTypeName(tile.eventTypeId))}</span></span>`) +
       (phase ? `<span class="next-tile-stage">${escapeForPage(phase)}</span>` : '') + '</div></div>' +
       `<span class="event-note">${escapeForPage(when)}</span></div>`;
   }).join('');
 }
 
-// As on the calendar's bars: the full name and its short form only where they fit on
-// one line; then the name alone; then only the short name ("SvS").
+// As on the calendar's bars, on a computer: the full name and its short form only where
+// they fit on one line; then the name alone; then only the short name. On a phone the
+// name is one line too: the full name where it fits, otherwise the event's short form, as
+// SvS (Roxanne, 26 Nov: "it's gonna be AC and registration").
 export function fitNextTiles(root: ParentNode): void {
   const titles = Array.from(root.querySelectorAll<HTMLElement>('.next-tile-title.fitted, .next-tile-title.fitted-wide'));
+  const onPhone = window.innerWidth < 1000;
   for (const title of titles) {
     const name = title.querySelector<HTMLElement>('.next-tile-name');
-    // A tile without a stage is fitted on a computer only; a phone wraps its name, as approved.
-    if (title.classList.contains('fitted-wide') && window.innerWidth < 1000) {
-      if (name?.dataset.fullName) name.textContent = name.dataset.fullName;
-      continue;
-    }
     const tag = title.querySelector<HTMLElement>('.next-tile-tag');
     if (!name) continue;
     const fullName = name.dataset.fullName ?? name.textContent ?? '';
@@ -111,6 +111,11 @@ export function fitNextTiles(root: ParentNode): void {
     name.textContent = fullName;
     if (tag) tag.style.display = '';
     const fits = () => title.scrollWidth <= title.clientWidth + 0.5;
+    if (onPhone) {
+      if (tag) tag.style.display = 'none';
+      if (!fits()) name.textContent = title.dataset.tag || title.dataset.shortName || fullName;
+      continue;
+    }
     if (fits()) continue;
     if (tag) tag.style.display = 'none';
     if (fits()) continue;

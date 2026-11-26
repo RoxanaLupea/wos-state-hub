@@ -11,7 +11,7 @@
 /* The whole event's short form, as on its calendar bar; the part under it, as the
    timeline writes its stages. */
 .next-tile-tag { font-family: var(--tag-font); font-size: 0.72em; font-weight: 700; letter-spacing: 0.08em; opacity: 0.9; }
-.next-tile-title.fitted { white-space: nowrap; overflow: hidden; }
+.next-tile-title.fitted, .next-tile-title.fitted-wide { white-space: nowrap; overflow: hidden; }
 .next-tile-stage { margin-top: 2px; font-size: 9.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
 /* On a phone the two tiles open the calendar page, above its controls (owner, 25 Nov); as
    the page scrolls they get smaller and fade away (main.ts, holdDayNames), and the
@@ -32,18 +32,17 @@
 /* Each tile is its logo with four lines left-aligned beside it: the label, the name, the
    phase and the date (Roxanne, 26 Nov: "I would put all 4 rows aligned to the left and make
    the icon bigger"), and every tile names its phase ("We either put the face or we don't").
-   The phone has the same layout with its own sizes ("the logic changes ... not sizes"); the
-   bigger logo is the computer's. */
+   The phone has the same layout with its own sizes ("the logic changes ... not sizes"), its
+   name on one line ("I don't remember us setting like the title on 2 lines"); the bigger
+   logo is the computer's. */
 .next-tile { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto auto; align-content: start; column-gap: 10px; row-gap: 0; align-items: start; }
 .next-tile-head { display: contents; }
-/* The two logos at the same height whatever the lines beside them (26 Nov): from the top on
-   a phone, where a name can take two lines; centred on a computer, where both tiles have
-   the same four lines. */
-.next-tile-head > .event-badge { grid-row: 1 / span 2; align-self: start; margin-top: 8px; }
+/* The logo centred on the four lines; every name is one line, so both tiles' logos and
+   lines sit level. */
+.next-tile-head > .event-badge { grid-row: 1 / span 2; align-self: center; }
 .next-tile-names { grid-column: 2; }
 .next-tile > .event-note { grid-column: 2; margin-top: 3px; }
 @media (min-width: 1000px) {
   .next-tile { column-gap: 12px; }
-  .next-tile-head > .event-badge { width: 48px; height: 48px; align-self: center; margin-top: 0; }
-  .next-tile-title.fitted-wide { white-space: nowrap; overflow: hidden; }
+  .next-tile-head > .event-badge { width: 48px; height: 48px; }
 }

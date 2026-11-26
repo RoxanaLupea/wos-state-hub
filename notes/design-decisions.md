@@ -1430,3 +1430,9 @@ All nine are built.
   line, no "Game time (UTC)" line, the calendar's two colours; Next up and Then with their
   phase on both and the four lines beside the logo, the logos level from the top. Phone
   sizes unchanged (logo, month, icons, spacing).
+- Phone tiles (Roxanne, 26 Nov): "it's gonna be next up, it's gonna be SVS and matchmaking,
+  but I don't understand why you didn't use AC for Alliance Championship ... I don't
+  remember us setting like the title on 2 lines. So it's gonna be AC and registration, and
+  like all 4 lines will be aligned and the entire panel should be narrower. It's way too
+  tall now for no reason." Built: on a phone the name is one line, the full name where it
+  fits, otherwise the event's short form (SvS, AC); both tiles' four lines level.
