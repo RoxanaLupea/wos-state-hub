@@ -334,3 +334,5 @@
   .top-bar #meButton { min-height: 38px; }
   .period-title { font-size: 20px; }
 }
+/* The name on the account button in the site's font, not the browser's own for buttons. */
+.me-button { font-family: inherit; }

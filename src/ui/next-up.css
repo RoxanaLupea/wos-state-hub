@@ -27,3 +27,5 @@
   .next-tile-title { font-size: 15px; }
   .next-tile-stage { font-size: 10.5px; }
 }
+/* The two tiles' logos sit at the same height whatever the lines beside them (26 Nov). */
+.next-tile-head { align-items: flex-start; }

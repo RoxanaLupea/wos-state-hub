@@ -108,3 +108,9 @@
 /* The day names never give up height to the weeks (they were squeezed and cut on short
    screens). */
 @media (min-width: 1000px) { .calendar-panel .weekday-names { flex: none; } }
+/* The day's card lines up with the tiles above it on both sides, and scrolls without a
+   scrollbar drawn, like the calendar (26 Nov). */
+@media (min-width: 1000px) {
+  .day-panel { margin-right: 0; padding-right: 0; scrollbar-gutter: auto; scrollbar-width: none; }
+  .day-panel::-webkit-scrollbar { display: none; }
+}
