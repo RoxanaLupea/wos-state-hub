@@ -1465,3 +1465,10 @@ All nine are built.
   triage in preparation in SVS are for sure smaller than the others." Built: two-line bars
   30px, 2px more between the lines and less above and below; every smaller word 9px (the
   parts were 7.5px, the second names 7.9px).
+- Calendar rows (Roxanne, 26 Nov): "I want Foundry and Canyon closer together ...
+  mobilization is gonna run for most of the week. It's actually the longest run, which is
+  why I would put it first. Then I would put Fortress Battle and TAL because they take up
+  a lot of space. Then Alliance Championship and State of Power because then again they take
+  up a lot of space ... I like that all the bears are on the same line interconnected with
+  the Crazy Joe, because it gives you a bigger picture". Tried: events are packed into rows
+  as before, then the fullest rows go first (not yet confirmed).

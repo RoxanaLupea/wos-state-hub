@@ -260,6 +260,7 @@ function placeInLanes(familyList: Family[]): WeekPiece[] {
   const laneIsFree = (lane: number, piece: WeekPiece) =>
     !(lanes[lane] ?? []).some(other => overlaps(other, piece));
   const placed: WeekPiece[] = [];
+  const blockLanes: number[][] = [];
 
   for (const block of familyList.flatMap(blocksOf).map(pieces => ({ pieces }))) {
     const family = block;
@@ -285,6 +286,41 @@ function placeInLanes(familyList: Family[]): WeekPiece[] {
       piece.lane = lane;
       placed.push(piece);
     }
+    blockLanes.push(family.pieces.map(piece => piece.lane));
   }
+  orderRowsByFullness(lanes, blockLanes);
   return placed;
+}
+
+// The fullest rows go first, so the longest runs open the week and the events that share
+// a row (Fortress Battles and TAL, Alliance Championship and SvS) come next (Roxanne,
+// 26 Nov: "mobilization is gonna run for most of the week ... which is why I would put it
+// first. Then I would put Fortress Battle and TAL because they take up a lot of space").
+// Rows that hold one block between them (bears of two alliances on the same day) move
+// together. Equally full rows keep their order, so related events stay close (Foundry and
+// Canyon).
+function orderRowsByFullness(lanes: WeekPiece[][], blockLanes: number[][]): void {
+  const groupOf = lanes.map((_, lane) => lane);
+  const find = (lane: number): number => groupOf[lane] === lane ? lane : (groupOf[lane] = find(groupOf[lane]));
+  for (const used of blockLanes) {
+    for (const lane of used) groupOf[find(lane)] = find(used[0]);
+  }
+  const groups = new Map<number, number[]>();
+  lanes.forEach((_, lane) => {
+    const root = find(lane);
+    groups.set(root, (groups.get(root) ?? []).concat(lane));
+  });
+  const fullness = (laneList: number[]) => Math.max(...laneList.map(lane =>
+    (lanes[lane] ?? []).reduce((sum, piece) => sum + (piece.end - piece.start), 0)));
+  const ordered = [...groups.values()]
+    .map(laneList => ({ laneList, full: fullness(laneList), first: Math.min(...laneList) }))
+    .sort((left, right) => right.full - left.full || left.first - right.first);
+  const newLane = new Map<number, number>();
+  let next = 0;
+  for (const group of ordered) {
+    for (const lane of group.laneList.sort((left, right) => left - right)) newLane.set(lane, next++);
+  }
+  lanes.forEach((pieces, lane) => {
+    for (const piece of pieces ?? []) piece.lane = newLane.get(lane) as number;
+  });
 }
