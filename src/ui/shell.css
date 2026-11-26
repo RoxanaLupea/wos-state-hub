@@ -359,3 +359,4 @@
   .me-arrow { display: block; flex: none; width: 18px; height: 18px; margin-left: -2px; color: var(--section);
     filter: drop-shadow(0 0 3px color-mix(in srgb, var(--section) 55%, transparent)); }
 }
+@media (min-width: 1000px) { .top-bar > .account-menu-wrap { display: flex; align-items: center; align-self: stretch; } }
