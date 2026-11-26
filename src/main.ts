@@ -1230,12 +1230,29 @@ const SIDEWAYS_ROWS: [string, string][] = [
 // As wide as the fade at a row's edge (shell.css), so the open name is never under it.
 const ROW_FADE_WIDTH = 36;
 
+// The sections in the top band keep the open one in the middle (Roxanne, 26 Nov: "the name
+// of the event has to be centered in the navigation bar, unless we scroll it"). Once the
+// bar is scrolled by hand it stays where it was put, until another section is opened.
+let mainNavByHand: { section: string; left: number } | null = null;
+
+function centreOpenSection(row: HTMLElement, open: HTMLElement): void {
+  const section = open.dataset.page ?? '';
+  if (mainNavByHand && mainNavByHand.section !== section) mainNavByHand = null;
+  const centred = open.offsetLeft - row.offsetLeft + open.offsetWidth / 2 - row.clientWidth / 2;
+  row.scrollLeft = mainNavByHand ? mainNavByHand.left : Math.max(0, centred);
+  const setTo = row.scrollLeft;
+  row.addEventListener('scroll', () => {
+    if (Math.abs(row.scrollLeft - setTo) > 1) mainNavByHand = { section, left: row.scrollLeft };
+  }, { passive: true });
+}
+
 function showOpenTab(app: HTMLElement): void {
   for (const [rowSelector, openSelector] of SIDEWAYS_ROWS) {
     const row = app.querySelector<HTMLElement>(rowSelector);
     if (!row) continue;
     const open = row.querySelector<HTMLElement>(openSelector);
-    if (open) {
+    if (open && rowSelector === '.main-nav') centreOpenSection(row, open);
+    else if (open) {
       const left = open.offsetLeft - row.offsetLeft;
       if (left - ROW_FADE_WIDTH < row.scrollLeft) row.scrollLeft = Math.max(0, left - ROW_FADE_WIDTH);
       else if (left + open.offsetWidth + ROW_FADE_WIDTH > row.scrollLeft + row.clientWidth) {

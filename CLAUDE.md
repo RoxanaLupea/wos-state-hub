@@ -33,6 +33,8 @@ notes/rules-and-open-items.md (game rules).
   a working rule: when a better design needs something else, think, say so and bring the
   better design (25 Nov). Don't just agree.
 - One question at a time, and only when it is truly open.
+- What she asked for is decided. Never list it as open or waiting for her ok, and never ask
+  her a question her own words already answer (26 Nov).
 - Never change saved data from your own reading of a screenshot or a theory: say what you
   think it shows and wait for her to confirm before changing anything (25 Nov).
 
@@ -61,6 +63,11 @@ everything.
 Panels follow the same rules, set once and inherited (notes/page-style.md, "Event
 panels"): we design using them, and an exception changes only what makes it one
 (Roxanne, 25 Nov).
+
+Never change something she approved as a side effect of other work, on any page, without
+asking her first (Roxanne, 26 Nov: "why go change something I approved without me even
+knowing about it, never allowed, never"). A fix meant for one page stays on that page; if it
+would touch an approved element anywhere else, say so and ask before doing it.
 
 Each page is designed on its own, but never varies from the elements the site already
 has (Roxanne, 25 Nov). The same element is never drawn in different ways; sizes may adapt

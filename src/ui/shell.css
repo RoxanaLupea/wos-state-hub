@@ -177,9 +177,10 @@
   .today-button { order: 0; margin-right: -4px; }
   .month-steps { order: 1; margin-right: auto; min-width: 0; }
   .page > .toolbar .period-title { font-size: 18px; }
-  .view-icons { order: 2; gap: 2px; margin-right: 10px; }
-  .filters-button { order: 3; }
-  .time-word { order: 4; }
+  .view-icons { order: 2; gap: 2px; }
+  .control-divider { order: 3; margin: 0 -2px; }
+  .filters-button { order: 4; }
+  .time-word { order: 5; }
   .phone-hidden { display: none; }
   /* Today and Filters are their icons alone on a phone, so a little bigger. */
   .page > .toolbar .today-button svg, .page > .toolbar .filters-button svg { width: 20px; height: 20px; }
@@ -202,6 +203,9 @@
 .step-arrow { display: none; width: 28px; height: 28px; align-items: center; justify-content: center; padding: 0;
   border: none; border-radius: 8px; background: none; color: var(--text-muted); cursor: pointer; }
 @media (hover: hover) { .step-arrow:hover { color: var(--text); background: rgba(255, 255, 255, 0.06); } }
+/* A thin upright line between a page's views and its other controls (Roxanne, 26 Nov: "make
+   this separator standard for other pages too, like the calendar"). */
+.control-divider { flex: none; align-self: center; width: 1px; height: 26px; background: var(--glass-border); }
 /* The views: calendar pages, the open one bright with a line under it in the section's colour. */
 /* The two views sit close together as one choice, a clear space after them, so they do
    not read as two more settings beside Filters and UTC (owner, 25 Nov). */
@@ -225,9 +229,11 @@
   .period-title { font-size: 24px; }
   .period-title .title-long { display: inline; }
   .period-title .title-short { display: none; }
-  .view-icons { order: 3; margin-left: auto; margin-right: 14px; }
-  .time-word { order: 4; }
+  .view-icons { order: 3; margin-left: auto; }
+  .control-divider { order: 4; margin: 0 -12px; }
+  /* The same order as on a phone (Roxanne, 26 Nov): views, Filters, then UTC. */
   .filters-button { order: 5; }
+  .time-word { order: 6; }
 }
 .segmented {
   display: grid; grid-template-columns: repeat(3, auto); gap: 2px; padding: 3px; border-radius: 14px;

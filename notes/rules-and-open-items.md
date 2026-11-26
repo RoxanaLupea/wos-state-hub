@@ -134,6 +134,43 @@ The structure these feed into is in supabase/schema.sql.
 - The president can send unlimited invitations; only the first 35 who actually transfer
   use up the quota.
 - Anyone above the power cap must shed power or hold a special invite.
+- When the invitational transfer ends, anyone can come in during the open phase and take
+  the places of invited players who have not transferred yet (Roxanne, 26 Nov).
+- Transfer passes: the formula is not public; the cost depends on the player's Transfer
+  (Migrant) Score against the target state's rating (sum of its top 100 active chiefs'
+  scores), 1 to 50 passes. Known cost: Roxanne needed 20 passes for her last move, 1056
+  to 1252 in the October 2026 transfer (Roxanne, 26 Nov). WoS Oracle now estimates 18 for
+  her (Migrant Score 4.5M).
+- Invites are sent after reset, and dismissing troops is only possible once the
+  invitation phase opens (Roxanne, 26 Nov).
+- Each transfer has a transfer manager: the president, or, when the state lost both SvS
+  prep and battle, the former president or someone they appoint (Roxanne, 26 Nov).
+- Power cap: the transfer manager sets it in Phase I (Pre-Transfer, 3 days); it cannot
+  change once Phase II starts. It rises as the state ages and unlocks hero generations
+  and FC levels; a Leading state is preset to the lowest tier. The community State
+  Transfer Board (whiteoutsurvival-community.com/tools/state-transfer-board.html, 8-14 Nov
+  2026 window) gives an estimated cap per generation: Gen 11 930M, Gen 12 1B, Gen 13
+  1.1B, Gen 14 1.15B, then +50M per generation to Gen 18 1.35B; its "peak cap" column
+  (Gen 12 497.84M, FC5/Gen 3 84.5M) looks like the Leading state's cap (84.5M is the known
+  Leading figure for FC5), not confirmed. Roxanne's moves from 1060 to 1056 and to 1252
+  had a 1B cap, which matches Gen 12; she expects 1B for 1458's next transfer (26 Nov).
+
+### Player data sources (checked 26 Nov)
+- Whiteout Stats API (our key): current data only, no history and no transfers. Base
+  (name, picture, state, alliance, power, furnace) can update hourly; the full profile
+  (heroes, ranks, chief gear, troops) at most every 2 hours. /v1/players?ids= takes up to
+  50 IDs per call, each counting as one request. A second call for the same player within
+  10 minutes is free. Activity (online, last active) is no longer sent by the game and is
+  stale. Chief gear can be hidden by the player.
+- WoS Oracle (wosoracle.com, Whiteout Stats is built on its data; no public API):
+  player page /player/{id} with a History tab listing each name or picture change with
+  the state, alliance, power, Labyrinth and kills at that time (every daily snapshot
+  needs Oracle+); state page /kingdoms/{state} with a transfers tab of arrivals and
+  departures (from and to state, when). It predicts the next transfer on 6 Dec 2026
+  (could slip to 3 Jan) with its own groups.
+- Others: WoS Atlas (name search including past names, history of renames and alliance
+  moves), WOS Control (nickname history, bot lookups), wos-transfer.com (tracks a
+  player's state every 24-48 h). None offers a public API.
 
 ### Map
 - The state is 1200 by 1200 tiles, corners 0,0 and 1199,1199.
@@ -251,3 +288,9 @@ Event pictures the owner still has to get, for public/images/events/:
 - president.png and supreme-president.png: the President and Supreme President icons
   (SvS results). The ones in the repo are cut out of her screenshot (25 Nov) until she
   finds the real files.
+
+### Special invites earned for the next transfer (Roxanne, 26 Nov)
+"If the state will get a special for the next transfer, meaning the date is after the first
+of the month, then it counts as a special, if we get it on the last day of the transfer it
+still costs but a note should be added with when it will be available."
+So a special won on the last day of the transfer counts and can be added (Roxanne, 26 Nov).

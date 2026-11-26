@@ -1,8 +1,42 @@
 # Handover: where the work stands
 
-Do CLAUDE.md's setup first. Updated 25 Nov 2026.
+Do CLAUDE.md's setup first. Updated 26 Nov 2026.
 
 ## Now
+
+Next job: build the Invites and Records pages in the code.
+
+### The spec: tools/mockups/invites/invites_status.py
+
+- Her accepted Invites and Records designs are drawn in this mockup, the spec for the code
+  (mockups are the spec: anything left out of the mockup is left out of the code). Her decisions, in her words: notes/design-decisions.md (Invites page, Records
+  page, Player rows, group colours, statuses, pop-ups, pin rules).
+- Run: build the site with tools/render/build.sh into /tmp/render-build, copy profile-tif.png
+  and profile-spickle.png into /tmp/render-build/images/, then
+  `python3 invites_status.py out.png 390 844 pop=0 small idline` (phone) or
+  `... 1440 900 ...` (computer). Flags: idline (the accepted row look, always on), editing,
+  popup (with addstate=ok|missing|listed|black|full|contact), rmv, ngroup, ngcustom,
+  records, future, over, profile, spickle, drag, phstats, sheet, rec=dec|nov.
+- Phone first, full-screen screenshots, before and after every change.
+
+### Build order
+
+1. Player rows, as in notes/design-decisions.md "Player rows (Roxanne, 26 Nov)". The same
+   element is used wherever players are listed, Records included (CLAUDE.md: the same
+   element is never drawn in different ways).
+2. Invites page: only what notes/design-decisions.md records as her decisions. The list
+   "Still to design on the Invites page, in her words" is designed with her first, not built.
+3. Records page: as accepted in notes/design-decisions.md ("Records page, accepted"),
+   with the pin on the phone and the computer.
+4. Specials won on the last day: notes/rules-and-open-items.md, "Special invites earned for
+   the next transfer", her words as written there.
+- The mockup also holds experiments she turned down. When the mockup and her words in the
+  notes disagree, her words win; when unsure, ask her.
+
+### Waiting for her push yes (26 Nov)
+
+- The uncommitted work: the open section centred in the top menu (src/main.ts), the divider
+  in the controls row (shell.ts, shell.css), the notes, CLAUDE.md and the mockup.
 
 ### Pushed 25 Nov, 23:30 (approved by her)
 

@@ -73,6 +73,20 @@ parts, never from glass sections, browser dropdowns, filled buttons or filled pi
 - On a computer a table is as wide as its columns, and the page starts on the same left
   edge as the page names.
 
+## Controls row
+- A thin upright line (.control-divider, 1px, 26px tall, the glass border's colour) stands
+  between a page's views and its other controls, about 12px from each, on the phone and
+  the computer (Roxanne, 26 Nov: "make this separator standard for other pages too, like
+  the calendar").
+- The controls keep the same order on the phone and the computer (Roxanne, 26 Nov: "keep the
+  same order for mobile and pc calendar icons"): on the calendar, the views, the line,
+  Filters, then UTC.
+
+## Top band
+- On a phone the open section sits in the middle of the sections' row; once the row is
+  scrolled by hand it stays where it was put until another section opens (Roxanne, 26 Nov:
+  "the name of the event has to be centered in the navigation bar, unless we scroll it").
+
 ## Pop-ups
 - Solid, in the page's two colours: a line of the first colour along the top edge, the
   title in the second, the action in the first. A sheet from the bottom on a phone, a
@@ -87,6 +101,15 @@ parts, never from glass sections, browser dropdowns, filled buttons or filled pi
 - One first and one second colour per page (design-decisions.md, Navigation). The player
   page takes its alliance's colour, evened.
 - Red only for a notice and Cancel, green only for Save.
+
+## Spacing everywhere (Roxanne, 26 Nov: "We should follow that same pattern everywhere")
+
+Every page and panel uses the event panels' spaces below, measured on what is drawn: 15px
+from the tabs to the first thing, 15px from a title (or the line under it) to its
+content, 25px from one section's last thing to the next title, 15px after the last
+thing. The working pages' shared gap (34px phone, 44px computer in data-table.css) and
+the profile's own spacing (22px top, 26px between parts) do not follow it yet and are
+to be brought in line.
 
 ## Event panels (owner, 25 Nov: "we need the same rules for panels and we design using them")
 

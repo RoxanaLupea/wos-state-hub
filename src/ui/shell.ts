@@ -265,6 +265,7 @@ export function calendarToolbar(options: ToolbarOptions): string {
     </div>
     <div class="toolbar-views">
       <div class="view-icons" role="group" aria-label="Calendar view">${viewButton('week')}${viewButton('month')}${YEAR_VIEW_SHOWN ? viewButton('year') : ''}</div>
+      <span class="control-divider" aria-hidden="true"></span>
       ${options.showFilters ? `<button type="button" class="quiet-button filters-button${options.filtersOpen ? ' open' : ''}"` +
         ` data-filters-open aria-expanded="${options.filtersOpen}" aria-label="Filters">${FUNNEL_ICON}<span class="phone-hidden">Filters</span></button>` : ''}
     </div>

@@ -60,6 +60,8 @@ there before discussing it again.
 - A whole page has one first colour and one second colour, everywhere: its accent, its
   buttons, what it marks (current phase, holders, our group) and its pop-ups. No other
   accent colour on the page (Roxanne, 24 Nov).
+  The rule is kept to avoid clutter; "however, if a page has 5 types of something I might
+  choose to use 5 colours" (Roxanne, 26 Nov).
   Fortress's second colour is 35% of its violet with white (Roxanne, 24 Nov; she tried
   55% and went back to 35%). Tyrant's is 50% of its cyan. The Tyrant section reads
   "Frostdragon TYRANT" (TYRANT in capitals in the first colour) (24 Nov).
@@ -100,7 +102,298 @@ there before discussing it again.
 - Switching between them is animated.
 - This is how every section moves between its pages. Only the colours change.
 
+### Records keep the player as they were (site-wide)
+- Players change names but keep their ID. A record keeps the name, picture and power the
+  player had at the time, and is linked to the ID, so the site knows who that account is
+  now under its present name. Records are any closed event: the president list, old
+  event lists, transfers (Roxanne, 26 Nov).
+- On the transfer list, name, picture and power update hourly until the player is a
+  confirmed transfer; then they are locked as a record on the transfer page. Their
+  profile and new data keep updating, but not the records (Roxanne, 26 Nov).
+- Reads for the transfer list: "we really only need an accurate read before reset"
+  (Roxanne, 26 Nov), instead of hourly reads.
+- Power over the cap: "having the status set as over cap is enough" (Roxanne, 26 Nov),
+  no red power; the table still shows every player's power as a number ("we want to
+  record the 650m too, not all players are over cap"). FC level and three troop tiers
+  (infantry, lancers, marksmen) in the table; skills are not known unless the players
+  update them (Roxanne, 26 Nov). Setting the status to sent asks for a fresh read, which brings the new
+  power, under the cap once the player has dropped troops.
+- Hourly power reads from when the invitation phase opens (not before) until the transfer
+  is confirmed, changing
+  the status from over cap when the player is under it, even before the invite is sent
+  (Roxanne, 26 Nov). Only for those not transferred yet: "it will just be 1 day or 2 for
+  those who come in late".
+- The Invites page has a countdown to the invitation phase and shows when the transfer is
+  ongoing (Roxanne, 26 Nov).
+
 ### Transfers
+- 1458 is an ordinary state by default; an admin sets Leading when it is (Roxanne,
+  26 Nov).
+- Invites page: "Same thing they do in those spreadsheets, only better because we have
+  the means to make it better" (Roxanne, 26 Nov). Three lists, special invites, normal
+  invites and open spots, each with its limit. 1458's Contact column is the alliance
+  the player goes to (her assumption).
+- Rows: "we are going to build our rows in the list - by row i mean a template that each
+  row will use, not an actual table row with words, just like we built our profile page,
+  but more concise" (Roxanne, 26 Nov). WoS Oracle link per player: not decided yet.
+- The alliance they go to: admins may also enter alliances we don't know; only NAP
+  alliances are recorded, but other alliances live in the state. A top 50 from the API
+  is possible but would hardly be used (Roxanne, 26 Nov).
+- Contact (Roxanne, 26 Nov): "keep it as contact and we either add an alliance or a name,
+  when we add a name we can link it to a player or select the alliance". Contacts seen:
+  利姆魯 (RUU, R3, ID 175635265) and Kat (on the same list, ID 155007799).
+- Statuses (Roxanne, 26 Nov): "It's overcap, send, transferred. I don't think it's revoked.
+  Rejected, I think. That's if they do reject it, like transfer to another state. Otherwise,
+  we have expired if they did not reply and they're still in their old state." So: Over cap,
+  Sent, Transferred, Rejected, Expired. No Revoked and no "Not sent" (Claude made that one up).
+  "Once the transfer opens that label should be displayed, it would be ready/over cap"
+  (Roxanne, 26 Nov): every row shows its status from the opening, Ready or Over cap first.
+- Statistics, as 1060 had two sets (Roxanne, 26 Nov): during the transfer, how many of
+  each list's places (normal and special) are assigned and how many available; after it,
+  how many invites were not sent at all. Open transfer arrivals were unknown before; now
+  the ones not already on our list can be filled in from WoS Oracle's records.
+- When the invitational transfer ends, the places of those who have not transferred go
+  to the open transfer list (Roxanne, 26 Nov).
+- Records can still be changed afterwards by admins: someone who got an invite without
+  being on the list is added, and a player can be moved from one list to another
+  (Roxanne, 26 Nov). The lock on a confirmed transfer keeps the name, picture and power of
+  that time; which list the player is on stays editable.
+- An invited player who arrives in the open phase stays on the invite list; rare, moved
+  by a person if needed. The time of the transfer confirmation is kept, "shown only when
+  we hover as a date and time" (Roxanne, 26 Nov).
+  On a phone the same shows when the transferred mark is tapped.
+- Countdown (Roxanne, 26 Nov): the page shows the countdown for the invitation and the
+  open transfer, 2 phases, and is marked as over when the time is over.
+- The three types of invites use "the gold purple blue system" (Roxanne, 26 Nov).
+- WoS Oracle link on each player: no for the first build; decided after seeing it.
+- The row's look is designed only after all the data it shows is selected.
+- A player added to the transfer list gets a profile, so each row can open the full
+  profile. The row also shows the current state, the Labyrinth total and the Migrant
+  Score (Roxanne, 26 Nov). No passes on the row: "just the migration scores".
+  Kills on the row too: "very low means inactive, high means a concern".
+  The place number is the row's position in its list (1, 2, 3…), not a stored field.
+- Blacklist (Roxanne, 26 Nov): "we will have a blacklist for sure", probably created from
+  this page and kept separate; nobody has to look at it, but if an ID is on it, the
+  entire row gets flagged.
+  1060's CHECK column (🪰 not checked, 🥳 check passed, 🚩 a problem) is not carried over:
+  the site always checks, so only the flags are shown, when there are any.
+- A player who says no (Roxanne, 26 Nov): removed from the list, or, if the invite was
+  sent, it stays sent; "once it's over if they didn't show up it will be ignored or
+  rejected". 1060's Pending is not carried over.
+  Each transfer keeps the list of those who ignored or rejected us; they are flagged
+  along with the blacklist when added again (Roxanne, 26 Nov).
+- Special invites available are calculated by the site from the rule and the past
+  transfers (specials used, one back each month, up to 3), not typed: "Why can't we just
+  have the number up instead of waiting for an input like a lazy site?" (Roxanne, 26 Nov).
+  Starting point: 1458 has 3 special invites for the 6 Dec 2026 transfer (Roxanne, 26 Nov).
+- 1458's previous transfer records (the month tabs of "1458 transfer December") will be
+  imported (Roxanne, 26 Nov). Wasted invites are never shown: "We do not wanna say, look,
+  this is what previous leadership wasted"; the page can be seen by everyone.
+- 1060's Extra stage was for more people interested than invites. Instead (Roxanne, 26
+  Nov): the open list takes more than 20; the first 20 are normal and everything after
+  is a little dimmed; rows can be moved up and down the list for that purpose. Linked
+  players (a group) ideally stick together, but moving one player moves only that player.
+- The invite list stops at 35: "35 is the absolute maximum of people who can accept an
+  invite, and we should never send more than 35" (Roxanne, 26 Nov).
+- A row is a card (Roxanne, 26 Nov): a graphical element, easy to read like the profile,
+  where one look gives all the information; not one column of text after another. One
+  card is described and shown for everyone; it is still a list, ordered and moved up and
+  down, but not a list of text columns.
+- Exalted skill level on the card (Roxanne, 26 Nov): a badge on the troop picture's lower
+  left, the counterpart of the FC badge at the top left: the FC10 badge's hexagon and gold
+  rim without its flower, a little smaller than the FC badge, the figure centred. Coloured
+  by level: 3 red, 2 orange, 1 yellow, 0 purple. No badge when the level was never set.
+- Skill levels are set as 0, 1, 2, 3 (replaces None / Lvl. 1 / Lvl. 2 / Lvl. 3 on the
+  profile); not set is different from 0 (Roxanne, 26 Nov). To change on the profile when
+  this is built.
+- Invites page has two views, Compact and Details, switched from the top like the
+  calendar's views (icons, not pages): Compact is one narrow line per player, Details is
+  the card (Roxanne, 26 Nov). The countdown takes one line at the top on a phone.
+- The ID is very important in transfers and has a copy button: the president or transfer
+  manager copies it and pastes it in the game to send the invite (Roxanne, 26 Nov). The
+  profile opens from the picture, with no extra row for it.
+- A player whose ID is linked to a site account (Discord or Google) is marked site-wide,
+  as part of their identity, very discreetly (Roxanne, 26 Nov): draft is a small grey link
+  on the picture's top corner.
+- The third list is "Open Transfer" and shows only once someone is added to it
+  (Roxanne, 26 Nov). The middle list is "Ordinary Invites", the game's word.
+- Over the cap is shown by the Over cap status; the power is never red: "don't make the
+  power red" (Roxanne, 26 Nov, replacing the earlier red-power rule).
+- Player rows (Roxanne, 26 Nov):
+  - ID and copy: the ID is grey. The copy button is a little bigger, in its original icon
+    style, and copies the player's ID: "copying that user copies the id, but we're copying
+    the identity of the player". The last player copied keeps the Copied state "so the user
+    knows which one was last"; the ID itself never turns yellow.
+  - Origin state: in Details after the power; in computer Compact its own State column, the
+    last one (after Transfer); in the Add and Remove pop-ups after the power.
+  - FC: in Compact a column where the troops were, on the computer and the phone; in Details
+    only when the troops are not shown. On the phone the FC column sits a little left,
+    leaving room for a normal 16-character name: "If they pick the worst case scenario they
+    have to live with it being cut".
+  - Details: full names; everything centred in its column; more space between the troop
+    icons; the name is 14 px on the computer so a 16-character name fits.
+  - Editing is done in place with nothing shifting (the site-wide editing rule, 25 Nov).
+- Who may do what on the Invites page (Roxanne, 26 Nov): all admins and R4s can add
+  people to the lists; only the transfer manager and admins can change the status (sent,
+  over cap and the others). The status is set by tapping it on a phone or clicking it on
+  a computer and picking another one; it must be clear it can be tapped.
+- Adding a player (Roxanne, 26 Nov): "it should be a pop-up, just like when we add the
+  character to our user account. And it should like take in the ID, then show us the person
+  which we confirm." Not a row opening in the list.
+- Moving players (Roxanne, 26 Nov): "Can we have long tap and then drag for the mobile? And
+  the 3 lines in front of the row, and if we click on them, we drag the entire row. Like,
+  can that be a way where to move people lower, upper, or even to a different table? And if
+  we go all the way down to the invites, we get the option to put it in open." Open Transfer
+  shows as a place to drop while dragging, even when it is empty.
+- Accepted mockup (Roxanne, 26 Nov: "Much much better"), on phone and computer:
+  - One Add for the page: on a phone on the countdown line, on a computer on the tab line at
+    the right edge of the lists. The pop-up is Add character's: the ID, the person found,
+    then Special / Ordinary / Open as kind-words (a full list greyed), Cancel and Save.
+  - The status is an icon and a word in the status's colour, drawn like the Edit and Add
+    buttons (no box, no arrows: "They're ugly"). Ready (light blue, ticked circle), Over cap
+    (red, arrow up to a line), Sent (section colour, paper plane), Transferred (green, arrow
+    in), Rejected (red, crossed circle), Expired (faint, hourglass). In Compact it sits under
+    the power, in Details above the contact. Tapping or clicking it opens the list under it,
+    the current one ticked.
+  - Remove does not go in the status list: "Remove has no business there" (Roxanne, 26 Nov).
+    Dragging only moves rows.
+  - Removing asks with a pop-up showing the player, as adding does (Roxanne, 26 Nov):
+    "Everywhere else, when we delete something, we added a confirmation pop-up. I think that
+    would be more appropriate than undo or whatever... the short thing on the card, that's
+    what we should do for delete... We show exactly who we're removing and confirm it."
+- How a group looks (Roxanne, 26 Nov: "I like the shading. I would keep the ring also",
+  then "I like this more"): a shade in the group's colour from the left of the row fading
+  out after about 160px, starting a little left of the list so the picture has room, the
+  group's first and last rows rounded on the left; the picture's ring in the same colour.
+  Each group has its own colour.
+- Making groups (Roxanne, 26 Nov): while editing, each row has Remove and a group button
+  ("when we edit, we can remove [or] group"); the contact stays editable, the power gives way
+  to the buttons, with their words. A group can be left or joined; joining asks which group.
+  "When we create a new group, we should be able to create it custom... select everyone, or
+  select the people with a common state. So 1252, if I pick 1252, everyone in 1252 will be
+  automatically put into a group, or based on the contact... make it a real pop-up, because it
+  will give us options." Many small groups of 2 or 3: "we need many colors that work".
+- Balance (Roxanne, 26 Nov): the picture is the tallest thing on a row and everything is
+  centred on it; the blocks beside it keep the same rhythm (no tight name and ID beside widely
+  spaced buttons). On the computer the right side mimics the phone profile, its width and look;
+  the statistics follow it.
+- Player profile on the Invites page (Roxanne, 26 Nov): made like the profile, keeping the
+  extra characters, "because that will tell us which farms they will bring", "or what other
+  big accounts they have when they add them".
+  It is the player's actual profile; the transfer's snapshot is in the table: "That's the
+  actual profile, and the snapshot will be in the table" (Roxanne, 26 Nov). It shows during
+  transfers; tapping a former transfer on Records goes to the player's current profile.
+- Computer layout of the Invites page (Roxanne, 26 Nov): the lists scroll in their own box
+  and fade at the bottom like the calendar, a small fade ("I just don't want it to be
+  suddenly cut"); no panel around the lists ("I don't want the panel for invites"); the
+  profile is in a panel card ("like this it just hangs in the air") as tall as the lists'
+  box; the group shades keep their rounded left edge inside the box.
+  The selected row keeps its group look with a thin border ("keep the same style as the
+  group has, but add a thin border"); the profile card takes the group's colour "as a top
+  accent", meaning "the background should have some of the colour of the group in it, and
+  the bottom line can be the colour you added on top". With no profile open, the transfer's
+  numbers are "a panel with a cool design"; "the yellow of the page will only be used as
+  accents for the stats panel, the yellow makes it look washed and hard to read, or maybe it
+  just has to be darker since we have all the icons there, and group and power cap can be more
+  visible" (Roxanne, 26 Nov).
+  The statistics panel is the site's glass, tinted gold ("it's ok", Roxanne, 26 Nov).
+- The transfer's head (Roxanne, 26 Nov): "group and the cap as one line, transfer manager as
+  another, and centered, remember players can have 16 characters in their names plus the
+  alliance": TRANSFER: INVITATION (or OPEN), the time left, then "1190 - 1552 · 1.0B". The
+  phase bar's words go above the lines, and "OPEN is enough".
+- Phone title and Details (Roxanne, 26 Nov: "I'm not sure the call to have 2 views was wise
+  since now we have views inside of views, maybe we just need a details button to open the
+  card and when we do we open it with title too"): no lists/statistics views; a Details
+  button opens the card from the bottom, with its title. The transfer manager's name can be
+  16 characters plus the alliance, so the label sits on its own line above the name.
+- The card's facts, centred (Roxanne, 26 Nov): group and power cap on one line, each with its
+  label above; under them "TRANSFER / MANAGER" as a two-line label beside the name, the name a
+  little bigger. No "until…" sentences: "is that how a countdown looks like?". The phone title
+  names the phase in full ("Invitation transfer", "Open transfer"); Details does not show the
+  phase or countdown again.
+- The places section is called "Available invites" (Roxanne, 26 Nov).
+- The card's order (Roxanne, 26 Nov: "In the card, the current phase and a times below
+  centered, transfer manager under and then the rest, transfer manager on top on the mobile
+  card too"): on the computer the phase in full and the time at the top of the card, centred;
+  then the transfer manager, group and power cap, available invites, status. The phone's
+  Details starts with the transfer manager (the title is above it).
+- After the transfer the panel shows the number of invites sent: "let's write the number of
+  invites sent instead" (of the invites never sent) (Roxanne, 26 Nov).
+- Which transfer the Invites page shows (Roxanne, 26 Nov): "The current transfer stays there
+  until Sunday at reset, on Monday the list for the next month will take its place, which is
+  what made me realise we need the dates too, because we want to be able to swap to future
+  transfers, on Monday the current transfer will go to records, we'll show 2 per page, each
+  with their date and statistics".
+  "Countdown is only for the next/current transfer" (Roxanne, 26 Nov).
+  The Invites page shows the current transfer and future ones only: "we don't show past
+  transfers here, just future ones, this is a planning page" (Roxanne, 26 Nov). On the
+  computer the date sits above the lists with Add and Edit on its line ("they're about the
+  lists not the page"), and the card starts level with it.
+  "We won't know the transfer manager, only after we see the svs result" (Roxanne, 26 Nov):
+  a later transfer shows "After SvS" in the manager's place.
+  "we need a pin like we have on calendar to return to our "current" transfer, the current
+  transfer is the one next in our queue, once one closes another comes up, that's what i meant
+  earlier with current/next transfer, only one gets the focus and the swap happens on monday"
+  (Roxanne, 26 Nov). Only the current transfer has the countdown.
+  Phone title: the phase in small capitals, then the countdown for the transfer in progress
+  ("no date needed when the transfer is in progress") or the date for an upcoming one; Add,
+  Edit and Details centred on the two lines; transfers change by swiping (Roxanne, 26 Nov).
+  The pin back to the current transfer shows only away from it, directly after the date, on
+  the phone and the computer alike ("stop creating inconsistencies").
+- Records only: the group shade stays inside the list (the rows' content 10px in); the Invites
+  page keeps the approved look, the shade starting a little left of the list (Roxanne, 26 Nov).
+  Records use slightly smaller type and tighter rows "to see more" (Roxanne, 26 Nov).
+- Records page, accepted (Roxanne, 26 Nov: "ok, i like this"): past transfers newest first,
+  two side by side on the computer, scrolling down to older pairs (no paging), each pair
+  starting on the same line. On the phone one transfer at a time, swiping to the next
+  ("i think on the phone we would like to swipe", Roxanne, 26 Nov).
+  "again, a pin to get us to the most recent": the pin sits directly after the date, only when
+  away from the most recent transfer. On the computer too: "didn't I ask for records to have a pin? Of
+  course they need one" (26 Nov). Each transfer's head is two lines: the date,
+  group · cap and how it ended (Transferred, Rejected, Expired counts); the manager, who arrived
+  from each list in its colour and the invites sent; then who came, as they were, list by list.
+  The scroll box fades at the bottom, and at the top once scrolled.
+- Group colours (Roxanne, 26 Nov: "i hate the lime, pick colours that would look good as a
+  card", then "these look good"): teal #5FD0C2, pink #EE8FB8, sky #7FC8F2, coral #F4A07E,
+  violet #A99BF5, aqua #6FD6EC, orchid #D98BE6, cobalt #7C92F5. No yellow-greens. Neighbouring
+  groups never share a colour, and sky, aqua and cobalt are kept apart.
+- Still to design on the Invites page, in her words (Roxanne, 26 Nov):
+  - Statistics on a phone: "a phone needs to be able to swap between them" (the lists and
+    the statistics).
+  - "dragging should be available for all lists and from one list to another".
+  - "we need to see how the page looks once transfer is over".
+  - Flagged rows (blacklist, ignored or rejected before): "put it where the over range is like
+    a warning, and show the reason on hover, click takes us to the entry in a former list -
+    will be working after we design the blacklist".
+  - The transferred time on hover or tap: "ok".
+  - Contact: "I have no idea how to do it yet - we type and get suggestions? we include it when
+    we add?"
+  - Add problems: "not found still lets us add it after a few retries? already on a list means
+    we can't add it - we tell them which list, blacklist will say the player is blacklisted in
+    the list if we add it but it should also tell us when we add it, list full gives the option
+    for open until things are clarified".
+  - "custom means we select the players ourselves".
+  - Transfer manager: "show it, there's plenty space".
+- Groups of players who come together (Roxanne, 26 Nov): no group name; visible as the
+  same group in all 3 tables (how it looks, on the picture or the whole row, is decided
+  when she sees it). Groups go from 2 to 15 people, so both ways: select several players
+  and make them a group, or add them one by one like adding a player, linking each new
+  one once there are 2, or link them at the end. No control names are agreed yet.
+  A group does not show when one member holds it up (e.g. over the cap): "it creates more
+  work to show something it's not even there most of the time, so we end up highlighting a
+  problem that then we have to ignore mentally" (Roxanne, 26 Nov).
+  A group can come over 2 transfers; how many places a group needs is information, not a
+  warning. Players who did not transfer are not carried to the next transfer: "if we want
+  that we'll add the id once more" (Roxanne, 26 Nov).
+- Each transfer records its transfer manager (Roxanne, 26 Nov: "I mentioned the transfer
+  manager rules precisely because of that").
+- Power cap: "filling in an estimate of power which acts like the actual cap until
+  confirmed or changed", "not about one transfer, I need it for all of them, past
+  transfers and future transfers" (Roxanne, 26 Nov). The estimate follows 1458's
+  generation and FC on that date (rules-and-open-items.md, State transfers).
+  Today's figures are used for past transfers too: "It's fine, we just want an estimate".
+- Adding a player to the invites: "when we add a new person we add the id and we get the
+  rest" (Roxanne, 26 Nov). The table shows the picture and name with the ID under it.
 - A group is the ranges that share a generation and a furnace cap. A difference in
   either one starts a new group, because a player can only move to a state with the
   same content released as their own.
