@@ -1381,3 +1381,5 @@ All nine are built.
 - Calendar head (26 Nov): "a lot of spacing for Monday, Tuesday ... and then the numbers
   ... that bar at the top for the dates becomes quite tall." Built: 8px from the day names
   to the first dates, dates 6px under a week's line and 4px over its bars.
+- The calendar's fade at the bottom (26 Nov): "it should be like half a row, maximum 1
+  row. We're wasting a lot of information at the bottom." Built: 16px, half a bar row.

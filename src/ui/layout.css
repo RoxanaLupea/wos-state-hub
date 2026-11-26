@@ -114,3 +114,15 @@
   .day-panel { margin-right: 0; padding-right: 0; scrollbar-gutter: auto; scrollbar-width: none; }
   .day-panel::-webkit-scrollbar { display: none; }
 }
+/* The calendar's weeks fade out over half a bar row at the bottom, not 48px, so less of
+   the month is lost (Roxanne, 26 Nov: "half a row, maximum 1 row"). */
+@media (min-width: 1000px) {
+  .calendar-panel .weeks.more-below {
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 16px), transparent);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 16px), transparent);
+  }
+  .calendar-panel .weeks.more-above.more-below {
+    -webkit-mask-image: linear-gradient(to bottom, #000 26px, transparent 26px, #000 46px, #000 calc(100% - 16px), transparent);
+    mask-image: linear-gradient(to bottom, #000 26px, transparent 26px, #000 46px, #000 calc(100% - 16px), transparent);
+  }
+}
