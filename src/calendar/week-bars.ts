@@ -112,18 +112,19 @@ export function weekPieces(
       lane: 0
     };
 
+    // An event's own day for the alliances (Foundry Battle, Canyon Clash) belongs to the
+    // same family as its phases, so it sits on their row, and the family stacks with the
+    // alliance events (Roxanne, 26 Nov: "they should all be tied together in the same row").
     const partOf = options.partOfByEventTypeId.get(bar.eventTypeId);
     const mainEventTypeId = partOf ?? bar.eventTypeId;
-    const familyKey = mainEventTypeId + (bar.count ? '|alliances' : '');
-    let family = families.get(familyKey);
+    const category = bar.count || bar.allianceIds.length ? 'alliance' : options.categoryOf(bar.eventTypeId);
+    let family = families.get(mainEventTypeId);
     if (!family) {
-      family = {
-        mainEventTypeId,
-        category: bar.count ? 'alliance'
-          : bar.allianceIds.length ? 'alliance' : options.categoryOf(bar.eventTypeId),
-        pieces: []
-      };
-      families.set(familyKey, family);
+      family = { mainEventTypeId, category, pieces: [] };
+      families.set(mainEventTypeId, family);
+    }
+    if (options.categoryOrder.indexOf(category) < options.categoryOrder.indexOf(family.category)) {
+      family.category = category;
     }
     family.pieces.push(piece);
   }
@@ -234,16 +235,36 @@ function sortFamilies(familyList: Family[], options: WeekPieceOptions): void {
     left.mainEventTypeId.localeCompare(right.mainEventTypeId));
 }
 
-// Each family takes the highest set of rows where all of its pieces fit together.
+// The run a piece belongs to: its schedule and planned date, without the phase.
+function runOf(piece: WeekPiece): string {
+  return piece.bar.key.split('|').slice(0, 2).join('|');
+}
+
+// The blocks a family is placed in. A family with a day for the alliances keeps all of
+// its pieces together on one row. Otherwise each run of the event is placed on its own,
+// so a run ending early in the week and the next one starting at its end do not have to
+// share a row (Roxanne, 26 Nov, Hall of Heroes).
+function blocksOf(family: Family): WeekPiece[][] {
+  if (family.pieces.some(piece => piece.bar.count)) return [family.pieces];
+  const byRun = new Map<string, WeekPiece[]>();
+  for (const piece of family.pieces) {
+    const run = runOf(piece);
+    byRun.set(run, (byRun.get(run) ?? []).concat(piece));
+  }
+  return [...byRun.values()];
+}
+
+// Each block takes the highest set of rows where all of its pieces fit together.
 function placeInLanes(familyList: Family[]): WeekPiece[] {
   const lanes: WeekPiece[][] = [];
   const laneIsFree = (lane: number, piece: WeekPiece) =>
     !(lanes[lane] ?? []).some(other => overlaps(other, piece));
   const placed: WeekPiece[] = [];
 
-  for (const family of familyList) {
+  for (const block of familyList.flatMap(blocksOf).map(pieces => ({ pieces }))) {
+    const family = block;
     family.pieces.sort((left, right) => left.start - right.start);
-    // Inside the family a piece only goes under another when their times overlap.
+    // Inside the block a piece only goes under another when their times overlap.
     const ownRows: WeekPiece[][] = [];
     const rowOf = new Map<WeekPiece, number>();
     for (const piece of family.pieces) {

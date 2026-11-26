@@ -87,3 +87,24 @@
 }
 .new-version-words { font-size: 13px; font-weight: 600; color: var(--text-muted); }
 .new-version .edit-button { --edit-colour: var(--accent); }
+
+/* Computers (Roxanne, 26 Nov): the weeks scroll with no scrollbar drawn and no room kept
+   for one, so the calendar's edges are the same on the left and the right. */
+@media (min-width: 1000px) {
+  .calendar-panel, .calendar-panel .weeks, .calendar-panel .weekday-names { scrollbar-gutter: auto; scrollbar-width: none; }
+  .calendar-panel::-webkit-scrollbar, .calendar-panel .weeks::-webkit-scrollbar, .calendar-panel .weekday-names::-webkit-scrollbar { display: none; }
+}
+@media (min-width: 1000px) {
+  .calendar-panel .weeks.more-above {
+    -webkit-mask-image: linear-gradient(to bottom, #000 30px, transparent 30px, #000 50px);
+    mask-image: linear-gradient(to bottom, #000 30px, transparent 30px, #000 50px);
+  }
+  .calendar-panel .weeks.more-above.more-below {
+    -webkit-mask-image: linear-gradient(to bottom, #000 30px, transparent 30px, #000 50px, #000 calc(100% - 48px), transparent);
+    mask-image: linear-gradient(to bottom, #000 30px, transparent 30px, #000 50px, #000 calc(100% - 48px), transparent);
+  }
+}
+@media (min-width: 1000px) { .calendar-panel .held-dates { margin-bottom: -30px; } }
+/* The day names never give up height to the weeks (they were squeezed and cut on short
+   screens). */
+@media (min-width: 1000px) { .calendar-panel .weekday-names { flex: none; } }

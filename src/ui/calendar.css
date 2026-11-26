@@ -327,3 +327,46 @@
 }
 .bar-window.show-time::after { display: block; }
 @media (hover: hover) { .bar-window:hover::after { display: block; } }
+
+/* ---------- Computers: one-line bars (Roxanne, 26 Nov) ----------
+   A bar is one line unless it really needs two (SvS, a week with tickets): its phases or
+   days are written after the name, each in its own stretch, and every one-line bar has
+   the same height. The logo stays where it is on every bar, at the start. Phones keep
+   their two lines. */
+.bar .head-logo, .bar .bar-sub-inline { display: none; }
+@media (min-width: 1000px) {
+  .bars { grid-auto-rows: 28px; row-gap: 4px; }
+  .bar { --bar-logo: 22px; --head-height: 24px; height: 28px; line-height: 24px; }
+  .bar img.event-icon { --logo-size: 22px; width: 22px; height: 22px; }
+  .bar.phase-lines.one-line-wide, .bar.phase-lines.day-lines.one-line-wide {
+    height: 28px; padding: 2px 6px; justify-content: center;
+  }
+  .bar.phase-lines.one-line-wide .bar-side-icon, .bar.phase-lines.one-line-wide .bar-sub { display: none; }
+  .bar.phase-lines.one-line-wide .head-logo { display: flex; align-items: center; flex: none; }
+  .bar.phase-lines.one-line-wide .bar-head { height: 24px; line-height: 24px; }
+  .bar.phase-lines.one-line-wide .bar-sub-inline {
+    display: inline; flex: 0 100 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; margin-left: 2px;
+    font-size: 12px; font-weight: 600; color: rgba(255, 255, 255, 0.88); text-shadow: var(--bar-small-text-shadow);
+  }
+  .bar.phase-lines.one-line-wide .bar-segment { top: 0; bottom: 0; height: auto; align-items: center; }
+  .bar.phase-lines.day-lines.one-line-wide .bar-segment-name, .bar.phase-lines.one-line-wide .bar-segment-name {
+    font-size: 12px; line-height: 16px; padding: 0 6px; font-weight: 600;
+  }
+  .bar.phase-lines.one-line-wide.one-segment .bar-segment { justify-content: flex-start; }
+  .bar.day-lines.one-line-wide .bar-mark.divider, .bar.one-line-wide .bar-mark.divider { top: 8px; bottom: 8px; height: auto; }
+  .bar.phase-lines.too-narrow { height: 28px; }
+}
+/* The short form after a name (SvS, TAL) stands on the name's line, not above it like a
+   power (Roxanne, 26 Nov), and is tried in Inter. */
+.bar .bar-head .bar-label, .bar .bar-head .bar-tag, .bar .bar-head .bar-sub-inline { align-self: baseline; }
+.bar .bar-tag { font-family: 'Inter', var(--tag-font); font-weight: 700; letter-spacing: 0.06em; }
+/* Computers: smaller dates with less room above the bars, and the held dates drawn on the
+   calendar's glass without edges of their own, so the calendar's top and sides look the
+   same scrolled or not. */
+@media (min-width: 1000px) {
+  .week-row { padding-top: 28px; }
+  .day-box, .held-date { font-size: 13px; }
+  .day-box .day-number, .held-date .day-number { min-width: 22px; height: 22px; }
+  .held-dates { height: 30px; margin-bottom: -30px; }
+  .held-dates.showing { border-color: transparent; }
+}

@@ -19,7 +19,7 @@ cat > "$output_folder/index.html" <<'PAGE'
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>1458 State Hub</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400..900&family=Montserrat:wght@700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400..900&family=Montserrat:wght@700&family=Inter:wght@600..800&display=swap">
 <link rel="stylesheet" href="main.css"></head>
 <body><div id="app"></div><script type="module" src="main.js"></script></body></html>
 PAGE

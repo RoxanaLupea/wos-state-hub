@@ -337,8 +337,14 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
   const hasTwoLines = piece.segments.length > 0 || piece.insideParts.length > 0 ||
     partsMode || piece.phaseParts.length > 0;
   const sideLogo = Boolean(subtitle) || hasTwoLines;
+  // On a computer a bar whose second line only names its phases or days, or says its
+  // second name, is one line: the phases are written after the name, in their own
+  // stretches (Roxanne, 26 Nov: "we have to write it in another way that lets us use one
+  // single row"). SvS keeps its two lines, and so does a week with tickets on line 2.
+  const oneLineOnComputer = sideLogo && !partsMode && !phaseOnLineOne && piece.insideParts.length === 0;
 
   const classes = ['bar', 'clickable'];
+  if (oneLineOnComputer) classes.push('one-line-wide');
   if (sideLogo) classes.push('phase-lines');
   if (hasTwoLines) classes.push('two-lines', 'day-lines');
   if (partsMode) classes.push('parts-bar');
@@ -374,9 +380,11 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
     light +
     (sideLogo ? `<span class="bar-side-icon">${logo}</span>` : '') +
     lineOne +
-    `<span class="bar-head">${sideLogo ? '' : logo}` +
+    `<span class="bar-head">${sideLogo ? (oneLineOnComputer ? `<span class="head-logo">${logo}</span>` : '') : logo}` +
     (bar.wasCancelled ? '<span class="cancelled-mark" aria-label="Cancelled">&times;</span>' : '') +
-    `<span class="bar-label">${escapeForPage(headName)}</span>${tag}${timeText}</span>` +
+    `<span class="bar-label">${escapeForPage(headName)}</span>${tag}` +
+    (oneLineOnComputer && subtitle ? `<span class="bar-sub-inline">${escapeForPage(subtitle)}</span>` : '') +
+    `${timeText}</span>` +
     lineTwo + stripes + windowLines + '</div>';
 }
 

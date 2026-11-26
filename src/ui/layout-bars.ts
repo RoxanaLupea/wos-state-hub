@@ -185,6 +185,39 @@ function drawnWidth(element: HTMLElement): number {
   return range.getBoundingClientRect().width;
 }
 
+// A one-line bar on a computer writes its phases after its name: each phase stays in its
+// own stretch, a stretch starting under the name starts after it, and a phase name that
+// does not fit takes its short name or is left out. The white lines under the name go.
+function placeAfterName(bar: HTMLElement, fits: (element: HTMLElement) => boolean): void {
+  const headLogo = bar.querySelector<HTMLElement>('.bar-head .head-logo');
+  const label = bar.querySelector<HTMLElement>('.bar-head .bar-label');
+  if (!headLogo || !label || window.getComputedStyle(headLogo).display === 'none') return;
+  const barLeft = bar.getBoundingClientRect().left;
+  const sub = bar.querySelector<HTMLElement>('.bar-head .bar-sub-inline');
+  if (sub && sub.getBoundingClientRect().width < 24) sub.style.display = 'none';
+  const shownSub = sub && sub.style.display !== 'none' ? sub : null;
+  const nameRight = (shownSub ? shownSub.getBoundingClientRect().right : nameEnd(bar, label)) - barLeft + 8;
+  bar.querySelectorAll<HTMLElement>('.bar-segment').forEach(segment => {
+    const left = parseFloat(segment.style.left) || 0;
+    const right = left + (parseFloat(segment.style.width) || 0);
+    const name = segment.querySelector<HTMLElement>('.bar-segment-name');
+    if (left < nameRight) {
+      const from = Math.min(right, nameRight);
+      segment.style.left = from + 'px';
+      segment.style.width = (right - from) + 'px';
+    }
+    if (!name) return;
+    name.style.visibility = '';
+    if (fits(name)) return;
+    const shorter = name.getAttribute('data-phase-short') || name.getAttribute('data-short');
+    if (shorter) name.textContent = shorter;
+    if (!fits(name)) name.style.visibility = 'hidden';
+  });
+  bar.querySelectorAll<HTMLElement>('.bar-mark.divider').forEach(mark => {
+    if ((parseFloat(mark.style.left) || 0) < nameRight) mark.style.display = 'none';
+  });
+}
+
 export function fitBarLabels(panel: HTMLElement): void {
   const canvas = document.createElement('canvas');
   const context = canvas.getContext('2d');
@@ -218,6 +251,8 @@ export function fitBarLabels(panel: HTMLElement): void {
       }
       const tag = bar.querySelector<HTMLElement>('.bar-head .bar-tag');
       if (tag) tag.style.display = '';
+      const sub = bar.querySelector<HTMLElement>('.bar-head .bar-sub-inline');
+      if (sub) sub.style.display = '';
       bar.classList.remove('too-narrow', 'shows-initials');
     }
 
@@ -376,6 +411,8 @@ export function fitBarLabels(panel: HTMLElement): void {
       if (initials) bar.classList.add('shows-initials');
       bar.classList.add('too-narrow');
     }
+
+    for (const bar of bars) placeAfterName(bar, fits);
   });
 }
 
@@ -390,7 +427,12 @@ export function sizeLanes(panel: HTMLElement): void {
     allBars.forEach(bar => {
       const lane = Number(bar.getAttribute('data-lane'));
       barHeights[lane] = Math.max(barHeights[lane] ?? 0, bar.offsetHeight);
-      const trails = Number(bar.getAttribute('data-trail-count')) || 0;
+      // Only the lines drawn in this week need room: a part's openings outside the week
+      // are on the bar but take no width.
+      const shownBottoms = new Set(Array.from(bar.querySelectorAll<HTMLElement>('.bar-stripe'))
+        .filter(stripe => (parseFloat(stripe.style.width) || 0) > 0)
+        .map(stripe => stripe.style.bottom));
+      const trails = Math.min(Number(bar.getAttribute('data-trail-count')) || 0, shownBottoms.size);
       const needed = bar.offsetHeight + (trails ? BAR_TRAIL_SPACE + 5 * (trails - 1) : 0);
       rowHeights[lane] = Math.max(rowHeights[lane] ?? 0, needed);
     });
