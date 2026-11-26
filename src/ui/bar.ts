@@ -236,6 +236,21 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
       // The first part's second line is its named days, handled above.
       if (index === 0) return;
       const inside = part.insideParts ?? [];
+      // A part inside a part (Castle Battle in SvS's Battle) is its logo, at its own time,
+      // between its own white lines (Roxanne, 26 Nov: "just put the icon of the castle and
+      // the lines where they need to be").
+      if (inside.length) {
+        for (const one of inside) {
+          const oneName = eventTypeName(one.eventTypeId);
+          if (one.startMinute > part.start) lineTwo += barMark(one.startMinute, 'divider', oneName + ' starts');
+          if (one.endMinute < part.end) lineTwo += barMark(one.endMinute, 'divider', oneName + ' ends');
+          lineTwo += `<span class="bar-inside" role="button" tabindex="0" data-open-event="${escapeForPage(one.key)}"` +
+            ` data-start-minute="${one.startMinute}" data-end-minute="${one.endMinute}"` +
+            ` title="${escapeForPage(oneName + ' · ' + spanText(one.startMinute, one.endMinute))}">` +
+            `${eventIcon(one.eventTypeId)}</span>`;
+        }
+        return;
+      }
       const below = inside.length
         ? inside.map(one => eventTypeName(one.eventTypeId)).join(' · ')
         : eventBarSubtitle(part.bar.eventTypeId);

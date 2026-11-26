@@ -875,8 +875,8 @@ there before discussing it again.
   replaces the category chips of 17 Nov. No filled blue buttons and no count badges, ever.
 - Today shows only when today is out of sight (another month or week); the month name
   keeps its place. UTC is one word with a swap icon that flips to MINE.
-- On a computer the two rows are one: Today and the month on the left, with arrows
-  either side of the month (a computer cannot swipe); the views, UTC and Filters on the
+- On a computer the two rows are one: the month on the left, then the pin and the arrows
+  (a computer cannot swipe; see 26 Nov below); the views, UTC and Filters on the
   right. Filters opens as a panel under it, three events to a row, the page not dimmed.
   Shown 24 Nov (cal-desk); the arrows were added in the build.
 - Today is always in sight when the calendar opens (the site, the section, Today, another
@@ -1383,3 +1383,10 @@ All nine are built.
   to the first dates, dates 6px under a week's line and 4px over its bars.
 - The calendar's fade at the bottom (26 Nov): "it should be like half a row, maximum 1
   row. We're wasting a lot of information at the bottom." Built: 16px, half a bar row.
+- Calendar month controls like Invites (Roxanne, 26 Nov): "The arrows, I think we already
+  established that we are gonna do them in the same style as the icons, and that they will be
+  after the month, and the pin icon is missing for when we go to other months ... it has to be
+  the same format here too, and on the phone, it has to be consistent". Built: the date, then
+  the pin back to today (only while today is out of sight, the icon alone), then the two arrows
+  in the icons' style; on a phone the pin after the date and no arrows. The date keeps the room
+  of its longest title so the pin and arrows don't move.

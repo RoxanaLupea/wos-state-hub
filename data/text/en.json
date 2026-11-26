@@ -110,6 +110,7 @@
   "eventType.bear.groupName": "Trap",
   "eventType.bear.name": "Bear Hunt",
   "eventType.bear.shortName": "BT",
+  "eventType.bear.tag": "BT",
   "eventType.bia.initials": "BIA",
   "eventType.bia.name": "Brothers in Arms",
   "eventType.bia.otherName": "Kill Event",

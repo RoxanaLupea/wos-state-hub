@@ -173,11 +173,6 @@ export function sectionNav(pageId: string, openSubPage: string, controls = ''): 
     `<div class="section-side"><div class="section-tabs">${tabs}</div>${controls}</div></nav>`;
 }
 
-const ARROW_LEFT = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
-  ' stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>';
-const ARROW_RIGHT = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
-  ' stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>';
-
 export type CalendarView = 'week' | 'month' | 'year';
 
 // An arrow curling back round to a dot: Today takes you back to now.
@@ -189,6 +184,10 @@ function lineIcon(id: string, body: string, strokeWidth = 2.2): string {
     '<stop offset="0" style="stop-color: var(--section)"/><stop offset="1" style="stop-color: var(--text)"/></linearGradient></defs>' +
     `<g fill="none" stroke="url(#${id})" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round">${body}</g></svg>`;
 }
+// The arrows that step a month or a week, in the same icon style and shape as the
+// Invites page's arrows (Roxanne, 26 Nov: "the same format here too").
+const ARROW_LEFT = lineIcon('step-left-colour', '<path d="M14.5 6l-6 6 6 6"/>');
+const ARROW_RIGHT = lineIcon('step-right-colour', '<path d="M9.5 6l6 6-6 6"/>');
 // Today: the pin that marks where we are in an event's timeline.
 const TODAY_ICON = lineIcon('today-icon-colour',
   '<path d="M12 21.6c-.6-.5-7-6.3-7-11.6a7 7 0 0 1 14 0c0 5.3-6.4 11.1-7 11.6z"/><circle cx="12" cy="10" r="2.8"/>');
@@ -235,10 +234,10 @@ export interface ToolbarOptions {
 }
 
 // The calendar's controls. On a phone, one line (owner, 25 Nov): the date, the three
-// views, Filters and UTC, with Today's icon before the date only when today is out of
+// views, Filters and UTC, with Today's pin after the date only when today is out of
 // sight; Today and Filters are their icons alone, and a week's title has no year. On a
-// computer: the month with its arrows on the left, the views, UTC and Filters on the
-// right. Nothing is boxed: the open view is bright with a line under it.
+// computer: the month, the pin and the arrows after it on the left, the views, UTC and
+// Filters on the right. Nothing is boxed: the open view is bright with a line under it.
 export function calendarToolbar(options: ToolbarOptions): string {
   const mode = currentTimeMode();
   const viewButton = (id: CalendarView) =>
@@ -249,20 +248,21 @@ export function calendarToolbar(options: ToolbarOptions): string {
   // The other word sits unseen in the same place, so the button is as wide as the wider
   // of the two and nothing moves when the time is swapped (owner, 25 Nov).
   const otherWord = mode === 'game' ? 'Mine' : 'UTC';
-  const today = options.todayInView ? '<span class="today-slot"></span>'
-    : `<button type="button" class="quiet-button today-button" data-step="0" aria-label="Today">${TODAY_ICON}<span class="phone-hidden">Today</span></button>`;
+  // The pin back to today, directly after the date and only while today is out of sight,
+  // as on the Invites page, on the phone and the computer alike (Roxanne, 26 Nov).
+  const today = options.todayInView ? ''
+    : `<button type="button" class="quiet-button today-button" data-step="0" aria-label="Today" title="Back to today">${TODAY_ICON}</button>`;
   // A week's year is left out on a phone, so the line fits (owner, 25 Nov); a month keeps it.
   const year = options.view === 'week' ? / \d{4}$/.exec(options.title)?.[0] ?? '' : '';
   const title = year ? `<span class="title-long">${escapeForPage(options.title)}</span>` +
     `<span class="title-short">${escapeForPage(options.title.slice(0, options.title.length - year.length))}</span>` : escapeForPage(options.title);
 
-  return `<div class="toolbar">
+  return `<div class="toolbar" data-view="${options.view}">
     <div class="toolbar-month">
-      ${today}
       <div class="month-steps">
-        <button type="button" class="step-arrow" data-step="-1" aria-label="Previous">${ARROW_LEFT}</button>
         <h1 class="period-title">${title}</h1>
-        <button type="button" class="step-arrow" data-step="1" aria-label="Next">${ARROW_RIGHT}</button>
+        <span class="step-controls">${today}<button type="button" class="step-arrow" data-step="-1" aria-label="Previous">${ARROW_LEFT}</button>` +
+    `<button type="button" class="step-arrow" data-step="1" aria-label="Next">${ARROW_RIGHT}</button></span>
       </div>
       <button type="button" class="quiet-button time-word" data-time-mode="${mode === 'game' ? 'local' : 'game'}"` +
     ` title="${mode === 'game' ? 'Game time (UTC). Tap for your own time.' : 'Your own time. Tap for game time (UTC).'}">${SWAP_ICON}<span class="time-word-box"><span class="shown">${timeWord}</span><span aria-hidden="true">${otherWord}</span></span></button>

@@ -173,8 +173,6 @@
     position: sticky; top: var(--top-bar-height, 0px); z-index: 6; }
   .page > .toolbar.stuck { background-color: var(--page-color); background-image: var(--page-background); background-attachment: fixed; }
   .toolbar-month, .toolbar-views { display: contents; }
-  .today-slot { display: none; }
-  .today-button { order: 0; margin-right: -4px; }
   .month-steps { order: 1; margin-right: auto; min-width: 0; }
   .page > .toolbar .period-title { font-size: 18px; }
   .view-icons { order: 2; gap: 2px; }
@@ -199,10 +197,23 @@
 .time-word-box { display: inline-grid; }
 .time-word-box > span { grid-area: 1 / 1; justify-self: start; }
 .time-word-box > span:not(.shown) { visibility: hidden; }
-/* The arrows step a month (or week, or year). A phone swipes instead, so it has none. */
-.step-arrow { display: none; width: 28px; height: 28px; align-items: center; justify-content: center; padding: 0;
-  border: none; border-radius: 8px; background: none; color: var(--text-muted); cursor: pointer; }
-@media (hover: hover) { .step-arrow:hover { color: var(--text); background: rgba(255, 255, 255, 0.06); } }
+/* After the date, as on the Invites page (Roxanne, 26 Nov): the pin back to today, only
+   while today is out of sight, then the arrows that step a month (or week). A phone swipes
+   instead, so it has the pin alone. */
+.month-steps { gap: 10px; }
+.step-controls { display: inline-flex; align-items: center; gap: 2px; }
+.month-steps .today-button { padding: 0 3px; }
+.step-arrow { display: none; width: 26px; height: 26px; align-items: center; justify-content: center; padding: 0;
+  border: none; border-radius: 8px; background: none; cursor: pointer; }
+.step-arrow svg { width: 19px; height: 19px; filter: drop-shadow(0 0 3px color-mix(in srgb, var(--section) 55%, transparent)); }
+@media (min-width: 1000px) {
+  .month-steps .today-button { margin-right: 8px; }
+  .month-steps .today-button svg { width: 19px; height: 19px; }
+  /* The date keeps the room of its longest title, so the pin and arrows stay put from one
+     month or week to the next, as Invites' date does. */
+  .toolbar[data-view="month"] .period-title { min-width: 152px; }
+  .toolbar[data-view="week"] .period-title { min-width: 190px; }
+}
 /* A thin upright line between a page's views and its other controls (Roxanne, 26 Nov: "make
    this separator standard for other pages too, like the calendar"). */
 .control-divider { flex: none; align-self: center; width: 1px; height: 26px; background: var(--glass-border); }
@@ -222,9 +233,7 @@
 @media (min-width: 1000px) {
   .toolbar { display: flex; align-items: center; gap: 26px; padding: 0 0 14px; }
   .toolbar-month, .toolbar-views { display: contents; }
-  .today-slot { display: none; }
-  .today-button { order: 1; }
-  .month-steps { order: 2; gap: 6px; }
+  .month-steps { order: 2; }
   .step-arrow { display: inline-flex; }
   .period-title { font-size: 24px; }
   .period-title .title-long { display: inline; }
