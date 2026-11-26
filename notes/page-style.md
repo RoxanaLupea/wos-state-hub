@@ -128,3 +128,14 @@ only what makes it one (the room its letters, digits or bars leave over and unde
 - Timelines: phases and stages 13px capitals; days, steps and openings 12px; the current
   row has the pin; lines as soft as State of Power's.
 - Font: Roboto everywhere; the short form of an event (SvS, TAL) stays Montserrat.
+
+## Calendar bars on a computer (standard, 26 Nov)
+- Two bars only: one line (28px) and two lines (42px). Two lines only where a bar needs
+  them: SvS (parts over its days) and a week with tickets.
+- Every event logo 22px; the name 14px, written as it is; the short form (SvS, TAL) 10px
+  in Inter, on the name's line.
+- Every smaller word on a bar is 12px. A phase is in capitals (weight 800), 12px after
+  the name or after the white line before it, never centred in what is left. On a two-line
+  bar the days under the parts stay as written, centred in their days.
+- In the day's card a phase under an event's name is in capitals too, and the logos are
+  sized to the two lines beside them (32px; 24px in the timeline).

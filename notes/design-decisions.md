@@ -1338,3 +1338,25 @@ All nine are built.
 - Yellow events mockup (25 Nov, rejected): "they look the same to me, shitty yellow almost brown, depressing and ugly, worse than what we had".
 - Deals and Packs (25 Nov): "This is part of deals, idk why or how these work, we'll keep them separate and decide if we want to merge them, deals might be tied to missions in game, packs we just buy them". Packs are what is bought in the Top-up Center.
 - Foundry power reminder (25 Nov, replaces "every 2 weeks"): "I want it when registration opens because that's when they can check". The number turns red with a dot when a Foundry Battle registration opens after it was set.
+
+## Redesign for the common screen (branch common-size, 26 Nov)
+
+- The site is designed for a common monitor (1920 × 1080), then made to look the same on
+  every screen; nothing stays squeezed or cut because a narrow width once forced it
+  (Roxanne, 26 Nov: "take back all the poor decisions we made because we didn't have
+  enough width").
+- Calendar bars (26 Nov): "we need to define 2 calendar rows or bars, one of 1 line, one
+  of 2 lines, and be efficient about how we display them." Fonts and heights the same
+  everywhere.
+- Phases on one-line bars (26 Nov): "they have to be written in caps", "leave a certain
+  amount of space that makes it clear that it's different, and then add the face there",
+  "the name of the events will be in normal font", "I do not want that change for events
+  where we have 2 rows ... the sub faces stay written like they are right now", and in the
+  day's card "where we have registration, battles, those are again faces, need to be
+  written in uppercase". The card's icons were "too big for those fonts".
+- Rows (26 Nov): an event's battle day goes on the same row as its Voting and
+  Registration ("tied together in the same row, even though we have like 2 days of gap");
+  a run that is ending and the next one starting do not have to share a row (Hall of
+  Heroes). The top band "takes up a lot of the screen, and it shouldn't"; the sections in
+  the site's font; no scrollbar on the calendar ("I never asked for a scroll bar"); equal
+  edges on both sides; day names never cut; dates a little smaller.

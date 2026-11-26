@@ -172,6 +172,9 @@ export interface AllDayItem {
   // What this day of the event is: its phase, the day's name and the day's steps that
   // have no time of their own, as in the old app ("Preparation · Hero Development").
   shortLine: string;
+  // The phase alone, the first part of the line when the day has one, so it can be
+  // written as a phase (in capitals) and the rest as it is.
+  phase: string;
 }
 
 export interface DayContents {
@@ -231,6 +234,7 @@ export function contentsOfDay(
       allDayItems.push({
         occurrence, name,
         shortLine: allDayLine(occurrence, dayOfEvent(occurrence, day), options),
+        phase: options.phaseNameForDay(occurrence.eventTypeId, dayOfEvent(occurrence, day)).split(' · ')[0],
         ...(playWindows ? { playWindows, dayWindow: window } : {})
       });
     }

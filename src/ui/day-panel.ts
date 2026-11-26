@@ -18,6 +18,13 @@ function colorWithOpacity(color: string, opacity: number): string {
   return `rgba(${red}, ${green}, ${blue}, ${opacity})`;
 }
 
+// The line under an event's name: its phase written as a phase, in capitals, and the
+// day's name and steps after it as they are (Roxanne, 26 Nov).
+function noteMarkup(line: string, phase: string): string {
+  if (!phase || !line.startsWith(phase)) return escapeForPage(line);
+  return `<span class="phase-word">${escapeForPage(phase)}</span>${escapeForPage(line.slice(phase.length))}`;
+}
+
 // An event running all day. The whole row is a button that opens the event, with an
 // arrow in the event's colour, as in the old app.
 function allDayItemMarkup(item: AllDayItem): string {
@@ -28,7 +35,7 @@ function allDayItemMarkup(item: AllDayItem): string {
     ${eventBadge(item.occurrence.eventTypeId)}
     <span class="all-day-text">
       <span class="event-title">${mark}${escapeForPage(item.name)}</span>
-      ${item.shortLine ? `<span class="event-note">${escapeForPage(item.shortLine)}</span>` : ''}
+      ${item.shortLine ? `<span class="event-note">${noteMarkup(item.shortLine, item.phase)}</span>` : ''}
       ${item.playWindows && item.dayWindow
         ? playLineMarkup(item.occurrence.eventTypeId, item.playWindows, item.dayWindow) : ''}
     </span>

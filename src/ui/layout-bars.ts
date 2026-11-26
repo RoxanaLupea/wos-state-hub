@@ -196,7 +196,7 @@ function placeAfterName(bar: HTMLElement, fits: (element: HTMLElement) => boolea
   const sub = bar.querySelector<HTMLElement>('.bar-head .bar-sub-inline');
   if (sub && sub.getBoundingClientRect().width < 24) sub.style.display = 'none';
   const shownSub = sub && sub.style.display !== 'none' ? sub : null;
-  const nameRight = (shownSub ? shownSub.getBoundingClientRect().right : nameEnd(bar, label)) - barLeft + 8;
+  const nameRight = (shownSub ? shownSub.getBoundingClientRect().right : nameEnd(bar, label)) - barLeft;
   bar.querySelectorAll<HTMLElement>('.bar-segment').forEach(segment => {
     const left = parseFloat(segment.style.left) || 0;
     const right = left + (parseFloat(segment.style.width) || 0);

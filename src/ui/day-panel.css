@@ -99,3 +99,11 @@
 .play-mark.now { box-shadow: 0 0 6px var(--play-light); }
 .play-mark.now .play-mark-time { color: var(--text); }
 .alliance-pick { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* The day's events (Roxanne, 26 Nov): their logos sized to the two lines beside them,
+   and the phase under the name in capitals, as on the bars. */
+@media (min-width: 1000px) {
+  .all-day-item .event-badge { width: 32px; height: 32px; }
+  .moment-title .event-badge.small { width: 24px; height: 24px; }
+}
+.all-day-text .phase-word { font-size: 12px; }
