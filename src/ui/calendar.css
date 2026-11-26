@@ -432,3 +432,8 @@
   .held-dates { height: 26px; margin-bottom: -26px; }
   .held-date { padding-top: 0; }
 }
+/* Today's line sits 2px higher, clear of the date under it (Roxanne, 26 Nov: "almost stuck
+   to 26th. It can go up a pixel or two"). */
+@media (min-width: 1000px) {
+  .day-box.today::before, .held-date.today::before { top: -2px; }
+}

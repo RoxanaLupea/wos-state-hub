@@ -331,6 +331,8 @@ Run on 24 Nov (third chat), before the push:
 
 ## Open
 
+- Flame and Fangs needs its colour adjusted: its logo is hard to see on the bar (Roxanne,
+  26 Nov: "make a note for the future").
 - The pages still to lay out: the alliance page, the transfer Invites page, the State
   page (its leaderboards are listed as open in design-decisions.md).
 - Exalted shown at FC8 and FC9 in the game data, against the rule that Exalted is only

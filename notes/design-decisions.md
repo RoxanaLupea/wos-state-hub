@@ -1390,3 +1390,20 @@ All nine are built.
   the pin back to today (only while today is out of sight, the icon alone), then the two arrows
   in the icons' style; on a phone the pin after the date and no arrows. The date keeps the room
   of its longest title so the pin and arrows don't move.
+- Screen 1 review, computer (Roxanne, 26 Nov):
+  - Today's line under the day name: "almost stuck to 26th. It can go up a pixel or two."
+  - "Bear Hunt is not BH ... Bear Hunt is BT, because it's Bear Trap 1, Bear Trap 2."
+  - SvS Castle Battle: "I don't think we should write Castle Battle under Battle ... just put
+    the icon of the castle and the lines where they need to be."
+  - The day's card: "if we have timeline and all day, why can't we have the date included in
+    that and the panel go higher a little?"; "if we don't have an event set, then it only
+    makes sense that the panel borrows the accent of the calendar ... blue, but also some of
+    that warm ... peach". Built: the date and "Game time (UTC)" as the card's head, the
+    card in the calendar logo's blue and peach.
+  - "I do not want a round picture. And make sure it's not stuck on the bottom row."
+  - "the clock can be bigger. The numbers ... heavier and bigger, and the UTC is good as it
+    is", the clock about the photo's size.
+  - Next up and Then: "We either put the face or we don't ... The date has to be in the same
+    font, same spot too, and the size of the icon has to be the same ... I would put all 4
+    rows aligned to the left and make the icon bigger." Built on the computer; the phone
+    tiles are as approved.

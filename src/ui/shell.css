@@ -369,3 +369,11 @@
     filter: drop-shadow(0 0 3px color-mix(in srgb, var(--section) 55%, transparent)); }
 }
 @media (min-width: 1000px) { .top-bar > .account-menu-wrap { display: flex; align-items: center; align-self: stretch; } }
+/* The picture a rounded square, not round, with room above and below it in the band; the
+   clock's numbers bigger and heavier, the whole clock about as tall as the picture with its
+   ring (Roxanne, 26 Nov: "I do not want a round picture ... not stuck on the bottom row",
+   "the clock can be bigger ... heavier"). */
+@media (min-width: 1000px) {
+  .me-button .me-pic { width: 34px; height: 34px; border-radius: 9px; font-size: 15px; }
+  .clock-time { font-size: 26px; font-weight: 900; }
+}

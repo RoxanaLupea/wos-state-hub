@@ -29,3 +29,17 @@
 }
 /* The two tiles' logos sit at the same height whatever the lines beside them (26 Nov). */
 .next-tile-head { align-items: flex-start; }
+/* On a computer each tile is its logo, bigger and the same in both, with four lines left-
+   aligned beside it: the label, the name, the phase and the date (Roxanne, 26 Nov: "I would
+   put all 4 rows aligned to the left and make the icon bigger"). Every tile names its
+   phase there; a phone shows only a whole event's stage, as approved. */
+.next-tile-stage.computer-only { display: none; }
+@media (min-width: 1000px) {
+  .next-tile { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 12px; row-gap: 0; align-items: start; }
+  .next-tile-head { display: contents; }
+  .next-tile-head > .event-badge { grid-row: 1 / span 2; width: 48px; height: 48px; align-self: center; }
+  .next-tile-names { grid-column: 2; }
+  .next-tile > .event-note { grid-column: 2; margin-top: 3px; }
+  .next-tile-stage.computer-only { display: block; }
+  .next-tile-title.fitted-wide { white-space: nowrap; overflow: hidden; }
+}
