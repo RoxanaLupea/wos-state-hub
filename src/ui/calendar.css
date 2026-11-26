@@ -370,3 +370,17 @@
   .held-dates { height: 30px; margin-bottom: -30px; }
   .held-dates.showing { border-color: transparent; }
 }
+
+/* ---------- Computers: two bars only (Roxanne, 26 Nov) ----------
+   A one-line bar and a two-line bar, the same everywhere: the same logo, the name in
+   14px, and every smaller word on a bar (phases, days, parts, a second name) in 12px. */
+@media (min-width: 1000px) {
+  .calendar-panel { --bar-one-line: 28px; --bar-two-lines: 42px; --bar-small-text: 12px; }
+  .bar { height: var(--bar-one-line); }
+  .bar.phase-lines, .bar.phase-lines.day-lines { height: var(--bar-two-lines); --line-two-height: 17px; }
+  .bar.phase-lines.one-line-wide, .bar.phase-lines.day-lines.one-line-wide, .bar.phase-lines.too-narrow { height: var(--bar-one-line); }
+  .bar-segment-name, .bar.phase-lines .bar-sub, .bar.phase-lines.day-lines .bar-segment-name,
+  .bar.phase-lines.one-line-wide .bar-segment-name, .bar.phase-lines.one-line-wide .bar-sub-inline,
+  .bar-part-text { font-size: var(--bar-small-text); }
+  .bar.phase-lines .bar-sub { height: 17px; line-height: 17px; }
+}
