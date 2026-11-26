@@ -155,6 +155,25 @@ The structure these feed into is in supabase/schema.sql.
   Leading figure for FC5), not confirmed. Roxanne's moves from 1060 to 1056 and to 1252
   had a 1B cap, which matches Gen 12; she expects 1B for 1458's next transfer (26 Nov).
 
+### Where the special event and pack dates came from (26 Nov)
+
+Where to look for next year's dates. Each date in the database names its source in its note
+(supabase/special-events-and-packs.sql).
+
+- Lunar New Year: Out of Games (2025), Altema (2026).
+- Valentine's: Out of Games (2025), the Whiteout Survival Wiki (2026).
+- Lantern of Blessings: Altema (2026).
+- Anniversary: BlueStacks (2025), Altema (2026).
+- Easter: BitTopup (2026).
+- Moonlight Festival: Mone and Heaven Guardian (2026).
+- Halloween: BlueStacks (2025), Out of Games (2026).
+- Harvest Festival: seen in game (2026).
+- Christmas: BlueStacks (2025).
+- Hero Ascension Training and the four packs: seen in game (Nov 2026).
+- The 2027 dates are estimates: from the real holiday (Lunar New Year, Ramadan, Easter,
+  Mid-Autumn Festival, Thanksgiving) or from the year before. They are replaced by the real
+  dates once the events happen.
+
 ### Player data sources (checked 26 Nov)
 - Whiteout Stats API (our key): current data only, no history and no transfers. Base
   (name, picture, state, alliance, power, furnace) can update hourly; the full profile
