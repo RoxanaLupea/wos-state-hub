@@ -4227,7 +4227,10 @@ async function start(): Promise<void> {
       }
       // Measured to the fraction of a pixel, so no sliver of the weeks shows between the
       // day names and the dates.
+      // On a computer the held dates sit at the top of the weeks' own box: a phone value left
+      // behind (the page zoomed in to a phone's width and back) would hold them mid-calendar.
       if (onPhone) document.documentElement.style.setProperty('--held-dates-top', (height + toolbarHeight + 5 + names.getBoundingClientRect().height) + 'px');
+      else document.documentElement.style.removeProperty('--held-dates-top');
       const line = onPhone ? names.getBoundingClientRect().bottom : weeks.getBoundingClientRect().top;
       let passedWeek: HTMLElement | null = null;
       // A week counts once its own dates start to pass under the held ones, so the held
