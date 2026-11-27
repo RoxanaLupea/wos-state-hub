@@ -3,6 +3,12 @@
 Sent 22 Nov 2026 (12 screenshots of the Event Rules tab). The Fishing Techniques tab and
 the rewards have not been sent yet.
 
+## Introduction (sent again 27 Nov)
+"A magnificent ocean world lies just out of reach under the ice, so grab a chisel and get
+fishing! Explore a huge realm of fishing treasures and awesome Club rewards." Under the
+rules there is a "Trial Stages" button. The 27 Nov Event Rules screenshots match the
+sections below.
+
 ## Tokens and Points
 1. Join the Fishing Tournament while in season to earn Fishing Points and Fishing Tokens.
 2. Fishing Points grant Club rewards and a higher ranking on the Master Fisher Leaderboard.
