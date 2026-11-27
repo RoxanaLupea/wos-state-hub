@@ -1475,3 +1475,8 @@ All nine are built.
 - SvS's BATTLE on a phone (Roxanne, 27 Nov): asked whether BATTLE may stay smaller or be cut
   like other names that don't fit: "Yes, it was for battle being an exception". BATTLE stays
   7.5px; every other smaller word on a phone bar is 9px.
+- Invites groups (Roxanne, 27 Nov): "I don't see it sorted to have groups together after I
+  save" and "Creating it should count as saving it. No?" Built: Create in New group saves the
+  group at once (editing stays on); saving puts a group's people together on their list, from
+  where its first one is. The New group list keeps its scroll while people are ticked ("when
+  I tap a new person it jumps at the top").
