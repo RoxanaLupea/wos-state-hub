@@ -1,8 +1,63 @@
 # Handover: where the work stands
 
-Do CLAUDE.md's setup first. Updated 27 Nov 2026.
+Do CLAUDE.md's setup first. Updated 27 Nov 2026, evening.
 
-## Now
+## Now (27 Nov, evening)
+
+### Branches
+
+- main (live) = 76ddca8: this morning's site plus one fix (the calendar's Filters and UTC switch
+  were dead since the 13:06 push; the toolbar's data-view caught every tap).
+- wip-27-nov (not live) = everything else from 27 Nov evening, committed and pushed. Work from it:
+  `git fetch origin wip-27-nov && git checkout wip-27-nov`. It merges into main with no conflict.
+  Merging and pushing to main waits for her yes; after the push, check it with her on her two
+  monitors (Claude in Chrome sees the live site in her real Chrome, one window per monitor).
+- Whatever she accepts is committed right away (CLAUDE.md, 27 Nov).
+
+### What was done on wip-27-nov
+
+- Tundra Arms League (event id hellfire): timeline renamed and restructured; Rewards in three
+  tabs (Champion's Glory with her ice frames, Ranking with Legion / Alliance / State Rewards,
+  Combatant with Elimination / Championship, Legion members as Win and Loss lines, combatants
+  under Win / Loss tabs); Missions with Daily / Weekly; Merchant tab with the Ordinary Shop
+  (Match Stakes) and Champion Shop (Champion Stakes) from guides (source in
+  data/captures/tundra-arms-league-hall-of-heroism.md).
+- The reward standard for every event (her words: notes/rewards-requests.md; the rules:
+  notes/page-style.md "Event panels"; code: event-panel.css end, rewardLines and withRankBadges in
+  event-panel.ts, fitRewardLabels in main.ts, reward-amount.ts).
+- Rank medals (public/images/ranks, her pictures) on every ranking list where rank 2 has a row of
+  its own; a Merchant tab of its own for merchants and shops; timeline spacing and the time
+  written once on every timeline.
+
+### Next: finish the rewards, then the redesign list
+
+Her ask (notes/rewards-requests.md 32): every event's rewards follow the rules, and she goes
+through the screens. Render each event's Rewards and Merchant tabs on the phone, the whole panel,
+check every rule in rewards-requests.md, fix, then send her the screens. Found and not fixed yet:
+- King of Icefield's Stage 1-7 tabs and its Ranking tabs, and Winter Siege's six tier tabs, are
+  too long for a phone line: fitRewardLabels writes them very small. Needs a design (say so, ask).
+- Dreamscape's "Chapter 1"... and Showdown's "Loss or draw" labels go onto two lines.
+- Showdown's Victory Points horn has no tile.
+- Crazy Joe's rewards (ranking, targets) are saved but shown nowhere: its panel is the alliance
+  times list.
+- Treasure Hunt Drill and Emporium of Enigma were not checked (not in Oct-Feb on the calendar).
+- Pictures to come from her: Custom Mythic Hero Gear Chest, Storm of Destruction.
+Questions still open, one at a time:
+- Fishing's ranks with 7 rewards: how should the 7 sit? (built as 3 + 4, not confirmed)
+- How many days old is 1458? (the Champion Shop's amounts depend on it; saved: over 448 days)
+- Alliance Championship Ultimate rank 2: is the 25.6K orange tile the Championship Badge, and
+  should ranks 2-3 be 25,600 (the site has 19,000)? (her mail screenshot is on the screenshots
+  branch)
+- How should "ROUND 1 - GOLD & SILVER" fit on one line on the phone (TAL timeline)?
+- The Harvest Festival concierge mockup waits for her feedback and her rewards / packs
+  screenshots.
+Then the redesign list below: screen 5, the SvS panel.
+
+Renders: tools/render/README.md. For a whole panel, make the viewport as tall as the panel's
+content (event-page-body scrollHeight) and take one screenshot; phone 384 x 832 at 2.8125, her
+laptop 1536 x 864 at 1.25, her monitor 2560 x 1440 at 1.
+
+## Earlier on 27 Nov
 
 ### Pushed 27 Nov, 13:00 (her time): the calendar redesign (common-size) merged into main
 
@@ -46,7 +101,8 @@ data/captures/fishing.md (from WoS Guru, not shown yet).
 
 - Every event's reward lists one after another on one page, each under its heading; tiers and
   bands are tabs like the event's own tabs (no boxes inside boxes, no filled pills).
-- Rank columns: number right, rewards left. Reward rows divided by space, no lines.
+- Rank columns: replaced the evening of 27 Nov (every label centred; see notes/rewards-requests.md).
+  Reward rows divided by space, no lines.
 - Notes in Rewards are quiet (11 px, faint). Prestige-type rewards: 2 x 2 big squares, the
   border scaled, how long they last as a label on the reward ("14 days").
 - Alliance Championship: Tier Rewards with a tab per tier (all six from the game), the open
