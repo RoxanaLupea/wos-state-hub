@@ -4,6 +4,13 @@ Do CLAUDE.md's setup first. Updated 27 Nov 2026.
 
 ## Now
 
+### Pushed 27 Nov, 07:46 (her time)
+
+Live: Submissions as three columns across the page on a computer (New/Pending, Approved,
+Rejected) and three sections that open and close on a phone; a member's seen tickets are kept
+in the database (result_submissions.seen_by_submitter, mark_submissions_seen(), run on her
+yes), so their dot clears on every device.
+
 ### Pushed 27 Nov, 07:40 (her time)
 
 Live: no scrollbar anywhere, boxes that scroll fade at the bottom (FADING_BOXES); scrolled
