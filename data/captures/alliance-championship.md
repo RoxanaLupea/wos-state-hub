@@ -95,6 +95,9 @@ Rules Overview
 
 ## Tier Rewards, every tier (the owner's screenshots, 27 Nov 2026, 12:45)
 
+Taken on an account in another state's alliance, as examples: its "(Current Tier)" Ultimate is
+not any 1458 alliance's tier and is not saved as one.
+
 Group Ranking: Star Rating, then 5-min General Speedup, Secured Resource Supply Chest (10K),
 Championship Badge. Prestige Rewards show only in the Ultimate tier.
 
