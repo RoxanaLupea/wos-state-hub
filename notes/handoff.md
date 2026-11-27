@@ -4,6 +4,14 @@ Do CLAUDE.md's setup first. Updated 26 Nov 2026.
 
 ## Now
 
+### Pushed 27 Nov, 05:30 (her time)
+
+Live: profiles opened on a phone scroll inside their sheet; the calendar's weeks, the day
+panel, admin pages and Fortress Season scroll with no scrollbar; New group rows 4px apart;
+tools/render/scroll-audit.py checks every page for cut-off content, scrollbars and boxes
+touching. Open: broken player pictures (her ask, 05:29), the AC results mockup, which list
+pop-ups open from the bottom on the phone.
+
 ### Pushed 27 Nov, 05:10 (her time)
 
 Live: while a pop-up or a sheet is open, the page behind stays still (tokens.css). Open:
