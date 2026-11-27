@@ -1606,3 +1606,8 @@ in the game; the 27th only keeps the tabs open.
 "We write on the calendar fishing, then the season in caps summer, and have that bar go at
 the bottom instead, like the one with the fish." Seasons follow winter, spring, summer,
 autumn, one a month (Century Games' help centre); 24 Nov 2026 is Summer.
+Fishing's bar (27 Nov, 08:38), accepted: one line, "Fishing SUMMER", the fish and a white mark
+where fishing ends (end of the 26th); under the bar a white line over the fishing days and a
+Sunken Treasure Hunt line to the event's end. "Ok, keep it like that and I'll get these 2
+logos from the top bars" (the game's tab logos; the Hunt's colour and logo are stand-ins
+until then).
