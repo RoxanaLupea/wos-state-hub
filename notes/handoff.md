@@ -9,7 +9,10 @@ Do CLAUDE.md's setup first. Updated 26 Nov 2026.
 Live: profiles opened on a phone scroll inside their sheet; the calendar's weeks, the day
 panel, admin pages and Fortress Season scroll with no scrollbar; New group rows 4px apart;
 tools/render/scroll-audit.py checks every page for cut-off content, scrollbars and boxes
-touching. Open: broken player pictures (her ask, 05:29), the AC results mockup, which list
+touching. Open: broken player pictures (her ask, 05:29: "something fun", clear it is not
+the picture; her examples were sketched animals peeking from an edge; my drawn versions
+were rejected, she will send the pictures herself, then a failed picture shows one of hers,
+the same one for the same player, through pictureOf in player-profile.ts), the AC results mockup, which list
 pop-ups open from the bottom on the phone.
 
 ### Pushed 27 Nov, 05:10 (her time)
