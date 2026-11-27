@@ -87,3 +87,25 @@
 }
 .new-version-words { font-size: 13px; font-weight: 600; color: var(--text-muted); }
 .new-version .edit-button { --edit-colour: var(--accent); }
+
+/* Computers (Roxanne, 26 Nov): the weeks scroll with no scrollbar drawn and no room kept
+   for one, so the calendar's edges are the same on the left and the right. */
+@media (min-width: 1000px) {
+  .calendar-panel, .calendar-panel .weeks, .calendar-panel .weekday-names { scrollbar-gutter: auto; scrollbar-width: none; }
+  .calendar-panel::-webkit-scrollbar, .calendar-panel .weeks::-webkit-scrollbar, .calendar-panel .weekday-names::-webkit-scrollbar { display: none; }
+}
+/* The day's card lines up with the tiles above it on both sides, and scrolls without a
+   scrollbar drawn, like the calendar (26 Nov). */
+@media (min-width: 1000px) {
+  .day-panel { margin-right: 0; padding-right: 0; scrollbar-gutter: auto; scrollbar-width: none; }
+  .day-panel::-webkit-scrollbar { display: none; }
+}
+/* Every box that scrolls does it with no scrollbar drawn (Roxanne, 27 Nov: "We do not want a
+   scroll bar. But we want all items to scroll on both PC and mobile"). */
+@media (min-width: 1000px) {
+  .admin-page { scrollbar-gutter: auto; scrollbar-width: none; margin-right: 0; }
+  .admin-page::-webkit-scrollbar { display: none; }
+  /* A Fortress season taller than the screen scrolls in its own box. */
+  .fort-board.fort-season { overflow-y: auto; scrollbar-width: none; }
+  .fort-board.fort-season::-webkit-scrollbar { display: none; }
+}

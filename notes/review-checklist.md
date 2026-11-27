@@ -3,6 +3,15 @@
 Every screenshot is checked against this before Roxanne sees it. Each line is a fault she
 has had to point out before. When she points out a new kind of fault, it is added here.
 
+## Scrolling and spacing (Roxanne, 27 Nov)
+- Every box whose content can be taller than it scrolls, on the phone and the computer, with
+  no scrollbar drawn. Nothing is cut off at the bottom of a page, panel, card or pop-up.
+- While a pop-up or sheet is open only it scrolls; the page behind stays still.
+- Items never touch: rows, cards and picked choices always have space between them.
+- Check it after every change: python3 tools/render/scroll-audit.py <build> <out> <port>
+  (every page and pop-up, phone and computer: cut-off content, drawn scrollbars, boxes
+  touching), then scroll each new box by hand in the render.
+
 ## The flow
 - The phone's back closes what is open over the page first, then goes to the page before,
   never out of the site while there is one (Roxanne, 26 Nov).

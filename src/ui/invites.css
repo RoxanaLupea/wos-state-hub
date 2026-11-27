@@ -868,4 +868,6 @@
   scrollbar-color: color-mix(in srgb, var(--section) 35%, transparent) transparent; }
 .inv .leave-prompt-box.ng { max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior: contain; }
 .inv .ng .ng-list + .saverow:not(.in-card *) { margin-top: 0 !important; }
-
+/* Picked people in New group never touch: a little space between the rows (Roxanne, 27 Nov:
+   "It is not acceptable to have items stuck to each other"). */
+.inv .ng-list:not(.in-card *) { gap: 4px; }
