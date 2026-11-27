@@ -44,9 +44,8 @@ She found agreed rules missing from some panels. Found by rendering every panel:
    Hero's Mission and Vision of Dawn rewards, Wander Theater's Bizarre Bazaar. The Emporium of
    Enigma shop shows nowhere from Frosty Fortune; Crazy Joe's rewards are saved but not shown.
 3. Shops (her answer, 27 Nov night, design-decisions.md "Shops"): the Merchant tab becomes Shop,
-   each offer a card drawn like the game's shop cards in the event's colours. Colours accepted;
-   second version (thicker glass, lower price bar, shorter cards) shown 27 Nov night, not committed
-   until she accepts it.
+   each offer a card drawn like the game's shop cards in the event's colours. Accepted 27 Nov
+   night ("the shops are perfect", 4th version), committed. PC versions shown next.
 4. Timelines on wip-27-nov: checked row by row, no rewards or mail row anywhere, no time
    written twice.
 

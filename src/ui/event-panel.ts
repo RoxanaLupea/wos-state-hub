@@ -507,11 +507,18 @@ function rewardListHtml(list: string, band: string, bandCount: number, shown: Re
       : SHOP_BAND_CURRENCIES[eventTypeId + '|' + band] ?? SHOP_CURRENCIES[eventTypeId] ?? '';
     const currencyFile = currency ? itemImageFile(currency) : '';
     const currencyUrl = currencyFile ? imageUrl(currencyFile.replace(/\.png$/, '')) : '';
-    return '<div class="merchant-grid">' + shown.map(row =>
-      `<div class="merchant-offer">${rewardTile(row)}<span class="merchant-price">` +
+    // Each offer is a card drawn like the game's shop cards, in the event's colours: the item,
+    // its limit, and the price on a light bar at the bottom (Roxanne, 27 Nov: "we'll use these
+    // to design the shops to keep the familiarity ... a graphical element that is drawn based
+    // on event").
+    const shopStyle = `--shop-a:${eventTypeColor(eventTypeId)};--shop-b:${eventTypeColorEnd(eventTypeId)}`;
+    return `<div class="shop-grid" style="${escapeForPage(shopStyle)}">` + shown.map(row =>
+      '<div class="shop-card">' + SHOP_CAP +
+      `<span class="shop-item">${rewardTile(row)}</span>` +
+      (row.note ? `<span class="shop-limit">${escapeForPage(row.note.replace(/^Limit\s*/, 'Limit: '))}</span>` : '') +
+      '<span class="shop-price">' +
       (currencyUrl ? `<img src="${escapeForPage(currencyUrl)}" alt="${escapeForPage(itemName(currency))}">` : '') +
-      `${escapeForPage(row.rowLabel)}</span>` +
-      (row.note ? `<span class="merchant-limit">${escapeForPage(row.note)}</span>` : '') + '</div>').join('') +
+      `${escapeForPage(row.rowLabel)}</span></div>`).join('') +
       '</div>';
   }
   // Any other list: a row per left words where the rewards have them, else one grid.
@@ -521,6 +528,11 @@ function rewardListHtml(list: string, band: string, bandCount: number, shown: Re
       ? rewardLines(inSection) : `<div class="reward-flat">${inSection.map(rewardTile).join('')}</div>`);
   }).join('');
 }
+
+// The snow on top of a shop card, as the game draws it: thicker at the corners, with a drip
+// near each, thin in the middle.
+const SHOP_CAP = '<svg class="shop-cap" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true">' +
+  '<path d="M0 0H100V7.5C97.5 7.5 97 11.5 94.5 11.5C92 11.5 92 6.2 88 5.4C72 4 28 4 12 5.4C8 6.2 8 11.5 5.5 11.5C3 11.5 2.5 7.5 0 7.5Z"/></svg>';
 
 // An event's merchant or shop is a tab of its own, apart from its rewards (Roxanne, 27 Nov:
 // "merchant has to be separate from rewards because many events have one").
@@ -553,7 +565,7 @@ function rewardsFold(eventTypeId: string, state: RewardViewState, merchant = fal
     shown = shown.slice().sort((left, right) => firstNumberIn(left.rowLabel) - firstNumberIn(right.rowLabel));
   }
 
-  let html = `<details class="points-list rewards-fold" open><summary>${merchant ? 'Merchant' : 'Rewards'}</summary>`;
+  let html = `<details class="points-list rewards-fold" open><summary>${merchant ? 'Shop' : 'Rewards'}</summary>`;
   // Every list one after another, each under its own heading, its tiers or bands as tabs
   // (Alliance Championship's look, for every event, Roxanne 27 Nov).
   if (lists.length) {

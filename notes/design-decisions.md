@@ -1834,4 +1834,5 @@ alliance-time forms it opened go to the admin menu (to be designed).
   Battle from the longest hold; the old records keep their results.
 - Shop price bar (Roxanne, 27 Nov night): "a 4th version where they are see-through but whiter, like
   more opaque, but still see-through."
+- Shops accepted (Roxanne, 27 Nov night): "Ok, the shops are perfect" (the 4th version).
 

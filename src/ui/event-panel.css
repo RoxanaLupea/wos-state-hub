@@ -342,11 +342,37 @@
 /* Ends a line of rewards early: the top ranks' extra rewards, then the ones every rank gets. */
 .reward-break { flex-basis: 100%; height: 0; }
 .reward-source { margin: 8px 0 2px; font-size: 11px; font-style: italic; color: var(--text-faint); }
-.merchant-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 8px; }
-.merchant-offer { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 2px; border-radius: 10px; background: rgba(255, 255, 255, 0.05); }
-.merchant-price { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 800; color: var(--text); }
-.merchant-price img { width: 16px; height: 16px; object-fit: contain; }
-.merchant-limit { font-size: 10.5px; font-weight: 700; color: var(--text-faint); }
+/* Shops (Roxanne, 27 Nov night): each offer a card drawn like the game's shop cards, in the
+   event's colours: snow on top, the item, its limit, the price on a light bar. Three a line,
+   as in the game. */
+.shop-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+/* Thick glass you cannot see through (Roxanne, 27 Nov night: "more glassy, even if it's a glass
+   that you cannot see through"): the event's colours, a sheen across the top, light edges and
+   a soft depth at the bottom. */
+.shop-card { position: relative; display: flex; flex-direction: column; align-items: center; overflow: hidden;
+  border-radius: 9px 9px 8px 8px;
+  background:
+    linear-gradient(155deg, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.08) 34%, rgba(255, 255, 255, 0) 52%),
+    linear-gradient(to bottom, color-mix(in srgb, var(--shop-a) 80%, #fff) 0%, var(--shop-a) 40%,
+      color-mix(in srgb, var(--shop-b) 70%, #0b1222) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.22),
+    inset 0 -6px 10px -4px rgba(0, 0, 0, 0.28), 0 3px 8px rgba(0, 0, 0, 0.38); }
+.shop-cap { position: absolute; top: 0; left: 0; width: 100%; height: 8px; fill: #f4fbff; }
+.shop-item { margin-top: 12px; }
+.shop-item .reward-tile { width: 54px; height: 54px; border-radius: 10px; border-width: 2px; }
+.shop-item .reward-tile .tile-top { font-size: 9px; }
+.shop-item .reward-tile .tile-qty { font-size: 11px; }
+.shop-limit { margin: 3px 0 5px; padding: 0 4px; font-size: 11.5px; font-weight: 800; line-height: 1.2; color: #fff;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.45), 0 0 3px rgba(0, 0, 0, 0.35); white-space: nowrap; }
+/* The price on a see-through white glass bar (Roxanne, 27 Nov night: "Make it like a transparent
+   glass ... it is gonna be white but see-through"), the digits centred on the bar. */
+.shop-price { align-self: stretch; display: flex; align-items: center; justify-content: center; gap: 3px; margin: auto 3px 3px;
+  height: 22px; padding: 0 4px; box-sizing: border-box; border-radius: 6px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0.38));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(4px);
+  font-size: 14px; font-weight: 900; line-height: 1; color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55), 0 0 1px rgba(0, 0, 0, 0.4); white-space: nowrap; }
+.shop-price img { width: 16px; height: 16px; object-fit: contain; }
 .day-chests { margin-top: 4px; }
 /* In a timeline the space is narrower: smaller tiles, so a chest's items stay on one line. */
 .day-chests .reward-row { grid-template-columns: 50px 1fr; gap: 4px; }
@@ -426,7 +452,6 @@
 .range-lines .reward-label { white-space: nowrap; font-size: 11.5px; overflow-wrap: normal; }
 .reward-tile .tile-top { white-space: nowrap; letter-spacing: -0.2px; }
 /* Champion's Glory: 2 per row, like in the game. */
-.merchant-grid.glory-grid { grid-template-columns: repeat(2, 1fr); }
 /* Notes under a row's words (Crazy Joe's points, the Star Rating change) may wrap. */
 .range-lines .reward-label small { white-space: normal; }
 /* Lucky Wheel Reward Rates: the chance, then the item and its name. */
