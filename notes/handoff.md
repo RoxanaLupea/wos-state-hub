@@ -43,8 +43,8 @@ She found agreed rules missing from some panels. Found by rendering every panel:
 2. Rewards and shops saved as text, so they skip the reward standard and the Merchant tab:
    Hero's Mission and Vision of Dawn rewards, Wander Theater's Bizarre Bazaar. The Emporium of
    Enigma shop shows nowhere from Frosty Fortune; Crazy Joe's rewards are saved but not shown.
-3. Merchant offers are the old app's boxed cards, 3 a line, never designed with her. Asked her
-   whether they take the 6-a-line reward tiles with price and limit under, no box.
+3. Shops (her answer, 27 Nov night, design-decisions.md "Shops"): the Merchant tab becomes Shop,
+   each offer a card drawn like the game's shop cards in the event's colours. Mockup in progress.
 4. Timelines on wip-27-nov: checked row by row, no rewards or mail row anywhere, no time
    written twice.
 
@@ -74,7 +74,6 @@ She found agreed rules missing from some panels. Found by rendering every panel:
 
 ## Questions still open (one at a time, never dropped)
 
-- Merchant offers: 6-a-line reward tiles with price and limit under, no box? (asked 27 Nov night)
 - Fishing's ranks with 7 rewards: how should the 7 sit? (built as 3 + 4, not confirmed)
 - How many days old is 1458? (the Champion Shop's amounts depend on it; saved: over 448 days)
 - Alliance Championship Ultimate rank 2: is the 25.6K orange tile the Championship Badge, and

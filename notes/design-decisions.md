@@ -1800,3 +1800,9 @@ alliance-time forms it opened go to the admin menu (to be designed).
 - TAL shops (27 Nov): "search in guides ffs", "Yes, we need these 2 shops too". Saved from Heaven
   Guardian's guide (data/captures/tundra-arms-league-hall-of-heroism.md) as the Merchant tab's Ordinary
   Shop (Match Stakes) and Champion Shop (Champion Stakes).
+- Shops (Roxanne, 27 Nov night, with five screens from the game: Mystery Shop, VIP Shop, Labyrinth
+  Shop, Foundry Shop, Kasia's Shop; on the screenshots branch, shops/ and harvests-and-feasts/):
+  "We are going to replace the merchant name with Shop since it's widely known in game and we'll
+  use these to design the shops to keep the familiarity, so instead of a transparent box we'll add
+  a graphical element that is drawn based on event and we'll display the shops like this". The tab
+  is Shop; each offer is a card drawn like the game's (item, limit, price), in the event's colours.
