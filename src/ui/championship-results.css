@@ -24,11 +24,12 @@ button.ac-lane::after { content: ''; position: absolute; inset: -9px 0; }
 .ac-rank > .head { padding: 0 0 4px; font-size: 10.5px; font-weight: 800; letter-spacing: 0.02em; color: var(--text-faint); }
 .ac-rank > .us, .ac-rank > .us.who { color: var(--ours); font-weight: 800; }
 .ac-rank > .us.who small { color: color-mix(in srgb, var(--ours) 70%, transparent); }
-.ac-rank.editing { grid-template-columns: 14px minmax(0, 1fr) 30px 36px 46px; }
+.ac-rank.editing { grid-template-columns: 34px minmax(0, 1fr) 26px 30px 40px; }
+.ac-rank.editing > .head { font-size: 9.5px; letter-spacing: 0; }
 .ac-rank .svs-field { width: 100%; height: 20px; padding: 0 4px; box-sizing: border-box; font-size: 13px; font-weight: 700; line-height: 1; text-align: right; color: var(--text); }
 .ac-result { --edit-colour: var(--event-color); }
-.ac-move { display: flex; flex-direction: column; align-items: center; gap: 1px; }
-.ac-move button { display: block; padding: 2px 1px; border: none; background: none; cursor: pointer; }
+.ac-move { display: flex; align-items: center; gap: 0; }
+.ac-move button { display: block; padding: 4px 1.5px; border: none; background: none; cursor: pointer; }
 .ac-move svg { display: block; width: 14px; height: 9px; fill: none; stroke: url(#ac-move-colour); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
 /* Credit to whoever put the results in. */
 .ac-credit { margin: 0 0 18px; font-size: 12.5px; font-weight: 600; color: var(--text-faint); }
