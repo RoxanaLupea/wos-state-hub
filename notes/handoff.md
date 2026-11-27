@@ -4,6 +4,14 @@ Do CLAUDE.md's setup first. Updated 27 Nov 2026.
 
 ## Now
 
+### The calendar review on common-size: the screens
+
+The 19 screenshots under review are Claude's renders of the branch (26 Nov), on a computer
+1920 x 950: 1 month view with the day card; 2 Alliance Championship panel, Timeline; 3 its
+Rules; 4 its Rewards; 5 SvS panel; 6 SvS Results; 7 Foundry Battle panel; 8 Filters; 9 the
+account menu; 10 week view; 11 year view; 12 to 19 the other pages (their order was not
+written down). Made again with /tmp/panels.py (STATES lists them). Done: 1 and 2. Now: 3.
+
 ### Pushed 27 Nov, 07:46 (her time)
 
 Live: Submissions as three columns across the page on a computer (New/Pending, Approved,
