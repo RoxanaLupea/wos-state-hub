@@ -345,7 +345,11 @@
 /* Shops (Roxanne, 27 Nov night): each offer a card drawn like the game's shop cards, in the
    event's colours: snow on top, the item, its limit, the price on a light bar. Three a line,
    as in the game. */
-.shop-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+/* Every screen keeps the phone's card (92 x 113 px on her phone, Roxanne 27 Nov night: "The
+   proportion we have in the mobile version is perfect"); narrower phones shrink it, wider panels
+   centre the cards with more space between them. */
+.shop-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 92px)); justify-content: center; gap: 10px; }
+@media (min-width: 700px) { .shop-grid { gap: 14px 16px; } }
 /* Thick glass you cannot see through (Roxanne, 27 Nov night: "more glassy, even if it's a glass
    that you cannot see through"): the event's colours, a sheen across the top, light edges and
    a soft depth at the bottom. */
