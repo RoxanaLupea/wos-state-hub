@@ -71,6 +71,8 @@ has had to point out before. When she points out a new kind of fault, it is adde
 - It works on a phone and on a computer, both checked.
 
 ## The content
+- Text she sends from elsewhere (a Discord message, a guide) is written in the site's own styles
+  (12px steps, the three tones), never copied with its bold or colours (27 Nov night).
 - A label reads correctly whatever is picked.
 - An empty value looks intentionally empty, never broken. Before showing anything as not
   recorded, check whether the records already hold it (the president always is). A part

@@ -1861,3 +1861,9 @@ alliance-time forms it opened go to the admin menu (to be designed).
   words: "this cannot be more wordy than the discord message, we are adding all the icons we need ...
   use the hover to show the skill"; the shop's extra day is a dotted line with no name.
 - Tab order (Roxanne, 27 Nov night): "no, timeline, missions, shop, shop is always after missions".
+- Flame and Fangs' timeline (Roxanne, 27 Nov night): "on the timeline we would have under each of them
+  how many missions we get"; "you're writing it all in bold because of a discord message, we have rules
+  for these cards that you're ignoring and breaking and you're not even flagging it". Built: each plan
+  step written as any step (12px, the step tone, no bold), the missions it brings under it in the faint
+  tone; Agnes' 8 counted into the Intel missions.
+
