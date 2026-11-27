@@ -2,6 +2,7 @@
 // sign in, plus the toolbar above the calendar.
 import './shell.css';
 import { currentTimeMode, gameClockText, nowMinute } from '../calendar/time-mode.ts';
+import { playerPictureMarkup } from './broken-picture.ts';
 import { escapeForPage } from './escape.ts';
 import { logoSvg } from './logo.ts';
 import { eventIcon, imageUrl } from './event-icon.ts';
@@ -97,6 +98,8 @@ export interface TopBarOptions {
   // The picture of the game account they are on, from the game; null before the game has one.
   playerPicture?: string | null;
   accountMenu: string | null;
+  // A red dot on the name: something in the menu waits for this person.
+  menuDot?: boolean;
   // The event the event section is about, so the open section can show its logo and name.
   eventTypeId: string | null;
 }
@@ -146,12 +149,13 @@ export function topBar(options: TopBarOptions): string {
     ${options.playerName
       ? `<div class="account-menu-wrap"><button type="button" class="ghost-button me-button" data-account-menu` +
         ` aria-haspopup="menu" aria-expanded="false" aria-label="${escapeForPage(options.playerName)}">` +
-        `<span class="me-pic" aria-hidden="true">${options.playerPicture ? `<img src="${escapeForPage(options.playerPicture)}" alt="">`
+        `<span class="me-pic" aria-hidden="true">${options.playerPicture ? playerPictureMarkup(options.playerPicture)
           : escapeForPage((Array.from(options.playerName).find(letter => /[\p{L}\p{N}]/u.test(letter)) ?? '').toUpperCase())}</span>` +
         `<span class="me-name">${escapeForPage(options.playerName)}</span>` +
         // The arrow to the menu, drawn as the site's icons are (computer only).
         '<svg class="me-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"' +
         ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>' +
+        (options.menuDot ? '<i class="menu-dot" aria-hidden="true"></i>' : '') +
         `</button>${options.accountMenu ?? ''}</div>`
       : '<button type="button" class="ghost-button" data-page="player">Sign in</button>'}
   </header>`;

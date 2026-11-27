@@ -34,6 +34,9 @@ notes/rules-and-open-items.md (game rules).
   better design (25 Nov). Don't just agree.
 - When she points out a problem ("too narrow", "looks wrong"), ask how she wants it fixed
   before building anything; never pick a fix and build it on your own (26 Nov).
+- When she asks how something should work or where it should go, ask how she wants it before
+  mocking or proposing anything: she usually has the idea already (27 Nov). Send screenshots as
+  soon as they exist, never hold them back.
 - One question at a time, and only when it is truly open.
 - What she asked for is decided. Never list it as open or waiting for her ok, and never ask
   her a question her own words already answer (26 Nov).
@@ -83,6 +86,12 @@ has (Roxanne, 25 Nov). The same element is never drawn in different ways; sizes 
 to where it sits. A new element is fine, but say it is new. Before showing anything,
 render every page before and after the change and compare them: nothing outside the
 change may move. She must be able to count on the work without inspecting it closely.
+
+Every box whose content can be taller than it scrolls, phone and computer, with no
+scrollbar drawn anywhere; a fade at its bottom says it scrolls, the standard for the whole
+site (main.ts FADING_BOXES); items never touch (Roxanne, 27 Nov: "Make sure you double check
+that from now on"). Run tools/render/scroll-audit.py after every change
+(notes/review-checklist.md); it shows scrollbars, so drawn ones are caught.
 
 ## What needs her yes
 

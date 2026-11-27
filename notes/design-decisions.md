@@ -1485,3 +1485,107 @@ All nine are built.
   or sheet is open, the page behind does not scroll (tokens.css).
 - Rows never touch (Roxanne, 27 Nov): "It is not acceptable to have items stuck to each other.
   Never ... items never stick together on PC either." (New group's ticked rows.)
+- Broken player pictures (Roxanne, 27 Nov): "I still wanted to show something, but like it has
+  to be clear that it's not the picture"; with the Whiteout Survival logo she sent: "Put a
+  transparent picture is not loading over that." Accepted ("That's it."): the logo filling the
+  picture's shape, a half-transparent dark veil and a white torn-picture sign in the middle.
+  A player with no picture yet keeps their first letter. Built in broken-picture.ts, used by
+  every player picture (pictureOf, the top bar).
+- Results, every event (Roxanne, 27 Nov): "if at the start, when we have no results recorded, we
+  should have a button instead of edit. We should have a button that says add results, and then
+  they get the template in which they can fill in stuff, and this should be the common practice.
+  Because before they add results, there should not be a results tab." Alliances without
+  screenshots sent "have to be able to edit in place".
+- Alliance Championship (Roxanne, 27 Nov): she sends screenshots of the rounds and the final
+  ranking; the site records every round, the flags and the final ranking from them ("I'm gonna
+  just give you the screenshots. That's how I will do it"). Her rule as she said it: "every game,
+  you have 3 lanes. If 2 of your lanes win, then you get 2 points ... the ranking is based on
+  those points, but if the points are equal, then the flags are gonna be what matters." The
+  game's mails (27 Nov) say a win earns 3 Championship Points and a loss none, and flags are
+  the lanes won (data/captures/other-states.md).
+- Alliance Championship results that alliances fill in (Roxanne, 27 Nov): the site does not
+  work out points or flags, because the other games of a round are not known. "If they want to
+  add them, great. If not, we show it without the ranking. So if they don't fill up the ranking,
+  only show the results for the round if that's what they fill up. It's not mandatory for them
+  to fill both."
+- Pop-ups on the phone (Roxanne, 27 Nov): Add player and New group open from the bottom, like
+  the profile: "I like them from the bottom on the phone. It makes more sense and it's more
+  consistent." The Custom / State / Contact choice is only as wide as its words, centred ("it
+  should only be as big as the elements inside it and centered"); it may be redesigned later.
+- Who adds results (Roxanne, 27 Nov): "Our R4s need to know that add result is an option...
+  Members should be able to add them. But they need to be confirmed by an R4."
+- Adding results, every alliance event that has or can have results (Roxanne, 27 Nov):
+  - The button is generic, "somewhere on top, and again it has to be graphical. It cannot be
+    just another text on the ... bars, the navigation in the panel." Never as the last element
+    of the timeline: "I hate it."
+  - Only what already happened is asked for: "if they're filling in results during round 3,
+    but round 3 wasn't fought yet, then you are gonna only ask for the first 2 rounds".
+  - Editing in place, matching what is shown: "we show 3 bars. That's how they will input the
+    data ... if they tap or click on the lanes, they get selected as victory lanes, and the ones
+    that are not selected are losing lanes. If they don't select any of them and they save, then
+    all 3 are losing lanes." At most a tiny "select victory lanes" message, "without changing
+    how the thing shows ... You're not gonna move elements to add one more line."
+  - "the points, you calculate them, so they do not insert numbers."
+  - "when they have all 5 rounds filled in, that's when we ... give them another option of add
+    ranking", filled in place. While filling, the rank column holds arrows to move a row up and
+    down; "If they don't order it properly, then we sort it at the end, so they don't have to."
+- Review of results (Roxanne, 27 Nov): "For R4, the button is save. For any other member of the
+  alliance who can still add results, the button will become submit. And when results are
+  submitted, our R4s will get notifications." An R4 gets "an extra thing in their menu ... for
+  review or something, or an inbox": "a message with a red dot telling them that there's work
+  for them to review, and a link to that particular event"; on that page "they have the option
+  to accept the work someone else did or reject it. And the one who submitted the work gets a
+  message telling them that it was accepted or rejected, or it's pending." Members also get "an
+  option ... to keep track of this" in the sign-in menu. "This is alliance based, so each person
+  can edit the events from their alliance, and the R4s of that alliance get the notifications."
+  One R4's answer settles it ("We don't need for our R4s to approve the same thing"); the item
+  shows its status, resolved, approved or rejected, and by whom.
+- Instructions while editing (Roxanne, 27 Nov): "select victory lanes" rather than "tap the lanes
+  you won"; "It doesn't have to be bold, it doesn't have to be that thick, and it can be like
+  blue and have a star. Mark it as an instruction." Lanes start red and turn blue when tapped.
+- Review items are tickets, not messages (Roxanne, 27 Nov): "they get a red dot when there are
+  open tickets. When they are solved, they don't get red dots. But all of them can see the
+  history of open tickets and see how it was resolved." The one who submitted gets a
+  notification that it was approved (or rejected).
+- Add results button (Roxanne, 27 Nov, accepted): a trophy with a plus and "Results" under it, at
+  the top right of the event's head ("Yes, I like it. And we're gonna keep it at that for now").
+  R4s can edit submitted results before accepting them, "so they can accept the input and just
+  fix the mistakes if there are any, without having to write everything from the start."
+- Alliance's registration plan (Roxanne, 27 Nov): the game's Registration note goes ("I don't
+  like it"); R4s set a message there, "something like register to middle lane with this ratio",
+  "shown underneath like all the time, not expandable". The button "Add note" is accepted. A
+  note is added once and kept for all future events of that kind ("When we add the note, we add
+  it for all future events. And in future events, that changes to edit note. So we only get the
+  add once, and then it moves to edit"). Members see only the note, no button; with no note they
+  see just Registration. It must look different from an instruction: "These are actual
+  instructions, a plan to follow ... it has to be like a banner or something that screams at
+  them, look at this."
+- Alliance Championship dates (Roxanne, 27 Nov): no Edit in its head. "These are fixed. These
+  are not gonna change. It's a fixed event. Those are the times, period. Remove it."
+  (datesLocked in event-types.json.)
+- The date and repeat forms (Roxanne, 27 Nov): "even if I need it, that is the worst possible way
+  to let me edit anything ... It's only confusing me." When the admin menu is designed, changing
+  an event's dates is designed anew there, not moved over as these forms.
+- Credit for results (Roxanne, 27 Nov): "when we approve something, we will have a message below
+  the results saying submitted by and then the user. We want to give credit to them." The
+  ranking's up and down arrows look like the site's buttons, so it is clear the rows can be moved.
+- Submissions, first version (Roxanne, 27 Nov): "It's enough to have them just as links": a
+  Submissions item in the menu with a red dot when something is submitted, opening a page
+  reached only from there, "basically just a list for now", each one taking the R4 "to the
+  exact page that the result is submitted for", to review it and "approve it or reject it".
+  "I don't really care how it looks. I need it to work." The design is revisited later.
+- Scrollbars (Roxanne, 27 Nov): "Don't want any scroll bars anywhere. It should just be
+  scrollable. We tell them that it's scrollable by having it faded a little at the bottom.
+  That's the standard practice for the entire site."
+- Lists keep their place (Roxanne, 27 Nov): "Whenever a list is scrollable and I check or uncheck
+  a thing ... it jumps to the top ... I don't want my list to jump when I'm selecting things."
+  Every box that scrolls on its own is put back where it was after each drawing (main.ts
+  KEPT_BOXES), PC and phone.
+- Contributors (Roxanne, 27 Nov): results are added round by round, so several members may
+  submit for one results screen; each one whose results are approved is added once, in order,
+  and all are shown under the results. "I want them to be displayed like with their picture and
+  their name from in-game ... I want every spot where a user is shown to be that user, not just
+  text." (person-chip.ts, used under results and on Submissions.)
+- Submissions GIFs (Roxanne, 27 Nov): "To make the app fun, remind me to add GIFs on the
+  submission page. We need something for approved, rejected, and submissions for when they are
+  empty." Open: she adds the GIFs; remind her when the Submissions page is next worked on.

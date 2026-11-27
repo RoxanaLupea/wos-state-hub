@@ -126,3 +126,12 @@
     mask-image: linear-gradient(to bottom, #000 26px, transparent 26px, #000 46px, #000 calc(100% - 16px), transparent);
   }
 }
+/* Every box that scrolls does it with no scrollbar drawn (Roxanne, 27 Nov: "We do not want a
+   scroll bar. But we want all items to scroll on both PC and mobile"). */
+@media (min-width: 1000px) {
+  .admin-page { scrollbar-gutter: auto; scrollbar-width: none; margin-right: 0; }
+  .admin-page::-webkit-scrollbar { display: none; }
+  /* A Fortress season taller than the screen scrolls in its own box. */
+  .fort-board.fort-season { overflow-y: auto; scrollbar-width: none; }
+  .fort-board.fort-season::-webkit-scrollbar { display: none; }
+}

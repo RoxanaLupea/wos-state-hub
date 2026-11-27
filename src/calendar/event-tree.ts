@@ -26,6 +26,9 @@ export interface TreeRow {
   playOpensUntil?: number;
   isPlayClose?: boolean;
   note?: string;
+  // A line always shown under the step's name, which is then drawn as a heading
+  // (Alliance Championship: "ROUND 1" over "Adjust lanes").
+  detail?: string;
   eventTypeId: string;
   occurrence: Occurrence;
   // 0 is the main line, 1 is a row hanging under it.
@@ -85,6 +88,7 @@ export interface TreeOptions {
   // A phase's or a step's instructions, opened from its row like points.
   phaseNoteOf: (phaseId: string) => string;
   stepNoteOf: (stepId: string) => string;
+  stepDetailOf?: (stepId: string) => string;
   dayNameOf: (eventTypeId: string, dayNumber: number) => string;
   // The scoring rows of one day, by their ids.
   pointSourceIdsForDay: (eventTypeId: string, dayNumber: number) => string[];
@@ -177,6 +181,7 @@ function memberContent(member: Occurrence, options: TreeOptions): TreeRow[] {
       minute: (member.startDay + step.dayNumber - 1) * MINUTES_PER_DAY +
         options.minutesFromTime(step.startTimeUtc),
       label: options.stepLabel(step.id), note: options.stepNoteOf(step.id),
+      detail: options.stepDetailOf?.(step.id) || undefined,
       eventTypeId: member.eventTypeId, occurrence: member, level: 1, pointSourceIds: []
     });
   }

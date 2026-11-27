@@ -1,0 +1,53 @@
+/* Alliance Championship results (Roxanne, 27 Nov): the rounds with one bar per lane,
+   blue for a lane we won and red for one we lost, and the group ranking. */
+.ac-lanes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-top: 6px; }
+.ac-lane { display: block; height: 6px; padding: 0; border: none; border-radius: 999px; }
+.ac-lane.o { background: linear-gradient(90deg, var(--ours-deep), var(--ours)); }
+.ac-lane.t { background: linear-gradient(90deg, var(--theirs), var(--theirs-deep)); }
+/* A lane is tapped while adding: the tap reaches a little above and below it. */
+button.ac-lane { position: relative; cursor: pointer; }
+button.ac-lane::after { content: ''; position: absolute; inset: -9px 0; }
+.ac-opp b { color: var(--theirs); font-weight: 800; }
+.svs-day-values .ac-opp .ac-alliance-name { display: block; min-width: 0; text-align: center; color: var(--text); }
+.ac-opp .svs-field { height: 20px; padding: 0 4px; font-size: 12.5px; font-weight: 700; line-height: 1; color: var(--text); vertical-align: middle; }
+.ac-opp .ac-state { width: 3.4em; text-align: center; }
+.ac-opp .ac-alliance { display: block; width: 15.5em; max-width: 100%; margin: 3px auto 0; text-align: center; }
+/* The instruction while adding: blue, regular, with a star (Roxanne, 27 Nov). */
+.event-page .part-title b.ac-hint { font-size: 12px; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--ours); }
+.ac-result .part-title .ac-add-ranking { margin: -4px 0; }
+
+.ac-rank { display: grid; grid-template-columns: 12px minmax(0, 1fr) 22px 36px 54px; column-gap: 5px; align-items: center; }
+.ac-rank > span { padding: 6px 0; font-size: 13px; font-weight: 700; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.ac-rank > span.n { text-align: right; }
+.ac-rank > span.who { color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ac-rank > span.who small { display: block; margin-top: 1px; font-size: 12px; font-weight: 700; color: var(--text-faint); }
+.ac-rank > .head { padding: 0 0 4px; font-size: 10.5px; font-weight: 800; letter-spacing: 0.02em; color: var(--text-faint); }
+.ac-rank > .us, .ac-rank > .us.who { color: var(--ours); font-weight: 800; }
+.ac-rank > .us.who small { color: color-mix(in srgb, var(--ours) 70%, transparent); }
+.ac-rank.editing { grid-template-columns: 44px minmax(0, 1fr) 24px 28px 36px; column-gap: 4px; }
+.ac-rank.editing > .head { font-size: 9.5px; letter-spacing: 0; }
+.ac-rank .svs-field { width: 100%; height: 22px; padding: 0 3px; box-sizing: border-box; font-size: 13px; font-weight: 700; line-height: 1; text-align: right; color: var(--text); }
+.ac-result { --edit-colour: var(--event-color); }
+.ac-rank > .ac-move { display: flex; align-items: stretch; align-self: stretch; gap: 0; padding: 2px 0; margin-left: -6px; }
+/* Each arrow is a full row tall and 25px wide, easy to tap (Roxanne, 27 Nov: "They are functional keys"). */
+.ac-move button { display: flex; align-items: center; justify-content: center; width: 25px; min-height: 40px; padding: 0; border: none; border-radius: 8px; background: none; cursor: pointer; }
+.ac-move button:active { background: rgba(255, 255, 255, 0.08); }
+.ac-move svg { display: block; width: 16px; height: 10px; fill: none; stroke: url(#ac-move-colour); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
+/* Credit to whoever put the results in. */
+.ac-credit { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 0 0 18px; }
+.ac-credit > span:first-child { font-size: 12.5px; font-weight: 600; color: var(--text-faint); }
+.ac-result .form-message:empty { display: none; }
+.ac-result .form-message { margin: 0; color: var(--danger); font-size: 13px; }
+
+/* While results are added on a phone, only the Results tab shows on the tabs' line, so
+   Cancel and Save fit beside it. */
+@media (max-width: 999.98px) {
+  .event-page:has(.ac-editing) .info-tab:not([aria-selected="true"]) { display: none; }
+}
+
+/* The Results button at the top right of an event's head: a trophy with a plus. */
+.add-results-top { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 0; border: none; background: none; cursor: pointer; font: inherit; }
+.add-results-icon { display: block; width: 28px; height: 28px; }
+.add-results-top span { font-size: 9.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); white-space: nowrap; }
+/* A round's flags take only the room they need, so the opponent's name fits between them. */
+.ac-round .svs-day-values > span:first-child, .ac-round .svs-day-values > span:last-child { min-width: 28px; flex: none; }

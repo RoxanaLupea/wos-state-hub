@@ -300,7 +300,8 @@
   .inv .two .il:not(.cmp) .troops:not(.in-card *) {gap: 4px; }
 }
 .inv .ng:not(.in-card *) {max-width: 420px !important; }
-.inv .ng .ng-how:not(.in-card *) {align-self: stretch; justify-content: center; }
+/* Custom / State / Contact only as wide as its words, centred (Roxanne, 27 Nov). */
+.inv .ng .ng-how:not(.in-card *) {align-self: center; justify-content: center; }
 .inv .ng .ng-how + .ng-opts:not(.in-card *) {margin-top: 15px; }
 .inv .ng-opts:not(.in-card *) {display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
 .inv .ng-opt:not(.in-card *) {height: 32px; padding: 0 14px; border-radius: 9px; border: 1px solid var(--glass-border); background: none; font: inherit; font-size: 14px; font-weight: 800; color: var(--text-muted); letter-spacing: .02em; cursor: pointer; }
@@ -729,6 +730,9 @@
 .inv .stats.prof { position: relative; }
 .inv .prof-close { position: absolute; right: 0; top: -44px; }
 .inv .profile-sheet .prof-card { border-radius: 22px 22px 0 0; max-height: 88vh; }
+/* The profile scrolls inside its sheet, the page behind staying still (27 Nov). */
+.inv .profile-sheet .prof-card { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+.inv .profile-sheet .prof-card::-webkit-scrollbar { display: none; }
 .inv .sheet-wrap.record-profile { align-items: flex-end; padding: 0; }
 @media (min-width: 1000px) {
   .inv .sheet-wrap.record-profile { align-items: center !important; padding: 20px !important; }
@@ -865,4 +869,17 @@
   scrollbar-color: color-mix(in srgb, var(--section) 35%, transparent) transparent; }
 .inv .leave-prompt-box.ng { max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior: contain; }
 .inv .ng .ng-list + .saverow:not(.in-card *) { margin-top: 0 !important; }
+/* Picked people in New group never touch: a little space between the rows (Roxanne, 27 Nov:
+   "It is not acceptable to have items stuck to each other"). */
+.inv .ng-list:not(.in-card *) { gap: 4px; }
 
+/* On the phone, Add player and New group open from the bottom, like the profile (Roxanne,
+   27 Nov: "I like them from the bottom on the phone. It makes more sense and it's more
+   consistent"). */
+@media (max-width: 999.98px) {
+  .inv .leave-prompt:has(> .from-bottom) { align-items: flex-end; padding: 0; }
+  .inv .leave-prompt-box.from-bottom { width: 100%; max-width: none !important; box-sizing: border-box;
+    border-radius: 22px 22px 0 0; border-bottom: none; padding: 22px 20px 20px;
+    max-height: 90dvh; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+  .inv .leave-prompt-box.ng.from-bottom .ng-list { max-height: 46dvh; }
+}

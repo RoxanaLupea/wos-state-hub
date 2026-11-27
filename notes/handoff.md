@@ -1,8 +1,65 @@
 # Handover: where the work stands
 
-Do CLAUDE.md's setup first. Updated 26 Nov 2026.
+Do CLAUDE.md's setup first. Updated 27 Nov 2026.
 
 ## Now
+
+### Pushed 27 Nov, 07:46 (her time)
+
+Live: Submissions as three columns across the page on a computer (New/Pending, Approved,
+Rejected) and three sections that open and close on a phone; a member's seen tickets are kept
+in the database (result_submissions.seen_by_submitter, mark_submissions_seen(), run on her
+yes), so their dot clears on every device.
+
+### Pushed 27 Nov, 07:40 (her time)
+
+Live: no scrollbar anywhere, boxes that scroll fade at the bottom (FADING_BOXES); scrolled
+lists stay in place when something is ticked (KEPT_BOXES). Submissions (submissions.ts,
+table result_submissions, created on her yes): members submit Alliance Championship results
+(button Submit), R4s get a red dot and the menu's Submissions list, open a ticket to the
+event's Results to fix, Approve or Reject; the member gets a dot when it is resolved. Everyone
+who contributed is shown under the results with picture and in-game name (person-chip.ts).
+Open: remind her to add GIFs to Submissions (approved, rejected, and each column when empty); Foundry and Canyon results by legion need their design (her screenshots are in
+data/captures); the Submissions page's design comes later; the bottom-sheet pop-ups later.
+Next: the calendar redesign review on common-size, screen 3 onward.
+
+### Pushed 27 Nov, 07:15 (her time)
+
+Live on main: Alliance Championship results (championship-results.ts): the trophy Results
+button at the top of the head for R4s once the first battle started and while there are no
+results; no Results tab until results exist (also Foundry, Canyon, Showdown, Winter Siege, whose
+Results button still opens their old forms, to be redesigned); rounds added in place (only rounds
+fought, lanes tapped as won, flags and points worked out); Add ranking once 5 rounds are in
+(group from the rounds, arrows side by side, sorted by points then flags on save); "Submitted by"
+under the results. Timeline: ROUND n with Adjust lanes under it, then Battle (eventStep .detail
+in en.json); the game's notes for rounds and registration removed. The R4s' plan banner under
+Registration (plan-note.ts; alliance_records.event_notes, column added on her yes 07:07). No head
+Edit on AC (datesLocked). Open: members submit and R4s approve as tickets (her rules in
+design-decisions.md, needs new tables); drawn scrollbars on PC wait for her call.
+The calendar redesign stays on common-size (built, not live), review continues there.
+
+### Pushed 27 Nov, 06:12 (her time)
+
+Live: a player picture that fails to load shows the WoS logo under a veil with a torn-picture
+icon (broken-picture.ts); on the phone Add player and New group open from the bottom (she wants
+them redone later); Custom/State/Contact only as wide as its words; 1252's Alliance Championship
+captured in data/captures/other-states.md. scroll-audit.py now shows scrollbars (headless hid
+them): it finds drawn scrollbars on PC in the event panel, Filters, Fortress Rewards, State,
+Invites lists and New group; removing them widens approved boxes, so it waits for her.
+Open: Add results for every alliance event (her rules in design-decisions.md, 27 Nov): a
+graphical button on top, only past rounds asked, in-place editing (AC lanes tapped as won),
+then Add ranking with up/down arrows; who adds (members) and how R4s confirm is still open.
+
+### Pushed 27 Nov, 05:30 (her time)
+
+Live: profiles opened on a phone scroll inside their sheet; the calendar's weeks, the day
+panel, admin pages and Fortress Season scroll with no scrollbar; New group rows 4px apart;
+tools/render/scroll-audit.py checks every page for cut-off content, scrollbars and boxes
+touching. Open: broken player pictures (her ask, 05:29: "something fun", clear it is not
+the picture; her examples were sketched animals peeking from an edge; my drawn versions
+were rejected, she will send the pictures herself, then a failed picture shows one of hers,
+the same one for the same player, through pictureOf in player-profile.ts), the AC results mockup, which list
+pop-ups open from the bottom on the phone.
 
 ### Pushed 27 Nov, 05:10 (her time)
 

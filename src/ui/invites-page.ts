@@ -452,7 +452,7 @@ function addPopup(popup: Extract<Popup, { kind: 'add' }>, shown: Shown): string 
   const kinds = found && !listed ? '<div class="kind-words" role="group" aria-label="List">' + INVITE_LISTS.map(list =>
     `<button type="button" class="kind-word${chosen === list ? ' selected' : ''}" data-invite-add-list="${list}"${full(list) ? ' disabled' : ''}>${KIND_WORDS[list]}</button>`).join('') + '</div>' : '';
   const canSave = !!found && !listed && !full(chosen) && !popup.saving;
-  return '<div class="leave-prompt" data-invite-popup-close><div class="leave-prompt-box glass add-invite" role="dialog" aria-modal="true">' +
+  return '<div class="leave-prompt" data-invite-popup-close><div class="leave-prompt-box glass add-invite from-bottom" role="dialog" aria-modal="true">' +
     '<div class="pp adding"><section class="add"><h2>Add player</h2>' +
     `<div class="add-id"><input class="info-field id-entry" id="invite-add-id" data-invite-add-id inputmode="numeric" autocomplete="off" placeholder="In-game ID"` +
     ` aria-label="In-game ID" value="${escapeForPage(popup.id)}"></div>` + answer + note + kinds +
@@ -493,7 +493,7 @@ function newGroupPopup(popup: Extract<Popup, { kind: 'new-group' }>, all: Invite
         `<div class="ng-p"><i>${pictureOf(invite.avatar, invite.name)}</i><span>${escapeForPage(invite.name || invite.playerId)}</span></div>`).join('') + '</div>'
         : '<p class="add-answer">No one on the lists has one yet.</p>');
   }
-  return '<div class="leave-prompt" data-invite-popup-close><div class="leave-prompt-box glass add-invite ng" role="dialog" aria-modal="true">' +
+  return '<div class="leave-prompt" data-invite-popup-close><div class="leave-prompt-box glass add-invite ng from-bottom" role="dialog" aria-modal="true">' +
     `<div class="pp adding"><section class="add"><h2>New group</h2>${how}${body}` +
     '<div class="saverow"><button type="button" class="ghost-button" data-invite-popup-close>Cancel</button>' +
     '<button type="button" class="primary-button save" data-new-group-create>Create</button></div></section></div></div></div>';

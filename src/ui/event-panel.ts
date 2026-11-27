@@ -442,7 +442,14 @@ export function setOpenPointRows(rows: Set<string>): void {
   openPointRows = rows;
 }
 
-export function renderEventTree(tree: EventTree): string {
+// The alliance's plan on the timeline's first row (Roxanne, 27 Nov): the R4s' button at
+// the row's right, and the plan under the row's name as a banner.
+export interface FirstRowPlan {
+  button: string;
+  banner: string;
+}
+
+export function renderEventTree(tree: EventTree, firstRow?: FirstRowPlan): string {
   const rows = tree.rows;
   const side = tree.side;
 
@@ -602,7 +609,7 @@ export function renderEventTree(tree: EventTree): string {
       (isNewDay ? `<b>${escapeForPage(shortDayText(rowDay))}</b>` : '') +
       `<span>${escapeForPage(clockText(row.minute))}</span></span>` +
       sideCell + (openingColumns.length ? openingCells(index) : '') + mainLine +
-      `<span class="tree-label${row.level === 0 && !row.isEndRow ? ' main' : ''}${row.isStage ? ' stage' : ''}` +
+      `<span class="tree-label${row.level === 0 && !row.isEndRow ? ' main' : ''}${row.isStage ? ' stage' : ''}${row.detail ? ' heading' : ''}` +
       `${row.isSideRow || row.isEndRow ? ' side-row' : ''}"` +
       // A ticket's rows are written in the ticket's own colour, like its line; other
       // rows beside the event use the light end of their bar.
@@ -612,13 +619,23 @@ export function renderEventTree(tree: EventTree): string {
       (row.isCancelled ? '<span class="cancelled-mark" aria-label="Cancelled">&times;</span> ' : '') +
       escapeForPage(row.label) +
       (row.subLabel ? `<span class="tree-sub">${escapeForPage(row.subLabel)}</span>` : '') +
+      (row.detail ? `<span class="tree-detail">${escapeForPage(row.detail)}</span>` : '') +
 
       '</span>' +
       (hasPoints || row.note
         ? `<span class="tree-arrow" style="--arrow-color:${dotColor}"></span>` : '<span></span>');
 
+    const plan = index === 0 && firstRow && !hasPoints && !noteHtml ? firstRow : null;
+    // The plan sits under the row's name, at least as wide as it, and the button where
+    // a row's arrow would be.
+    const rowInside = plan
+      ? inside.replace(/(<span class="tree-label[^"]*"[^>]*>)([\s\S]*?)<\/span><span><\/span>$/, (_whole, open: string, name: string) =>
+          `${open}<span class="plan-stack"><span class="plan-name">${name}</span>${plan.banner}</span></span>${plan.button || '<span></span>'}`)
+      : inside;
     const rowClass = 'tree-row' +
+      (plan?.banner ? ' has-plan' : '') +
       (row.level === 0 ? ' main' : row.isSideRow ? ' side' : ' nested') +
+      (row.detail ? ' has-detail' : '') +
       (row.isCurrent ? ' current' : '') +
       (row.isPicked ? ' picked' : '') +
       (playState === 'now' ? ' play-now' : '');
@@ -627,7 +644,7 @@ export function renderEventTree(tree: EventTree): string {
       (row.isPicked ? ` style="--current-color:${dotColor}"` : '');
 
     if (!hasPoints && !noteHtml) {
-      return `<div class="${rowClass}"${rowKey}>${inside}</div>`;
+      return `<div class="${rowClass}"${rowKey}>${rowInside}</div>`;
     }
     const sources = pointSourcesForDay(row.eventTypeId, row.dayNumber ?? 1)
       .filter(source => row.pointSourceIds.includes(source.id));
@@ -678,6 +695,8 @@ export interface EventPanelOptions {
   // What sits at the right of the tabs' line while a tab is open, by tab: its edit icon,
   // or Cancel and Save while it is being edited.
   tabActions?: Record<string, string>;
+  // The alliance's plan on the timeline's first row, for the events that have one.
+  firstRowPlan?: FirstRowPlan;
   // A stage (State of Power's Matchmaking, Preparation, Battle, Field Triage) opens its
   // whole event: the head names the event and spans all of it.
   wholeEvent?: { eventTypeId: string; startMinute: number; endMinute: number };
@@ -757,7 +776,7 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
       '</details>'
     : '';
 
-  const timelineHtml = options.tree.rows.length ? renderEventTree(options.tree) : '';
+  const timelineHtml = options.tree.rows.length ? renderEventTree(options.tree, options.firstRowPlan) : '';
   // The event's own scoring list, unless the timeline already shows points per day.
   const ownPoints = options.tree.hasPoints
     ? '' : pointsList(eventTypeId, pointSourcesForDay(eventTypeId, options.dayOfEvent), true);

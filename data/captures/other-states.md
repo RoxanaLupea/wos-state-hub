@@ -4,6 +4,39 @@ Sent 20-21 Nov 2026 from the owner's accounts in other states. None of this is 1
 data; it shows what each event's result screens and mails hold. Player names are as
 shown in game; styled letters are written as close as plain text allows.
 
+## Alliance Championship, 1252, 23–27 Nov 2026 ([DUB]BAKinDUB, Ultimate tier)
+Sent 27 Nov 2026 by the owner from her 1252 account: four round mails, the Group Ranking after
+round 4, the Schedule of all five rounds and a replay. A win earns 3 Championship Points and a
+loss none ("earning 3 Championship Points" / "earning no Championship Points"); flags are the
+lanes won (DUB: 2+3+2+1 = 8 flags, 3 wins = 9 points). Each lane is fought by 20 a side; the
+mail gives each side's remaining/fought per lane. The round mails arrive at about 01:08 and 13:08 UTC, after the battles (they start at 11:00 and 23:00 UTC, her times).
+
+| Round | Mail time (UTC) | Our match | Score | Lanes (ours remaining/fought : theirs) | Points |
+|---|---|---|---|---|---|
+| 1 | 2026-11-25 13:08:05 | #1252 [DUB]BAKinDUB vs #1238 [LOV]LoveTherapyInc | 2:1 win | Left 8/20 : 0/20; Middle 0/20 : 10/20; Right 1/20 : 0/20 | 3 |
+| 2 | 2026-11-26 01:08:31 | vs #1378 [FZN]TheFrozenEmpire | 3:0 win | Left 3/20 : 0/20; Middle 2/20 : 0/20; Right 3/20 : 0/20 | 3 |
+| 3 | 2026-11-26 13:08:21 | vs #1230 [RES]RenaissanceSquad | 2:1 win | Left 2/20 : 0/20; Middle 10/20 : 0/20; Right 0/20 : 9/20 | 3 |
+| 4 | 2026-11-27 01:08:04 | vs #1179 [HoT]SnowCrystal (last letter a heart-like sign) | 1:2 loss | Left 2/20 : 0/20; Middle 0/20 : 1/20; Right 0/20 : 1/20 | 0 |
+| 5 | in progress (08:14:03 left on 27 Nov) | vs #1233 [IVY] (name in styled letters, reads BEACONOFHOPE) | | | |
+
+Rewards per mail: a purple mystery chest ×1, a resource chest ×120 (×80 in round 3), 5-min
+speedups ×15 (×10 in round 3); "Defeated 2 opponents" (rounds 1, 4) or 1 (rounds 2, 3).
+
+Other matches in the group (Schedule): round 1 #1179 HoT 2:1 #1233 IVY, #1230 RES 2:1 #1378 FZN;
+round 2 #1238 LOV 1:2 #1179 HoT, #1233 IVY 2:1 #1230 RES; round 3 #1238 LOV 2:1 #1233 IVY,
+#1179 HoT 2:1 #1378 FZN; round 4 #1238 LOV 2:1 #1230 RES, #1233 IVY 2:1 #1378 FZN; round 5
+#1238 LOV vs #1378 FZN, #1179 HoT vs #1230 RES.
+
+Group Ranking after round 4 (points, flags, defeated):
+1. #1179 [HoT]SnowCrystal: 12 points, 8 flags, 168
+2. #1252 [DUB]BAKinDUB: 9 points, 8 flags, 181
+3. #1238 [LOV]LoveTherapyInc: 6 points, 6 flags, 159
+4. #1233 [IVY]BEACONOFHOPE: 6 points, 6 flags, 148
+5. #1230 [RES]RenaissanceSquad: 3 points, 5 flags, 147
+6. #1378 [FZN]TheFrozenEmpire: 0 points, 3 flags, 140
+
+The replay of round 4 shows each lane's fighters in order (20:20 per lane) and an MVP.
+
 ## Alliance Championship, 1252 ([dub]BAKupDUB)
 Five rounds, three matches each. Score is lanes won.
 

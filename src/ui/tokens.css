@@ -94,6 +94,11 @@ body {
 /* While a pop-up or a sheet is open it is what is active: only it scrolls, and the page
    behind stays still (Roxanne, 27 Nov: "Once that is open, that's on top"). */
 html:has(.leave-prompt), html:has(.filters-sheet) { overflow: hidden; }
+/* No scrollbar anywhere, phone or computer: a box that holds more than it shows scrolls,
+   and a fade at its bottom says so (Roxanne, 27 Nov: "Don't want any scroll bars anywhere.
+   It should just be scrollable ... That's the standard practice for the entire site"). */
+* { scrollbar-width: none !important; }
+*::-webkit-scrollbar { display: none; width: 0; height: 0; }
 .leave-prompt, .sheet, .filters-sheet { overscroll-behavior: contain; }
 
 /* The sections' colours. Set on the page's root, so the band, the page and the pop-ups
@@ -148,3 +153,11 @@ button { color: inherit; }
   backdrop-filter: var(--blur);
   -webkit-backdrop-filter: var(--blur);
 }
+
+/* A player's picture that did not load: the game's logo under a dark veil with the
+   torn-picture sign (Roxanne, 27 Nov), in the shape of whatever holds the picture. */
+.pic-broken { position: relative; display: block; flex: none; width: 100% !important; height: 100% !important; border-radius: inherit; overflow: hidden; }
+.pic-broken > img { position: absolute; inset: 0; width: 100% !important; height: 100% !important; margin: 0 !important; object-fit: cover; border-radius: inherit !important; }
+.pic-veil { position: absolute; inset: 0; display: flex !important; align-items: center; justify-content: center; border-radius: inherit;
+  background: rgba(10, 16, 28, 0.5); color: rgba(255, 255, 255, 0.9); }
+.pic-torn { width: 52% !important; height: 52% !important; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6)); }

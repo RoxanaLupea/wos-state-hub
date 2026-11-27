@@ -523,3 +523,15 @@
 .event-folds .rewards-tab .reward-sub {
   font-size: 14px; font-weight: 700; letter-spacing: 0; text-transform: none; color: var(--text);
 }
+
+/* A step with a line always under it (Alliance Championship's rounds, Roxanne 27 Nov):
+   its name as a heading in caps, the line under it, and its time and dot on the heading's
+   line. The space above it sets each round apart; its Battle sits close under it. */
+.event-tree .tree-row.has-detail { align-items: start; }
+.event-tree .tree-row.has-detail .tree-when { padding-top: 21px; }
+.event-tree .tree-row.has-detail .tree-label { padding-top: 22px; }
+.event-tree .tree-row.has-detail .tree-line { align-items: flex-start; }
+.event-tree .tree-row.has-detail .tree-step-dot { margin-top: 25px; }
+.event-page .tree-label.heading { font-size: 12.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); }
+.event-page .tree-label .tree-detail { display: block; margin: 3px 0 2px; font-size: 12px; font-weight: 500; line-height: 1.35;
+  letter-spacing: 0; text-transform: none; color: var(--text-muted); }

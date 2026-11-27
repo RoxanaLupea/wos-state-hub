@@ -116,6 +116,10 @@ async function rpc(name, args) {
     return { data: player ? { name: player.nick_name, avatar: player.avatar_url ?? null, power: player.power ?? null, state: player.kid ?? null,
       alliance: player.alliance?.abbr ?? null, furnace: player.furnace_level ?? null } : null, error: null };
   }
+  if (name === 'mark_submissions_seen') {
+    for (const row of tables.result_submissions ?? []) if (row.status !== 'open') row.seen_by_submitter = true;
+    return { data: null, error: null };
+  }
   if (name === 'ask_game_refresh') {
     const row = players.find(one => one.player_id === args.player_number);
     if (row) row.refresh_asked_at = new Date().toISOString();
