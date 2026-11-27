@@ -1866,4 +1866,7 @@ alliance-time forms it opened go to the admin menu (to be designed).
   for these cards that you're ignoring and breaking and you're not even flagging it". Built: each plan
   step written as any step (12px, the step tone, no bold), the missions it brings under it in the faint
   tone; Agnes' 8 counted into the Intel missions.
+- Shop layout (Roxanne, 27 Nov night, after the game's exchange rows were tried for Flame and Fangs):
+  "Shop version is cleaner, we're keeping that". Every shop keeps the cards; the exchange rows were
+  removed.
 
