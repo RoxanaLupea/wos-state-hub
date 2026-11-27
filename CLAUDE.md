@@ -88,8 +88,10 @@ render every page before and after the change and compare them: nothing outside 
 change may move. She must be able to count on the work without inspecting it closely.
 
 Every box whose content can be taller than it scrolls, phone and computer, with no
-scrollbar drawn; items never touch (Roxanne, 27 Nov: "Make sure you double check that from
-now on"). Run tools/render/scroll-audit.py after every change (notes/review-checklist.md).
+scrollbar drawn anywhere; a fade at its bottom says it scrolls, the standard for the whole
+site (main.ts FADING_BOXES); items never touch (Roxanne, 27 Nov: "Make sure you double check
+that from now on"). Run tools/render/scroll-audit.py after every change
+(notes/review-checklist.md); it shows scrollbars, so drawn ones are caught.
 
 ## What needs her yes
 

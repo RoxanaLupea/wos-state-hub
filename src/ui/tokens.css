@@ -94,6 +94,11 @@ body {
 /* While a pop-up or a sheet is open it is what is active: only it scrolls, and the page
    behind stays still (Roxanne, 27 Nov: "Once that is open, that's on top"). */
 html:has(.leave-prompt), html:has(.filters-sheet) { overflow: hidden; }
+/* No scrollbar anywhere, phone or computer: a box that holds more than it shows scrolls,
+   and a fade at its bottom says so (Roxanne, 27 Nov: "Don't want any scroll bars anywhere.
+   It should just be scrollable ... That's the standard practice for the entire site"). */
+* { scrollbar-width: none !important; }
+*::-webkit-scrollbar { display: none; width: 0; height: 0; }
 .leave-prompt, .sheet, .filters-sheet { overscroll-behavior: contain; }
 
 /* The sections' colours. Set on the page's root, so the band, the page and the pop-ups

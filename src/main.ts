@@ -1475,7 +1475,7 @@ function watchTableEdges(app: HTMLElement): void {
 
 // The boxes that scroll on their own. Each fades at an edge while there is more to
 // scroll past it, instead of cutting the rows off.
-const FADING_BOXES = '.event-page-body, .day-panel, .calendar-panel, .calendar-panel .weeks, .admin-page';
+const FADING_BOXES = '.event-page-body, .day-panel, .calendar-panel, .calendar-panel .weeks, .admin-page, .filters-sheet, .fort-board.fort-season, .work-page';
 
 function watchScrollEdges(app: HTMLElement): void {
   for (const box of Array.from(app.querySelectorAll<HTMLElement>(FADING_BOXES))) {

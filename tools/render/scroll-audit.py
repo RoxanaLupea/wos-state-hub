@@ -54,7 +54,7 @@ STATES = [
     ('map', nav('map')), ('profile', ['[data-account-menu]', '.account-menu [data-page="player"]']),
 ]
 JS = r'''() => {
-  const out = { clipped: [], bars: [], offscreen: [], touching: [] };
+  const out = { clipped: [], bars: [], nofade: [], offscreen: [], touching: [] };
   const vis = e => { const c = getComputedStyle(e); const r = e.getBoundingClientRect(); return c.display !== 'none' && c.visibility !== 'hidden' && r.width > 0 && r.height > 0; };
   const name = e => (e.tagName.toLowerCase() + '.' + String(e.className).trim().split(/\s+/).slice(0, 3).join('.')).slice(0, 70);
   for (const e of document.querySelectorAll('body *')) {
@@ -70,6 +70,9 @@ JS = r'''() => {
     if ((c.overflowY === 'auto' || c.overflowY === 'scroll') && e.scrollHeight > e.clientHeight + 1) {
       const bar = e.offsetWidth - e.clientWidth - parseFloat(c.borderLeftWidth) - parseFloat(c.borderRightWidth);
       if (bar > 0.5) out.bars.push(name(e) + ' bar ' + bar.toFixed(0));
+      // a box that scrolls says so with a fade at its bottom (Roxanne, 27 Nov), on itself or the box around it
+      const faded = k => { const kc = getComputedStyle(k); return (kc.maskImage && kc.maskImage !== 'none') || (kc.webkitMaskImage && kc.webkitMaskImage !== 'none'); };
+      if (!faded(e) && !(e.parentElement && faded(e.parentElement))) out.nofade.push(name(e) + ' ' + e.clientHeight + '/' + e.scrollHeight);
     }
     if (c.position === 'fixed') {
       const r = e.getBoundingClientRect();
