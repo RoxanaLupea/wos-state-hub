@@ -1426,3 +1426,6 @@ All nine are built.
 - Alliance Championship dates (Roxanne, 27 Nov): no Edit in its head. "These are fixed. These
   are not gonna change. It's a fixed event. Those are the times, period. Remove it."
   (datesLocked in event-types.json.)
+- The date and repeat forms (Roxanne, 27 Nov): "even if I need it, that is the worst possible way
+  to let me edit anything ... It's only confusing me." When the admin menu is designed, changing
+  an event's dates is designed anew there, not moved over as these forms.
