@@ -1611,3 +1611,6 @@ where fishing ends (end of the 26th); under the bar a white line over the fishin
 Sunken Treasure Hunt line to the event's end. "Ok, keep it like that and I'll get these 2
 logos from the top bars" (the game's tab logos; the Hunt's colour and logo are stand-ins
 until then).
+Changed 08:40: "the blue phishing square thingy is the phishing event, and it's gonna have a
+vertical line with the fish before it, telling us that the actual phishing ended, and then only
+have the golden line with the sunken treasure logo at the end." No white line under the bar.

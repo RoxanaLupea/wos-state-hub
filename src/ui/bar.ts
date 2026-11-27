@@ -338,20 +338,18 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
         ` aria-label="${escapeForPage(eventTypeName(bar.eventTypeId) + ' ' + times)}"></span>`;
     }).join('');
 
-  // Fishing (mockup, Roxanne 27 Nov): two lines under the bar, like the parts of Frosty
-  // Fortune. The first, white, covers the days fishing is open and ends with a fish; the
-  // second is the Sunken Treasure Hunt, open to the event's last day, with its logo at
+  // Fishing (Roxanne, 27 Nov): the bar is the fishing event. Where fishing ends (a day
+  // before the event's end) a white mark stands with the fish before it. Under the bar one
+  // golden line, the Sunken Treasure Hunt, open to the event's last day, with its logo at
   // the end (a stand-in until Roxanne sends the logo).
   const fishingDaysEarly = eventTypeById(bar.eventTypeId)?.fishingEndsDaysEarly ?? 0;
   const fishingEnd = bar.endMinute - fishingDaysEarly * MINUTES_PER_DAY;
   const fishingLines = fishingDaysEarly > 0
-    ? `<span class="bar-stripe" style="background:#FFFFFF;bottom:-6px"` +
-      ` data-start-minute="${bar.startMinute}" data-end-minute="${fishingEnd}"></span>` +
-      (fishingEnd <= piece.end && fishingEnd > piece.start
+    ? (fishingEnd <= piece.end && fishingEnd > piece.start
         ? `<span class="bar-stripe-end" data-end-minute="${fishingEnd}" title="Fishing">${FISH_BONE}</span>` +
           (fishingEnd < piece.end ? barMark(fishingEnd, 'end-mark', 'Fishing ends') : '')
         : '') +
-      `<span class="bar-stripe" style="background:${HUNT_STAND_IN_COLOR};bottom:-11px"` +
+      `<span class="bar-stripe" style="background:${HUNT_STAND_IN_COLOR};bottom:-6px"` +
       ` data-start-minute="${bar.startMinute}" data-end-minute="${bar.endMinute}"></span>` +
       (bar.endMinute <= piece.end
         ? `<span class="bar-stripe-end" data-end-minute="${bar.endMinute}" data-at-bar-end="yes"` +
@@ -407,7 +405,7 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
   // second line of text, not centred in the bar.
   const lineTwoNames = (lineTwo.match(/class="bar-segment-name/g) ?? []).length;
   if (lineTwoNames === 1) classes.push('one-segment');
-  const trailCount = bar.stripes.length + (fishingLines ? 2 : 0);
+  const trailCount = bar.stripes.length + (fishingLines ? 1 : 0);
   if (trailCount) classes.push('has-trail');
   if (bar.wasCancelled) classes.push('cancelled');
   if (bar.isProvisional) classes.push('provisional');
