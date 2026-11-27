@@ -29,3 +29,15 @@ create policy "the alliance's leaders resolve" on result_submissions for update 
 
 grant select, insert, update on result_submissions to authenticated;
 grant usage, select on sequence result_submissions_id_seq to authenticated;
+
+-- Whether the member who submitted a ticket has seen how it was resolved: their red dot
+-- shows until they open Submissions, on any device (Roxanne, 27 Nov). They mark only their
+-- own tickets as seen, through this function, and can change nothing else.
+alter table result_submissions add column if not exists seen_by_submitter boolean not null default false;
+create or replace function public.mark_submissions_seen() returns void
+  language sql security definer set search_path = public as $$
+  update result_submissions set seen_by_submitter = true
+  where submitted_by = auth.uid() and status <> 'open' and not seen_by_submitter;
+$$;
+revoke all on function public.mark_submissions_seen() from public;
+grant execute on function public.mark_submissions_seen() to authenticated;

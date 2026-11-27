@@ -74,6 +74,7 @@ import { SVS_EDIT_FORM_ID, preparationOutcome, typeHoldTime, updateSvsEditor } f
 import { moveRankingRow, rankingFromForm, toggleChampionshipLane } from './ui/championship-results.ts';
 import { planFirstRow, planNoteEdit } from './ui/plan-note.ts';
 import { SUBMITTED_EVENTS, fieldsOfForm, hasSubmissionsDot, submissionsPage } from './ui/submissions.ts';
+import { markOwnSubmissionsSeen } from './data/submissions.ts';
 import { personalEntryForm, personalEntryOf } from './ui/personal-entry.ts';
 import {
   academiesPage, availabilityPage, facilitiesPage, membersPage, planPage, requestsPage, rolesPage,
@@ -1057,25 +1058,27 @@ function troopsOfAccount(inGameId: string): Record<string, { tier: string; skill
 // The date a result is recorded under: the run's first day; for SvS, the day of its
 // battle, as the SvS history has always been kept; for a part of a bigger event, the
 // first day of the whole event.
-// A red dot on the menu: a ticket waits for this R4, or one of this member's was resolved
-// since they last opened Submissions.
-const SUBMISSIONS_SEEN = 'submissionsSeenUntil';
 // The Submissions sections closed on a phone: Approved and Rejected start closed.
 const closedSubmissionSections = new Set<string>(['approved', 'rejected']);
+
+// A red dot on the menu: a ticket waits for this R4, or one of this member's was resolved
+// and they have not opened Submissions since.
 function submissionsDot(): boolean {
   if (!person) return false;
   const signedIn = person;
-  let seen = '';
-  try { seen = window.localStorage.getItem(SUBMISSIONS_SEEN) ?? ''; } catch { seen = ''; }
-  return hasSubmissionsDot(rowsOf('result_submissions'), signedIn.userId, allianceId => leadsAlliance(signedIn, allianceId), seen);
+  return hasSubmissionsDot(rowsOf('result_submissions'), signedIn.userId, allianceId => leadsAlliance(signedIn, allianceId));
 }
 
-// Opening Submissions counts as having seen how this member's tickets were resolved.
+// Opening Submissions marks this member's resolved tickets as seen, on every device: at once
+// here, and in the database.
+let markingSeen = false;
 function markSubmissionsSeen(): void {
-  const latest = (rowsOf('result_submissions') ?? []).filter(one => one.submitted_by === person?.userId && one.resolved_at)
-    .map(one => String(one.resolved_at)).sort().pop();
-  if (!latest) return;
-  try { window.localStorage.setItem(SUBMISSIONS_SEEN, latest); } catch { /* a browser that keeps nothing */ }
+  const unseen = (rowsOf('result_submissions') ?? []).filter(one =>
+    one.submitted_by === person?.userId && one.status !== 'open' && !one.seen_by_submitter);
+  if (!unseen.length || markingSeen) return;
+  for (const row of unseen) row.seen_by_submitter = true;
+  markingSeen = true;
+  void markOwnSubmissionsSeen().catch(() => undefined).finally(() => { markingSeen = false; });
 }
 
 // A ticket opened from Submissions: the event's Results on that date, with what was

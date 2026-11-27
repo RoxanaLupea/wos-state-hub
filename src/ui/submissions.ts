@@ -89,9 +89,9 @@ export function submissionsPage(options: SubmissionsPageOptions): string {
 }
 
 // Whether the menu shows a red dot: for an R4, a ticket of their alliance still open; for
-// the one who submitted, a ticket of theirs resolved since they last looked.
-export function hasSubmissionsDot(rows: Row[] | null, userId: string, leads: (allianceId: string) => boolean, seenUntil: string): boolean {
+// the one who submitted, a ticket of theirs resolved that they have not seen yet.
+export function hasSubmissionsDot(rows: Row[] | null, userId: string, leads: (allianceId: string) => boolean): boolean {
   if (!rows) return false;
   return rows.some(row => (isOpen(row) && leads(String(row.alliance_id))) ||
-    (!isOpen(row) && row.submitted_by === userId && String(row.resolved_at ?? '') > seenUntil));
+    (!isOpen(row) && row.submitted_by === userId && !row.seen_by_submitter));
 }
