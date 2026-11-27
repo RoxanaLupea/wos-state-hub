@@ -58,6 +58,9 @@ notes/rules-and-open-items.md (game rules).
   you build entire features without consulting me"): a change to one or two pages is made and
   shown, never asked about first; a whole feature (a new tab, a new element, new data shown) is
   discussed with her before anything is built.
+- When she calls a solution bad, it is reverted at once, all of it, back to what was there before
+  (27 Nov night: "once i said a solution is bad we revert it, ok? like the bs white around the
+  core"). Then ask how she wants it.
 - When she points out a problem ("too narrow", "looks wrong"), ask how she wants it fixed
   before building anything; never pick a fix and build it on your own (26 Nov).
   A simple fault with one obvious fix (something shown twice, a stray row) is just fixed,
