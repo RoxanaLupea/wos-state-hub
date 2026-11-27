@@ -1371,3 +1371,9 @@ All nine are built.
   add them, great. If not, we show it without the ranking. So if they don't fill up the ranking,
   only show the results for the round if that's what they fill up. It's not mandatory for them
   to fill both."
+- Pop-ups on the phone (Roxanne, 27 Nov): Add player and New group open from the bottom, like
+  the profile: "I like them from the bottom on the phone. It makes more sense and it's more
+  consistent." The Custom / State / Contact choice is only as wide as its words, centred ("it
+  should only be as big as the elements inside it and centered"); it may be redesigned later.
+- Who adds results (Roxanne, 27 Nov): "Our R4s need to know that add result is an option...
+  Members should be able to add them. But they need to be confirmed by an R4."
