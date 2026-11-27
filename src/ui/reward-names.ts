@@ -27,6 +27,7 @@ export const REWARD_TABS: [string, string][] = [
 // here, or its own tabs are used.
 export const EVENT_REWARD_TABS: Record<string, [string, string][]> = {
   'alliance-championship': [['group', 'Tier Rewards'], ['ko', 'KO Rewards']],
+  fishing: [['club', 'Ice Fishing Club'], ['ranking', 'Ranking Rewards']],
   koi: [['targets', 'Target Points'], ['medals', 'Medal of Honor'], ['ranking', 'Ranking']],
   'crazy-joe': [['targets', 'Defense Point'], ['ranking', 'Ranking']],
   frostfire: [['targets', 'Gathering Rewards'], ['ranking', 'Ranking Rewards']],

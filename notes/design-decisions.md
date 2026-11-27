@@ -1624,3 +1624,8 @@ Summer's: "So these are the chances for summer. Ask me for the next one next tim
 Chances (27 Nov, 08:56): "don't mark them as these are chances in summer, because it's
 confusing. We are gonna see what changes next time... save them but don't display them for now.
 Don't show the tab for now." They stay in point-sources (list "chances"), with no tab.
+Reward tracks (27 Nov): the Ice Fishing Club is drawn like the game, a band per track under
+its medal (free, first pack, second pack), no lines between levels. "This layout will be used
+for more than just this, because many events unlock things like this, so it's just new, not
+unique." Built as one element for every event with tracks. "I don't like how it looks centered
+like that."

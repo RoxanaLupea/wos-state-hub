@@ -556,5 +556,353 @@
   {
     "id": "emporium-resource-chest",
     "imageFile": "items/resource-chest-lvl-1-2.png"
+  },
+  {
+    "id": "fishing-mockup-decoration",
+    "imageFile": "items/fishing-mockup/decoration.png"
+  },
+  {
+    "id": "fishing-mockup-frame",
+    "imageFile": "items/fishing-mockup/frame.png"
+  },
+  {
+    "id": "fishing-mockup-whale",
+    "imageFile": "items/fishing-mockup/whale.png"
+  },
+  {
+    "id": "fishing-mockup-club-1-0",
+    "imageFile": "items/fishing-mockup/club-1-0.png"
+  },
+  {
+    "id": "fishing-mockup-club-1-1",
+    "imageFile": "items/fishing-mockup/club-1-1.png"
+  },
+  {
+    "id": "fishing-mockup-club-1-2",
+    "imageFile": "items/fishing-mockup/club-1-2.png"
+  },
+  {
+    "id": "fishing-mockup-club-1-3",
+    "imageFile": "items/fishing-mockup/club-1-3.png"
+  },
+  {
+    "id": "fishing-mockup-club-2-0",
+    "imageFile": "items/fishing-mockup/club-2-0.png"
+  },
+  {
+    "id": "fishing-mockup-club-2-1",
+    "imageFile": "items/fishing-mockup/club-2-1.png"
+  },
+  {
+    "id": "fishing-mockup-club-2-2",
+    "imageFile": "items/fishing-mockup/club-2-2.png"
+  },
+  {
+    "id": "fishing-mockup-club-2-3",
+    "imageFile": "items/fishing-mockup/club-2-3.png"
+  },
+  {
+    "id": "fishing-mockup-club-3-0",
+    "imageFile": "items/fishing-mockup/club-3-0.png"
+  },
+  {
+    "id": "fishing-mockup-club-3-1",
+    "imageFile": "items/fishing-mockup/club-3-1.png"
+  },
+  {
+    "id": "fishing-mockup-club-3-2",
+    "imageFile": "items/fishing-mockup/club-3-2.png"
+  },
+  {
+    "id": "fishing-mockup-club-3-3",
+    "imageFile": "items/fishing-mockup/club-3-3.png"
+  },
+  {
+    "id": "fishing-mockup-club-4-0",
+    "imageFile": "items/fishing-mockup/club-4-0.png"
+  },
+  {
+    "id": "fishing-mockup-club-4-1",
+    "imageFile": "items/fishing-mockup/club-4-1.png"
+  },
+  {
+    "id": "fishing-mockup-club-4-2",
+    "imageFile": "items/fishing-mockup/club-4-2.png"
+  },
+  {
+    "id": "fishing-mockup-club-4-3",
+    "imageFile": "items/fishing-mockup/club-4-3.png"
+  },
+  {
+    "id": "fishing-mockup-club-5-0",
+    "imageFile": "items/fishing-mockup/club-5-0.png"
+  },
+  {
+    "id": "fishing-mockup-club-5-1",
+    "imageFile": "items/fishing-mockup/club-5-1.png"
+  },
+  {
+    "id": "fishing-mockup-club-5-2",
+    "imageFile": "items/fishing-mockup/club-5-2.png"
+  },
+  {
+    "id": "fishing-mockup-club-5-3",
+    "imageFile": "items/fishing-mockup/club-5-3.png"
+  },
+  {
+    "id": "fishing-mockup-club-6-0",
+    "imageFile": "items/fishing-mockup/club-6-0.png"
+  },
+  {
+    "id": "fishing-mockup-club-6-1",
+    "imageFile": "items/fishing-mockup/club-6-1.png"
+  },
+  {
+    "id": "fishing-mockup-club-6-2",
+    "imageFile": "items/fishing-mockup/club-6-2.png"
+  },
+  {
+    "id": "fishing-mockup-club-6-3",
+    "imageFile": "items/fishing-mockup/club-6-3.png"
+  },
+  {
+    "id": "fishing-mockup-club-7-0",
+    "imageFile": "items/fishing-mockup/club-7-0.png"
+  },
+  {
+    "id": "fishing-mockup-club-7-1",
+    "imageFile": "items/fishing-mockup/club-7-1.png"
+  },
+  {
+    "id": "fishing-mockup-club-7-2",
+    "imageFile": "items/fishing-mockup/club-7-2.png"
+  },
+  {
+    "id": "fishing-mockup-club-7-3",
+    "imageFile": "items/fishing-mockup/club-7-3.png"
+  },
+  {
+    "id": "fishing-mockup-club-8-0",
+    "imageFile": "items/fishing-mockup/club-8-0.png"
+  },
+  {
+    "id": "fishing-mockup-club-8-1",
+    "imageFile": "items/fishing-mockup/club-8-1.png"
+  },
+  {
+    "id": "fishing-mockup-club-8-2",
+    "imageFile": "items/fishing-mockup/club-8-2.png"
+  },
+  {
+    "id": "fishing-mockup-club-8-3",
+    "imageFile": "items/fishing-mockup/club-8-3.png"
+  },
+  {
+    "id": "fishing-mockup-club-9-0",
+    "imageFile": "items/fishing-mockup/club-9-0.png"
+  },
+  {
+    "id": "fishing-mockup-club-9-1",
+    "imageFile": "items/fishing-mockup/club-9-1.png"
+  },
+  {
+    "id": "fishing-mockup-club-9-2",
+    "imageFile": "items/fishing-mockup/club-9-2.png"
+  },
+  {
+    "id": "fishing-mockup-club-9-3",
+    "imageFile": "items/fishing-mockup/club-9-3.png"
+  },
+  {
+    "id": "fishing-mockup-club-10-0",
+    "imageFile": "items/fishing-mockup/club-10-0.png"
+  },
+  {
+    "id": "fishing-mockup-club-10-1",
+    "imageFile": "items/fishing-mockup/club-10-1.png"
+  },
+  {
+    "id": "fishing-mockup-club-10-2",
+    "imageFile": "items/fishing-mockup/club-10-2.png"
+  },
+  {
+    "id": "fishing-mockup-club-10-3",
+    "imageFile": "items/fishing-mockup/club-10-3.png"
+  },
+  {
+    "id": "fishing-mockup-club-11-0",
+    "imageFile": "items/fishing-mockup/club-11-0.png"
+  },
+  {
+    "id": "fishing-mockup-club-11-1",
+    "imageFile": "items/fishing-mockup/club-11-1.png"
+  },
+  {
+    "id": "fishing-mockup-club-11-2",
+    "imageFile": "items/fishing-mockup/club-11-2.png"
+  },
+  {
+    "id": "fishing-mockup-club-11-3",
+    "imageFile": "items/fishing-mockup/club-11-3.png"
+  },
+  {
+    "id": "fishing-mockup-club-12-0",
+    "imageFile": "items/fishing-mockup/club-12-0.png"
+  },
+  {
+    "id": "fishing-mockup-club-12-1",
+    "imageFile": "items/fishing-mockup/club-12-1.png"
+  },
+  {
+    "id": "fishing-mockup-club-12-2",
+    "imageFile": "items/fishing-mockup/club-12-2.png"
+  },
+  {
+    "id": "fishing-mockup-club-12-3",
+    "imageFile": "items/fishing-mockup/club-12-3.png"
+  },
+  {
+    "id": "fishing-mockup-club-13-0",
+    "imageFile": "items/fishing-mockup/club-13-0.png"
+  },
+  {
+    "id": "fishing-mockup-club-13-1",
+    "imageFile": "items/fishing-mockup/club-13-1.png"
+  },
+  {
+    "id": "fishing-mockup-club-13-2",
+    "imageFile": "items/fishing-mockup/club-13-2.png"
+  },
+  {
+    "id": "fishing-mockup-club-13-3",
+    "imageFile": "items/fishing-mockup/club-13-3.png"
+  },
+  {
+    "id": "fishing-mockup-club-14-0",
+    "imageFile": "items/fishing-mockup/club-14-0.png"
+  },
+  {
+    "id": "fishing-mockup-club-14-1",
+    "imageFile": "items/fishing-mockup/club-14-1.png"
+  },
+  {
+    "id": "fishing-mockup-club-14-2",
+    "imageFile": "items/fishing-mockup/club-14-2.png"
+  },
+  {
+    "id": "fishing-mockup-club-14-3",
+    "imageFile": "items/fishing-mockup/club-14-3.png"
+  },
+  {
+    "id": "fishing-mockup-club-15-0",
+    "imageFile": "items/fishing-mockup/club-15-0.png"
+  },
+  {
+    "id": "fishing-mockup-club-15-1",
+    "imageFile": "items/fishing-mockup/club-15-1.png"
+  },
+  {
+    "id": "fishing-mockup-club-15-2",
+    "imageFile": "items/fishing-mockup/club-15-2.png"
+  },
+  {
+    "id": "fishing-mockup-club-15-3",
+    "imageFile": "items/fishing-mockup/club-15-3.png"
+  },
+  {
+    "id": "fishing-mockup-club-16-0",
+    "imageFile": "items/fishing-mockup/club-16-0.png"
+  },
+  {
+    "id": "fishing-mockup-club-16-1",
+    "imageFile": "items/fishing-mockup/club-16-1.png"
+  },
+  {
+    "id": "fishing-mockup-club-16-2",
+    "imageFile": "items/fishing-mockup/club-16-2.png"
+  },
+  {
+    "id": "fishing-mockup-club-16-3",
+    "imageFile": "items/fishing-mockup/club-16-3.png"
+  },
+  {
+    "id": "fishing-mockup-club-17-0",
+    "imageFile": "items/fishing-mockup/club-17-0.png"
+  },
+  {
+    "id": "fishing-mockup-club-17-1",
+    "imageFile": "items/fishing-mockup/club-17-1.png"
+  },
+  {
+    "id": "fishing-mockup-club-17-2",
+    "imageFile": "items/fishing-mockup/club-17-2.png"
+  },
+  {
+    "id": "fishing-mockup-club-17-3",
+    "imageFile": "items/fishing-mockup/club-17-3.png"
+  },
+  {
+    "id": "fishing-mockup-club-18-0",
+    "imageFile": "items/fishing-mockup/club-18-0.png"
+  },
+  {
+    "id": "fishing-mockup-club-18-1",
+    "imageFile": "items/fishing-mockup/club-18-1.png"
+  },
+  {
+    "id": "fishing-mockup-club-18-2",
+    "imageFile": "items/fishing-mockup/club-18-2.png"
+  },
+  {
+    "id": "fishing-mockup-club-18-3",
+    "imageFile": "items/fishing-mockup/club-18-3.png"
+  },
+  {
+    "id": "fishing-mockup-club-19-0",
+    "imageFile": "items/fishing-mockup/club-19-0.png"
+  },
+  {
+    "id": "fishing-mockup-club-19-1",
+    "imageFile": "items/fishing-mockup/club-19-1.png"
+  },
+  {
+    "id": "fishing-mockup-club-19-2",
+    "imageFile": "items/fishing-mockup/club-19-2.png"
+  },
+  {
+    "id": "fishing-mockup-club-19-3",
+    "imageFile": "items/fishing-mockup/club-19-3.png"
+  },
+  {
+    "id": "fishing-mockup-club-20-0",
+    "imageFile": "items/fishing-mockup/club-20-0.png"
+  },
+  {
+    "id": "fishing-mockup-club-20-1",
+    "imageFile": "items/fishing-mockup/club-20-1.png"
+  },
+  {
+    "id": "fishing-mockup-club-20-2",
+    "imageFile": "items/fishing-mockup/club-20-2.png"
+  },
+  {
+    "id": "fishing-mockup-club-20-3",
+    "imageFile": "items/fishing-mockup/club-20-3.png"
+  },
+  {
+    "id": "fishing-mockup-club-21-0",
+    "imageFile": "items/fishing-mockup/club-21-0.png"
+  },
+  {
+    "id": "fishing-mockup-club-21-1",
+    "imageFile": "items/fishing-mockup/club-21-1.png"
+  },
+  {
+    "id": "fishing-mockup-club-21-2",
+    "imageFile": "items/fishing-mockup/club-21-2.png"
+  },
+  {
+    "id": "fishing-mockup-club-21-3",
+    "imageFile": "items/fishing-mockup/club-21-3.png"
   }
 ]

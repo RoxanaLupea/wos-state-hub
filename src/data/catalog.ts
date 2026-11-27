@@ -44,6 +44,10 @@ export interface EventType {
   // in the game (Fishing's last day, Roxanne 27 Nov). The bar draws a line ending with a
   // fish over the days it can be played.
   fishingEndsDaysEarly?: number;
+  // A personal event with nothing for a player to record: no Mine tab (Fishing, 27 Nov).
+  noPersonalEntry?: boolean;
+  // Its facts (Mini-game, the season) sit in the panel's head with its name (Fishing).
+  factsInHead?: boolean;
   // An event that changes season each run, once a month (Fishing): the seasons in their
   // order and one run whose season is known. Fishing's order is from Century Games' help
   // centre; Summer for 24 Nov 2026 is from Roxanne's screenshot (27 Nov).
@@ -381,6 +385,11 @@ export function pointSourcesOf(eventTypeId: string): PointSource[] {
 export function pointSourcesForDay(eventTypeId: string, dayOfEvent: number): PointSource[] {
   return (pointSourcesByEvent.get(eventTypeId) ?? [])
     .filter(source => !source.list && (!source.dayNumber || source.dayNumber === dayOfEvent));
+}
+
+// The heading an event gives one of its lists of notes ("How to fish"), or the usual one.
+export function listTitle(eventTypeId: string, list: string, usual: string): string {
+  return text['eventType.' + eventTypeId + '.list.' + list] ?? usual;
 }
 
 export function pointSourcesInList(eventTypeId: string, list: string): PointSource[] {

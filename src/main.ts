@@ -577,7 +577,7 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
       isEditing: view.editing === planNoteEdit(occurrence.eventTypeId)
     }),
     wholeEvent,
-    personalHtml: personalEntryForm({
+    personalHtml: eventTypeById(occurrence.eventTypeId)?.noPersonalEntry ? '' : personalEntryForm({
       occurrence, category: categoryOf(occurrence.eventTypeId), userId: person?.userId ?? null,
       entries: person ? rowsOf('personal_entries') : []
     }),

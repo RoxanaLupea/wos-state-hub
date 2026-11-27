@@ -416,6 +416,9 @@
     "icon": "target",
     "imageFile": "fishing",
     "fishingEndsDaysEarly": 1,
+    "noPersonalEntry": true,
+    "factsInHead": true,
+    "datesLocked": true,
     "seasonOrder": ["Winter", "Spring", "Summer", "Autumn"],
     "seasonKnown": { "firstDate": "2026-11-24", "season": "Summer" },
     "sortOrder": 40

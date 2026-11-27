@@ -10,6 +10,7 @@ import {
   eventTypeLabel, itemImageFile, itemLabel, itemName, phaseName, playerRequirement,
   pointSourceDayName, pointSourceTask, pointSourcesForDay, pointSourcesInList, pointsNote,
   pointsTitle, rewardsOf, type PointSource, type RewardRow
+, listTitle, seasonOf
 } from '../data/catalog.ts';
 import { clockText, nowMinute, shownDayOf } from '../calendar/time-mode.ts';
 import { spanText } from '../calendar/spans.ts';
@@ -99,7 +100,8 @@ function noteRow(written: string, imageFile: string): string {
   if (!title) {
     return `<p class="points-note${picture ? ' with-picture' : ''}">${picture}${bodyHtml}</p>`;
   }
-  const isShort = lines.length <= 1 && body.length <= 40;
+  // A row with a picture always keeps its title on its own line, like the others beside it.
+  const isShort = !picture && lines.length <= 1 && body.length <= 40;
   return `<p class="points-note${isShort ? '' : ' titled'}${picture ? ' with-picture' : ''}">` +
     `${picture}<b class="note-title">${escapeForPage(title)}${isShort ? ':' : ''}</b>` +
     `${isShort ? ' ' : ''}${bodyHtml}</p>`;
@@ -125,13 +127,14 @@ function pointsList(eventTypeId: string, sources: PointSource[], isOpen: boolean
 }
 
 // A fold of plain notes from one named list.
-function notesFold(eventTypeId: string, list: string, title: string): string {
+function notesFold(eventTypeId: string, list: string, title: string, hidesTitle = false): string {
   // A rewards note written for one list or band shows with that list, under its
   // buttons, as in the game; only the notes for all the rewards stay on top.
   const notes = pointSourcesInList(eventTypeId, list)
     .filter(source => list !== 'rewards' || !pointSourceDayName(source.id));
   if (!notes.length) return '';
-  return `<details class="points-list" open><summary>${escapeForPage(title)}</summary>` +
+  // A tab that already names the list draws its fold without the title (Fishing).
+  return `<details class="points-list${hidesTitle ? ' no-title' : ''}" open><summary>${escapeForPage(title)}</summary>` +
     notes.map(source => noteRow(pointSourceTask(source.id, heroDay), source.imageFile)).join('') +
     '</details>';
 }
@@ -320,6 +323,31 @@ function rewardListHtml(list: string, band: string, bandCount: number, shown: Re
       (prestige.length ? '<div class="reward-sub">Prestige Rewards</div>' + namedTiles(prestige) : '') +
       '<div class="reward-sub">Group Ranking</div><div class="range-lines with-notes">' +
       rewardLines(shown.filter(row => row.section !== 'prestige')) + '</div>';
+  }
+  if (list === 'club') {
+    // Fishing's Ice Fishing Club (mockup, Roxanne 27 Nov): drawn like the game, three
+    // tracks side by side, each in its own band under its medal: free, then silver (one
+    // pack), then gold (the second pack, two rewards a level). No lines between levels.
+    const medal = (name: string) =>
+      `<img src="${escapeForPage(imageUrl('items/fishing-mockup/medal-' + name))}" alt="">`;
+    const levels: string[] = [];
+    const byLevel = new Map<string, RewardRow[]>();
+    for (const row of shown) {
+      if (!byLevel.has(row.rowLabel)) { byLevel.set(row.rowLabel, []); levels.push(row.rowLabel); }
+      byLevel.get(row.rowLabel)?.push(row);
+    }
+    return '<div class="club-grid">' +
+      '<span class="club-level"></span>' +
+      `<span class="club-cell free head">${medal('bronze')}</span>` +
+      `<span class="club-cell silver head">${medal('silver')}</span>` +
+      `<span class="club-cell gold head">${medal('gold')}</span>` +
+      levels.map(level => {
+        const tiles = (byLevel.get(level) ?? []).map(rewardTile);
+        return `<span class="club-level">${escapeForPage(level)}</span>` +
+          `<span class="club-cell free">${tiles[0] ?? ''}</span>` +
+          `<span class="club-cell silver">${tiles[1] ?? ''}</span>` +
+          `<span class="club-cell gold">${tiles.slice(2).join('')}</span>`;
+      }).join('') + '</div>';
   }
   if (list === 'rates') {
     // Lucky Wheel: a row per reward, its chance, then the item with its name.
@@ -734,7 +762,7 @@ function joinFolds(first: string, second: string): string {
 function rulesPage(eventTypeId: string, requirements: string): string {
   const parts = [
     requirements,
-    notesFold(eventTypeId, 'rules', 'Rules'),
+    notesFold(eventTypeId, 'rules', listTitle(eventTypeId, 'rules', 'Rules')),
     notesFold(eventTypeId, 'predictions', 'Predictions')
   ].filter(Boolean);
   return parts.join('');
@@ -755,6 +783,9 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
   const facts: string[] = [];
   const typeLabel = eventTypeLabel(eventTypeId);
   if (typeLabel) facts.push(typeLabel);
+  // The run's season, beside its kind (Fishing's Summer, Roxanne 27 Nov).
+  const season = seasonOf(eventTypeId, occurrence.startDay);
+  if (season) facts.push(season);
   if (occurrence.wasCancelled) facts.push('Cancelled');
   if (occurrence.wasChanged) facts.push('Date or time changed');
 
@@ -794,12 +825,22 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
   // The same tabs, in the same order, on every event; an event shows only the ones it
   // has. Timeline first; Rules holds the requirements, the rules and the predictions;
   // the tabs only one kind of event needs come after Rewards.
+  const splitRules = pointSourcesInList(eventTypeId, 'how-to').length > 0 && !requirements;
   const tabs: InfoTab[] = [
     { id: 'timeline', label: 'Timeline', html: timelineHtml },
+    // An event whose rules are split into tabs (Fishing: Guide and Rewards,
+    // Roxanne 27 Nov) writes no heading inside them: the tab already names its page.
     { id: 'rules', label: 'Rules', html: rulesPage(eventTypeId, requirements) },
+    { id: 'how-to', label: listTitle(eventTypeId, 'how-to', 'How to play'),
+      html: notesFold(eventTypeId, 'how-to', listTitle(eventTypeId, 'how-to', 'How to play'), true) },
+    // Fishing's chances are saved (list 'chances') but not shown for now (Roxanne, 27 Nov:
+    // "save them but don't display them for now").
     tabFromFold('points', ownPoints),
-    tabFromFold('rewards', joinFolds(
-      notesFold(eventTypeId, 'rewards', 'Rewards'), rewardsFold(eventTypeId, options.rewardView))),
+    splitRules
+      ? { id: 'rewards', label: 'Rewards', html: joinFolds(
+        notesFold(eventTypeId, 'rewards', 'Rewards', true), rewardsFold(eventTypeId, options.rewardView)) }
+      : tabFromFold('rewards', joinFolds(
+        notesFold(eventTypeId, 'rewards', 'Rewards'), rewardsFold(eventTypeId, options.rewardView))),
     { id: 'battles', label: 'Battles', html: options.fortBattlesHtml },
     { id: 'score', label: 'Total score', html: options.scoreHtml },
     { id: 'alliance-times', label: 'Alliance times', html: allianceTimesHtml },
@@ -834,6 +875,13 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
         (showsTabLine ? '' : `<h3 class="tab-page-title">${escapeForPage(openTab.label)}</h3>`) +
         `${openTab.html}</div></div>`;
 
+  const factsHtml = facts.length
+    ? '<div class="event-facts">' +
+      facts.map(fact => `<span class="event-fact">${escapeForPage(fact)}</span>`).join('') + '</div>'
+    : '';
+  // An event can show its facts (Mini-game, Summer) in its head, with its name, rather
+  // than in a tab (Fishing, Roxanne 27 Nov: "add it to the tournament, not to the rules").
+  const factsInHead = Boolean(eventTypeById(eventTypeId)?.factsInHead);
   const headEventTypeId = options.wholeEvent?.eventTypeId ?? eventTypeId;
   const headStart = options.wholeEvent?.startMinute ?? occurrence.startMinute;
   const headEnd = options.wholeEvent?.endMinute ?? occurrence.endMinute;
@@ -844,6 +892,7 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
     (occurrence.wasCancelled ? '<span class="cancelled-mark" aria-label="Cancelled">&times;</span> ' : '') +
     escapeForPage(eventTypeName(headEventTypeId) + options.allianceTags) + '</h2>' +
     `<span class="event-note">${escapeForPage(spanText(headStart, headEnd))}</span>` +
+    (factsInHead ? factsHtml : '') +
     `</div><div class="row-buttons">${options.headPencils}</div></div>` +
     // The other name, the event's note and this date's note go with the name, not in a tab.
     (notes.length ? `<div class="event-notes">${notes.join('')}</div>` : '') +
@@ -851,11 +900,7 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
     tabsHtml +
     '<div class="event-page-body">';
 
-  if (facts.length) {
-    html += '<div class="event-facts">' +
-      facts.map(fact => `<span class="event-fact">${escapeForPage(fact)}</span>`).join('') +
-      '</div>';
-  }
+  if (!factsInHead) html += factsHtml;
 
   html += options.editFormHtml;
   html += openHtml;
