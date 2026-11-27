@@ -26,10 +26,12 @@ chats applied her rules only on the page she was looking at; she found the gaps 
 
 ## Branches
 
-- main (live): this morning's site plus the calendar's Filters/UTC fix and the zoom fix.
-- wip-27-nov (not live): all the 27 Nov evening and night work. She wants it checked before it
-  goes live ("i don't trust"). It goes into main only with her yes; then check it with her on
-  her two monitors (Claude in Chrome sees the live site in her real Chrome).
+- main (live): everything up to 27 Nov night, pushed with her yes: the panel audit (results on every
+  event, timelines without mail rows), the shops as game cards, SvS results from the numbers, ticket
+  lines, Flame and Fangs (Timeline and Shop, its plan with preparation dots and cores, the shop's
+  extra day dashed, red colours, its preparation on the calendar as growing dots).
+- wip-27-nov: merged into main; delete it once the live site is checked with her.
+- screenshots: her game screenshots, a folder per event (no code).
 
 ## Now: the panel audit (27 Nov, night)
 
@@ -78,12 +80,8 @@ She found agreed rules missing from some panels. Found by rendering every panel:
 ## Questions still open (one at a time, never dropped)
 
 - Shops on the biggest screen: a proposal for scaling them is with her; she decides (27 Nov night).
-- Flame and Fangs: the preparation day on the calendar, a faded piece on the Sunday? (asked 27 Nov night)
-- Flame and Fangs' shop as in the game, with the redeem limit and no button: needs her screenshot of
-  the in-game shop (asked 27 Nov night).
-- Flame and Fangs: purple or red? Renders sent 27 Nov night (red is uncommitted in the working copy;
-  purple is in /tmp/et.bak and in git).
-- Flame and Fangs' cores on the timeline: how she wants them (the glow attempt was reverted).
+- Flame and Fangs' shop, Fire Crystals: a guide site's picture shows x5 with "Left: 6", the site has
+  x9 with limit 8. Needs her game check before anything changes.
 - Mine on the personal events: she said Mine is only for events with something to record; which
   keep it is asked (27 Nov night).
 
