@@ -385,13 +385,13 @@ function rewardListHtml(list: string, band: string, bandCount: number, shown: Re
   }
   if (list === 'tier') {
     // Win Streak, Victory and Loss, each with how the tier changes.
-    return ['streak', 'win', 'lose'].map(section => {
+    return '<div class="tier-rows">' + ['streak', 'win', 'lose'].map(section => {
       const inSection = shown.filter(row => row.section === section);
       if (!inSection.length) return '';
       return `<div class="reward-row"><span class="reward-label">${escapeForPage(rewardSectionName(list, section))}` +
         `<small>Tier ${escapeForPage(inSection[0].rowLabel.replace('-', '−'))}</small></span>` +
         `<span class="reward-items">${inSection.map(rewardTile).join('')}</span></div>`;
-    }).join('');
+    }).join('') + '</div>';
   }
   if (list === 'merchant' || list === 'shop') {
     // Each offer: the item, its price in the shop's currency and how many can be bought.
@@ -446,7 +446,17 @@ function rewardsFold(eventTypeId: string, state: RewardViewState): string {
       const oneRows = rewardsOf(eventTypeId, one);
       const oneBands: string[] = [];
       for (const row of oneRows) if (row.band && !oneBands.includes(row.band)) oneBands.push(row.band);
-      const oneBand = oneBands[0] ?? '';
+      // The alliance's own tier opens first; the other tiers stay one tap away.
+      const chosenOne = state.openBand.get(eventTypeId + '|' + one);
+      const ownOne = state.ownBand.get(eventTypeId + '|' + one);
+      const oneBand = chosenOne && oneBands.includes(chosenOne) ? chosenOne
+        : ownOne && oneBands.includes(ownOne) ? ownOne : oneBands[0] ?? '';
+      const bandButtons = oneBands.length > 1
+        ? `<div class="reward-bands">` + oneBands.map(item =>
+          `<button type="button" class="reward-band${item === oneBand ? ' on' : ''}"` +
+          ` data-reward-band="${escapeForPage(eventTypeId + '|' + one + '|' + item)}">` +
+          `${escapeForPage(rewardBandName(item))}</button>`).join('') + '</div>'
+        : '';
       const oneShown = oneBand ? oneRows.filter(row => row.band === oneBand) : oneRows;
       const note = pointSourcesInList(eventTypeId, 'rewards').find(source => {
         const where = pointSourceDayName(source.id);
@@ -454,10 +464,10 @@ function rewardsFold(eventTypeId: string, state: RewardViewState): string {
       });
       const noteHtml = note
         ? `<p class="points-note reward-note">${escapeForPage(pointSourceTask(note.id, heroDay))}</p>` : '';
-      html += one === 'group'
+      html += bandButtons + (one === 'group'
         ? rewardListHtml(one, oneBand, 1, oneShown, eventTypeId, noteHtml)
         : `<div class="reward-sub">${escapeForPage(rewardListName(eventTypeId, one))}</div>` + noteHtml +
-          rewardListHtml(one, oneBand, 1, oneShown, eventTypeId);
+          rewardListHtml(one, oneBand, 1, oneShown, eventTypeId));
     }
     return html + '</details>';
   }
