@@ -349,9 +349,10 @@ function rewardListHtml(list: string, band: string, bandCount: number, shown: Re
         : '') +
       // The game's name for these: rewards by the alliance's rank in its group.
       '<div class="reward-sub">Group Ranking</div>' +
+      // The ranks are tabs, drawn like the event's own tabs (Roxanne, 27 Nov: "Make it tabs").
       (ranks.length > 1
-        ? `<div class="reward-tabs" style="grid-template-columns:repeat(${ranks.length},1fr)">` + ranks.map(rank =>
-          `<button type="button" class="reward-tab${rank === openRank ? ' on' : ''}"` +
+        ? `<div class="info-tabs rank-tabs" role="tablist" style="--tab-color:${escapeForPage(eventTypeColor(eventTypeId))}">` + ranks.map(rank =>
+          `<button type="button" class="info-tab" role="tab" aria-selected="${rank === openRank}"` +
           ` data-reward-band="${escapeForPage(eventTypeId + '|group-rank|' + rank)}">${escapeForPage(rank)}</button>`).join('') +
           '</div>'
         : '') +
