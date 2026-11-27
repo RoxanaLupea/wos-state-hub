@@ -12,10 +12,17 @@ Read this first in every chat. Roxanne should never have to explain the setup ag
    websites go through the database's admin_tools.http (supabase/admin-tools.sql); the
    Whiteout Stats API key is never written into the repo.
 5. Rendering: tools/render/README.md. npm cannot install here; the real build runs on
-   GitHub after a push.
+   GitHub after a push. Fetch the database copy with tools/render/fetch-data.sql into
+   tools/render/data/main.json (never commit it), run `bash tools/render/rebuild.sh /tmp/rb`,
+   then use tools/render/page.py (open_site, click) with
+   RENDER_USER_ID=1096141f-8fab-4476-9b28-f707e86731da to see the site as she does. Phone
+   first: 384 x 832 at scale 2.8125; her laptop 1536 x 864 at 1.25, her monitor 2560 x 1440
+   at 1. Her PC and Chrome are usually open: Claude in Chrome for game guides, the web and the
+   live site on her two monitors.
 
-Then read notes/handoff.md (where the work stands), notes/what-this-is.md and the notes
-for the part being worked on: notes/design-decisions.md (her decisions),
+Then read notes/handoff.md (where the work stands, what is next, the questions still open),
+notes/rewards-requests.md (her rewards requests in her words), notes/what-this-is.md and the
+notes for the part being worked on: notes/design-decisions.md (her decisions),
 notes/page-style.md and notes/visual-language.md (the site's look),
 notes/rules-and-open-items.md (game rules).
 
@@ -24,6 +31,11 @@ notes/rules-and-open-items.md (game rules).
 - When she says "me" about who may do something, she means admins. She says "owner" when
   she wants something locked that tight (25 Nov).
 
+- Talk to her while working: say what you are about to do before doing it, and never work
+  silently for minutes (27 Nov: "you're not talking to me ... i have no idea what you're doing").
+- When she asks for a standard to be applied, apply it to every case it covers, check every
+  case against her words before showing anything, and show her the screens (27 Nov: she had to
+  ask three times for the rewards).
 - Do what she asks, exactly. When she asks to look, answer or discuss, do that and build
   nothing. Add nothing she did not ask for.
 - Her words win over everything: over the notes, over an example she sends, over your own

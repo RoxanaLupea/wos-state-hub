@@ -6,15 +6,13 @@ Do CLAUDE.md's setup first. Updated 27 Nov 2026, evening.
 
 ### Branches
 
-- main (live) = 76ddca8: this morning's site plus one fix (the calendar's Filters and UTC switch
-  were dead since the 13:06 push; the toolbar's data-view caught every tap).
-- wip-27-nov (not live) = everything else from 27 Nov evening, committed and pushed. Work from it:
-  `git fetch origin wip-27-nov && git checkout wip-27-nov`. It merges into main with no conflict.
-  Merging and pushing to main waits for her yes; after the push, check it with her on her two
-  monitors (Claude in Chrome sees the live site in her real Chrome, one window per monitor).
+- main (live): everything up to the evening of 27 Nov, pushed with her yes ("push the wip
+  branch"). wip-27-nov was merged into it; work goes on main again.
+- After the push, check the rewards with her on her two monitors (Claude in Chrome sees the live
+  site in her real Chrome, one window per monitor).
 - Whatever she accepts is committed right away (CLAUDE.md, 27 Nov).
 
-### What was done on wip-27-nov
+### What was done on 27 Nov evening
 
 - Tundra Arms League (event id hellfire): timeline renamed and restructured; Rewards in three
   tabs (Champion's Glory with her ice frames, Ranking with Legion / Alliance / State Rewards,
