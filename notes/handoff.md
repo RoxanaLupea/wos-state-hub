@@ -4,6 +4,21 @@ Do CLAUDE.md's setup first. Updated 27 Nov 2026.
 
 ## Now
 
+### Pushed 27 Nov, 07:15 (her time)
+
+Live on main: Alliance Championship results (championship-results.ts): the trophy Results
+button at the top of the head for R4s once the first battle started and while there are no
+results; no Results tab until results exist (also Foundry, Canyon, Showdown, Winter Siege, whose
+Results button still opens their old forms, to be redesigned); rounds added in place (only rounds
+fought, lanes tapped as won, flags and points worked out); Add ranking once 5 rounds are in
+(group from the rounds, arrows side by side, sorted by points then flags on save); "Submitted by"
+under the results. Timeline: ROUND n with Adjust lanes under it, then Battle (eventStep .detail
+in en.json); the game's notes for rounds and registration removed. The R4s' plan banner under
+Registration (plan-note.ts; alliance_records.event_notes, column added on her yes 07:07). No head
+Edit on AC (datesLocked). Open: members submit and R4s approve as tickets (her rules in
+design-decisions.md, needs new tables); drawn scrollbars on PC wait for her call.
+The calendar redesign stays on common-size (built, not live), review continues there.
+
 ### Pushed 27 Nov, 06:12 (her time)
 
 Live: a player picture that fails to load shows the WoS logo under a veil with a torn-picture
