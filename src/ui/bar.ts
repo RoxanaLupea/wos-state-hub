@@ -8,7 +8,7 @@
 // layout-bars.ts, once the browser knows how wide a day column is.
 
 import {
-  eventBarSubtitle, eventTypeById, seasonOf, eventTypeColor, eventTypeInitials, eventTypeName, eventTypeShortName, eventTypeTag,
+  eventBarSubtitle, eventTypeById, seasonOf, eventTypeColor, eventTypeColorEnd, eventTypeInitials, eventTypeName, eventTypeShortName, eventTypeTag,
   SVS_FAMILY, eventStepsByEventType, hasLogoColors, logoColors, phaseName, showsTimesInLine, windowLabel
 } from '../data/catalog.ts';
 import { MINUTES_PER_DAY, minutesFromTime, textFromDay } from '../calendar/days.ts';
@@ -409,6 +409,7 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
   if (trailCount) classes.push('has-trail');
   if (bar.wasCancelled) classes.push('cancelled');
   if (bar.isProvisional) classes.push('provisional');
+  if (bar.isPreparation) classes.push('prep-line');
   if (isLitBar(bar.key, options.litKeys)) classes.push('lit-event');
 
   const logo = eventIcon(mainOfParts ?? bar.eventTypeId);
@@ -447,7 +448,21 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
       ? `<span class="bar-segment wide-only" data-start-minute="${piece.start}" data-end-minute="${piece.end}">` +
         `<span class="bar-segment-name">${escapeForPage(subtitle)}</span></span>`
       : '') +
-    lineTwo + stripes + fishingLines + windowLines + '</div>';
+    lineTwo + stripes + fishingLines + windowLines +
+    (bar.isPreparation ? prepLine(bar, logo) : '') + '</div>';
+}
+
+// The preparation's line (Roxanne, 27 Nov night: "With the circles, like tiny, bigger, and then the
+// flame"): small, bigger and biggest dots in the event's colours, then its logo. A computer has room
+// to repeat the dots three times, the phone shows them once.
+function prepLine(bar: Bar, logo: string): string {
+  const from = escapeForPage(eventTypeColor(bar.eventTypeId));
+  const to = escapeForPage(eventTypeColorEnd(bar.eventTypeId));
+  const sizes = ['small', 'bigger', 'biggest'];
+  const dots = [0, 1, 2].map(group =>
+    sizes.map(size => `<i class="${size}${group > 0 ? ' wide-only' : ''}"></i>`).join('')).join('');
+  return `<span class="prep-dots" style="--prep-from:${from};--prep-to:${to}">${dots}</span>` +
+    `<span class="prep-line-logo">${logo}</span>`;
 }
 
 // A bar that shows only its marked times, as logos, instead of a block across the

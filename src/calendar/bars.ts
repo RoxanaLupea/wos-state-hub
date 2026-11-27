@@ -54,6 +54,9 @@ export interface Bar {
   wasCancelled: boolean;
   // The day is still a guess until an admin confirms it.
   isProvisional: boolean;
+  // The preparation before an event (Flame and Fangs' Sunday): drawn as a line ending in the
+  // event's logo, not as a bar (Roxanne, 27 Nov night: "At most we're gonna have a line ... with a logo").
+  isPreparation?: boolean;
   // Only the marked times show, as logos, instead of a block across the day.
   markers: Marker[] | null;
   // Parts running for days inside this event, drawn as lines under the bar.
@@ -111,7 +114,8 @@ export function phaseMinutes(
 ): { start: number; end: number } | null {
   if (phase.fromDay > occurrence.lengthDays) return null;
 
-  let start = phase.fromDay <= 1
+  // A phase from day 0 starts the day before the event (Flame and Fangs' preparation).
+  let start = phase.fromDay === 1
     ? occurrence.startMinute
     : (occurrence.startDay + phase.fromDay - 1) * MINUTES_PER_DAY;
   let end = phase.toDay >= occurrence.lengthDays
@@ -125,7 +129,8 @@ export function phaseMinutes(
     end = (occurrence.startDay + phase.toDay - 1) * MINUTES_PER_DAY + minutesFromTime(phase.endTimeUtc);
   }
 
-  start = Math.max(start, occurrence.startMinute);
+  // Only a preparation phase (from day 0) starts before its event.
+  if (phase.fromDay >= 1) start = Math.max(start, occurrence.startMinute);
   end = Math.min(end, occurrence.endMinute);
   return end > start ? { start, end } : null;
 }
@@ -239,8 +244,18 @@ export function buildBarsForRange(
     }
 
     const phases = options.phasesByEventType.get(occurrence.eventTypeId);
-    if (!phases || phases.length === 0) {
+    // An event whose phases are all shown only on its page keeps its whole bar.
+    if (!phases || phases.length === 0 || phases.every(phase => phase.hideBar)) {
       bars.push(barFromOccurrence(occurrence, { stripes: ownStripes }));
+      for (const phase of phases ?? []) {
+        if (phase.fromDay >= 1) continue;
+        const span = phaseMinutes(occurrence, phase, options.minutesFromTime);
+        if (!span) continue;
+        bars.push(barFromOccurrence(occurrence, {
+          key: occurrence.key + '|' + phase.id, startMinute: span.start, endMinute: span.end,
+          phaseId: phase.id, isPreparation: true
+        }));
+      }
       continue;
     }
     // Phases marked "no bar" only show on the event's own page.

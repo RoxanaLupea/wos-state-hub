@@ -484,3 +484,27 @@
 /* The castle's own lines and logo at its own time are the computer's; the phone has the
    logo in the middle of the part. */
 @media (min-width: 1000px) { .bar .bar-inside.in-part-middle { display: none; } }
+
+/* A preparation before its event (Flame and Fangs' Sunday): no bar, only small, bigger and biggest
+   dots in the event's colours, then its logo (Roxanne, 27 Nov night). The gaps are even, the last
+   dot to the logo included; the same space on both sides of the day. */
+.bar.prep-line { background: none !important; box-shadow: none !important; border-color: transparent !important;
+  backdrop-filter: none !important; -webkit-backdrop-filter: none !important; overflow: visible; }
+.bar.prep-line > :not(.prep-dots):not(.prep-line-logo) { visibility: hidden; }
+.bar.prep-line::before, .bar.prep-line::after { display: none; }
+.prep-dots { position: absolute; left: 4px; right: 26px; top: 0; bottom: 0; display: flex; align-items: center;
+  justify-content: space-between; }
+/* An empty last item, so the gap from the last dot to the logo is the same as between the dots. */
+.prep-dots::after { content: ''; width: 0; }
+.prep-dots i { display: block; flex: none; border-radius: 50%; }
+.prep-dots i.small { width: 5px; height: 5px; background: var(--prep-from); opacity: 0.7; }
+.prep-dots i.bigger { width: 7px; height: 7px; background: color-mix(in srgb, var(--prep-from) 50%, var(--prep-to)); opacity: 0.85; }
+.prep-dots i.biggest { width: 9px; height: 9px; background: var(--prep-to); }
+.prep-line-logo { position: absolute; right: 4px; top: 0; bottom: 0; display: flex; align-items: center; }
+.prep-line-logo .event-icon { --logo-size: 20px; width: 20px; height: 20px; display: block; }
+@media (max-width: 480px) {
+  .prep-dots { left: 3px; right: 21px; }
+  .prep-dots i.wide-only { display: none; }
+  .prep-line-logo { right: 3px; }
+  .prep-line-logo .event-icon { --logo-size: 16px; width: 16px; height: 16px; }
+}

@@ -265,5 +265,21 @@
     "fromDay": 2,
     "toDay": 2,
     "sortOrder": 43
+  },
+  {
+    "id": "ph44",
+    "eventTypeId": "flame-and-fang",
+    "fromDay": 0,
+    "toDay": 0,
+    "hideBar": "yes",
+    "sortOrder": 44
+  },
+  {
+    "id": "ph45",
+    "eventTypeId": "flame-and-fang",
+    "fromDay": 1,
+    "toDay": 2,
+    "hideBar": "yes",
+    "sortOrder": 45
   }
 ]

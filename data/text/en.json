@@ -3152,5 +3152,7 @@
   "reward.rw-hellfire-shop-champion-17-speedup-training-1h.rowLabel": "50",
   "reward.rw-hellfire-shop-champion-17-speedup-training-1h.note": "Limit 15",
   "reward.rw-hellfire-shop-champion-18-custom-secured-resource-chest-3.rowLabel": "5",
-  "reward.rw-hellfire-shop-champion-18-custom-secured-resource-chest-3.note": "Limit 16"
+  "reward.rw-hellfire-shop-champion-18-custom-secured-resource-chest-3.note": "Limit 16",
+  "eventPhase.ph44.name": "Preparation",
+  "eventPhase.ph45.name": "Event"
 }
