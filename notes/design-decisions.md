@@ -1870,3 +1870,22 @@ alliance-time forms it opened go to the admin menu (to be designed).
   "Shop version is cleaner, we're keeping that". Every shop keeps the cards; the exchange rows were
   removed.
 
+- Flame and Fangs' preparation on the calendar (Roxanne, 27 Nov night): "At most we're gonna have a line
+  or dots or something, line with a logo"; "With the circles, like tiny, bigger, and then the flame. Can
+  we repeat the same pattern on PC"; "careful with the spacing, because the third dot is too close to the
+  second and not close enough to the logo"; "Make sure the logo and tiny bullets are centered". Built:
+  small, bigger and biggest dots in the event's colours then its logo, once on the phone, three times on
+  a computer, even gaps up to the logo, one centre line. Accepted ("Okay, I like it").
+- Flame and Fangs has no Missions tab (Roxanne, 27 Nov night: "I think you didn't remove missions"):
+  Timeline and Shop only; the core counts stay in data/captures/flame-and-fangs.md.
+- Flame and Fangs' cores on the timeline (Roxanne, 27 Nov night): "after the preparation or event, like
+  we put the 3 dots increasing in size, and then the core, and then the number"; "the last one doesn't
+  have to be that big, so they're just 3 discrete dots"; in the event's colours.
+- Flame and Fangs' timeline colours and lines (Roxanne, 27 Nov night): "the timeline is not in the event
+  colors"; the preparation "shouldn't [look like a timeline]. It should be dotted"; "each of the big dots
+  should mark the point where we do something"; the shop's extra day: "it's a dotted line, it's a line,
+  it's connected to the end, it's connected to the big circle in front of it". Built: the event's own
+  colours (not softened), a small and a bigger dot between the preparation's points, a dashed line for
+  the shop's day joined at both ends. A try with one dot spacing, a colour going to the event's red, the
+  shop text and less space under the headings was called worse and reverted. Accepted ("this is done").
+- Flame and Fangs' colours are red (Roxanne, 27 Nov night: "It's mostly red"), used everywhere since.
