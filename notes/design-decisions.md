@@ -1406,3 +1406,7 @@ All nine are built.
 - Instructions while editing (Roxanne, 27 Nov): "select victory lanes" rather than "tap the lanes
   you won"; "It doesn't have to be bold, it doesn't have to be that thick, and it can be like
   blue and have a star. Mark it as an instruction." Lanes start red and turn blue when tapped.
+- Review items are tickets, not messages (Roxanne, 27 Nov): "they get a red dot when there are
+  open tickets. When they are solved, they don't get red dots. But all of them can see the
+  history of open tickets and see how it was resolved." The one who submitted gets a
+  notification that it was approved (or rejected).
