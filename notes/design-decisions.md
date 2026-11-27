@@ -1449,3 +1449,6 @@ All nine are built.
   and all are shown under the results. "I want them to be displayed like with their picture and
   their name from in-game ... I want every spot where a user is shown to be that user, not just
   text." (person-chip.ts, used under results and on Submissions.)
+- Submissions GIFs (Roxanne, 27 Nov): "To make the app fun, remind me to add GIFs on the
+  submission page. We need something for approved, rejected, and submissions for when they are
+  empty." Open: she adds the GIFs; remind her when the Submissions page is next worked on.

@@ -12,7 +12,7 @@ table result_submissions, created on her yes): members submit Alliance Champions
 (button Submit), R4s get a red dot and the menu's Submissions list, open a ticket to the
 event's Results to fix, Approve or Reject; the member gets a dot when it is resolved. Everyone
 who contributed is shown under the results with picture and in-game name (person-chip.ts).
-Open: Foundry and Canyon results by legion need their design (her screenshots are in
+Open: remind her to add GIFs to Submissions (approved, rejected, and each column when empty); Foundry and Canyon results by legion need their design (her screenshots are in
 data/captures); the Submissions page's design comes later; the bottom-sheet pop-ups later.
 Next: the calendar redesign review on common-size, screen 3 onward.
 
