@@ -56,6 +56,13 @@ const FISH_BONE = '<svg class="fish-bone" viewBox="0 0 22 12" aria-hidden="true"
   '<rect x="9.4" y="2.2" width="2" height="7.6" rx="1"/>' +
   '<path d="M13.4 0.8 C17.4 0.8 20.4 3.6 22 6 C20.4 8.4 17.4 11.2 13.4 11.2 C12.5 8 12.5 4 13.4 0.8 Z"/></svg>';
 
+// Stand-ins for the Sunken Treasure Hunt's line and logo in the mockup.
+const HUNT_STAND_IN_COLOR = '#E8B64A';
+const HUNT_STAND_IN_LOGO = '<svg class="hunt-stand-in" viewBox="0 0 20 20" aria-hidden="true">' +
+  '<rect x="2" y="6" width="16" height="11" rx="2" fill="#B9772C"/>' +
+  '<rect x="2" y="3" width="16" height="6" rx="2" fill="#E8B64A"/>' +
+  '<rect x="8.5" y="7" width="3" height="4" rx="1" fill="#FFF2C4"/></svg>';
+
 // A white line across a bar where something starts or ends.
 export function barMark(minute: number, kind: string, what: string): string {
   const time = clockText(minute);
@@ -331,17 +338,25 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
         ` aria-label="${escapeForPage(eventTypeName(bar.eventTypeId) + ' ' + times)}"></span>`;
     }).join('');
 
-  // Fishing: a white line along the bottom of the bar over the days fishing is open,
-  // ending with a fish like the lines beside the headings of the game's Event Rules
-  // (Roxanne, 27 Nov). The last day the event's tabs are still open but nobody can fish.
+  // Fishing (mockup, Roxanne 27 Nov): two lines under the bar, like the parts of Frosty
+  // Fortune. The first, white, covers the days fishing is open and ends with a fish; the
+  // second is the Sunken Treasure Hunt, open to the event's last day, with its logo at
+  // the end (a stand-in until Roxanne sends the logo).
   const fishingDaysEarly = eventTypeById(bar.eventTypeId)?.fishingEndsDaysEarly ?? 0;
   const fishingEnd = bar.endMinute - fishingDaysEarly * MINUTES_PER_DAY;
-  const fishLine = fishingDaysEarly > 0 && fishingEnd > piece.start && bar.startMinute < piece.end
-    ? `<span class="bar-fish-line${fishingEnd <= piece.end ? ' ends-here' : ''}"` +
-      ` data-start-minute="${bar.startMinute}" data-end-minute="${fishingEnd}">` +
-      `<span class="fish-rule"></span>${fishingEnd <= piece.end ? FISH_BONE : ''}</span>` +
-      // The white mark where fishing ends, like the end of a part (Roxanne, 27 Nov).
-      (fishingEnd < piece.end ? barMark(fishingEnd, 'end-mark', 'Fishing ends') : '')
+  const fishingLines = fishingDaysEarly > 0
+    ? `<span class="bar-stripe" style="background:#FFFFFF;bottom:-6px"` +
+      ` data-start-minute="${bar.startMinute}" data-end-minute="${fishingEnd}"></span>` +
+      (fishingEnd <= piece.end && fishingEnd > piece.start
+        ? `<span class="bar-stripe-end" data-end-minute="${fishingEnd}" title="Fishing">${FISH_BONE}</span>` +
+          (fishingEnd < piece.end ? barMark(fishingEnd, 'end-mark', 'Fishing ends') : '')
+        : '') +
+      `<span class="bar-stripe" style="background:${HUNT_STAND_IN_COLOR};bottom:-11px"` +
+      ` data-start-minute="${bar.startMinute}" data-end-minute="${bar.endMinute}"></span>` +
+      (bar.endMinute <= piece.end
+        ? `<span class="bar-stripe-end" data-end-minute="${bar.endMinute}" data-at-bar-end="yes"` +
+          ` title="Sunken Treasure Hunt">${HUNT_STAND_IN_LOGO}</span>`
+        : '')
     : '';
 
   if (subtitle) lineTwo += `<span class="bar-sub">${escapeForPage(subtitle)}</span>`;
@@ -376,8 +391,7 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
 
   const hasTwoLines = piece.segments.length > 0 || piece.insideParts.length > 0 ||
     partsMode || piece.phaseParts.length > 0;
-  // Fishing's line is its second line on a phone.
-  const sideLogo = Boolean(subtitle) || hasTwoLines || Boolean(fishLine);
+  const sideLogo = Boolean(subtitle) || hasTwoLines;
   // On a computer a bar whose second line only names its phases or days, or says its
   // second name, is one line: the phases are written after the name, in their own
   // stretches (Roxanne, 26 Nov: "we have to write it in another way that lets us use one
@@ -393,7 +407,7 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
   // second line of text, not centred in the bar.
   const lineTwoNames = (lineTwo.match(/class="bar-segment-name/g) ?? []).length;
   if (lineTwoNames === 1) classes.push('one-segment');
-  const trailCount = bar.stripes.length;
+  const trailCount = bar.stripes.length + (fishingLines ? 2 : 0);
   if (trailCount) classes.push('has-trail');
   if (bar.wasCancelled) classes.push('cancelled');
   if (bar.isProvisional) classes.push('provisional');
@@ -435,7 +449,7 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
       ? `<span class="bar-segment wide-only" data-start-minute="${piece.start}" data-end-minute="${piece.end}">` +
         `<span class="bar-segment-name">${escapeForPage(subtitle)}</span></span>`
       : '') +
-    lineTwo + stripes + windowLines + fishLine + '</div>';
+    lineTwo + stripes + fishingLines + windowLines + '</div>';
 }
 
 // A bar that shows only its marked times, as logos, instead of a block across the

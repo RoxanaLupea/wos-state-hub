@@ -297,6 +297,8 @@
   .bar.phase-lines.too-narrow { height: 30px; }
   .bar.phase-lines.too-narrow.shows-initials { padding-left: calc(6px + var(--side-icon) + var(--side-gap)); }
   .bar-stripe-end .event-icon { --logo-size: 20px; width: 20px; height: 20px; }
+  .bar-stripe-end .fish-bone { width: 20px; height: 11px; }
+  .bar-stripe-end .hunt-stand-in { width: 20px; height: 20px; }
 }
 
 /* Large screens: the second line is bigger, with room for it. */
@@ -328,13 +330,9 @@
 .bar-window.show-time::after { display: block; }
 @media (hover: hover) { .bar-window:hover::after { display: block; } }
 
-/* Fishing: a white line up to the end of the days fishing is open, ending
-   with a fish (Roxanne, 27 Nov), the same white as the lines of Wild Brawl's windows. */
-.bar-fish-line { position: absolute; z-index: 4; height: 12px; margin-top: -6px; display: flex; align-items: center; gap: 3px; box-sizing: border-box; pointer-events: none; }
-.bar-fish-line.ends-here { padding-right: 5px; }
-.bar-mark.end-mark.on-line-two { top: auto; bottom: 4px; height: calc(var(--line-two-height) - 4px); }
-.bar-fish-line .fish-rule { flex: 1; height: 2px; border-radius: 1px; background: rgba(255, 255, 255, 0.8); }
-.bar-fish-line .fish-bone { flex: none; width: 16px; height: 9px; fill: rgba(255, 255, 255, 0.8); }
+/* Fishing's fish and the Hunt's stand-in logo at the end of their lines under the bar. */
+.bar-stripe-end .fish-bone { width: 16px; height: 9px; fill: #FFFFFF; }
+.bar-stripe-end .hunt-stand-in { width: 16px; height: 16px; }
 
 /* ---------- Computers: one-line bars (Roxanne, 26 Nov) ----------
    A bar is one line unless it really needs two (SvS, a week with tickets): its phases or

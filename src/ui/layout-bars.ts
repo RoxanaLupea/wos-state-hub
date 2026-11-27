@@ -74,7 +74,7 @@ export function layoutBars(panel: HTMLElement): void {
         ? left + parseFloat(window.getComputedStyle(bar).paddingLeft) - 4
         : left;
 
-      bar.querySelectorAll<HTMLElement>('.bar-segment, .bar-inside, .bar-light, .bar-stripe, .bar-part, .bar-window, .bar-fish-line')
+      bar.querySelectorAll<HTMLElement>('.bar-segment, .bar-inside, .bar-light, .bar-stripe, .bar-part, .bar-window')
         .forEach(element => {
           const isLineTwo = element.classList.contains('bar-segment') ||
             element.classList.contains('bar-inside') || element.classList.contains('bar-part');
@@ -97,7 +97,6 @@ export function layoutBars(panel: HTMLElement): void {
         });
 
       placeFirstPart(bar);
-      placeFishLine(bar);
 
       // A part's logo on line two fits between the two lines.
       bar.querySelectorAll<HTMLElement>('.bar-inside .event-icon').forEach(icon => {
@@ -144,56 +143,6 @@ function placeFirstPart(bar: HTMLElement): void {
   first.style.left = left + 'px';
   first.style.width = (baseRight - left) + 'px';
   first.dataset.laidOut = first.style.left;
-}
-
-// Fishing's line (Roxanne, 27 Nov). On a phone the bar has two lines and the fish line is
-// its second line, starting after the big logo. On a computer, where bars are one line,
-// it is written after the name and season, halfway up their capitals, as phases are.
-function placeFishLine(bar: HTMLElement): void {
-  const line = bar.querySelector<HTMLElement>('.bar-fish-line');
-  const label = bar.querySelector<HTMLElement>('.bar-head .bar-label');
-  if (!line || !label) return;
-  // Its own place is kept from the last layout, as the name may be shortened later.
-  if (line.dataset.baseLeft === undefined || line.dataset.laidOut !== line.style.left) {
-    line.dataset.baseLeft = String(parseFloat(line.style.left) || 0);
-    line.dataset.baseWidth = String(parseFloat(line.style.width) || 0);
-  }
-  const baseLeft = Number(line.dataset.baseLeft);
-  const baseRight = baseLeft + Number(line.dataset.baseWidth);
-  const barBox = bar.getBoundingClientRect();
-  const isOneLine = window.matchMedia('(min-width: 1000px)').matches && bar.classList.contains('one-line-wide');
-  let startAt: number;
-  let middle: number;
-  if (isOneLine) {
-    startAt = nameEnd(bar, label) - barBox.left + 10;
-    const capitals = capitalsOf(label, bar);
-    middle = capitals.top + capitals.height / 2;
-  } else {
-    // It starts where the name starts, so the two lines are aligned.
-    startAt = label.getBoundingClientRect().left - barBox.left;
-    const headBottom = (bar.querySelector<HTMLElement>('.bar-head') as HTMLElement).getBoundingClientRect().bottom - barBox.top;
-    middle = (headBottom + bar.clientHeight) / 2;
-  }
-  const left = Math.min(baseRight, Math.max(baseLeft, startAt));
-  line.style.left = left + 'px';
-  line.style.width = (baseRight - left) + 'px';
-  line.style.top = middle + 'px';
-  line.dataset.laidOut = line.style.left;
-  // With no room for the line and its fish, neither is drawn, nor the mark where fishing
-  // ends. The mark was hidden earlier if the full name still covered it.
-  const hasRoom = baseRight - left >= 40;
-  line.style.display = hasRoom ? '' : 'none';
-  const endMark = bar.querySelector<HTMLElement>('.bar-mark.end-mark');
-  if (endMark && line.classList.contains('ends-here')) {
-    endMark.style.display = hasRoom ? '' : 'none';
-    // On a phone the mark stands on the second line, beside the fish, as tall as the
-    // white lines between days there; the fish line runs through its middle.
-    endMark.classList.toggle('on-line-two', !isOneLine);
-    if (!isOneLine && hasRoom) {
-      const markBox = endMark.getBoundingClientRect();
-      line.style.top = (markBox.top + markBox.height / 2 - barBox.top) + 'px';
-    }
-  }
 }
 
 // Names that do not fit:
@@ -504,8 +453,6 @@ export function fitBarLabels(panel: HTMLElement): void {
     }
 
     for (const bar of bars) placeAfterName(bar, fits);
-    // Fishing's line once the names are settled.
-    for (const bar of bars) placeFishLine(bar);
   });
 }
 
