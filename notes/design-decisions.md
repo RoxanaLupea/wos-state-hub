@@ -1904,3 +1904,8 @@ alliance-time forms it opened go to the admin menu (to be designed).
 - Foundry results (Roxanne, 27 Nov night): each result is connected to one of the set legions; one
   Results tab with a tab per legion that has results ("it won't be 3 result tabs, just one tab with 3
   legions"). She is sending her Foundry instruction screenshots next.
+- Foundry legion times are kept, not set per run (Roxanne, 27 Nov night): "just save the Legion times
+  for all future events until changed ... we won't set it per event. All Legions will be at the
+  initial set times unless they're changed." Leaders set them when registration starts (after the
+  voting); most of the time they stay the same. (The site's schedules already work this way: one
+  repeating schedule per alliance and legion.)
