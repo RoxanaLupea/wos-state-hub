@@ -13,6 +13,8 @@ has had to point out before. When she points out a new kind of fault, it is adde
   touching), then scroll each new box by hand in the render.
 
 ## Panels (Roxanne, 27 Nov night)
+- Before touching an event: its rules (rules-and-open-items.md), its captures file, its
+  decisions. Nothing she confirmed is asked, searched or presented as new.
 - A change to one event's panel that is a rule (results, rewards, merchants, timelines, the head)
   is checked on every event: run tools/render/panels.py and go through every tab and
   panels.txt. She found rules applied only on the page she was looking at.

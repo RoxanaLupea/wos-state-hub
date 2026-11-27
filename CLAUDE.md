@@ -31,6 +31,13 @@ notes/rules-and-open-items.md (game rules).
 
 ## How to work with Roxanne
 
+- Before working on any event, read everything already known about it: its section in
+  notes/rules-and-open-items.md, its file in data/captures/, its entries in
+  notes/design-decisions.md and its schedule. What she confirmed is never searched for again
+  or presented as new (27 Nov night: "i already sent you 2 intel events in a row and already
+  confirmed that the shop stays for another day, do we even remember those confirmations? cause
+  we're doing them to confirm our patterns").
+
 - When she says "me" about who may do something, she means admins. She says "owner" when
   she wants something locked that tight (25 Nov).
 
