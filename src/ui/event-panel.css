@@ -32,7 +32,10 @@
 .event-page { gap: 8px; }
 /* Head: icon (44 px, centred), then the name and the dates on 2 lines, the pencils on the right. */
 .event-page-head { display: flex; align-items: center; gap: 12px; }
-.event-page-head .row-buttons { align-self: center; }
+/* The head's buttons sit at its top right, in one row (Edit, then Results), whatever else
+   the head holds: Results stays where it was approved on Alliance Championship, on every
+   event (Roxanne, 27 Nov). */
+.event-page-head .row-buttons { align-self: flex-start; display: flex; align-items: flex-start; gap: 16px; }
 .event-page-title { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .event-page-title h2 { margin: 0; font-size: 20px; font-weight: 800; }
 .event-facts { display: flex; flex-wrap: wrap; gap: 6px; }
