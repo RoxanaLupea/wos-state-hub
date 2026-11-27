@@ -1392,3 +1392,14 @@ All nine are built.
   - "when they have all 5 rounds filled in, that's when we ... give them another option of add
     ranking", filled in place. While filling, the rank column holds arrows to move a row up and
     down; "If they don't order it properly, then we sort it at the end, so they don't have to."
+- Review of results (Roxanne, 27 Nov): "For R4, the button is save. For any other member of the
+  alliance who can still add results, the button will become submit. And when results are
+  submitted, our R4s will get notifications." An R4 gets "an extra thing in their menu ... for
+  review or something, or an inbox": "a message with a red dot telling them that there's work
+  for them to review, and a link to that particular event"; on that page "they have the option
+  to accept the work someone else did or reject it. And the one who submitted the work gets a
+  message telling them that it was accepted or rejected, or it's pending." Members also get "an
+  option ... to keep track of this" in the sign-in menu. "This is alliance based, so each person
+  can edit the events from their alliance, and the R4s of that alliance get the notifications."
+  One R4's answer settles it ("We don't need for our R4s to approve the same thing"); the item
+  shows its status, resolved, approved or rejected, and by whom.
