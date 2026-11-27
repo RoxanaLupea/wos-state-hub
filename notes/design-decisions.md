@@ -1414,3 +1414,12 @@ All nine are built.
   the top right of the event's head ("Yes, I like it. And we're gonna keep it at that for now").
   R4s can edit submitted results before accepting them, "so they can accept the input and just
   fix the mistakes if there are any, without having to write everything from the start."
+- Alliance's registration plan (Roxanne, 27 Nov): the game's Registration note goes ("I don't
+  like it"); R4s set a message there, "something like register to middle lane with this ratio",
+  "shown underneath like all the time, not expandable". The button "Add note" is accepted. A
+  note is added once and kept for all future events of that kind ("When we add the note, we add
+  it for all future events. And in future events, that changes to edit note. So we only get the
+  add once, and then it moves to edit"). Members see only the note, no button; with no note they
+  see just Registration. It must look different from an instruction: "These are actual
+  instructions, a plan to follow ... it has to be like a banner or something that screams at
+  them, look at this."
