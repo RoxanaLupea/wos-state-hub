@@ -754,8 +754,9 @@ async function run(context: InvitesContext, work: () => Promise<void>): Promise<
   context.redraw();
 }
 
-// The lists' groups: a group of one is no group.
-async function saveGroups(shown: Shown): Promise<void> {
+// The lists' groups: a group of one is no group. Creating a group saves it at once and
+// stays in editing (Roxanne, 27 Nov: "Creating it should count as saving it").
+async function saveGroups(shown: Shown, stayEditing = false): Promise<void> {
   const all = withDraft(INVITE_LISTS.flatMap(list => shown.lists[list]));
   const sizes = new Map<number, number>();
   for (const invite of all) if (invite.groupNumber !== null) sizes.set(invite.groupNumber, (sizes.get(invite.groupNumber) ?? 0) + 1);
@@ -786,7 +787,7 @@ async function saveGroups(shown: Shown): Promise<void> {
     if (Object.keys(fields).length) changes.push(changeInvite(invite.id, fields));
   }
   await Promise.all(changes);
-  state.editing = false;
+  if (!stayEditing) state.editing = false;
   state.groupDraft.clear();
   state.groupPickFor = null;
 }
@@ -1016,12 +1017,12 @@ function handlePopupClick(target: HTMLElement, context: InvitesContext, shown: S
         const picked = options.includes(popup.pick) ? popup.pick : options[0] ?? '';
         members = drafted.filter(invite => picked && keyOf(invite) === picked).map(invite => invite.id);
       }
+      state.popup = null;
       if (members.length > 1) {
         const number = nextGroupNumber(drafted);
         for (const id of members) state.groupDraft.set(id, number);
-      }
-      state.popup = null;
-      context.redraw();
+        void run(context, () => saveGroups(shown, true));
+      } else context.redraw();
     }
     return true;
   }

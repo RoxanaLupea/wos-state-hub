@@ -1338,3 +1338,8 @@ All nine are built.
 - Yellow events mockup (25 Nov, rejected): "they look the same to me, shitty yellow almost brown, depressing and ugly, worse than what we had".
 - Deals and Packs (25 Nov): "This is part of deals, idk why or how these work, we'll keep them separate and decide if we want to merge them, deals might be tied to missions in game, packs we just buy them". Packs are what is bought in the Top-up Center.
 - Foundry power reminder (25 Nov, replaces "every 2 weeks"): "I want it when registration opens because that's when they can check". The number turns red with a dot when a Foundry Battle registration opens after it was set.
+- Invites groups (Roxanne, 27 Nov): "I don't see it sorted to have groups together after I
+  save" and "Creating it should count as saving it. No?" Built: Create in New group saves the
+  group at once (editing stays on); saving puts a group's people together on their list, from
+  where its first one is. The New group list keeps its scroll while people are ticked ("when
+  I tap a new person it jumps at the top").
