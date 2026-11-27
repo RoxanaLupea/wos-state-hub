@@ -1909,3 +1909,9 @@ alliance-time forms it opened go to the admin menu (to be designed).
   initial set times unless they're changed." Leaders set them when registration starts (after the
   voting); most of the time they stay the same. (The site's schedules already work this way: one
   repeating schedule per alliance and legion.)
+- Alliance times are declared in the events (Roxanne, 27 Nov night): every time an alliance keeps (its
+  Foundry legions, its Canyon legions, the Mercenary bosses, Crazy Joe, Bear, ...) is "a declaration
+  from our alliance to all the new joiners". "The times will be set in the events": the Times button
+  and its in-place editing are one shared element for every event with alliance times, not Foundry's
+  own. The alliance's times page on the State page (not designed yet) only displays them; when one
+  changes in its event, that page shows the change.
