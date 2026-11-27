@@ -34,6 +34,9 @@ notes/rules-and-open-items.md (game rules).
   better design (25 Nov). Don't just agree.
 - When she points out a problem ("too narrow", "looks wrong"), ask how she wants it fixed
   before building anything; never pick a fix and build it on your own (26 Nov).
+- When she asks how something should work or where it should go, ask how she wants it before
+  mocking or proposing anything: she usually has the idea already (27 Nov). Send screenshots as
+  soon as they exist, never hold them back.
 - One question at a time, and only when it is truly open.
 - What she asked for is decided. Never list it as open or waiting for her ok, and never ask
   her a question her own words already answer (26 Nov).
