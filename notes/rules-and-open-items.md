@@ -93,6 +93,12 @@ The structure these feed into is in supabase/schema.sql.
 - Alliance Rewards come from the alliance you were in when registration ended.
 - NOT CONFIRMED: whether those rewards still arrive if you have left by the time
   Legion 1 finishes. Until tested, the safe advice is to be back before it ends.
+- From the game's rules (her screenshots, 27 Nov 2026; all of it in data/captures/foundry-battle.md):
+  the top 20 alliances on the Power Leaderboard take part; Legion 2 needs alliance Lv. 6 and 40
+  members logged in this week; a Legion needs 15 Combatants and Substitutes; up to 30 Combatants
+  and 10 Substitutes, one Legion per member; members need Furnace Lv. 16 and to have joined before
+  registration. Each Legion registers a time slot; the match time is either side's slot or the
+  midpoint between them, so the battle time is only known after matchmaking.
 
 ### Frostdragon Tyrant
 - Starts Monday, repeats every 8 weeks. Sign-up days 1 to 2, combatant dispatch 3 to 4,
