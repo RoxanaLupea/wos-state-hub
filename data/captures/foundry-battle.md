@@ -2,8 +2,8 @@
 
 Source: Roxanne's game screenshots, sent 27 Nov 2026 (the event's Guide, 8 pages, and Rules
 Overview, Rules and Other tabs), kept on the screenshots branch in foundry-battle/. The map with
-the buildings' names came with them. Guide pages 2, 5, 6, 7 and 8 are cut off at the bottom. The
-Building Details and Rewards tabs came in a second batch the same evening.
+the buildings' names came with them. The Building Details and Rewards tabs came in a second batch, and the endings of Guide pages 2, 5,
+6 and 8 in a third, the same evening.
 
 ## The field (map)
 Imperial Foundry in the centre; Mercenary above it and Munitions below it; Prototype 1 and 2;
@@ -11,19 +11,23 @@ Repair 1 to 4; Boiler; Transit.
 
 ## Guide
 1. Introduction only.
-2. The Imperial Foundry is a key battleground (rest cut off).
+2. The Imperial Foundry is a key battleground. Our forces are tagged blue at the start of the
+   battle and enter the field from the Blue Zone; enemies are tagged red and enter from the Red Zone.
 3. Controlling the Imperial Foundry in the centre earns a continuous stream of Arsenal Points.
    Arsenal Points are the key to victory.
 4. Two Prototype Sites near the Imperial Foundry also earn Arsenal Points.
 5. A Repair Facility generates Arsenal Points. Controlling the Munitions Warehouse boosts your
-   troops in combat. Controlling the Boiler Room reduces the time ... (cut off).
+   troops in combat. Controlling the Boiler Room reduces the time needed to take control of
+   buildings. The Central Transit Station recovers teleporter cooldowns. The Mercenary Camp lets you
+   send mercenaries to attack enemy-controlled buildings.
 6. Occupied buildings produce Arsenal Points until they reach capacity. Of the points over
    capacity, 50% go straight to the occupier's Arsenal Points and 50% to the occupier's temporary
-   Arsenal Points (cut off).
+   Arsenal Points, shown in the bubble above the building. On defeat the temporary Arsenal Points
+   are lost and scattered around the building as Arsenal Supplies.
 7. Temporary Arsenal Points from a building are lost by the defender when an attacker takes
    control. They are strewn around as Arsenal Supplies, which either side can loot for points.
 8. Hidden Weapon Workshops appear on the field from time to time. Soldiers sent to loot them earn
-   Arsenal Points. Workshops appear in two waves (cut off).
+   Arsenal Points. Workshops appear in two waves.
 
 ## Rules
 - Troops cannot die in Foundry Battle and heal on their own at the end of the battle.
