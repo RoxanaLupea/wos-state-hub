@@ -1496,6 +1496,9 @@ All nine are built.
   they get the template in which they can fill in stuff, and this should be the common practice.
   Because before they add results, there should not be a results tab." Alliances without
   screenshots sent "have to be able to edit in place".
+  Every event means every event with results, state events too (Roxanne, 27 Nov night: "the
+  results are added, so then there is no results bar if they're not added and the top bar gets
+  an add icon, it's not applied for svs so clearly you didn't cover all event panels").
 - Alliance Championship (Roxanne, 27 Nov): she sends screenshots of the rounds and the final
   ranking; the site records every round, the flags and the final ranking from them ("I'm gonna
   just give you the screenshots. That's how I will do it"). Her rule as she said it: "every game,

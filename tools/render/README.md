@@ -30,3 +30,10 @@ after every push (`gh run list -R RoxanaLupea/wos-state-hub -L 1`). The site's f
 3. In a Python script: `shoot.serve('/tmp/rb', 8800)`, launch Chrome
    (`/usr/bin/google-chrome`, `--no-sandbox`), then `page.open_site(...)` and `page.click(...)`.
    Set RENDER_USER_ID to her account id to see the site as she does (an R4, admin).
+
+## Every event panel (27 Nov)
+
+`python3 tools/render/panels.py /tmp/rb OUT` (after rebuild.sh, RENDER_USER_ID set) opens every
+event from October to February, renders each tab full height on the phone (or the size given),
+saves 540 px copies in OUT/small and writes heads, tabs and timeline rows to OUT/panels.txt.
+Add runs with `--keys "s-svsmm|2026-11-28"`.

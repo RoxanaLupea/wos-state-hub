@@ -12,6 +12,16 @@ has had to point out before. When she points out a new kind of fault, it is adde
   (every page and pop-up, phone and computer: cut-off content, drawn scrollbars, boxes
   touching), then scroll each new box by hand in the render.
 
+## Panels (Roxanne, 27 Nov night)
+- A change to one event's panel that is a rule (results, rewards, merchants, timelines, the head)
+  is checked on every event: run tools/render/panels.py and go through every tab and
+  panels.txt. She found rules applied only on the page she was looking at.
+- Results: no Results tab until that run has results; the trophy Results button in the head
+  for whoever may add, once something has happened to record. Every event with results.
+- Rewards and shops are reward data shown as tiles, never lines of text; every shop is in the
+  Merchant tab.
+- Timelines: no rewards or mail rows; each moment's time written once.
+
 ## The flow
 - The phone's back closes what is open over the page first, then goes to the page before,
   never out of the site while there is one (Roxanne, 26 Nov).

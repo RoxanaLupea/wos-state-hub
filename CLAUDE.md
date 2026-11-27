@@ -22,7 +22,8 @@ Read this first in every chat. Roxanne should never have to explain the setup ag
    at 1. Her PC and Chrome are usually open: Claude in Chrome for game guides, the web and the
    live site on her two monitors.
 
-Then read notes/handoff.md (where the work stands, what is next, the questions still open),
+Then read notes/handoff.md (why we are redesigning, where the work stands, what is next, the
+questions still open; notes/history.md is only the record of past sessions),
 notes/rewards-requests.md (her rewards requests in her words), notes/what-this-is.md and the
 notes for the part being worked on: notes/design-decisions.md (her decisions),
 notes/page-style.md and notes/visual-language.md (the site's look),
@@ -92,6 +93,12 @@ everything.
 Panels follow the same rules, set once and inherited (notes/page-style.md, "Event
 panels"): we design using them, and an exception changes only what makes it one
 (Roxanne, 25 Nov).
+A rule for panels is built once in the shared code and data (event-panel.ts, the event's entry
+in data/catalog/event-types.json), never in one event's branch, and checked on every event
+before she sees anything: `python3 tools/render/panels.py /tmp/rb OUT` renders every event's
+every tab and writes every timeline row to OUT/panels.txt. "Every event" means state, alliance
+and personal events alike (27 Nov: "it's not applied for svs so clearly you didn't cover all
+event panels ... be thorough, professional and systematic").
 
 Never change something she approved as a side effect of other work, on any page, without
 asking her first (Roxanne, 26 Nov: "why go change something I approved without me even
