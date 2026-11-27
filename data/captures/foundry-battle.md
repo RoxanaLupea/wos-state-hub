@@ -137,3 +137,18 @@ gives a battlefield boost.
   The items without a game name here (crystals, statue, puzzle piece, chest, ticket, speedup, EXP
   bottle) are named only by their pictures; their names are to be confirmed with her before they
   are entered as data.
+
+## The result in the game (from the web, not her screenshots)
+Players' screenshots found on Google Images in her Chrome, 28 Nov 2026; guide material, not her
+confirmation. Kept on the screenshots branch as foundry-battle/2026-11-28-from-a-guide-site-*.
+- After the battle, a screen like the Tundra Arms League one: Victory, VS, both sides' state, tag and
+  name, their Alliance Arsenal Points, then Control, Gathering, Loot and KO Rewards and the Foundry
+  control duration for both sides.
+- The mail: "Congratulations! Your alliance [Legion 1] prevailed in the [Foundry Battle] against your
+  enemy", the same VS head with points, the Rewards, then a Legion Tally fold.
+- The Legion Tally: Imperial Foundry Control Duration; Control, Gathering, Loot and KO Rewards, each
+  with its MVP (picture, name, amount), "No MVP awarded" when it is 0; Sieges by Mercenaries. Four MVPs.
+- A newer mail (dated 2026-07) shows instead "Battle Stats | MVP": Foundry control duration, Arsenal
+  Points from Building Occupation, from Gathering and from Enemy KOs (each with its MVP), Sieged by
+  Mercenaries; then Personal Arsenal Points, ranked, the top three with medals.
+- An older defeat mail (2025-01) shows a Personal tally of the reader's own points instead.
