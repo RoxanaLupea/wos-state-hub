@@ -71,6 +71,8 @@ has had to point out before. When she points out a new kind of fault, it is adde
 - It works on a phone and on a computer, both checked.
 
 ## The content
+- Messages to her never name a colour (no hex, no colour words as the point): she judges colours
+  only by seeing them with the rest of the screen (27 Nov night: "for the millionth time").
 - Text she sends from elsewhere (a Discord message, a guide) is written in the site's own styles
   (12px steps, the three tones), never copied with its bold or colours (27 Nov night).
 - A label reads correctly whatever is picked.
