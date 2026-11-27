@@ -70,7 +70,11 @@ She found agreed rules missing from some panels. Found by rendering every panel:
    5-6. SvS panel and its Results tab: "It's good for now. Anything else can be updated later."
       (27 Nov night). Later: enter the Grants and Castle Battle Ranking Rewards (data/captures/svs.md)
       so its Rewards tab shows; the SvS rules agreed with the other state (item 0).
-   7. Foundry Battle panel. <- next
+   7. Foundry Battle panel: designed 27-28 Nov night (notes/design-decisions.md, Foundry entries; mockups in
+      tools/render/mockups/). To build: the shared Times button and legion times (kept until changed,
+      academies under their main alliance), results per legion with the settled layout, no Mine, no
+      Alliance times tab, no rule line. Facts: data/captures/foundry-battle.md. Open: how many MVPs the
+      Legion Tally has (her screenshot after a battle); the reward items' names before entering them.
    8. Filters.
    9. The account menu.
    10. Week view.

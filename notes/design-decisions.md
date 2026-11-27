@@ -1927,3 +1927,16 @@ alliance-time forms it opened go to the admin menu (to be designed).
   to be like centered"; Control, Gathering, Loot rows "look kind of okay"; the Legion Tally (MVPs) "is
   plain, it's boring, and it's blue and red from ... SvS"; the tabs "have to say Legion 1 and Legion 2";
   "it took me a while to read all of this. How come all of this fits better in the game?"
+- Foundry legion result, settled for now (Roxanne, 28 Nov, after many colour tries): "settle it like this,
+  not because I like it ... just because I do not have time to waste. I'll figure it out at some point and
+  change it." The settled mockup (tools/render/mockups/foundry-legion-result.py, "plain" version): no rule
+  line under the title; legion tabs in one row of words, "DVL · Legion 1" (L1, L2 when they do not fit);
+  Victory (event green) or Defeat (red) on top, no date or time; "#1458 [DVL]" VS "[MIS] #1040", names
+  under; our total in the result's colour, theirs white when it leads and grey when it trails; Control,
+  Gathering, Loot, KO Rewards, Foundry Control and Mercenary Sieges as neutral bands, the leading number
+  white and the other grey; MVPs four in a line (stat, picture, [tag] over the name, amount); Members
+  collapsed, opened as rank, picture, [tag]name, Personal Arsenal Points, 0 in grey. Rejected on the way:
+  the mail's blue and red split, gold numbers, MVPs between the bands, colouring every line, a glow with an
+  edge, tinting the whole panel ("it changes the whole page"), tinted bands, a red Members arrow.
+- Legion times mockup: tools/render/mockups/foundry-legion-times.py (option A: legions on the Timeline
+  under Battle, Times button at the top right, editing in place with alliance and legion pickers).
