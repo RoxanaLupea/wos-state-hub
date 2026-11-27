@@ -146,6 +146,8 @@
   {
     "id": "alliance-championship",
     "datesLocked": true,
+    "factsInHead": true,
+    "rewardListsTogether": true,
     "category": "alliance",
     "color": "#3E60A8",
     "colorEnd": "#BC5247",

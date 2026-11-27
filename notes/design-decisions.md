@@ -1629,3 +1629,18 @@ its medal (free, first pack, second pack), no lines between levels. "This layout
 for more than just this, because many events unlock things like this, so it's just new, not
 unique." Built as one element for every event with tracks. "I don't like how it looks centered
 like that."
+
+## Reward lists (27 Nov)
+
+- Rank columns, every event: "rank columns will have the number aligned to the right, and then
+  the rewards aligned to the left."
+- Notes in a Rewards tab are only notes: lighter and smaller; the mail note in two rows.
+- Prestige-type rewards (named rewards): "I want the rewards from Prestige to be 2x2, even if
+  that means they're much bigger... This is how we're gonna display like this type of rewards."
+  The note under Prestige Rewards on one line.
+- Alliance Championship: Prestige, Tier and KO Rewards one after another, not behind buttons:
+  "It's one type, tier it's another type, KO it's another type. I don't like how they're split
+  like this and have a bunch of text that repeats and empty pages." Group Ranking: "+2 ★".
+- The tier: "we need to have the tier set and saved somewhere... all the events that have it,
+  we need to be able to set the tier." She did not like "TIER Ultimate" as a line; shown for
+  now as a chip in the head ("Ultimate tier").

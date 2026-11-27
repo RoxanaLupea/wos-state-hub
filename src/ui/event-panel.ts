@@ -248,6 +248,9 @@ export interface RewardViewState {
 // Rewards that share their left words (a rank, a points target, a stronghold) make one
 // row of tiles, with those words on the left and the first reward's note small under
 // them, each part of the note on its own line.
+const STAR_PICTURE = '<svg class="note-star" viewBox="0 0 24 24" aria-label="star">' +
+  '<path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg>';
+
 function rewardLines(rows: RewardRow[]): string {
   const order: string[] = [];
   const byLabel = new Map<string, RewardRow[]>();
@@ -258,8 +261,10 @@ function rewardLines(rows: RewardRow[]): string {
   return order.map(label => {
     const inRow = byLabel.get(label) ?? [];
     const note = inRow[0]?.note ?? '';
+    // A star in a note ("+2 ★", Alliance Championship's Star Rating) is drawn as the
+    // game's star (Roxanne, 27 Nov: "we're gonna put 1 star there and be done with it").
     const noteHtml = note
-      ? note.split(' · ').map(part => `<small>${escapeForPage(part)}</small>`).join('') : '';
+      ? note.split(' · ').map(part => `<small>${escapeForPage(part).replace(' ★', STAR_PICTURE)}</small>`).join('') : '';
     return `<div class="reward-row"><span class="reward-label">${escapeForPage(label)}${noteHtml}</span>` +
       `<span class="reward-items">${inRow.map(rewardTile).join('')}</span></div>`;
   }).join('');
@@ -294,7 +299,7 @@ const SHOP_CURRENCIES: Record<string, string> = {
 // The list itself, laid out the way the game lays out that kind of list, as the old
 // app did.
 function rewardListHtml(list: string, band: string, bandCount: number, shown: RewardRow[],
-    eventTypeId: string): string {
+    eventTypeId: string, listNoteHtml = ''): string {
   if (list === 'glory') {
     return sectionsOf(shown).map(section =>
       sectionHeading(list, section) + namedTiles(shown.filter(row => row.section === section))).join('');
@@ -316,12 +321,19 @@ function rewardListHtml(list: string, band: string, bandCount: number, shown: Re
       `<div class="range-lines${hasNotes ? ' with-notes' : ''}">${rewardLines(shown)}</div>`;
   }
   if (list === 'group') {
-    // Alliance Championship: the tier, its Prestige Rewards with their names, then a row
-    // per group rank.
+    // Alliance Championship (Roxanne, 27 Nov): the tier first, clearly a tier; then the
+    // Prestige Rewards with their note, kept quiet, and the rewards as big squares; then
+    // a row per group rank.
     const prestige = shown.filter(row => row.section === 'prestige');
-    return (band && bandCount === 1 ? `<div class="reward-sub">${escapeForPage(band)}</div>` : '') +
-      (prestige.length ? '<div class="reward-sub">Prestige Rewards</div>' + namedTiles(prestige) : '') +
-      '<div class="reward-sub">Group Ranking</div><div class="range-lines with-notes">' +
+    return (prestige.length
+        ? '<div class="reward-sub">Prestige Rewards</div>' +
+          (listNoteHtml ? listNoteHtml : '') +
+          '<div class="prestige-grid">' + prestige.map(row =>
+            `<div class="prestige-reward">${rewardTile({ ...row, tile: 'blue' })}` +
+            `<span class="prestige-name">${escapeForPage(itemName(row.itemId).replace(/-/g, '\u2011'))}</span></div>`).join('') + '</div>'
+        : '') +
+      `<div class="reward-sub">${escapeForPage(rewardListName(eventTypeId, 'group'))}</div>` +
+      '<div class="range-lines with-notes group-ranking">' +
       rewardLines(shown.filter(row => row.section !== 'prestige')) + '</div>';
   }
   if (list === 'club') {
@@ -428,6 +440,27 @@ function rewardsFold(eventTypeId: string, state: RewardViewState): string {
   }
 
   let html = '<details class="points-list rewards-fold" open><summary>Rewards</summary>';
+  // Every list one after another, each under its own heading (Alliance Championship).
+  if (eventTypeById(eventTypeId)?.rewardListsTogether) {
+    for (const one of lists) {
+      const oneRows = rewardsOf(eventTypeId, one);
+      const oneBands: string[] = [];
+      for (const row of oneRows) if (row.band && !oneBands.includes(row.band)) oneBands.push(row.band);
+      const oneBand = oneBands[0] ?? '';
+      const oneShown = oneBand ? oneRows.filter(row => row.band === oneBand) : oneRows;
+      const note = pointSourcesInList(eventTypeId, 'rewards').find(source => {
+        const where = pointSourceDayName(source.id);
+        return where === one + '|' + oneBand || (!oneBand && where === one);
+      });
+      const noteHtml = note
+        ? `<p class="points-note reward-note">${escapeForPage(pointSourceTask(note.id, heroDay))}</p>` : '';
+      html += one === 'group'
+        ? rewardListHtml(one, oneBand, 1, oneShown, eventTypeId, noteHtml)
+        : `<div class="reward-sub">${escapeForPage(rewardListName(eventTypeId, one))}</div>` + noteHtml +
+          rewardListHtml(one, oneBand, 1, oneShown, eventTypeId);
+    }
+    return html + '</details>';
+  }
   if (lists.length > 1) {
     html += `<div class="reward-tabs" style="grid-template-columns:repeat(${lists.length},1fr)">` +
       lists.map(one =>
@@ -450,11 +483,12 @@ function rewardsFold(eventTypeId: string, state: RewardViewState): string {
     const where = pointSourceDayName(source.id);
     return where === list + '|' + band || (!band && where === list);
   });
-  if (listNote) {
-    html += `<p class="points-note reward-note">${escapeForPage(pointSourceTask(listNote.id, heroDay))}</p>`;
-  }
+  const listNoteHtml = listNote
+    ? `<p class="points-note reward-note">${escapeForPage(pointSourceTask(listNote.id, heroDay))}</p>` : '';
+  // Alliance Championship's tier list places its note under its Prestige Rewards heading.
+  if (list !== 'group') html += listNoteHtml;
 
-  html += rewardListHtml(list, band, bands.length, shown, eventTypeId);
+  html += rewardListHtml(list, band, bands.length, shown, eventTypeId, list === 'group' ? listNoteHtml : '');
 
   if (shown.some(row => row.source === 'guides')) {
     html += '<p class="reward-source">From guides, not checked in game yet.</p>';
@@ -786,6 +820,9 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
   // The run's season, beside its kind (Fishing's Summer, Roxanne 27 Nov).
   const season = seasonOf(eventTypeId, occurrence.startDay);
   if (season) facts.push(season);
+  // The alliance's tier, for an event with tiers (Alliance Championship).
+  const tier = rewardsOf(eventTypeId, 'group').find(row => row.band)?.band ?? '';
+  if (tier) facts.push(rewardBandName(tier) + ' tier');
   if (occurrence.wasCancelled) facts.push('Cancelled');
   if (occurrence.wasChanged) facts.push('Date or time changed');
 

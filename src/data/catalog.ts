@@ -48,6 +48,9 @@ export interface EventType {
   noPersonalEntry?: boolean;
   // Its facts (Mini-game, the season) sit in the panel's head with its name (Fishing).
   factsInHead?: boolean;
+  // Its reward lists one after another on one page instead of behind buttons (Alliance
+  // Championship: Prestige, Tier and KO Rewards, Roxanne 27 Nov).
+  rewardListsTogether?: boolean;
   // An event that changes season each run, once a month (Fishing): the seasons in their
   // order and one run whose season is known. Fishing's order is from Century Games' help
   // centre; Summer for 24 Nov 2026 is from Roxanne's screenshot (27 Nov).
