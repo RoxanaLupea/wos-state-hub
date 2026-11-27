@@ -273,7 +273,12 @@
 .event-folds .tier-rows .reward-row { grid-template-columns: 62px 1fr; }
 .tier-rows .reward-label { overflow-wrap: normal; }
 /* Alliance Championship's Tier Rewards for the open group rank: its stars, then its rewards. */
-.rank-tabs { margin: 0 0 10px; }
+.info-tabs.rank-tabs { margin: 0 0 10px; gap: 14px; }
+/* Six tiers fit on a phone's line: the same tabs, a little tighter. */
+@media (max-width: 999.98px) {
+  .info-tabs.rank-tabs { gap: 9px; }
+  .info-tabs.rank-tabs .info-tab { font-size: 11px; letter-spacing: 0.03em; }
+}
 .rank-stars { display: inline-flex; align-items: center; justify-content: flex-end; gap: 2px; white-space: nowrap; }
 .rank-stars .note-star { width: 16px; height: 16px; vertical-align: 0; }
 .note-star { width: 1.1em; height: 1.1em; margin-left: 1px; vertical-align: -0.18em; fill: #F0C070; }

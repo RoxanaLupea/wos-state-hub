@@ -92,3 +92,17 @@ Rules Overview
   for further ranking rewards.
 - The ranking's tie-break "the enemies defeated" is what the group ranking's Defeated column
   counts.
+
+## Tier Rewards, every tier (the owner's screenshots, 27 Nov 2026, 12:45)
+
+Group Ranking: Star Rating, then 5-min General Speedup, Secured Resource Supply Chest (10K),
+Championship Badge. Prestige Rewards show only in the Ultimate tier.
+
+| Tier | 1 | 2–3 | 4–5 | 6 |
+|---|---|---|---|---|
+| Iron | +4: 14, 185, 9,500 | +3: 12, 160, 7,600 | +2: 11, 140, 5,700 | +1: 9, 120, 3,800 |
+| Bronze | +4: 19, 250, 11.9K | +3: 16, 215, 9,500 | +2: 14, 190, 7,100 | +1: 12, 165, 4,800 |
+| Silver | +3: 26, 335, 14.3K | +2: 22, 295, 11.4K | +1: 19, 255, 8,600 | 0: 17, 220, 5,700 |
+| Gold | +3: 35, 455, 16.7K | +2: 30, 395, 13.3K | +1: 26, 345, 10K | 0: 23, 300, 6,700 |
+| Diamond | +3: 47, 615, 20.2K | +2: 41, 535, 16.2K | +1: 35, 465, 12.1K | −1: 31, 405, 8,100 |
+| Ultimate | +2: 63, 830, 23.8K | +1: 55, 720, 19K | −1: 48, 625, 14.3K | −2: 41, 545, 9,500 |

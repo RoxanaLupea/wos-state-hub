@@ -299,7 +299,7 @@ const SHOP_CURRENCIES: Record<string, string> = {
 // The list itself, laid out the way the game lays out that kind of list, as the old
 // app did.
 function rewardListHtml(list: string, band: string, bandCount: number, shown: RewardRow[],
-    eventTypeId: string, listNoteHtml = '', rankOpen = ''): string {
+    eventTypeId: string, listNoteHtml = '', tierTabsHtml = ''): string {
   if (list === 'glory') {
     return sectionsOf(shown).map(section =>
       sectionHeading(list, section) + namedTiles(shown.filter(row => row.section === section))).join('');
@@ -321,17 +321,12 @@ function rewardListHtml(list: string, band: string, bandCount: number, shown: Re
       `<div class="range-lines${hasNotes ? ' with-notes' : ''}${list === 'ko' ? ' group-ranking' : ''}">${rewardLines(shown)}</div>`;
   }
   if (list === 'group') {
-    // Alliance Championship (Roxanne, 27 Nov): the Prestige Rewards with their note, kept
-    // quiet, and the rewards as big squares; then the Tier Rewards with a tab per group rank
-    // (1, 2–3, 4–5, 6) and, for the open one, the stars gained or lost and its rewards.
+    // Alliance Championship (Roxanne, 27 Nov): the tiers are tabs, the alliance's own open
+    // first; under the open tier its Prestige Rewards when it has them (big squares, a quiet
+    // note) and its group ranks, each with the stars it gains or loses and its rewards.
     const prestige = shown.filter(row => row.section === 'prestige');
-    const ranked = shown.filter(row => row.section !== 'prestige');
-    const ranks: string[] = [];
-    for (const row of ranked) if (!ranks.includes(row.rowLabel)) ranks.push(row.rowLabel);
-    const openRank = rankOpen && ranks.includes(rankOpen) ? rankOpen : ranks[0] ?? '';
-    const inRank = ranked.filter(row => row.rowLabel === openRank);
-    const stars = inRank[0]?.note ?? '';
-    return (prestige.length
+    return (tierTabsHtml ?? '') +
+      (prestige.length
         ? '<div class="reward-sub">Prestige Rewards</div>' +
           (listNoteHtml ? listNoteHtml : '') +
           '<div class="prestige-grid">' + prestige.map(row => {
@@ -345,22 +340,11 @@ function rewardListHtml(list: string, band: string, bandCount: number, shown: Re
               ? tile.replace(/<\/span>$/, `<span class="tile-top">${days[1]} days</span></span>`) : tile;
             return `<div class="prestige-reward">${labelled}` +
               `<span class="prestige-name">${escapeForPage(name)}</span></div>`;
-          }).join('') + '</div>'
+          }).join('') + '</div>' +
+          '<div class="reward-sub">Group Ranking</div>'
         : '') +
-      // The game's name for these: rewards by the alliance's rank in its group.
-      '<div class="reward-sub">Group Ranking</div>' +
-      // The ranks are tabs, drawn like the event's own tabs (Roxanne, 27 Nov: "Make it tabs").
-      (ranks.length > 1
-        ? `<div class="info-tabs rank-tabs" role="tablist" style="--tab-color:${escapeForPage(eventTypeColor(eventTypeId))}">` + ranks.map(rank =>
-          `<button type="button" class="info-tab" role="tab" aria-selected="${rank === openRank}"` +
-          ` data-reward-band="${escapeForPage(eventTypeId + '|group-rank|' + rank)}">${escapeForPage(rank)}</button>`).join('') +
-          '</div>'
-        : '') +
-      // The open rank's stars and rewards sit where KO1, KO2 and Defeat sit below: the
-      // stars in the rank column, the rewards from the same line (Roxanne, 27 Nov).
-      '<div class="range-lines with-notes group-ranking"><div class="reward-row">' +
-      `<span class="reward-label rank-stars">${escapeForPage(stars).replace(' ★', STAR_PICTURE)}</span>` +
-      `<span class="reward-items">${inRank.map(rewardTile).join('')}</span></div></div>`;
+      '<div class="range-lines with-notes group-ranking">' +
+      rewardLines(shown.filter(row => row.section !== 'prestige')) + '</div>';
   }
   if (list === 'club') {
     // Fishing's Ice Fishing Club (mockup, Roxanne 27 Nov): drawn like the game, three
@@ -477,24 +461,26 @@ function rewardsFold(eventTypeId: string, state: RewardViewState): string {
       const ownOne = state.ownBand.get(eventTypeId + '|' + one);
       const oneBand = chosenOne && oneBands.includes(chosenOne) ? chosenOne
         : ownOne && oneBands.includes(ownOne) ? ownOne : oneBands[0] ?? '';
-      const bandButtons = oneBands.length > 1
-        ? `<div class="reward-bands">` + oneBands.map(item =>
-          `<button type="button" class="reward-band${item === oneBand ? ' on' : ''}"` +
-          ` data-reward-band="${escapeForPage(eventTypeId + '|' + one + '|' + item)}">` +
-          `${escapeForPage(rewardBandName(item))}</button>`).join('') + '</div>'
-        : '';
       const oneShown = oneBand ? oneRows.filter(row => row.band === oneBand) : oneRows;
+      // The tiers are tabs like the event's own tabs (Roxanne, 27 Nov).
+      const bandButtons = oneBands.length > 1
+        ? `<div class="info-tabs rank-tabs" role="tablist" style="--tab-color:${escapeForPage(eventTypeColor(eventTypeId))}">` +
+          oneBands.map(item =>
+            `<button type="button" class="info-tab" role="tab" aria-selected="${item === oneBand}"` +
+            ` data-reward-band="${escapeForPage(eventTypeId + '|' + one + '|' + item)}">` +
+            `${escapeForPage(rewardBandName(item))}</button>`).join('') + '</div>'
+        : '';
       const note = pointSourcesInList(eventTypeId, 'rewards').find(source => {
         const where = pointSourceDayName(source.id);
         return where === one + '|' + oneBand || (!oneBand && where === one);
       });
       const noteHtml = note
         ? `<p class="points-note reward-note">${escapeForPage(pointSourceTask(note.id, heroDay))}</p>` : '';
-      html += bandButtons + (one === 'group'
-        ? rewardListHtml(one, oneBand, 1, oneShown, eventTypeId, noteHtml,
-          state.openBand.get(eventTypeId + '|group-rank') ?? '')
-        : `<div class="reward-sub">${escapeForPage(rewardListName(eventTypeId, one))}</div>` + noteHtml +
-          rewardListHtml(one, oneBand, 1, oneShown, eventTypeId));
+      html += one === 'group'
+        ? `<div class="reward-sub">${escapeForPage(rewardListName(eventTypeId, one))}</div>` +
+          rewardListHtml(one, oneBand, 1, oneShown, eventTypeId, noteHtml, bandButtons)
+        : `<div class="reward-sub">${escapeForPage(rewardListName(eventTypeId, one))}</div>` + bandButtons + noteHtml +
+          rewardListHtml(one, oneBand, 1, oneShown, eventTypeId);
     }
     return html + '</details>';
   }

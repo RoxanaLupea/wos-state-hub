@@ -9801,6 +9801,606 @@
     "sortOrder": 830
   },
   {
+    "id": "rw-alliance-championship-group-iron-1-speedup-general-5m",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Iron",
+    "itemId": "speedup-general-5m",
+    "tile": "green",
+    "quantity": 14,
+    "sortOrder": 770
+  },
+  {
+    "id": "rw-alliance-championship-group-iron-1-secured-resource-supply-chest-10k",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Iron",
+    "itemId": "secured-resource-supply-chest-10k",
+    "tile": "green",
+    "quantity": 185,
+    "sortOrder": 771
+  },
+  {
+    "id": "rw-alliance-championship-group-iron-1-championship-badge",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Iron",
+    "itemId": "championship-badge",
+    "tile": "orange",
+    "quantity": 9500,
+    "sortOrder": 772
+  },
+  {
+    "id": "rw-alliance-championship-group-iron-2-3-speedup-general-5m",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Iron",
+    "itemId": "speedup-general-5m",
+    "tile": "green",
+    "quantity": 12,
+    "sortOrder": 773
+  },
+  {
+    "id": "rw-alliance-championship-group-iron-2-3-secured-resource-supply-chest-10k",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Iron",
+    "itemId": "secured-resource-supply-chest-10k",
+    "tile": "green",
+    "quantity": 160,
+    "sortOrder": 774
+  },
+  {
+    "id": "rw-alliance-championship-group-iron-2-3-championship-badge",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Iron",
+    "itemId": "championship-badge",
+    "tile": "orange",
+    "quantity": 7600,
+    "sortOrder": 775
+  },
+  {
+    "id": "rw-alliance-championship-group-iron-4-5-speedup-general-5m",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Iron",
+    "itemId": "speedup-general-5m",
+    "tile": "green",
+    "quantity": 11,
+    "sortOrder": 776
+  },
+  {
+    "id": "rw-alliance-championship-group-iron-4-5-secured-resource-supply-chest-10k",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Iron",
+    "itemId": "secured-resource-supply-chest-10k",
+    "tile": "green",
+    "quantity": 140,
+    "sortOrder": 777
+  },
+  {
+    "id": "rw-alliance-championship-group-iron-4-5-championship-badge",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Iron",
+    "itemId": "championship-badge",
+    "tile": "orange",
+    "quantity": 5700,
+    "sortOrder": 778
+  },
+  {
+    "id": "rw-alliance-championship-group-iron-6-speedup-general-5m",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Iron",
+    "itemId": "speedup-general-5m",
+    "tile": "green",
+    "quantity": 9,
+    "sortOrder": 779
+  },
+  {
+    "id": "rw-alliance-championship-group-iron-6-secured-resource-supply-chest-10k",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Iron",
+    "itemId": "secured-resource-supply-chest-10k",
+    "tile": "green",
+    "quantity": 120,
+    "sortOrder": 780
+  },
+  {
+    "id": "rw-alliance-championship-group-iron-6-championship-badge",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Iron",
+    "itemId": "championship-badge",
+    "tile": "orange",
+    "quantity": 3800,
+    "sortOrder": 781
+  },
+  {
+    "id": "rw-alliance-championship-group-bronze-1-speedup-general-5m",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Bronze",
+    "itemId": "speedup-general-5m",
+    "tile": "green",
+    "quantity": 19,
+    "sortOrder": 782
+  },
+  {
+    "id": "rw-alliance-championship-group-bronze-1-secured-resource-supply-chest-10k",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Bronze",
+    "itemId": "secured-resource-supply-chest-10k",
+    "tile": "green",
+    "quantity": 250,
+    "sortOrder": 783
+  },
+  {
+    "id": "rw-alliance-championship-group-bronze-1-championship-badge",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Bronze",
+    "itemId": "championship-badge",
+    "tile": "orange",
+    "quantity": 11900,
+    "sortOrder": 784
+  },
+  {
+    "id": "rw-alliance-championship-group-bronze-2-3-speedup-general-5m",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Bronze",
+    "itemId": "speedup-general-5m",
+    "tile": "green",
+    "quantity": 16,
+    "sortOrder": 785
+  },
+  {
+    "id": "rw-alliance-championship-group-bronze-2-3-secured-resource-supply-chest-10k",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Bronze",
+    "itemId": "secured-resource-supply-chest-10k",
+    "tile": "green",
+    "quantity": 215,
+    "sortOrder": 786
+  },
+  {
+    "id": "rw-alliance-championship-group-bronze-2-3-championship-badge",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Bronze",
+    "itemId": "championship-badge",
+    "tile": "orange",
+    "quantity": 9500,
+    "sortOrder": 787
+  },
+  {
+    "id": "rw-alliance-championship-group-bronze-4-5-speedup-general-5m",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Bronze",
+    "itemId": "speedup-general-5m",
+    "tile": "green",
+    "quantity": 14,
+    "sortOrder": 788
+  },
+  {
+    "id": "rw-alliance-championship-group-bronze-4-5-secured-resource-supply-chest-10k",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Bronze",
+    "itemId": "secured-resource-supply-chest-10k",
+    "tile": "green",
+    "quantity": 190,
+    "sortOrder": 789
+  },
+  {
+    "id": "rw-alliance-championship-group-bronze-4-5-championship-badge",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Bronze",
+    "itemId": "championship-badge",
+    "tile": "orange",
+    "quantity": 7100,
+    "sortOrder": 790
+  },
+  {
+    "id": "rw-alliance-championship-group-bronze-6-speedup-general-5m",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Bronze",
+    "itemId": "speedup-general-5m",
+    "tile": "green",
+    "quantity": 12,
+    "sortOrder": 791
+  },
+  {
+    "id": "rw-alliance-championship-group-bronze-6-secured-resource-supply-chest-10k",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Bronze",
+    "itemId": "secured-resource-supply-chest-10k",
+    "tile": "green",
+    "quantity": 165,
+    "sortOrder": 792
+  },
+  {
+    "id": "rw-alliance-championship-group-bronze-6-championship-badge",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Bronze",
+    "itemId": "championship-badge",
+    "tile": "orange",
+    "quantity": 4800,
+    "sortOrder": 793
+  },
+  {
+    "id": "rw-alliance-championship-group-silver-1-speedup-general-5m",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Silver",
+    "itemId": "speedup-general-5m",
+    "tile": "green",
+    "quantity": 26,
+    "sortOrder": 794
+  },
+  {
+    "id": "rw-alliance-championship-group-silver-1-secured-resource-supply-chest-10k",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Silver",
+    "itemId": "secured-resource-supply-chest-10k",
+    "tile": "green",
+    "quantity": 335,
+    "sortOrder": 795
+  },
+  {
+    "id": "rw-alliance-championship-group-silver-1-championship-badge",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Silver",
+    "itemId": "championship-badge",
+    "tile": "orange",
+    "quantity": 14300,
+    "sortOrder": 796
+  },
+  {
+    "id": "rw-alliance-championship-group-silver-2-3-speedup-general-5m",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Silver",
+    "itemId": "speedup-general-5m",
+    "tile": "green",
+    "quantity": 22,
+    "sortOrder": 797
+  },
+  {
+    "id": "rw-alliance-championship-group-silver-2-3-secured-resource-supply-chest-10k",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Silver",
+    "itemId": "secured-resource-supply-chest-10k",
+    "tile": "green",
+    "quantity": 295,
+    "sortOrder": 798
+  },
+  {
+    "id": "rw-alliance-championship-group-silver-2-3-championship-badge",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Silver",
+    "itemId": "championship-badge",
+    "tile": "orange",
+    "quantity": 11400,
+    "sortOrder": 799
+  },
+  {
+    "id": "rw-alliance-championship-group-silver-4-5-speedup-general-5m",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Silver",
+    "itemId": "speedup-general-5m",
+    "tile": "green",
+    "quantity": 19,
+    "sortOrder": 800
+  },
+  {
+    "id": "rw-alliance-championship-group-silver-4-5-secured-resource-supply-chest-10k",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Silver",
+    "itemId": "secured-resource-supply-chest-10k",
+    "tile": "green",
+    "quantity": 255,
+    "sortOrder": 801
+  },
+  {
+    "id": "rw-alliance-championship-group-silver-4-5-championship-badge",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Silver",
+    "itemId": "championship-badge",
+    "tile": "orange",
+    "quantity": 8600,
+    "sortOrder": 802
+  },
+  {
+    "id": "rw-alliance-championship-group-silver-6-speedup-general-5m",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Silver",
+    "itemId": "speedup-general-5m",
+    "tile": "green",
+    "quantity": 17,
+    "sortOrder": 803
+  },
+  {
+    "id": "rw-alliance-championship-group-silver-6-secured-resource-supply-chest-10k",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Silver",
+    "itemId": "secured-resource-supply-chest-10k",
+    "tile": "green",
+    "quantity": 220,
+    "sortOrder": 804
+  },
+  {
+    "id": "rw-alliance-championship-group-silver-6-championship-badge",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Silver",
+    "itemId": "championship-badge",
+    "tile": "orange",
+    "quantity": 5700,
+    "sortOrder": 805
+  },
+  {
+    "id": "rw-alliance-championship-group-gold-1-speedup-general-5m",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Gold",
+    "itemId": "speedup-general-5m",
+    "tile": "green",
+    "quantity": 35,
+    "sortOrder": 806
+  },
+  {
+    "id": "rw-alliance-championship-group-gold-1-secured-resource-supply-chest-10k",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Gold",
+    "itemId": "secured-resource-supply-chest-10k",
+    "tile": "green",
+    "quantity": 455,
+    "sortOrder": 807
+  },
+  {
+    "id": "rw-alliance-championship-group-gold-1-championship-badge",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Gold",
+    "itemId": "championship-badge",
+    "tile": "orange",
+    "quantity": 16700,
+    "sortOrder": 808
+  },
+  {
+    "id": "rw-alliance-championship-group-gold-2-3-speedup-general-5m",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Gold",
+    "itemId": "speedup-general-5m",
+    "tile": "green",
+    "quantity": 30,
+    "sortOrder": 809
+  },
+  {
+    "id": "rw-alliance-championship-group-gold-2-3-secured-resource-supply-chest-10k",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Gold",
+    "itemId": "secured-resource-supply-chest-10k",
+    "tile": "green",
+    "quantity": 395,
+    "sortOrder": 810
+  },
+  {
+    "id": "rw-alliance-championship-group-gold-2-3-championship-badge",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Gold",
+    "itemId": "championship-badge",
+    "tile": "orange",
+    "quantity": 13300,
+    "sortOrder": 811
+  },
+  {
+    "id": "rw-alliance-championship-group-gold-4-5-speedup-general-5m",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Gold",
+    "itemId": "speedup-general-5m",
+    "tile": "green",
+    "quantity": 26,
+    "sortOrder": 812
+  },
+  {
+    "id": "rw-alliance-championship-group-gold-4-5-secured-resource-supply-chest-10k",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Gold",
+    "itemId": "secured-resource-supply-chest-10k",
+    "tile": "green",
+    "quantity": 345,
+    "sortOrder": 813
+  },
+  {
+    "id": "rw-alliance-championship-group-gold-4-5-championship-badge",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Gold",
+    "itemId": "championship-badge",
+    "tile": "orange",
+    "quantity": 10000,
+    "sortOrder": 814
+  },
+  {
+    "id": "rw-alliance-championship-group-gold-6-speedup-general-5m",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Gold",
+    "itemId": "speedup-general-5m",
+    "tile": "green",
+    "quantity": 23,
+    "sortOrder": 815
+  },
+  {
+    "id": "rw-alliance-championship-group-gold-6-secured-resource-supply-chest-10k",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Gold",
+    "itemId": "secured-resource-supply-chest-10k",
+    "tile": "green",
+    "quantity": 300,
+    "sortOrder": 816
+  },
+  {
+    "id": "rw-alliance-championship-group-gold-6-championship-badge",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Gold",
+    "itemId": "championship-badge",
+    "tile": "orange",
+    "quantity": 6700,
+    "sortOrder": 817
+  },
+  {
+    "id": "rw-alliance-championship-group-diamond-1-speedup-general-5m",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Diamond",
+    "itemId": "speedup-general-5m",
+    "tile": "green",
+    "quantity": 47,
+    "sortOrder": 818
+  },
+  {
+    "id": "rw-alliance-championship-group-diamond-1-secured-resource-supply-chest-10k",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Diamond",
+    "itemId": "secured-resource-supply-chest-10k",
+    "tile": "green",
+    "quantity": 615,
+    "sortOrder": 819
+  },
+  {
+    "id": "rw-alliance-championship-group-diamond-1-championship-badge",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Diamond",
+    "itemId": "championship-badge",
+    "tile": "orange",
+    "quantity": 20200,
+    "sortOrder": 820
+  },
+  {
+    "id": "rw-alliance-championship-group-diamond-2-3-speedup-general-5m",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Diamond",
+    "itemId": "speedup-general-5m",
+    "tile": "green",
+    "quantity": 41,
+    "sortOrder": 821
+  },
+  {
+    "id": "rw-alliance-championship-group-diamond-2-3-secured-resource-supply-chest-10k",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Diamond",
+    "itemId": "secured-resource-supply-chest-10k",
+    "tile": "green",
+    "quantity": 535,
+    "sortOrder": 822
+  },
+  {
+    "id": "rw-alliance-championship-group-diamond-2-3-championship-badge",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Diamond",
+    "itemId": "championship-badge",
+    "tile": "orange",
+    "quantity": 16200,
+    "sortOrder": 823
+  },
+  {
+    "id": "rw-alliance-championship-group-diamond-4-5-speedup-general-5m",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Diamond",
+    "itemId": "speedup-general-5m",
+    "tile": "green",
+    "quantity": 35,
+    "sortOrder": 824
+  },
+  {
+    "id": "rw-alliance-championship-group-diamond-4-5-secured-resource-supply-chest-10k",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Diamond",
+    "itemId": "secured-resource-supply-chest-10k",
+    "tile": "green",
+    "quantity": 465,
+    "sortOrder": 825
+  },
+  {
+    "id": "rw-alliance-championship-group-diamond-4-5-championship-badge",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Diamond",
+    "itemId": "championship-badge",
+    "tile": "orange",
+    "quantity": 12100,
+    "sortOrder": 826
+  },
+  {
+    "id": "rw-alliance-championship-group-diamond-6-speedup-general-5m",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Diamond",
+    "itemId": "speedup-general-5m",
+    "tile": "green",
+    "quantity": 31,
+    "sortOrder": 827
+  },
+  {
+    "id": "rw-alliance-championship-group-diamond-6-secured-resource-supply-chest-10k",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Diamond",
+    "itemId": "secured-resource-supply-chest-10k",
+    "tile": "green",
+    "quantity": 405,
+    "sortOrder": 828
+  },
+  {
+    "id": "rw-alliance-championship-group-diamond-6-championship-badge",
+    "eventTypeId": "alliance-championship",
+    "list": "group",
+    "band": "Diamond",
+    "itemId": "championship-badge",
+    "tile": "orange",
+    "quantity": 8100,
+    "sortOrder": 829
+  },
+  {
     "id": "rw-alliance-championship-group-ultimate-prestige-knight-of-the-watch",
     "eventTypeId": "alliance-championship",
     "list": "group",
