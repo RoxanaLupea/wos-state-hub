@@ -122,7 +122,13 @@ The structure these feed into is in supabase/schema.sql.
   costs future missions.
 - An uncompleted set lasts about 15 hours before it disappears. Completing without
   claiming parks it safely; leaving a set undone is the part on a clock.
-- The shop stays open for a countdown after the event ends.
+- The shop stays open one more day after the event ends, for exchanging only. Confirmed by
+  Roxanne from her own game screenshot, sent to an earlier chat; that screenshot was not kept,
+  and this line did not say where it came from until 27 Nov night. The old app's note "the event
+  and its shop end together after day 2, seen in game 16 Nov 2026" (old-app/Setup.gs) is wrong.
+- Every game fact here says who confirmed it and from what (Roxanne's screenshot, a guide), and
+  her screenshots are kept on the screenshots branch: the site is built on what she sees in game
+  (27 Nov night: "you're the one responsible of keeping track of what i see in game").
 
 ### State transfers
 - Ordinary state: 35 in the invitation phase, 20 in the open phase, 55 total. Banks up

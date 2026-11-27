@@ -38,6 +38,11 @@ notes/rules-and-open-items.md (game rules).
   confirmed that the shop stays for another day, do we even remember those confirmations? cause
   we're doing them to confirm our patterns").
 
+- Claude keeps track of what she sees in game (27 Nov night: "you're the one responsible of keeping
+  track of what i see in game and we base the info in the site on that"): every fact from her
+  screenshots is written down at once with its source (her screenshot, the date), in the event's
+  section of notes/rules-and-open-items.md or its data/captures file, and the screenshot is kept.
+
 - When she says "me" about who may do something, she means admins. She says "owner" when
   she wants something locked that tight (25 Nov).
 
