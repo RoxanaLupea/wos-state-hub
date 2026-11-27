@@ -494,7 +494,7 @@ function tierLineOf(occurrence: Occurrence): string {
   const mayEdit = Boolean(view.myAllianceId) && leadsAlliance(person, view.myAllianceId as string);
   if (!tier && !mayEdit) return '';
   return `<span class="tier-head">${escapeForPage(tier || 'Tier not set')}` +
-    (mayEdit ? `<button type="button" class="tier-edit" data-edit="tier|${escapeForPage(occurrence.key)}"` +
+    (mayEdit ? `<button type="button" class="edit-button tier-edit" data-edit="tier|${escapeForPage(occurrence.key)}"` +
       ` aria-label="Change the tier">${EDIT_ICON}</button>` : '') + '</span>';
 }
 
