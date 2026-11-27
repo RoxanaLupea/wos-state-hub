@@ -1377,3 +1377,18 @@ All nine are built.
   should only be as big as the elements inside it and centered"); it may be redesigned later.
 - Who adds results (Roxanne, 27 Nov): "Our R4s need to know that add result is an option...
   Members should be able to add them. But they need to be confirmed by an R4."
+- Adding results, every alliance event that has or can have results (Roxanne, 27 Nov):
+  - The button is generic, "somewhere on top, and again it has to be graphical. It cannot be
+    just another text on the ... bars, the navigation in the panel." Never as the last element
+    of the timeline: "I hate it."
+  - Only what already happened is asked for: "if they're filling in results during round 3,
+    but round 3 wasn't fought yet, then you are gonna only ask for the first 2 rounds".
+  - Editing in place, matching what is shown: "we show 3 bars. That's how they will input the
+    data ... if they tap or click on the lanes, they get selected as victory lanes, and the ones
+    that are not selected are losing lanes. If they don't select any of them and they save, then
+    all 3 are losing lanes." At most a tiny "select victory lanes" message, "without changing
+    how the thing shows ... You're not gonna move elements to add one more line."
+  - "the points, you calculate them, so they do not insert numbers."
+  - "when they have all 5 rounds filled in, that's when we ... give them another option of add
+    ranking", filled in place. While filling, the rank column holds arrows to move a row up and
+    down; "If they don't order it properly, then we sort it at the end, so they don't have to."

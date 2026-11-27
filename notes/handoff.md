@@ -1,8 +1,20 @@
 # Handover: where the work stands
 
-Do CLAUDE.md's setup first. Updated 26 Nov 2026.
+Do CLAUDE.md's setup first. Updated 27 Nov 2026.
 
 ## Now
+
+### Pushed 27 Nov, 06:12 (her time)
+
+Live: a player picture that fails to load shows the WoS logo under a veil with a torn-picture
+icon (broken-picture.ts); on the phone Add player and New group open from the bottom (she wants
+them redone later); Custom/State/Contact only as wide as its words; 1252's Alliance Championship
+captured in data/captures/other-states.md. scroll-audit.py now shows scrollbars (headless hid
+them): it finds drawn scrollbars on PC in the event panel, Filters, Fortress Rewards, State,
+Invites lists and New group; removing them widens approved boxes, so it waits for her.
+Open: Add results for every alliance event (her rules in design-decisions.md, 27 Nov): a
+graphical button on top, only past rounds asked, in-place editing (AC lanes tapped as won),
+then Add ranking with up/down arrows; who adds (members) and how R4s confirm is still open.
 
 ### Pushed 27 Nov, 05:30 (her time)
 
