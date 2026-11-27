@@ -1354,3 +1354,15 @@ All nine are built.
   picture's shape, a half-transparent dark veil and a white torn-picture sign in the middle.
   A player with no picture yet keeps their first letter. Built in broken-picture.ts, used by
   every player picture (pictureOf, the top bar).
+- Results, every event (Roxanne, 27 Nov): "if at the start, when we have no results recorded, we
+  should have a button instead of edit. We should have a button that says add results, and then
+  they get the template in which they can fill in stuff, and this should be the common practice.
+  Because before they add results, there should not be a results tab." Alliances without
+  screenshots sent "have to be able to edit in place".
+- Alliance Championship (Roxanne, 27 Nov): she sends screenshots of the rounds and the final
+  ranking; the site records every round, the flags and the final ranking from them ("I'm gonna
+  just give you the screenshots. That's how I will do it"). Her rule as she said it: "every game,
+  you have 3 lanes. If 2 of your lanes win, then you get 2 points ... the ranking is based on
+  those points, but if the points are equal, then the flags are gonna be what matters." (Open:
+  1252's ranking gives 10 points and 8 flags for lanes 1, 2, 2, 2, 1, which fits 3 points a win,
+  1 a draw and flags = lanes won; asked her.)
