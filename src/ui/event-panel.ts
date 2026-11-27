@@ -681,13 +681,12 @@ export function renderEventTree(tree: EventTree, firstRow?: FirstRowPlan): strin
   // so the rows line up whether there is one part or two.
   const openingColumns = tree.openingSides.map(part => {
     const spans = (part.openings ?? []).map(opening => {
-      // A ticket opening at the same moment as a step of the event starts on that step's row,
-      // so tickets that open together start level (Roxanne, 27 Nov: "the match predictions and
-      // champion predictions start at the same time ... only the end is different").
-      let from = -1;
-      for (let index = 0; index < rows.length; index++) {
-        if (!rows[index].isSideRow && rows[index].minute === opening.start) from = index;
-      }
+      // A ticket opening at the same moment as a row of the event starts on the first row at
+      // that moment, where its time is written, so tickets that open together start level
+      // (Roxanne, 27 Nov: "the match predictions and champion predictions start at the same
+      // time ... only the end is different"; "the 0 is at elimination ... it has to start at
+      // elimination").
+      let from = rows.findIndex(row => !row.isSideRow && row.minute === opening.start);
       if (from === -1) {
         from = rows.findIndex(row =>
           row.openingPartKey === part.occurrence.key && row.openingStart === opening.start);
@@ -709,11 +708,14 @@ export function renderEventTree(tree: EventTree, firstRow?: FirstRowPlan): strin
     // A named ticket (Champion Prediction xN) has its own words; only the other one's are the step's.
     if (eventTypeById(column.part.occurrence.eventTypeId)?.windowMark === 'label') continue;
     for (const span of column.spans) {
-      const row = rows[span.from];
-      if (row && !row.isSideRow && row.detail) {
-        const colors = logoColors(column.part.occurrence.eventTypeId);
-        detailColorAt.set(span.from, `color-mix(in srgb, ${colors.light} 50%, ${colors.dark})`);
-      }
+      // The step written under a row at the moment the ticket opens (ROUND 1's Match Predictions).
+      const minute = rows[span.from]?.minute;
+      rows.forEach((row, index) => {
+        if (index >= span.from && row.minute === minute && !row.isSideRow && row.detail) {
+          const colors = logoColors(column.part.occurrence.eventTypeId);
+          detailColorAt.set(index, `color-mix(in srgb, ${colors.light} 50%, ${colors.dark})`);
+        }
+      });
     }
   }
 
