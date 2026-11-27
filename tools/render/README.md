@@ -22,3 +22,11 @@ What this does not prove: the workspace's TypeScript is newer than the build's
 TypeScript 5, so a clean check here can still fail on GitHub. Check the GitHub build
 after every push (`gh run list -R RoxanaLupea/wos-state-hub -L 1`). The site's fonts
 (Roboto, Montserrat) are installed here, so screenshots use the site's own fonts.
+
+## Quick renders (27 Nov)
+
+1. Fetch the database copy into tools/render/data/main.json (fetch-data.sql).
+2. `bash tools/render/rebuild.sh /tmp/rb`
+3. In a Python script: `shoot.serve('/tmp/rb', 8800)`, launch Chrome
+   (`/usr/bin/google-chrome`, `--no-sandbox`), then `page.open_site(...)` and `page.click(...)`.
+   Set RENDER_USER_ID to her account id to see the site as she does (an R4, admin).
