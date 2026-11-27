@@ -1363,6 +1363,6 @@ All nine are built.
   ranking; the site records every round, the flags and the final ranking from them ("I'm gonna
   just give you the screenshots. That's how I will do it"). Her rule as she said it: "every game,
   you have 3 lanes. If 2 of your lanes win, then you get 2 points ... the ranking is based on
-  those points, but if the points are equal, then the flags are gonna be what matters." (Open:
-  1252's ranking gives 10 points and 8 flags for lanes 1, 2, 2, 2, 1, which fits 3 points a win,
-  1 a draw and flags = lanes won; asked her.)
+  those points, but if the points are equal, then the flags are gonna be what matters." The
+  game's mails (27 Nov) say a win earns 3 Championship Points and a loss none, and flags are
+  the lanes won (data/captures/other-states.md).
