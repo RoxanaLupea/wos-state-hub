@@ -636,7 +636,7 @@
   "pointSource.pac2.task": "Matchmaking: The game puts 6 alliances of the same or a similar tier in one group. A signed-up alliance cannot disband until the Championship ends. A member who quits during Matchmaking still fights but gets no rewards.",
   "pointSource.pac3.task": "Rounds: Each alliance meets the other 5 of its group, one round each. Before each round's battle, the Leader and R4s can move troops between the 3 lanes or swap single armies in a lane.",
   "pointSource.pac4.task": "Battle: In each lane, the troops with the highest Power fight first and each army fights at most twice. The first alliance to defeat all enemy troops in a lane takes its flag. Only expedition hero skills work.",
-  "pointSource.pac5.task": "Points: The alliance with more flags wins the round and gets 3 points, and a draw gives both 1 point. Alliances are ranked in their group by Championship Points, and ties are decided by the flags captured and the enemies defeated.",
+  "pointSource.pac5.task": "Points: The alliance with more flags wins the round and gets 3 points, and a draw gives both 1 point. Alliances are ranked in their group by Championship Points, and ties are decided by the flags captured and the enemies defeated. Chiefs awarded auto-advance victory rewards are not eligible for further ranking rewards.",
   "pointSource.pacw1.task": "Rewards are sent by mail when round 5 ends, on Friday at 12:00 UTC, only to the members in the alliance at that time.",
   "pointSource.pacw2.dayName": "group|Ultimate",
   "pointSource.pacw2.task": "Prestige Rewards are granted after battling in the Ultimate tier.",
