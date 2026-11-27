@@ -166,8 +166,12 @@ function placeFishLine(bar: HTMLElement): void {
   line.dataset.laidOut = line.style.left;
   const capitals = capitalsOf(label, bar);
   line.style.top = (capitals.top + capitals.height / 2) + 'px';
-  // With no room for the line and its fish, neither is drawn.
-  line.style.display = baseRight - left < 40 ? 'none' : '';
+  // With no room for the line and its fish, neither is drawn, nor the mark where fishing
+  // ends. The mark was hidden earlier if the full name still covered it.
+  const hasRoom = baseRight - left >= 40;
+  line.style.display = hasRoom ? '' : 'none';
+  const endMark = bar.querySelector<HTMLElement>('.bar-mark.end-mark');
+  if (endMark && line.classList.contains('ends-here')) endMark.style.display = hasRoom ? '' : 'none';
 }
 
 // Names that do not fit:

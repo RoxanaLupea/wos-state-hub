@@ -339,7 +339,9 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
   const fishLine = fishingDaysEarly > 0 && fishingEnd > piece.start && bar.startMinute < piece.end
     ? `<span class="bar-fish-line${fishingEnd <= piece.end ? ' ends-here' : ''}"` +
       ` data-start-minute="${bar.startMinute}" data-end-minute="${fishingEnd}">` +
-      `<span class="fish-rule"></span>${fishingEnd <= piece.end ? FISH_BONE : ''}</span>`
+      `<span class="fish-rule"></span>${fishingEnd <= piece.end ? FISH_BONE : ''}</span>` +
+      // The white mark where fishing ends, like the end of a part (Roxanne, 27 Nov).
+      (fishingEnd < piece.end ? barMark(fishingEnd, 'end-mark', 'Fishing ends') : '')
     : '';
 
   if (subtitle) lineTwo += `<span class="bar-sub">${escapeForPage(subtitle)}</span>`;
