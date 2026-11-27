@@ -184,6 +184,8 @@ export interface DayContents {
 
 export interface DayOptions extends MomentOptions {
   phaseNameForDay: (eventTypeId: string, dayOfEvent: number) => string;
+  // The season of a run that has one (Fishing's Summer), shown as its phase.
+  seasonOf?: (eventTypeId: string, startDay: number) => string;
   // The name the game gives a day of the event, if it has one.
   dayNameOf: (eventTypeId: string, dayOfEvent: number) => string;
   // The alliances whose times the player wants to see. A run set for any other
@@ -231,10 +233,11 @@ export function contentsOfDay(
     const playWindows = options.timesInLine?.(occurrence.eventTypeId)
       ? playWindowsIn(occurrence, options.stepsByEventType.get(occurrence.eventTypeId) ?? [], window) : null;
     if (!isTimedOneDay) {
+      const season = options.seasonOf?.(occurrence.eventTypeId, occurrence.startDay) ?? '';
       allDayItems.push({
         occurrence, name,
-        shortLine: allDayLine(occurrence, dayOfEvent(occurrence, day), options),
-        phase: options.phaseNameForDay(occurrence.eventTypeId, dayOfEvent(occurrence, day)).split(' · ')[0],
+        shortLine: season || allDayLine(occurrence, dayOfEvent(occurrence, day), options),
+        phase: season || options.phaseNameForDay(occurrence.eventTypeId, dayOfEvent(occurrence, day)).split(' · ')[0],
         ...(playWindows ? { playWindows, dayWindow: window } : {})
       });
     }

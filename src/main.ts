@@ -35,7 +35,7 @@ import { loadDateChanges, loadSchedules, loadSettings } from './data/schedules.t
 import {
   categoryOf, dayNameOf, eventStepsByEventType, eventTypeById, eventTypeName, eventTypeShortName, eventTypeStageName, wholeEventTypeOf,
   isDetailsOnly, partOfByEventTypeId, phaseName, phaseNameForDay, phaseShortName, phasesByEventType,
-  phaseNote, pointSourcesForDay, showsTimesInLine, sortOrderOf, stepDetail, stepLabel, stepNote
+  phaseNote, pointSourcesForDay, seasonOf, showsTimesInLine, sortOrderOf, stepDetail, stepLabel, stepNote
 } from './data/catalog.ts';
 import {
   minutesFromTime, startOfMonth, startOfWeek, textFromDay, todayNumber, yearAndMonthOf, dayFromText, MINUTES_PER_DAY
@@ -362,7 +362,7 @@ function panelContents(): string {
     day,
     {
       stepsByEventType: eventStepsByEventType, nameOf: eventTypeName, stepLabel,
-      phaseNameForDay, dayNameOf, myAllianceIds, timesInLine: showsTimesInLine,
+      phaseNameForDay, dayNameOf, myAllianceIds, timesInLine: showsTimesInLine, seasonOf,
       allianceTagsOf: one => one.allianceIds.length
         ? ' · ' + one.allianceIds.filter(id => myAllianceIds.includes(id)).map(allianceTag).join(', ')
         : '',
