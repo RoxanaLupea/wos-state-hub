@@ -29,6 +29,8 @@
 .sub-column-list { display: flex; flex-direction: column; gap: 8px; }
 .sub-empty { margin: 0; font-size: 13px; font-weight: 600; color: var(--text-faint); }
 @media (min-width: 1000px) {
+  /* The board takes the page's whole width: three wide columns (Roxanne, 27 Nov). */
+  .work-page.submissions { max-width: none; }
   .sub-board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: start; }
   .sub-column { padding: 14px; border-radius: 14px; background: rgba(255, 255, 255, 0.03); }
   .sub-column-title { cursor: default; pointer-events: none; }
