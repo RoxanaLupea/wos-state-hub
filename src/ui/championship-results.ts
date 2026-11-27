@@ -56,6 +56,8 @@ export interface ChampionshipDrawOptions {
   addRankingEdit: string;
   // The add icon the site's add buttons use.
   addIcon: string;
+  // Who put the results in, to give them credit (Roxanne, 27 Nov).
+  submittedBy: string;
 }
 
 function lanesWon(lanes: string): number {
@@ -133,8 +135,11 @@ function groupFromRounds(options: ChampionshipDrawOptions): RankingRow[] {
   ];
 }
 
-const UP_ARROW = '<svg viewBox="0 0 12 8" aria-hidden="true"><path d="M1.5 6.5L6 2l4.5 4.5"/></svg>';
-const DOWN_ARROW = '<svg viewBox="0 0 12 8" aria-hidden="true"><path d="M1.5 1.5L6 6l4.5-4.5"/></svg>';
+// Drawn like the site's buttons (the edit icon's colours), so they read as something to tap.
+const ARROW_COLOUR = '<defs><linearGradient id="ac-move-colour" x1="0" y1="0" x2="1" y2="1">' +
+  '<stop offset="0" style="stop-color: var(--edit-colour)"/><stop offset="1" style="stop-color: var(--text)"/></linearGradient></defs>';
+const UP_ARROW = `<svg viewBox="0 0 14 9" aria-hidden="true">${ARROW_COLOUR}<path d="M1.5 7.5L7 2l5.5 5.5"/></svg>`;
+const DOWN_ARROW = `<svg viewBox="0 0 14 9" aria-hidden="true">${ARROW_COLOUR}<path d="M1.5 1.5L7 7l5.5-5.5"/></svg>`;
 
 function rankingSection(options: ChampionshipDrawOptions): string {
   const { view } = options;
@@ -194,7 +199,8 @@ export function championshipResult(options: ChampionshipDrawOptions): string {
   return isEditing
     ? `<form class="svs-result ac-result ac-editing" id="${CHAMPIONSHIP_EDIT_FORM_ID}" data-form="result" data-key="${escapeForPage(options.formKey)}">` +
       body + '<p class="form-message" data-form-message></p></form>'
-    : `<div class="svs-result ac-result">${body}</div>`;
+    : `<div class="svs-result ac-result">${body}` +
+      (options.submittedBy ? `<p class="ac-credit">Submitted by <b>${escapeForPage(options.submittedBy)}</b></p>` : '') + '</div>';
 }
 
 // A lane tapped while adding: it turns won or lost, and its round's flags follow.

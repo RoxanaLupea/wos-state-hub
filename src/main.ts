@@ -548,7 +548,8 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
   const resultsOptions = {
     context: workContext(), eventTypeId: occurrence.eventTypeId, runDate: resultRunDate(occurrence, nearby),
     stateNumber: Number(STATE_NUMBER), isSwitchedOff: resultsSwitchedOff,
-    hasStarted: occurrence.startMinute <= nowMinute(), roundsFought: roundsFoughtIn(occurrence)
+    hasStarted: occurrence.startMinute <= nowMinute(), roundsFought: roundsFoughtIn(occurrence),
+    playerNameOf
   };
   return eventPanel(occurrence, {
     tree, day, dayOfEvent: dayInEvent,
@@ -1055,6 +1056,14 @@ function troopsOfAccount(inGameId: string): Record<string, { tier: string; skill
 // The date a result is recorded under: the run's first day; for SvS, the day of its
 // battle, as the SvS history has always been kept; for a part of a bigger event, the
 // first day of the whole event.
+// A person's name in the game: the name of their main account (or their first account).
+function playerNameOf(userId: string): string {
+  const accounts = (rowsOf('game_accounts') ?? []).filter(one => one.owner_id === userId && one.kind !== 'farm')
+    .sort((left, right) => (left.kind === 'main' ? 0 : 1) - (right.kind === 'main' ? 0 : 1) || Number(left.sort_order) - Number(right.sort_order));
+  const account = accounts[0];
+  return account ? gameOfAccount(String(account.in_game_id))?.name ?? '' : '';
+}
+
 // The plan the player's alliance keeps for an event, set by its R4s (Roxanne, 27 Nov).
 function planNoteOf(eventTypeId: string): string {
   const record = view.myAllianceId

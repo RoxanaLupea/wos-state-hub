@@ -8,7 +8,7 @@
 button.ac-lane { position: relative; cursor: pointer; }
 button.ac-lane::after { content: ''; position: absolute; inset: -9px 0; }
 .ac-opp b { color: var(--theirs); font-weight: 800; }
-.ac-opp .ac-alliance-name { display: block; }
+.svs-day-values .ac-opp .ac-alliance-name { display: block; min-width: 0; text-align: center; color: var(--text); }
 .ac-opp .svs-field { height: 20px; padding: 0 4px; font-size: 12.5px; font-weight: 700; line-height: 1; color: var(--text); vertical-align: middle; }
 .ac-opp .ac-state { width: 3.4em; text-align: center; }
 .ac-opp .ac-alliance { display: block; width: 15.5em; max-width: 100%; margin: 3px auto 0; text-align: center; }
@@ -26,9 +26,13 @@ button.ac-lane::after { content: ''; position: absolute; inset: -9px 0; }
 .ac-rank > .us.who small { color: color-mix(in srgb, var(--ours) 70%, transparent); }
 .ac-rank.editing { grid-template-columns: 14px minmax(0, 1fr) 30px 36px 46px; }
 .ac-rank .svs-field { width: 100%; height: 20px; padding: 0 4px; box-sizing: border-box; font-size: 13px; font-weight: 700; line-height: 1; text-align: right; color: var(--text); }
-.ac-move { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-.ac-move button { display: block; padding: 2px; border: none; background: none; cursor: pointer; }
-.ac-move svg { display: block; width: 12px; height: 8px; fill: none; stroke: var(--text-muted); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.ac-result { --edit-colour: var(--event-color); }
+.ac-move { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+.ac-move button { display: block; padding: 2px 1px; border: none; background: none; cursor: pointer; }
+.ac-move svg { display: block; width: 14px; height: 9px; fill: none; stroke: url(#ac-move-colour); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
+/* Credit to whoever put the results in. */
+.ac-credit { margin: 0 0 18px; font-size: 12.5px; font-weight: 600; color: var(--text-faint); }
+.ac-credit b { font-weight: 800; color: var(--text-muted); }
 .ac-result .form-message:empty { display: none; }
 .ac-result .form-message { margin: 0; color: var(--danger); font-size: 13px; }
 

@@ -1429,3 +1429,6 @@ All nine are built.
 - The date and repeat forms (Roxanne, 27 Nov): "even if I need it, that is the worst possible way
   to let me edit anything ... It's only confusing me." When the admin menu is designed, changing
   an event's dates is designed anew there, not moved over as these forms.
+- Credit for results (Roxanne, 27 Nov): "when we approve something, we will have a message below
+  the results saying submitted by and then the user. We want to give credit to them." The
+  ranking's up and down arrows look like the site's buttons, so it is clear the rows can be moved.

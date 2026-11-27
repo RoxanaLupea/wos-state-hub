@@ -36,6 +36,8 @@ export interface ResultsOptions {
   // only what already happened is asked for.
   hasStarted: boolean;
   roundsFought: number;
+  // A person's name in the game, from their account id.
+  playerNameOf: (userId: string) => string;
 }
 
 interface ResultView {
@@ -691,7 +693,8 @@ function championshipResults(options: ResultsOptions, allianceId: string, record
     roundsFought: options.roundsFought, isEditing,
     withRanking: isEditing && (context.editing === edit + '|ranking' || view.ranking.length > 0),
     formKey: formKey('alliance-championship', options.runDate, allianceId, existing),
-    addRankingEdit: context.leads(allianceId) ? edit + '|ranking' : '', addIcon: ADD_ICON
+    addRankingEdit: context.leads(allianceId) ? edit + '|ranking' : '', addIcon: ADD_ICON,
+    submittedBy: existing?.row.updated_by ? options.playerNameOf(String(existing.row.updated_by)) : ''
   });
 }
 
