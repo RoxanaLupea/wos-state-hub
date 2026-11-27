@@ -1129,8 +1129,9 @@ function scrollPlaces(app: HTMLElement): ScrollPlaces {
     weeks: app.querySelector<HTMLElement>('.calendar-panel .weeks')?.scrollTop ?? 0,
     panel: app.querySelector<HTMLElement>('.day-panel')?.scrollTop ?? 0,
     eventBody: app.querySelector<HTMLElement>('.event-page-body')?.scrollTop ?? 0,
-    // The Invites lists, Records and a profile scroll in boxes of their own on a computer.
-    inviteBoxes: Array.from(app.querySelectorAll<HTMLElement>('.inv .lists, .inv .rscroll, .inv .prof-card, .inv .sheet')).map(box => box.scrollTop)
+    // The Invites lists, Records and a profile scroll in boxes of their own on a computer;
+    // the New group list in its own box everywhere, kept while people are ticked (27 Nov).
+    inviteBoxes: Array.from(app.querySelectorAll<HTMLElement>('.inv .lists, .inv .rscroll, .inv .prof-card, .inv .sheet, .inv .ng-list')).map(box => box.scrollTop)
   };
 }
 
@@ -1245,7 +1246,7 @@ function putBackScrollPlaces(app: HTMLElement, places: ScrollPlaces): void {
     if (weeks) weeks.scrollTop = places.weeks;
     if (panel) panel.scrollTop = startAtTop.panel ? 0 : places.panel;
     if (eventBody) eventBody.scrollTop = startAtTop.panel ? 0 : places.eventBody;
-    Array.from(app.querySelectorAll<HTMLElement>('.inv .lists, .inv .rscroll, .inv .prof-card, .inv .sheet'))
+    Array.from(app.querySelectorAll<HTMLElement>('.inv .lists, .inv .rscroll, .inv .prof-card, .inv .sheet, .inv .ng-list'))
       .forEach((box, index) => { box.scrollTop = places.inviteBoxes[index] ?? 0; });
   }
   // The site's first drawing on a phone starts at the top, whatever the browser kept

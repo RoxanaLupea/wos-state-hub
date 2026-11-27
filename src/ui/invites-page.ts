@@ -759,11 +759,31 @@ async function saveGroups(shown: Shown): Promise<void> {
   const all = withDraft(INVITE_LISTS.flatMap(list => shown.lists[list]));
   const sizes = new Map<number, number>();
   for (const invite of all) if (invite.groupNumber !== null) sizes.set(invite.groupNumber, (sizes.get(invite.groupNumber) ?? 0) + 1);
+  const groupOf = (invite: Invite) => invite.groupNumber !== null && (sizes.get(invite.groupNumber) ?? 0) > 1 ? invite.groupNumber : null;
+  // A group's people sit together on their list, from where its first one is (Roxanne,
+  // 27 Nov: "I don't see it sorted to have groups together after I save").
+  const newPosition = new Map<number, number>();
+  for (const list of INVITE_LISTS) {
+    const rows = all.filter(invite => invite.list === list).sort((left, right) => left.position - right.position || left.id - right.id);
+    const ordered: Invite[] = [];
+    for (const invite of rows) {
+      if (ordered.includes(invite)) continue;
+      const group = groupOf(invite);
+      if (group === null) ordered.push(invite);
+      else ordered.push(...rows.filter(one => groupOf(one) === group));
+    }
+    ordered.forEach((invite, index) => newPosition.set(invite.id, index + 1));
+  }
   const changes: Promise<void>[] = [];
   for (const invite of all) {
     const original = shown.lists[invite.list].find(one => one.id === invite.id);
-    const group = invite.groupNumber !== null && (sizes.get(invite.groupNumber) ?? 0) > 1 ? invite.groupNumber : null;
-    if (original && original.groupNumber !== group) changes.push(changeInvite(invite.id, { group_number: group }));
+    if (!original) continue;
+    const fields: Record<string, unknown> = {};
+    const group = groupOf(invite);
+    if (original.groupNumber !== group) fields.group_number = group;
+    const position = newPosition.get(invite.id);
+    if (position !== undefined && position !== original.position) fields.position = position;
+    if (Object.keys(fields).length) changes.push(changeInvite(invite.id, fields));
   }
   await Promise.all(changes);
   state.editing = false;
