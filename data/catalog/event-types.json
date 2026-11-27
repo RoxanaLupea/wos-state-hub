@@ -12,7 +12,8 @@
     "icon": "swords",
     "imageFile": "svs-prep",
     "opponentCount": "1",
-    "sortOrder": 2
+    "sortOrder": 2,
+    "resultsBy": "state"
   },
   {
     "id": "svs-matchmaking",
@@ -120,7 +121,8 @@
     "icon": "sun",
     "imageFile": "castle-battle",
     "hasPresident": "yes",
-    "sortOrder": 8
+    "sortOrder": 8,
+    "resultsBy": "state"
   },
   {
     "id": "bia",
@@ -146,7 +148,8 @@
     "colorEnd": "#3E63A8",
     "icon": "shield",
     "resultType": "winloss",
-    "sortOrder": 6
+    "sortOrder": 6,
+    "resultsBy": "alliance"
   },
   {
     "id": "trade-route",
@@ -169,7 +172,9 @@
     "icon": "trophy",
     "imageFile": "alliance_championship",
     "resultType": "rank",
-    "sortOrder": 21
+    "sortOrder": 21,
+    "resultsBy": "alliance",
+    "resultsFrom": "st68"
   },
   {
     "id": "fortress-battles",
@@ -198,7 +203,9 @@
     "icon": "castle",
     "imageFile": "wintersiege",
     "resultType": "winloss",
-    "sortOrder": 23
+    "sortOrder": 23,
+    "resultsBy": "alliance",
+    "resultsFrom": "ph35"
   },
   {
     "id": "crazy-joe",
@@ -220,7 +227,9 @@
     "opponentCount": "1",
     "opponentHasAlliance": "yes",
     "resultType": "winloss",
-    "sortOrder": 9
+    "sortOrder": 9,
+    "resultsBy": "alliance",
+    "resultsFrom": "ph8"
   },
   {
     "id": "canyon",
@@ -232,7 +241,9 @@
     "opponentCount": "2",
     "opponentHasAlliance": "yes",
     "resultType": "winloss",
-    "sortOrder": 10
+    "sortOrder": 10,
+    "resultsBy": "alliance",
+    "resultsFrom": "ph12"
   },
   {
     "id": "mercenaries",
@@ -455,7 +466,9 @@
     "icon": "dragon",
     "detailsOnly": "yes",
     "resultType": "rank",
-    "sortOrder": 18
+    "sortOrder": 18,
+    "resultsBy": "state",
+    "resultsFrom": "ph27"
   },
   {
     "id": "frostwind-journey",
@@ -494,7 +507,9 @@
     "groupCount": "2",
     "resultType": "rank",
     "sortOrder": 19,
-    "rewardListTabs": true
+    "rewardListTabs": true,
+    "resultsBy": "state",
+    "resultsFrom": "ph17"
   },
   {
     "id": "tal-schedule-info",

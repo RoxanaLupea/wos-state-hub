@@ -7,7 +7,7 @@ import { editButton } from './edit-forms.ts';
 import { cancelWord, dataTable, formSection, rowForm, saveWord, text, type Column, type Field } from './data-table.ts';
 import type { Row } from '../data/records.ts';
 import { allianceTag } from '../data/alliances.ts';
-import { SVS_FAMILY, dayNameOf, eventTypeName } from '../data/catalog.ts';
+import { SVS_FAMILY, dayNameOf, eventTypeById, eventTypeName, eventsWithResults } from '../data/catalog.ts';
 import { longDayText, shortDayText } from './day-names.ts';
 import { dayFromText } from '../calendar/days.ts';
 import type { WorkContext } from './working-pages.ts';
@@ -22,8 +22,26 @@ import { CHAMPIONSHIP_EDIT_FORM_ID, addResultsButton, championshipResult, champi
 import { SUBMITTED_EVENTS } from './submissions.ts';
 import { personChip, type PersonShown } from './person-chip.ts';
 
+// Every event with results follows one rule (Roxanne, 27 Nov: "if at the start, when we have
+// no results recorded ... there should not be a results tab"; "it's not applied for svs so
+// clearly you didn't cover all event panels"). Which events keep results, and who records
+// them, is in each event's own entry in event-types.json (resultsBy, resultsFrom):
+// - no Results tab until the run has results (or they are being added);
+// - the trophy Results button in the head for whoever may record them, once the run has
+//   something to record (resultsFrom), while it has none;
+// - once there are results, Edit on the tabs' line for whoever may change them.
+
 // The events an alliance records for itself.
-export const ALLIANCE_RESULT_EVENTS = ['showdown', 'foundry', 'canyon', 'winter-siege', 'alliance-championship'];
+export const ALLIANCE_RESULT_EVENTS = eventsWithResults('alliance');
+
+// The event a run's results belong to: every part of State of Power keeps the whole SvS's.
+function resultsEventOf(eventTypeId: string): string {
+  return SVS_FAMILY.includes(eventTypeId) ? 'svs' : eventTypeId;
+}
+
+function keepsResults(eventTypeId: string): boolean {
+  return Boolean(eventTypeById(resultsEventOf(eventTypeId))?.resultsBy);
+}
 
 export interface ResultsOptions {
   context: WorkContext;
@@ -34,9 +52,10 @@ export interface ResultsOptions {
   stateNumber: number;
   // Events an alliance switched off in its results section.
   isSwitchedOff: (allianceId: string, eventTypeId: string) => boolean;
-  // Whether the run has started, and for a Championship how many rounds' battles have:
-  // only what already happened is asked for.
-  hasStarted: boolean;
+  // Whether the run has something to record yet (from its resultsFrom phase or step), and
+  // for a Championship how many rounds' battles have started: only what already happened
+  // is asked for.
+  canRecord: boolean;
   roundsFought: number;
   // A person as the game shows them (name and picture), from their account id.
   playerOf: (userId: string) => PersonShown;
@@ -86,15 +105,80 @@ function formKey(eventTypeId: string, date: string, allianceId: string, existing
   return [eventTypeId, date, allianceId, existing ? String(existing.row.id) : ''].join('|');
 }
 
-// The Results tab of an event, or empty for an event without results.
+// The key the Results button and Edit open: this run's results, added or changed in place.
+function resultsKey(options: ResultsOptions): string {
+  const eventTypeId = resultsEventOf(options.eventTypeId);
+  if (eventTypeId === 'svs') return svsEditKey(options.runDate);
+  if (eventTypeId === 'sunfire') return 'sunfire-result|' + options.runDate;
+  if (eventTypeId === 'alliance-championship') return championshipEdit(options.runDate);
+  return `add-result|${eventTypeId}|${options.runDate}`;
+}
+
+function isEditing(options: ResultsOptions): boolean {
+  const key = resultsKey(options);
+  const editing = options.context.editing ?? '';
+  return editing === key || editing.startsWith(key + '|');
+}
+
+// Whether this person may record this event's results: admins for the state's (any
+// alliance's R4s too for Tundra Arms League, played by one of our alliances); for an
+// alliance's own, its R4s, and any member where members submit them for review.
+function mayRecord(options: ResultsOptions): boolean {
+  const { context } = options;
+  const eventTypeId = resultsEventOf(options.eventTypeId);
+  const by = eventTypeById(eventTypeId)?.resultsBy;
+  if (by === 'alliance') {
+    const allianceId = context.myAllianceId;
+    if (!allianceId || options.isSwitchedOff(allianceId, eventTypeId)) return false;
+    return context.leads(allianceId) || (SUBMITTED_EVENTS.includes(eventTypeId) && Boolean(context.userId));
+  }
+  if (by !== 'state') return false;
+  if (eventTypeId === 'hellfire') return context.isAdmin || context.alliances.some(one => context.leads(one.id));
+  return context.isAdmin;
+}
+
+// Whether this run has results recorded: true, false, or null while they are loading.
+function runHasResults(options: ResultsOptions): boolean | null {
+  const { context, runDate } = options;
+  const eventTypeId = resultsEventOf(options.eventTypeId);
+  const recorded = resultsOf(context, eventTypeId);
+  if (!recorded) return null;
+  const ofRun = recorded.filter(one => one.row.event_date === runDate);
+  if (eventTypeId === 'svs') {
+    return ofRun.length > 0 || (svsHistory as Record<string, unknown>[]).some(one => one.date === runDate);
+  }
+  if (eventTypeId === 'sunfire') {
+    const run = sunfireRunOf(ofRun[0], (sunfireHistory as Record<string, unknown>[]).find(one => one.date === runDate));
+    return run.holds.length > 0 || Boolean(run.president);
+  }
+  if (eventTypeById(eventTypeId)?.resultsBy === 'alliance') {
+    return Boolean(context.myAllianceId) && ofRun.some(one => one.row.alliance_id === context.myAllianceId);
+  }
+  if (eventTypeId === 'tyrant') return ofRun.some(one => !one.row.alliance_id);
+  return ofRun.length > 0;
+}
+
+// The Results tab of an event: only once its run has results, or while they are added.
 export function resultsTab(options: ResultsOptions): string {
-  const eventTypeId = options.eventTypeId;
-  if (SVS_FAMILY.includes(eventTypeId)) return svsResults(options);
+  if (!keepsResults(options.eventTypeId)) return '';
+  const eventTypeId = resultsEventOf(options.eventTypeId);
+  if (eventTypeById(eventTypeId)?.resultsBy === 'alliance' &&
+      (!options.context.myAllianceId || options.isSwitchedOff(options.context.myAllianceId, eventTypeId))) return '';
+  if (!runHasResults(options) && !(isEditing(options) && mayRecord(options))) return '';
+  if (eventTypeId === 'svs') return svsResults(options);
   if (eventTypeId === 'sunfire') return sunfireResults(options);
   if (eventTypeId === 'hellfire') return talResults(options);
   if (eventTypeId === 'tyrant') return tyrantResults(options);
-  if (ALLIANCE_RESULT_EVENTS.includes(eventTypeId)) return allianceResults(options);
-  return '';
+  return allianceResults(options);
+}
+
+// The Results button at the top right of an event's head (Roxanne, 27 Nov: "a button that
+// says add results"), for whoever may record them, once the run has something to record,
+// while it has none.
+export function addResultsHead(options: ResultsOptions): string {
+  if (!keepsResults(options.eventTypeId) || !options.canRecord || !mayRecord(options)) return '';
+  if (runHasResults(options) !== false || isEditing(options)) return '';
+  return addResultsButton(resultsKey(options));
 }
 
 // ---------------------------------------------------------------------------
@@ -151,7 +235,7 @@ function svsResults(options: ResultsOptions): string {
   const existing = recorded.find(one => one.row.event_date === options.runDate);
   const known = (svsHistory as Record<string, unknown>[]).find(one => one.date === options.runDate);
   const run = existing ? svsRunOf(existing, known) : known ? svsRunFromHistory(known) : null;
-  if (context.isAdmin && context.editing === svsEditKey(options.runDate)) {
+  if (context.isAdmin && isEditing(options)) {
     return svsResultEditor({
       run: run ?? EMPTY_RUN, ourState: options.stateNumber, dayNameOf: day => dayNameOf('svs-prep', day),
       formKey: formKey('svs', options.runDate, '', existing),
@@ -171,23 +255,17 @@ function svsEditKey(runDate: string): string {
   return 'svs-result|' + runDate;
 }
 
-// The key the edit button opens on an event's Results tab, for those who may change
-// those results (admins, for an SvS); empty when nobody here may.
-export function resultsEditKey(options: ResultsOptions): string {
-  if (!options.context.isAdmin) return '';
-  if (SVS_FAMILY.includes(options.eventTypeId)) return svsEditKey(options.runDate);
-  if (options.eventTypeId === 'sunfire') return 'sunfire-result|' + options.runDate;
-  return '';
-}
-
-// At the right of the tabs' line: the edit button for the one who may change these
-// results, and Cancel and Save in its place while they are being edited.
+// At the right of the tabs' line: Edit for whoever may change these results, and Cancel and
+// Save in its place while they are being added or changed. The forms not redesigned yet
+// (Tundra Arms League, Tyrant and the alliance events but the Championship) carry their own.
 export function resultsTabActions(options: ResultsOptions): string {
-  if (options.eventTypeId === 'alliance-championship') return championshipTabActions(options);
-  const key = resultsEditKey(options);
-  if (!key) return '';
-  if (options.context.editing !== key) return editButton(key);
-  const formId = options.eventTypeId === 'sunfire' ? SUNFIRE_EDIT_FORM_ID : SVS_EDIT_FORM_ID;
+  const eventTypeId = resultsEventOf(options.eventTypeId);
+  if (eventTypeId === 'alliance-championship') return championshipTabActions(options);
+  if (!keepsResults(eventTypeId) || !mayRecord(options)) return '';
+  const key = resultsKey(options);
+  if (!isEditing(options)) return runHasResults(options) ? editButton(key) : '';
+  if (eventTypeId !== 'svs' && eventTypeId !== 'sunfire') return '';
+  const formId = eventTypeId === 'sunfire' ? SUNFIRE_EDIT_FORM_ID : SVS_EDIT_FORM_ID;
   return cancelWord() + saveWord('Save').replace('type="submit"', `type="submit" form="${formId}"`);
 }
 
@@ -259,8 +337,7 @@ function sunfireResults(options: ResultsOptions): string {
   const existing = recorded.find(one => one.row.event_date === options.runDate);
   const known = (sunfireHistory as Record<string, unknown>[]).find(one => one.date === options.runDate);
   const run = sunfireRunOf(existing, known);
-  const key = resultsEditKey(options);
-  if (key && options.context.editing === key) {
+  if (options.context.isAdmin && isEditing(options)) {
     return sunfireResultEditor(run, formKey('sunfire', options.runDate, '', existing));
   }
   return run.holds.length || run.president ? sunfireResult(run) : historyLink('sunfire-history');
@@ -310,10 +387,9 @@ function talResults(options: ResultsOptions): string {
     { label: 'Legion', cell: row => text(row.legion), isNumber: true },
     { label: 'Final rank', cell: row => text(row.rank), isNumber: true }
   ];
-  const mayRecord = context.isAdmin || context.alliances.some(one => context.leads(one.id));
-  const form = mayRecord ? rowForm({
+  const form = isEditing(options) && mayRecord(options) ? rowForm({
     form: 'result', key: formKey('hellfire', options.runDate, '', undefined),
-    title: 'Record a legion',
+    title: 'Record a legion', canCancel: true,
     fields: [
       { name: 'alliance_id', label: 'Alliance', kind: 'select', isRequired: true,
         choices: [['', 'Pick an alliance'], ...context.alliances
@@ -342,9 +418,9 @@ function tyrantResults(options: ResultsOptions): string {
     { label: 'Note', cell: one => text(one.note) }
   ];
   const existing = recorded.find(one => one.row.event_date === options.runDate && !one.row.alliance_id);
-  const form = context.isAdmin ? rowForm({
+  const form = isEditing(options) && mayRecord(options) ? rowForm({
     form: 'result', key: formKey('tyrant', options.runDate, '', existing),
-    title: `Tyrant of ${longDayText(dayFromText(options.runDate))}`,
+    title: `Tyrant of ${longDayText(dayFromText(options.runDate))}`, canCancel: true,
     fields: [
       { name: 'state_alliance_id', label: 'Played as', kind: 'select', value: existing?.row.state_alliance_id ?? '',
         choices: [['', 'Not known'], ...context.alliances.map(one => [one.id, one.tag] as [string, string])] },
@@ -508,19 +584,14 @@ function allianceRunsTable(eventTypeId: string, ours: ResultView[]): string {
 function allianceResults(options: ResultsOptions): string {
   const { context, eventTypeId } = options;
   const allianceId = context.myAllianceId;
-  // No Results tab until there are results (Roxanne, 27 Nov): they are started from the
-  // Results button at the top of the event.
-  if (!allianceId) return '';
-  if (options.isSwitchedOff(allianceId, eventTypeId)) return '';
   const recorded = resultsOf(context, eventTypeId);
-  if (!recorded) return '';
+  if (!allianceId || !recorded) return '';
   if (eventTypeId === 'alliance-championship') return championshipResults(options, allianceId, recorded);
   const ours = recorded.filter(one => one.row.alliance_id === allianceId);
-  if (!ours.length && context.editing !== addResultsEdit(options)) return '';
   const runTitle = `${allianceTag(allianceId)} · ${eventTypeName(eventTypeId)} of ${longDayText(dayFromText(options.runDate))}`;
 
   let forms = '';
-  if (context.leads(allianceId)) {
+  if (context.leads(allianceId) && isEditing(options)) {
     const legions = LEGION_EVENTS.includes(eventTypeId) ? ['1', '2'] : [''];
     forms = legions.map(legion => {
       const existing = ours.find(one => one.row.event_date === options.runDate &&
@@ -529,7 +600,7 @@ function allianceResults(options: ResultsOptions): string {
       if (legion) fields.unshift({ name: 'detail_legion', label: 'Legion', kind: 'hidden', value: legion });
       return rowForm({
         form: 'result', key: formKey(eventTypeId, options.runDate, allianceId, existing),
-        title: legion ? `${runTitle} · Legion ${legion}` : runTitle, fields
+        title: legion ? `${runTitle} · Legion ${legion}` : runTitle, fields, canCancel: true
       });
     }).join('');
   }
@@ -654,29 +725,8 @@ export function opponentNotesPage(context: WorkContext, hidesOthers: boolean, hi
 // Adding results: the Results button at the top of an event (Roxanne, 27 Nov).
 // ---------------------------------------------------------------------------
 
-function addResultsEdit(options: ResultsOptions): string {
-  return options.eventTypeId === 'alliance-championship' ? championshipEdit(options.runDate)
-    : `add-result|${options.eventTypeId}|${options.runDate}`;
-}
-
 function championshipEdit(runDate: string): string {
   return 'championship-result|' + runDate;
-}
-
-// The Results button at the top of an alliance event's head, for its R4s, once the run
-// has started (for a Championship, once its first battle has) and while it has no results.
-export function addResultsHead(options: ResultsOptions): string {
-  const { context, eventTypeId } = options;
-  const allianceId = context.myAllianceId;
-  if (!ALLIANCE_RESULT_EVENTS.includes(eventTypeId) || !allianceId) return '';
-  // Its R4s add results; for the events members may submit, any signed-in member does.
-  if (!context.leads(allianceId) && !(SUBMITTED_EVENTS.includes(eventTypeId) && context.userId)) return '';
-  if (options.isSwitchedOff(allianceId, eventTypeId)) return '';
-  if (eventTypeId === 'alliance-championship' ? options.roundsFought < 1 : !options.hasStarted) return '';
-  const recorded = resultsOf(context, eventTypeId);
-  if (!recorded || recorded.some(one => one.row.alliance_id === allianceId && one.row.event_date === options.runDate)) return '';
-  if (context.editing?.startsWith(addResultsEdit(options))) return '';
-  return addResultsButton(addResultsEdit(options));
 }
 
 function championshipResults(options: ResultsOptions, allianceId: string, recorded: ResultView[]): string {

@@ -576,7 +576,8 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
   const resultsOptions = {
     context: workContext(), eventTypeId: occurrence.eventTypeId, runDate: resultRunDate(occurrence, nearby),
     stateNumber: Number(STATE_NUMBER), isSwitchedOff: resultsSwitchedOff,
-    hasStarted: occurrence.startMinute <= nowMinute(), roundsFought: roundsFoughtIn(occurrence),
+    canRecord: canRecordResults(occurrence, wholeEvent?.startMinute ?? occurrence.startMinute, nearby),
+    roundsFought: roundsFoughtIn(occurrence),
     playerOf
   };
   return eventPanel(occurrence, {
@@ -609,7 +610,9 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
       entries: person ? rowsOf('personal_entries') : []
     }),
     // A day without a recorded winner shows a dash.
-    scoreHtml: showdownScoreSection({
+    // Showdown's Total score is its results: shown only once they exist (Roxanne, 27 Nov).
+    scoreHtml: occurrence.eventTypeId === 'showdown' && !showdownScoreOf(workContext(), textFromDay(occurrence.startDay))
+      ? '' : showdownScoreSection({
       eventTypeId: occurrence.eventTypeId, stateNumber: STATE_NUMBER,
       allianceId: view.myAllianceId,
       score: occurrence.eventTypeId === 'showdown' ? showdownScoreOf(workContext(), textFromDay(occurrence.startDay)) : null,
@@ -1161,6 +1164,21 @@ function roundsFoughtIn(occurrence: Occurrence): number {
   return (eventStepsByEventType.get(occurrence.eventTypeId) ?? []).filter(step => step.startTimeUtc &&
     stepLabel(step.id) === 'Battle' &&
     (occurrence.startDay + step.dayNumber - 1) * MINUTES_PER_DAY + minutesFromTime(step.startTimeUtc) <= now).length;
+}
+
+// Whether a run has something to record yet (Roxanne, 27 Nov: only what already happened is
+// asked for): from the phase or step its event names in resultsFrom (Foundry's Battle, a
+// Championship's first battle), else from the run's start.
+function canRecordResults(occurrence: Occurrence, runStartMinute: number, nearby: Occurrence[]): boolean {
+  const from = eventTypeById(occurrence.eventTypeId)?.resultsFrom;
+  if (!from) return runStartMinute <= nowMinute();
+  const runStartDay = dayFromText(resultRunDate(occurrence, nearby));
+  const phase = (phasesByEventType.get(occurrence.eventTypeId) ?? []).find(one => one.id === from);
+  const step = (eventStepsByEventType.get(occurrence.eventTypeId) ?? []).find(one => one.id === from);
+  const dayNumber = phase?.fromDay ?? step?.dayNumber;
+  if (dayNumber === undefined) return runStartMinute <= nowMinute();
+  const time = phase?.startTimeUtc ?? step?.startTimeUtc ?? '00:00';
+  return (runStartDay + dayNumber - 1) * MINUTES_PER_DAY + minutesFromTime(time) <= nowMinute();
 }
 
 function resultRunDate(occurrence: Occurrence, nearby: Occurrence[]): string {
@@ -2208,7 +2226,7 @@ function handleClicks(event: MouseEvent): void {
   if (editButton) {
     view.editing = view.editing === editButton.dataset.edit ? null : editButton.dataset.edit as string;
     // Adding results opens the Results tab, being filled in.
-    if (/^(championship-result|add-result)\|/.test(view.editing ?? '')) view.openInfoTab = 'results';
+    if (/^(championship-result|add-result|svs-result|sunfire-result)\|/.test(view.editing ?? '')) view.openInfoTab = 'results';
     // The head's forms open at the top of the event's page.
     if (view.editing?.startsWith('head|')) startAtTop.panel = true;
     draw();

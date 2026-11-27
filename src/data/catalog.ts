@@ -63,6 +63,13 @@ export interface EventType {
   lineColor?: string;
   // The times a player can pick from ("02:00,05:00,..."), such as Frostfire's slots.
   slotTimes?: string;
+  // Who records this event's results: admins for the state ('state'), each alliance its own
+  // ('alliance'). Every event with results follows one rule (Roxanne, 27 Nov): no Results tab
+  // until its run has results, and the Results button in the head until then.
+  resultsBy?: 'state' | 'alliance';
+  // The phase or step from which a run has something to record (Foundry's Battle, a
+  // Championship's first battle); without it, from the run's start.
+  resultsFrom?: string;
 }
 
 interface PhaseRow {
@@ -87,6 +94,12 @@ export function eventTypeById(id: string): EventType | undefined {
 
 // Falls back to the id, so a missing word shows up as an obvious oddity on the page
 // rather than an empty space.
+// The events that keep results, recorded by the state or by each alliance, in the order of
+// the event list.
+export function eventsWithResults(by: 'state' | 'alliance'): string[] {
+  return eventTypes.filter(type => type.resultsBy === by).map(type => type.id);
+}
+
 export function eventTypeName(id: string): string {
   return text['eventType.' + id + '.name'] ?? id;
 }
