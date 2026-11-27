@@ -4,6 +4,13 @@ Do CLAUDE.md's setup first. Updated 26 Nov 2026.
 
 ## Now
 
+### Pushed 27 Nov, 05:10 (her time)
+
+Live: while a pop-up or a sheet is open, the page behind stays still (tokens.css). Open:
+which list pop-ups (Add player, New group, Save for which characters) open from the bottom
+on the phone like a player's profile; New group's ticked rows touch (they need a gap); the
+Alliance Championship results mockup waits for her verdict.
+
 ### Pushed 27 Nov, 04:55 (her time)
 
 Live: the Records pin removed, Invites and Records scrollbars hidden, and the Invites group

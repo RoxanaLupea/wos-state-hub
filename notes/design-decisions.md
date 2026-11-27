@@ -1480,3 +1480,8 @@ All nine are built.
   group at once (editing stays on); saving puts a group's people together on their list, from
   where its first one is. The New group list keeps its scroll while people are ticked ("when
   I tap a new person it jumps at the top").
+- Pop-ups and sheets (Roxanne, 27 Nov): "the scroll still works for the page behind it, and
+  it shouldn't. Once that is open, that's on top. That's what's active." While any pop-up
+  or sheet is open, the page behind does not scroll (tokens.css).
+- Rows never touch (Roxanne, 27 Nov): "It is not acceptable to have items stuck to each other.
+  Never ... items never stick together on PC either." (New group's ticked rows.)
