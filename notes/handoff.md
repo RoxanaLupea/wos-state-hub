@@ -4,17 +4,68 @@ Do CLAUDE.md's setup first. Updated 27 Nov 2026.
 
 ## Now
 
-Next Fishing run (Autumn, a month after 24 Nov 2026): ask Roxanne for that season's
-chances (her ask, 27 Nov). Summer's are saved (point-sources list "chances") but not shown;
-compare them then and decide how to show them.
+### Pushed 27 Nov, 13:00 (her time): the calendar redesign (common-size) merged into main
 
-### The calendar review on common-size: the screens
+Everything on common-size went live with her yes ("Push all our work because we're doing a
+handover"). The branch is deleted; work goes on main from now on.
 
-The 19 screenshots under review are Claude's renders of the branch (26 Nov), on a computer
-1920 x 950: 1 month view with the day card; 2 Alliance Championship panel, Timeline; 3 its
-Rules; 4 its Rewards; 5 SvS panel; 6 SvS Results; 7 Foundry Battle panel; 8 Filters; 9 the
-account menu; 10 week view; 11 year view; 12 to 19 the other pages (their order was not
-written down). Made again with /tmp/panels.py (STATES lists them). Done: 1, 2 and 3. Now: 4.
+## The redesign plan (her words: "highly important")
+
+We go through the redesigned site screen by screen with Roxanne, phone first, and change only
+what she asks. For every event panel, ask her whether its fold arrows stay (removed on Alliance
+Championship). The 19 review screens are Claude's 1920 x 950 renders (26 Nov):
+
+1. Month view with the day card: done.
+2. Alliance Championship panel, Timeline: done.
+3. Alliance Championship, Rules: done.
+4. Alliance Championship, Rewards: done 27 Nov (see "Rewards, 27 Nov" below).
+5. SvS panel. <- next
+6. SvS, Results tab.
+7. Foundry Battle panel.
+8. Filters.
+9. The account menu.
+10. Week view.
+11. Year view.
+12-19. The other pages. Their names were never written down (Claude's mistake). They were
+    the remaining pages of the site; render each page that is not in 1-11 (Fortress season
+    and rewards, Invites, New group, the State page, My alliance pages, the player profile,
+    Submissions, Transfers) and go through them with her in turn.
+
+Fishing (done 27 Nov, mockup now live): one-line bar "Fishing SUMMER" with the fish and a white
+mark at the end of fishing (the day before the event ends) and a golden Sunken Treasure Hunt
+line under it; no Timeline, no Mine, no Edit; Mini-game and Summer in the head; tabs Guide
+(how to play, with item pictures) and Rewards (Club as reward tracks, Ranking Rewards). Item
+pictures to come from her: notes/images-needed.md. Seasons go winter, spring, summer, autumn,
+one a month (catalog seasonOrder/seasonKnown). Next run (Autumn): ask her for that season's
+chances (saved for Summer in point-sources list "chances", not shown), the reward item names,
+the daily mission amounts and the missions screens; daily and season mission targets are in
+data/captures/fishing.md (from WoS Guru, not shown yet).
+
+### Rewards, 27 Nov (rules for every event, in design-decisions.md)
+
+- Every event's reward lists one after another on one page, each under its heading; tiers and
+  bands are tabs like the event's own tabs (no boxes inside boxes, no filled pills).
+- Rank columns: number right, rewards left. Reward rows divided by space, no lines.
+- Notes in Rewards are quiet (11 px, faint). Prestige-type rewards: 2 x 2 big squares, the
+  border scaled, how long they last as a label on the reward ("14 days").
+- Alliance Championship: Tier Rewards with a tab per tier (all six from the game), the open
+  tier's Prestige Rewards (Ultimate only) and its group ranks with "+2 ★"; KO1, KO2, Defeat.
+- Reward tracks (Fishing's Club): a band per track under its medal, free / first pack /
+  second pack, numbers right; a new element for every event that has tracks.
+- Shown to her only for Alliance Championship and Fishing: the one-page look on the other
+  events (Showdown, Winter Siege, KoI, Hellfire, Frostfire...) is live but she has not seen it.
+
+### The event head, 27 Nov
+
+- What she approves on one event's head applies to every event. Results sits at the top right
+  where it was approved. No Edit in any head (date, repeat and alliance-time edits come back
+  later in a design that makes sense; alliance times will be edited in place).
+- The alliance's tier under the name in capitals (no word "tier"), a tiny edit for R4s only.
+  Open: what R4s see when no tier is set (now "TIER NOT SET"; she does not want the word).
+  To build: the tiny edit's picker, and the tier saved per run (a new run takes the current
+  tier; a change applies from that run on; past runs keep theirs). Today the tier is per
+  alliance (alliance_records.championship_tier, winter_siege_tier); no alliance has one set.
+  The screenshots she sent of all six tiers were examples from another state's account.
 
 ### Pushed 27 Nov, 07:46 (her time)
 
