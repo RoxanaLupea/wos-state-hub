@@ -450,8 +450,9 @@ function rewardsFold(eventTypeId: string, state: RewardViewState): string {
   }
 
   let html = '<details class="points-list rewards-fold" open><summary>Rewards</summary>';
-  // Every list one after another, each under its own heading (Alliance Championship).
-  if (eventTypeById(eventTypeId)?.rewardListsTogether) {
+  // Every list one after another, each under its own heading, its tiers or bands as tabs
+  // (Alliance Championship's look, for every event, Roxanne 27 Nov).
+  if (lists.length) {
     for (const one of lists) {
       const oneRows = rewardsOf(eventTypeId, one);
       const oneBands: string[] = [];
@@ -479,8 +480,8 @@ function rewardsFold(eventTypeId: string, state: RewardViewState): string {
       html += one === 'group'
         ? `<div class="reward-sub">${escapeForPage(rewardListName(eventTypeId, one))}</div>` +
           rewardListHtml(one, oneBand, 1, oneShown, eventTypeId, noteHtml, bandButtons)
-        : `<div class="reward-sub">${escapeForPage(rewardListName(eventTypeId, one))}</div>` + bandButtons + noteHtml +
-          rewardListHtml(one, oneBand, 1, oneShown, eventTypeId);
+        : (lists.length > 1 ? `<div class="reward-sub">${escapeForPage(rewardListName(eventTypeId, one))}</div>` : '') +
+          bandButtons + noteHtml + rewardListHtml(one, oneBand, oneBands.length, oneShown, eventTypeId);
     }
     return html + '</details>';
   }
