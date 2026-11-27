@@ -87,6 +87,10 @@ to where it sits. A new element is fine, but say it is new. Before showing anyth
 render every page before and after the change and compare them: nothing outside the
 change may move. She must be able to count on the work without inspecting it closely.
 
+Sizes are standard (one-line and two-line bars, and so on). When a change moves an element
+to another standard size or type (a one-line bar becoming a two-line bar), say so plainly
+when showing it; she must never be the one to catch it (Roxanne, 27 Nov).
+
 Every box whose content can be taller than it scrolls, phone and computer, with no
 scrollbar drawn anywhere; a fade at its bottom says it scrolls, the standard for the whole
 site (main.ts FADING_BOXES); items never touch (Roxanne, 27 Nov: "Make sure you double check
