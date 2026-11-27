@@ -98,3 +98,81 @@ the rewards have not been sent yet.
 The Fishing Pro Set may be available outside Fishing Tournament times. Leftover Fishing
 Tokens are kept as the Tokens and Points rules say after the tournament ends; other items
 carry over seasonally.
+
+## Event tabs, sent 27 Nov 2026 (12 screenshots, the last day)
+
+The owner: on the last day (27 Nov) fishing is no longer possible, though the event's tabs
+are still there. The Fishing Tournament tab shows "UTC 2026/11/27-2026/11/28" with 17:57:05
+left (taken about 06:03 UTC), so the tabs close at 00:00 UTC on 28 Nov. Item names in
+brackets are read from the pictures and not confirmed.
+
+### Fishing Tournament tab
+"My Ice Fishing Points: 0. You did not rank on the Leaderboard on this occasion! Better luck
+next time."
+
+### Ice Fishing Club
+Lv. 1, 0/100. Three reward tracks per level: the free one (bronze medal), a locked silver one
+and a locked gold one (two items).
+
+| Level | Free | Silver | Gold |
+|---|---|---|---|
+| 1 | (chest) x5, claimed | (silver medal) | (gold medal), (three soldiers) x1 |
+| 2 | (fishing reel) x1 | (treasure chart) x1 | (treasure chart) x1, 1h speedup x3 |
+| 3 | (lantern) x1 | (hero picture) x1 | 1h speedup x2, 1K gems x1 |
+| 4 | (lure) x1 | (book, swords) x2 | 10K EXP x3, 1h speedup x6 |
+| 5 | (treasure chart) x1 | (treasure chart) x1 | (treasure chart) x1, (grey mystery chest) x2 |
+| 6 | (book, flag) x1 | 1h speedup x5 | 1h speedup x5, 1K gems x1 |
+| 7 | (book, swords) x1 | 1K gems x1 | (book, swords) x3, (soldier, green up arrow) x1 |
+| 8 | 1h speedup x2 | 1h speedup x5 | 1h speedup x6, 1K gems x1 |
+| 9 | (book, flag) x1 | (book, flag) x2 | (treasure chart) x1, (flamethrower soldier, up arrow) x1 |
+| 10 | (conch) x1 | (conch) x1 | (conch) x1, (grey mystery chest) x10 |
+| 11 | (gold key) x1 | 1h speedup x6 | (book, flag) x3, (shield soldier, up arrow) x1 |
+| 12 | 1h speedup x2 | (gold key) x2 | (book, swords) x3, 1K gems x1 |
+| 13 | (purple puzzle piece) x5 | (book, swords) x2 | (gold puzzle piece) x1, (soldier, up arrow) x1 |
+| 14 | 1h speedup x3 | (grey stone, red hammer) x2 | 1h speedup x7, 1h speedup x7 |
+| 15 | (gold puzzle piece) x1 | (conch) x1 | (conch) x1, 1K gems x1 |
+| 16 | (book, swords) x1 | 10K EXP x2 | (book, flag) x3, 3h speedup x2 |
+| 17 | 10K EXP x1 | (book, flag) x2 | 10K EXP x3, (spear soldier, red down arrow) x1 |
+| 18 | (gold puzzle piece) x1 | (book, swords) x2 | 3h speedup x3, 3h speedup x3 |
+| 19 | (book, flag) x1 | 1h speedup x10 | (book, swords) x3, (shield soldier, red down arrow) x1 |
+| 20 | 1K gems x2 | (book, swords) x2 | (book, flag) x3, 8h speedup x2 |
+| 21 | 3h speedup x3 | (gold puzzle piece) x2 | (gold puzzle piece) x2, (three soldiers) x1 |
+
+"Next Supply: 0/2,000. After all the rewards have been claimed, every 2,000 points gained will
+grant an extra supply!"
+
+### Master Fisher Leaderboard (27 Nov, final)
+1 [TFF]Gigz #840 120,482; 2 [LOM]Starling #408 91,670; 3 [WoV]NesimEMRE #408 74,710;
+4 [TOP]Noirin #1458 70,756; 5 [TOP]Noirin's juju B #1458 61,300; 6 [DVL]Innocent_Terry_ #1458
+58,796; 7 [TOP]Jazz #1458 54,150; 8 [WoV] (name in styled letters) #408 46,278;
+9 [SKY]Victor888教官 #1458 43,690; 10 [BtX]CapA Steven 41,956 (state cut off).
+The owner's [JSV]Roxy Foxy #1458: Unranked, 0.
+
+Ranking Rewards ("Rewards will be sent through mail."). The 30-day items: (a city decoration),
+(an avatar frame), (a whale). Speedups are 1h construction, research and training unless said.
+- 1: decoration, frame, whale (30 days each), 50K gems, speedups x20 each
+- 2: the same, 30K gems, x15 each
+- 3: the same, 20K gems, x13 each
+- 4-6: the same, 10K gems, x9 each
+- 7-10: decoration, frame, 6,500 gems, x7 each
+- 11-15: decoration, frame, 3,500 gems, x6 each
+- 16-50: 2,000 gems, frame (30 days), x5 each
+- 51-100: 1,500 gems, 5-min construction, research and training speedups x40 each
+- 101-500: 1,000 gems, 5-min speedups x25 each
+- Unranked: "No ranking rewards to show"
+
+### Sunken Treasure Hunt
+Hunt for treasure 1 time: 1,500 Fishing Tokens; 10 times: 15,000. The board: (gold puzzle
+piece) x5, resource chest x80, (grey mystery chest) x1, (grey stone, red hammer) x1, 1h speedup
+x1, (silver bar) 1,000, (scroll) x1, (hex nut) 100 x1, (bottle) x10, 1h speedup x5, (gold puzzle
+piece) x1, resource chest x80, (red gem) x5, (grey stone, red hammer) x5.
+
+### Guide
+"Current season: Summer". Five kinds (fish, diving mask, chest, coral, trident). Collection
+milestones at 5, 80, 105, 130, 155 and 180 stars (the owner: 55); fish caught 14/150; the
+collection's reward is two decorations (claim).
+
+### Fishing Pro Set (pack)
+"A fine Fishing Kit Set to help you concentrate on the rarest and most valuable fish!" 500 gems,
+(grey stone, red hammer) x3, (treasure chart) x1, (conch) x1, (ticket) x1, Fishing Tokens (200,
+cut off); 5580%; 4,99 RON; "Event Remaining: 1"; 500 (gift points).
