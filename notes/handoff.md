@@ -5,7 +5,8 @@ Do CLAUDE.md's setup first. Updated 27 Nov 2026.
 ## Now
 
 Next Fishing run (Autumn, a month after 24 Nov 2026): ask Roxanne for that season's
-chances (her ask, 27 Nov).
+chances (her ask, 27 Nov). Summer's are saved (point-sources list "chances") but not shown;
+compare them then and decide how to show them.
 
 ### The calendar review on common-size: the screens
 

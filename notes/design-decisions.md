@@ -1621,3 +1621,6 @@ Fishing's panel (27 Nov): tabs Rules, How to fish, Chances; no Edit ("there is n
 edit about this fishing tournament"); no Mine ("we're not gonna record shit here"); Mini-game
 and the season in the head ("add it to the tournament, not to the rules"). The chances are
 Summer's: "So these are the chances for summer. Ask me for the next one next time."
+Chances (27 Nov, 08:56): "don't mark them as these are chances in summer, because it's
+confusing. We are gonna see what changes next time... save them but don't display them for now.
+Don't show the tab for now." They stay in point-sources (list "chances"), with no tab.
