@@ -54,6 +54,10 @@ notes/rules-and-open-items.md (game rules).
 - Never reinterpret a clear instruction silently. A rule set while working on a design is
   a working rule: when a better design needs something else, think, say so and bring the
   better design (25 Nov). Don't just agree.
+- Small or large (Roxanne, 27 Nov night: "when it's 1/2 pages just show me, i am losing it when
+  you build entire features without consulting me"): a change to one or two pages is made and
+  shown, never asked about first; a whole feature (a new tab, a new element, new data shown) is
+  discussed with her before anything is built.
 - When she points out a problem ("too narrow", "looks wrong"), ask how she wants it fixed
   before building anything; never pick a fix and build it on your own (26 Nov).
   A simple fault with one obvious fix (something shown twice, a stray row) is just fixed,
