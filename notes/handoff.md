@@ -4,6 +4,18 @@ Do CLAUDE.md's setup first. Updated 27 Nov 2026.
 
 ## Now
 
+### Pushed 27 Nov, 07:40 (her time)
+
+Live: no scrollbar anywhere, boxes that scroll fade at the bottom (FADING_BOXES); scrolled
+lists stay in place when something is ticked (KEPT_BOXES). Submissions (submissions.ts,
+table result_submissions, created on her yes): members submit Alliance Championship results
+(button Submit), R4s get a red dot and the menu's Submissions list, open a ticket to the
+event's Results to fix, Approve or Reject; the member gets a dot when it is resolved. Everyone
+who contributed is shown under the results with picture and in-game name (person-chip.ts).
+Open: Foundry and Canyon results by legion need their design (her screenshots are in
+data/captures); the Submissions page's design comes later; the bottom-sheet pop-ups later.
+Next: the calendar redesign review on common-size, screen 3 onward.
+
 ### Pushed 27 Nov, 07:15 (her time)
 
 Live on main: Alliance Championship results (championship-results.ts): the trophy Results
