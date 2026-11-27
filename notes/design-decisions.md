@@ -1403,3 +1403,6 @@ All nine are built.
   can edit the events from their alliance, and the R4s of that alliance get the notifications."
   One R4's answer settles it ("We don't need for our R4s to approve the same thing"); the item
   shows its status, resolved, approved or rejected, and by whom.
+- Instructions while editing (Roxanne, 27 Nov): "select victory lanes" rather than "tap the lanes
+  you won"; "It doesn't have to be bold, it doesn't have to be that thick, and it can be like
+  blue and have a star. Mark it as an instruction." Lanes start red and turn blue when tapped.
