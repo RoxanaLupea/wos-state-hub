@@ -4,6 +4,19 @@ Do CLAUDE.md's setup first. Updated 26 Nov 2026.
 
 ## Now
 
+### Pushed 27 Nov, 04:55 (her time)
+
+Live: the Records pin removed, Invites and Records scrollbars hidden, and the Invites group
+fixes: Create in New group saves the group at once (editing stays on); saving puts a group's
+people together on their list from where its first one is; the New group list keeps its
+scroll while people are ticked (main.ts keeps .inv .ng-list's place). Build green.
+
+The calendar redesign for the common screen is on branch common-size (pushed, not merged; the
+site deploys from main only). It has main's commits merged in. The review goes screen by screen
+through her 19 screenshots; screen 1 (month view with the day card) is the one in review.
+Open on the branch: the row order (fullest rows first) not yet confirmed; the side panels'
+fade; the phone nav font; "where's the glass".
+
 ### Invites and Records live (26 Nov, second chat)
 
 On her yes (18:20) supabase/transfer-invites.sql and supabase/blacklist.sql were run (the
