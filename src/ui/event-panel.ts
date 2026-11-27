@@ -318,7 +318,7 @@ function rewardListHtml(list: string, band: string, bandCount: number, shown: Re
     const hasNotes = shown.some(row => row.note);
     return (list === 'targets' && band && bandCount === 1
       ? `<div class="reward-sub">${escapeForPage(band)}</div>` : '') +
-      `<div class="range-lines${hasNotes ? ' with-notes' : ''}">${rewardLines(shown)}</div>`;
+      `<div class="range-lines${hasNotes ? ' with-notes' : ''}${list === 'ko' ? ' group-ranking' : ''}">${rewardLines(shown)}</div>`;
   }
   if (list === 'group') {
     // Alliance Championship (Roxanne, 27 Nov): the tier first, clearly a tier; then the
