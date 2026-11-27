@@ -1203,13 +1203,32 @@ function pageControls(openPage: string, subPage: string): string {
 // event or another month opened.
 const startAtTop = { calendar: false, panel: false, wholePage: false };
 
+// The boxes that scroll on their own besides the calendar and the panels: the Invites
+// lists, Records, a profile, the New group list, the filters, a pop-up's list, and a
+// working page on a computer. Each is put back where it was after a drawing.
+const KEPT_BOXES = '.inv .lists, .inv .rscroll, .inv .prof-card, .inv .sheet, .inv .ng-list, .inv .ng-who, ' +
+  '.filters-sheet, .leave-prompt-box, .fort-board.fort-season, .work-page, .admin-page';
+
+// The kept boxes, each named by its classes (the ones that change with what is shown,
+// like the faded edges, left out) and its place among the boxes named the same.
+function keptBoxesOf(app: HTMLElement): [string, HTMLElement][] {
+  const seen = new Map<string, number>();
+  return Array.from(app.querySelectorAll<HTMLElement>(KEPT_BOXES)).map(box => {
+    const name = Array.from(box.classList).filter(one => !/^more-/.test(one)).sort().join('.');
+    const count = seen.get(name) ?? 0;
+    seen.set(name, count + 1);
+    return [name + '#' + count, box] as [string, HTMLElement];
+  });
+}
+
 interface ScrollPlaces {
   window: number;
   calendar: number;
   panel: number;
   eventBody: number;
   weeks: number;
-  inviteBoxes: number[];
+  // Each kept box by what it is (its classes, and which one of those it is).
+  inviteBoxes: Map<string, number>;
 }
 
 function scrollPlaces(app: HTMLElement): ScrollPlaces {
@@ -1219,9 +1238,9 @@ function scrollPlaces(app: HTMLElement): ScrollPlaces {
     weeks: app.querySelector<HTMLElement>('.calendar-panel .weeks')?.scrollTop ?? 0,
     panel: app.querySelector<HTMLElement>('.day-panel')?.scrollTop ?? 0,
     eventBody: app.querySelector<HTMLElement>('.event-page-body')?.scrollTop ?? 0,
-    // The Invites lists, Records and a profile scroll in boxes of their own on a computer;
-    // the New group list in its own box everywhere, kept while people are ticked (27 Nov).
-    inviteBoxes: Array.from(app.querySelectorAll<HTMLElement>('.inv .lists, .inv .rscroll, .inv .prof-card, .inv .sheet, .inv .ng-list')).map(box => box.scrollTop)
+    // Every list in a box of its own stays where it was while things in it are ticked
+    // (Roxanne, 27 Nov: "I don't want my list to jump when I'm selecting things").
+    inviteBoxes: new Map(keptBoxesOf(app).map(([key, box]) => [key, box.scrollTop]))
   };
 }
 
@@ -1336,8 +1355,7 @@ function putBackScrollPlaces(app: HTMLElement, places: ScrollPlaces): void {
     if (weeks) weeks.scrollTop = places.weeks;
     if (panel) panel.scrollTop = startAtTop.panel ? 0 : places.panel;
     if (eventBody) eventBody.scrollTop = startAtTop.panel ? 0 : places.eventBody;
-    Array.from(app.querySelectorAll<HTMLElement>('.inv .lists, .inv .rscroll, .inv .prof-card, .inv .sheet, .inv .ng-list'))
-      .forEach((box, index) => { box.scrollTop = places.inviteBoxes[index] ?? 0; });
+    for (const [key, box] of keptBoxesOf(app)) box.scrollTop = places.inviteBoxes.get(key) ?? 0;
   }
   // The site's first drawing on a phone starts at the top, whatever the browser kept
   // from before a reload (owner, 25 Nov).

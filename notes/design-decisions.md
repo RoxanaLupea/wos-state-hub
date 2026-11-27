@@ -1440,3 +1440,7 @@ All nine are built.
 - Scrollbars (Roxanne, 27 Nov): "Don't want any scroll bars anywhere. It should just be
   scrollable. We tell them that it's scrollable by having it faded a little at the bottom.
   That's the standard practice for the entire site."
+- Lists keep their place (Roxanne, 27 Nov): "Whenever a list is scrollable and I check or uncheck
+  a thing ... it jumps to the top ... I don't want my list to jump when I'm selecting things."
+  Every box that scrolls on its own is put back where it was after each drawing (main.ts
+  KEPT_BOXES), PC and phone.
