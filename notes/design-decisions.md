@@ -1915,3 +1915,10 @@ alliance-time forms it opened go to the admin menu (to be designed).
   and its in-place editing are one shared element for every event with alliance times, not Foundry's
   own. The alliance's times page on the State page (not designed yet) only displays them; when one
   changes in its event, that page shows the change.
+- Academies' times sit under their main alliance's name on the alliance times page (Roxanne, 27 Nov
+  night): "for Crazy Joe, for example, we can set only one time per alliance, but we'll do 2 for sure".
+- A Foundry legion's result (Roxanne, 27 Nov night): built from the battle mail, playing with its colour
+  accents; the comparison between the two alliances ("the defeats, the control, all of that"); each
+  title's person shown as a real player, picture and name, never plain text. Member points are recorded
+  too, "collapsed, and we can expand that for each legion". Tracking members across events (as the xSK
+  Alliance Records spreadsheets did, with the Foundry spreadsheet) is wanted, but not on the event.
