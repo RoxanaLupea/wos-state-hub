@@ -1060,6 +1060,8 @@ function troopsOfAccount(inGameId: string): Record<string, { tier: string; skill
 // A red dot on the menu: a ticket waits for this R4, or one of this member's was resolved
 // since they last opened Submissions.
 const SUBMISSIONS_SEEN = 'submissionsSeenUntil';
+// The Submissions sections closed on a phone: Approved and Rejected start closed.
+const closedSubmissionSections = new Set<string>(['approved', 'rejected']);
 function submissionsDot(): boolean {
   if (!person) return false;
   const signedIn = person;
@@ -1180,6 +1182,8 @@ function workingPageMarkup(openPage: string, subPage: string): string {
     const signedIn = person;
     markSubmissionsSeen();
     return submissionsPage({ rows: rowsOf('result_submissions'), userId: signedIn.userId, playerOf,
+      isReviewer: isAdmin(signedIn) || signedIn.roles.some(one => one.role === 'alliance_manager'),
+      closedSections: closedSubmissionSections,
       leads: allianceId => leadsAlliance(signedIn, allianceId) });
   }
   if (key === 'map|territory') return territoryPage(workContext());
@@ -1893,6 +1897,14 @@ function handleClicks(event: MouseEvent): void {
     return;
   }
 
+  const submissionSection = target.closest<HTMLElement>('[data-sub-section]');
+  if (submissionSection) {
+    const section = submissionSection.dataset.subSection as string;
+    if (closedSubmissionSections.has(section)) closedSubmissionSections.delete(section);
+    else closedSubmissionSections.add(section);
+    draw();
+    return;
+  }
   const submissionButton = target.closest<HTMLElement>('[data-open-submission]');
   if (submissionButton) { openSubmission(submissionButton.dataset.openSubmission as string); draw(); return; }
   const rejectButton = target.closest<HTMLElement>('[data-reject-submission]');

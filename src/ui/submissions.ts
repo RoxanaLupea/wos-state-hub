@@ -41,6 +41,10 @@ export function isOpen(row: Row): boolean {
 
 export interface SubmissionsPageOptions {
   rows: Row[] | null;
+  // An R4 (or admin) sees the tickets as New; a member sees theirs as Pending.
+  isReviewer: boolean;
+  // The phone's sections the player closed (open ones are New or Pending at first).
+  closedSections: Set<string>;
   userId: string;
   playerOf: (userId: string) => PersonShown;
   leads: (allianceId: string) => boolean;
@@ -53,23 +57,35 @@ function statusText(row: Row, playerOf: (userId: string) => PersonShown): string
     (row.resolved_by ? personChip(playerOf(String(row.resolved_by))) : '') + '</span>';
 }
 
-// The Submissions page: every ticket this person may see, open ones first, newest first.
+// One ticket: the event and its date, the alliance, who submitted it, and how it was
+// resolved. Each opens the event's Results on that date.
+function ticket(row: Row, options: SubmissionsPageOptions, withStatus: boolean): string {
+  const reviews = isOpen(row) && options.leads(String(row.alliance_id));
+  const event = `${eventTypeName(String(row.event_type_id))} of ${longDayText(dayFromText(String(row.event_date)))}`;
+  return `<button type="button" class="sub-item${isOpen(row) ? ' open' : ''}" data-open-submission="${escapeForPage(String(row.id))}">` +
+    `<span class="sub-event">${reviews ? '<i class="sub-dot" aria-label="To review"></i>' : ''}${escapeForPage(event)}</span>` +
+    `<span class="sub-who">${escapeForPage(allianceTag(String(row.alliance_id)))} · Submitted by ` +
+    `${personChip(options.playerOf(String(row.submitted_by)))}</span>` +
+    (withStatus || !isOpen(row) ? statusText(row, options.playerOf) : '') + '</button>';
+}
+
+// The Submissions page (Roxanne, 27 Nov): three columns like Jira on a computer, three
+// sections that open and close on a phone. New, Approved and Rejected for an R4; Pending,
+// Approved and Rejected for a member. Newest first in each.
 export function submissionsPage(options: SubmissionsPageOptions): string {
   if (!options.rows) return '<div class="work-page submissions"><p class="work-empty">Loading…</p></div>';
-  const rows = options.rows.slice().sort((left, right) =>
-    Number(isOpen(right)) - Number(isOpen(left)) || String(right.submitted_at).localeCompare(String(left.submitted_at)));
-  const items = rows.map(row => {
-    const reviews = isOpen(row) && options.leads(String(row.alliance_id));
-    const event = `${eventTypeName(String(row.event_type_id))} of ${longDayText(dayFromText(String(row.event_date)))}`;
-    return `<button type="button" class="sub-item${isOpen(row) ? ' open' : ''}" data-open-submission="${escapeForPage(String(row.id))}">` +
-      `<span class="sub-event">${reviews ? '<i class="sub-dot" aria-label="To review"></i>' : ''}${escapeForPage(event)}</span>` +
-      `<span class="sub-who">${escapeForPage(allianceTag(String(row.alliance_id)))} · Submitted by ` +
-      `${personChip(options.playerOf(String(row.submitted_by)))}</span>` +
-      statusText(row, options.playerOf) + '</button>';
+  const newestFirst = (left: Row, right: Row) => String(right.submitted_at).localeCompare(String(left.submitted_at));
+  const columns: [string, string][] = [['open', options.isReviewer ? 'New' : 'Pending'], ['approved', 'Approved'], ['rejected', 'Rejected']];
+  const board = columns.map(([status, title]) => {
+    const tickets = options.rows!.filter(row => row.status === status).sort(newestFirst).map(row => ticket(row, options, false)).join('');
+    const closed = options.closedSections.has(status);
+    return `<section class="sub-column ${status}${closed ? ' closed' : ''}">` +
+      `<button type="button" class="sub-column-title" data-sub-section="${status}" aria-expanded="${!closed}">${title}` +
+      `<span class="sub-chevron" aria-hidden="true"></span></button>` +
+      `<div class="sub-column-list">${tickets || '<p class="sub-empty">None</p>'}</div></section>`;
   }).join('');
   return '<div class="work-page submissions"><section class="work-section"><div class="work-head"><h2>Submissions</h2></div>' +
-    (items ? `<div class="sub-list">${items}</div>` : '<p class="work-empty">Nothing has been submitted yet.</p>') +
-    '</section></div>';
+    `<div class="sub-board">${board}</div></section></div>`;
 }
 
 // Whether the menu shows a red dot: for an R4, a ticket of their alliance still open; for

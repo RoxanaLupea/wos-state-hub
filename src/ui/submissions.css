@@ -1,5 +1,4 @@
 /* The Submissions page: a plain list for now (Roxanne, 27 Nov: the design comes later). */
-.submissions .sub-list { display: flex; flex-direction: column; gap: 6px; }
 .sub-item { display: grid; gap: 3px; padding: 10px 12px; border: none; border-radius: 10px; background: rgba(255, 255, 255, 0.04);
   font: inherit; color: var(--text); text-align: left; cursor: pointer; }
 .sub-item.open { background: rgba(255, 255, 255, 0.08); }
@@ -14,3 +13,25 @@
 .me-button { position: relative; }
 .me-button .menu-dot { position: absolute; top: 2px; right: 2px; box-shadow: 0 0 0 2px #121A2B; }
 .account-menu-item .menu-dot { margin-left: 8px; }
+
+/* Three sections, each opened or closed by its title on a phone; three columns side by
+   side on a computer, like Jira, always open. */
+.sub-board { display: flex; flex-direction: column; gap: 14px; }
+.sub-column { display: flex; flex-direction: column; gap: 10px; }
+.sub-column-title { display: flex; align-items: center; gap: 8px; margin: 0; padding: 4px 0; border: none; background: none; cursor: pointer;
+  font: inherit; font-size: 13px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); text-align: left; }
+.sub-column.open .sub-column-title { color: var(--ours); }
+.sub-column.approved .sub-column-title { color: #7FD39A; }
+.sub-column.rejected .sub-column-title { color: var(--theirs); }
+.sub-chevron { width: 8px; height: 8px; margin-top: 2px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(-135deg); }
+.sub-column.closed .sub-chevron { margin-top: -3px; transform: rotate(45deg); }
+.sub-column.closed .sub-column-list { display: none; }
+.sub-column-list { display: flex; flex-direction: column; gap: 8px; }
+.sub-empty { margin: 0; font-size: 13px; font-weight: 600; color: var(--text-faint); }
+@media (min-width: 1000px) {
+  .sub-board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: start; }
+  .sub-column { padding: 14px; border-radius: 14px; background: rgba(255, 255, 255, 0.03); }
+  .sub-column-title { cursor: default; pointer-events: none; }
+  .sub-chevron { display: none; }
+  .sub-column.closed .sub-column-list { display: flex; }
+}
