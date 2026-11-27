@@ -1911,6 +1911,8 @@ function handleClicks(event: MouseEvent): void {
     if (pageButton.dataset.page === 'player') { openListed = null; lookUp = { kind: 'none' }; dropDraft('listed'); playerEditing.delete('listed'); }
     view.openPage = pageButton.dataset.page as string;
     view.openSubPage = '';
+    // Opening Submissions clears the member's red dot at once.
+    if (view.openPage === 'submissions') markSubmissionsSeen();
     startAtTop.wholePage = true;
     draw();
     // "Check history" goes to its part of the page.
