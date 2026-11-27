@@ -1614,3 +1614,6 @@ until then).
 Changed 08:40: "the blue phishing square thingy is the phishing event, and it's gonna have a
 vertical line with the fish before it, telling us that the actual phishing ended, and then only
 have the golden line with the sunken treasure logo at the end." No white line under the bar.
+No Timeline for Fishing (27 Nov): "I don't think we need a timeline for fishing. Like, we
+already have the start at the top, so, and like the time, so it's fine." The right panel
+shows SUMMER under Fishing Tournament, like a phase.
