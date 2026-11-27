@@ -41,12 +41,26 @@ const GLORY_SECTIONS: Record<string, string> = {
   top4: 'Top 4 Alliance Glory'
 };
 
+// Under the Win and Loss tabs, so the side is not written again (Roxanne, 27 Nov: "Legion
+// members / WIN / LOSS").
 const COMBATANT_SECTIONS: Record<string, string> = {
-  win: "Winning legion's members",
-  lose: "Losing legion's members",
-  'personal-win': "Winning legion's combatants, by Personal Arsenal Points",
-  'personal-lose': "Losing legion's combatants, by Personal Arsenal Points"
+  win: 'Legion members',
+  lose: 'Legion members',
+  'personal-win': 'Combatants, by Personal Arsenal Points',
+  'personal-lose': 'Combatants, by Personal Arsenal Points'
 };
+
+// The tabs of rewards that depend on winning or losing.
+const SIDE_NAMES: Record<string, Record<string, string>> = {
+  combatant: { win: 'Win', lose: 'Loss' },
+  star: { win: 'Win', lose: 'Loss or draw' },
+  ranking: { win: 'Win', lose: 'Loss or draw' },
+  daily: { win: 'Win', lose: 'Loss or draw' }
+};
+
+export function rewardSideName(list: string, side: string): string {
+  return SIDE_NAMES[list]?.[side] ?? side;
+}
 
 const DAILY_SECTIONS: Record<string, string> = {
   win: 'Winning alliance of the day',

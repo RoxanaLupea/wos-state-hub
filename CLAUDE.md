@@ -34,6 +34,9 @@ notes/rules-and-open-items.md (game rules).
   better design (25 Nov). Don't just agree.
 - When she points out a problem ("too narrow", "looks wrong"), ask how she wants it fixed
   before building anything; never pick a fix and build it on your own (26 Nov).
+  A simple fault with one obvious fix (something shown twice, a stray row) is just fixed,
+  not asked about: "This is a simple fix. So you shouldn't be asking for simple fixes like
+  this. Something is doubled, it has to not be doubled" (27 Nov).
 - When she asks how something should work or where it should go, ask how she wants it before
   mocking or proposing anything: she usually has the idea already (27 Nov). Send screenshots as
   soon as they exist, never hold them back.
@@ -106,8 +109,15 @@ that from now on"). Run tools/render/scroll-audit.py after every change
 - Game information she gives (screenshots, numbers) goes into the database right away,
   with her as the source that confirms it: updated_by her account and a "source" detail
   (25 Nov). Data from other sites (WoS Oracle) says so in its source.
+- Every game screenshot she sends is kept as a file on the branch "screenshots" (no code on
+  it), in a folder per event, named by date and what it shows (27 Nov: "keep them on a branch
+  in the future, per event, we'll probably have to look back at things"). Work on it in a
+  worktree: `git worktree add /home/claude/wos-screenshots screenshots` after fetching it
+  (`git fetch --depth=1 origin screenshots:screenshots`).
 - Her "ok" on a design accepts it; it goes live with the next push. When she says push,
   everything she accepted goes live together.
+- Whatever she accepts is committed right away, so the work is always on a branch (27 Nov:
+  "when i accept something then you make the commit"). Pushing still waits for her yes.
 - A design tried in versions goes on a fresh branch from main, merged and deleted once
   she accepts. Everything else is done on main.
 

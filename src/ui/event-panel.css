@@ -76,9 +76,16 @@
 
 /* ---------- The whole event as one timeline ---------- */
 .event-tree { display: flex; flex-direction: column; }
-.event-tree .tree-row { display: grid; grid-template-columns: 84px 24px 26px minmax(0, 1fr) 16px; align-items: center; min-height: 44px; border-radius: 10px; }
+/* Every timeline (Roxanne, 27 Nov: "make it standard for timelines"): a row is only as tall
+   as its words, with 7px above and below the words beside the line and 5px above and below
+   the date and time, so the timeline stays compact. */
+.event-tree .tree-row { display: grid; grid-template-columns: 84px 24px 26px minmax(0, 1fr) 16px; align-items: center; border-radius: 10px; }
+.event-tree .tree-label { padding-top: 7px; padding-bottom: 7px; white-space: pre-line; }
+.event-tree .tree-when { padding-top: 5px; padding-bottom: 5px; }
 /* With a part beside it (Trade Route): its line in a narrow column just left of the main line. */
-.event-tree.has-side .tree-row { grid-template-columns: 84px 10px 24px 26px minmax(0, 1fr) 16px; }
+/* Lines beside each other in a timeline sit 20px apart, centre to centre (Roxanne, 27 Nov:
+   "let's establish a standard distance between them"). */
+.event-tree.has-side .tree-row { grid-template-columns: 84px 17px 24px 26px minmax(0, 1fr) 16px; }
 .event-tree.has-side .tree-row.main .tree-label, .event-tree.has-side .tree-row.nested .tree-label, .event-tree.has-side .tree-row.side .tree-label { grid-column: 4 / 6; }
 .tree-row.main .tree-label, .tree-row.nested .tree-label, .tree-row.side .tree-label { grid-column: 3 / 5; }
 /* A step inside the event: a smaller circle on the line, smaller words on the same row (no connector lines). */
@@ -161,8 +168,8 @@
 /* A day's points open under its row; the main line keeps going on their left. */
 .tree-points { position: relative; padding: 2px 8px 8px 116px; }
 .tree-points::before { content: ''; position: absolute; left: 94.5px; top: 0; bottom: 0; width: 3px; background: var(--line-below); }
-.event-tree.has-side .tree-points { padding-left: 126px; }
-.event-tree.has-side .tree-points::before { left: 104.5px; }
+.event-tree.has-side .tree-points { padding-left: 133px; }
+.event-tree.has-side .tree-points::before { left: 111.5px; }
 .tree-points.with-side::after { content: ''; position: absolute; left: 92px; top: 0; bottom: 0; width: 2px; background: var(--side-color); }
 /* Fortress Friday: one row per fortress and stronghold. */
 .fort-battle-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid var(--glass-border); font-size: 14px; font-weight: 700; }
@@ -257,7 +264,9 @@
 .reward-row > .reward-label { text-align: right; }
 /* Notes in a Rewards tab are only notes: lighter and smaller than the rewards (Roxanne,
    27 Nov). */
-.event-folds .rewards-tab .points-note { font-size: 11px; font-weight: 400; line-height: 1.45; color: var(--text-faint); text-wrap: pretty; }
+/* Notes on reward and mission pages: small but easy to read (Roxanne, 27 Nov: "make the long text
+   more white and smaller, I still wanna be able to read it"). */
+.event-folds .rewards-tab .points-note, .event-folds .merchant-tab .points-note, .event-folds .missions-tab .points-note { font-size: 10.5px; font-weight: 400; line-height: 1.45; color: var(--text-muted); text-wrap: pretty; }
 /* Alliance Championship's tier, its Prestige Rewards as big squares, and the group ranks
    starting on the left. */
 .tier-line { display: flex; align-items: baseline; gap: 8px; margin: 2px 0 4px; }
@@ -274,6 +283,24 @@
 .tier-rows .reward-label { overflow-wrap: normal; }
 /* Alliance Championship's Tier Rewards for the open group rank: its stars, then its rewards. */
 .info-tabs.rank-tabs { margin: 0 0 10px; gap: 14px; }
+/* Tabs inside a page share the row's width equally, each word centred in its part, and the
+   open tab's whole part is underlined (Roxanne, 27 Nov: "the line gets split ... the word will be
+   centered and the whole width of the section gets highlighted"). A word longer than its part
+   takes the room it needs; a row wider than the screen scrolls. */
+.info-tabs.rank-tabs { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(max-content, 1fr); gap: 0; }
+.info-tabs.rank-tabs .info-tab { text-align: center; padding-left: 0; padding-right: 0; }
+/* A second row of tabs under the reward lists' tabs (Tundra Arms League's Legion, Alliance,
+   State Rewards): words, not capitals, with no line under the row, so the two rows read as
+   two levels (Roxanne, 27 Nov). */
+/* The second level stays the words the approved version had, centred together, the open one
+   underlined under its word; only the first row of tabs splits its line (Roxanne, 27 Nov: "we do
+   not want 2 rows of tabs, so it's tabs and then something else for tabs"). */
+/* Every word of a lower level gets the same width, a little more than the widest word, and the
+   row sits in the centre (Roxanne, 27 Nov: "all sub-tabs. Make them the same width, a little bigger
+   than the biggest, and place them nicely in the center"). */
+.event-folds .info-tabs.rank-tabs.sub-tabs { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; justify-content: center;
+  gap: 10px; width: max-content; max-width: 100%; margin: 2px auto 12px; border-bottom: none; }
+.event-folds .info-tabs.rank-tabs.sub-tabs .info-tab { font-size: 12.5px; font-weight: 600; letter-spacing: 0; text-transform: none; padding: 4px 10px 5px; }
 /* Six tiers fit on a phone's line: the same tabs, a little tighter. */
 @media (max-width: 999.98px) {
   .info-tabs.rank-tabs { gap: 9px; }
@@ -293,11 +320,6 @@
 .club-cell.head img { width: 34px; height: 34px; object-fit: contain; border-radius: 6px; }
 @media (max-width: 999.98px) {
   .club-grid { grid-template-columns: 40px auto auto auto; column-gap: 6px; }
-  /* Fishing's ranking rewards keep a rank's seven rewards on one line on a phone: the
-     tiles a little smaller there, the rank column only as wide as "101–500". */
-  .event-page[data-event-type="fishing"] .wide-labels .reward-row { grid-template-columns: 44px 1fr; gap: 4px; }
-  .event-page[data-event-type="fishing"] .wide-labels .reward-items { flex-wrap: nowrap; gap: 2px; }
-  .event-page[data-event-type="fishing"] .wide-labels .reward-tile { width: 33px; height: 33px; border-radius: 6px; }
   .club-cell { gap: 3px; padding: 3px 5px; }
   .club-cell.head img { width: 30px; height: 30px; }
 }
@@ -314,9 +336,11 @@
 .reward-sub.with-picture { display: flex; align-items: center; gap: 8px; }
 .reward-sub.with-picture img { width: 28px; height: 28px; object-fit: contain; }
 .reward-row { display: grid; grid-template-columns: 56px 1fr; align-items: center; gap: 6px; padding: 7px 0; }
-.reward-label { font-size: 12.5px; font-weight: 800; color: var(--text-muted); overflow-wrap: anywhere; }
+.reward-label { font-size: 11.5px; font-weight: 800; color: var(--text-muted); overflow-wrap: anywhere; }
 .reward-label small { display: block; font-size: 10px; font-weight: 700; color: var(--text-faint); }
 .reward-items, .reward-flat { display: flex; flex-wrap: wrap; gap: 4px; }
+/* Ends a line of rewards early: the top ranks' extra rewards, then the ones every rank gets. */
+.reward-break { flex-basis: 100%; height: 0; }
 .reward-source { margin: 8px 0 2px; font-size: 11px; font-style: italic; color: var(--text-faint); }
 .merchant-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 8px; }
 .merchant-offer { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 2px; border-radius: 10px; background: rgba(255, 255, 255, 0.05); }
@@ -379,18 +403,20 @@
 /* Event timeline: the opening's label under a row's words (Match Prediction, ROUND 1). */
 .tree-sub { display: block; margin-top: 1px; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.85; }
 /* Event timeline with two part lines beside the main line (Tundra Arms League's predictions). */
-.event-tree.has-two-sides .tree-row { grid-template-columns: 84px 12px 12px 24px 26px minmax(0, 1fr) 16px; }
+.event-tree.has-two-sides .tree-row { grid-template-columns: 84px 20px 14px 24px 26px minmax(0, 1fr) 16px; }
 .event-tree.has-two-sides .tree-row .tree-label { grid-column: 5 / 7; }
-.event-tree.has-two-sides .tree-points { padding-left: 140px; }
-.event-tree.has-two-sides .tree-points::before { left: 118.5px; }
+.event-tree.has-two-sides .tree-points { padding-left: 150px; }
+.event-tree.has-two-sides .tree-points::before { left: 128.5px; }
 .event-tree.has-two-sides .tree-side::before, .event-tree.has-two-sides .tree-side::after { left: 5px; }
 .event-tree.has-two-sides .tree-side-logo, .event-tree.has-two-sides .tree-side .tree-cap,
 .event-tree.has-two-sides .tree-side-start { left: 6px; }
 /* An event's info in tabs (Info, Predictions, Rewards, Missions). */
 .reward-tabs.info-tabs { margin: 4px 0 8px; }
 /* Missions: each mission with its rewards under it. */
-.mission-row { display: flex; flex-direction: column; gap: 5px; padding: 7px 0; border-top: 1px solid var(--glass-border); }
-.mission-name { font-size: 13px; font-weight: 600; }
+.mission-row { display: flex; flex-direction: column; gap: 6px; padding: 7px 0; }
+/* A mission's name is written as a Prestige reward's name is (Roxanne, 27 Nov: "the fonts are
+   all over the place"): one style for the names of things on reward pages. */
+.mission-name { font-size: 12.5px; font-weight: 600; line-height: 1.3; color: var(--text-muted); }
 /* Secured items: the shield in the bottom right of the tile. */
 .reward-tile img.tile-secured { inset: auto; right: 1px; bottom: 1px; width: 42%; height: 42%; z-index: 1; }
 .reward-tile .tile-qty { z-index: 2; }
@@ -559,7 +585,7 @@
   --panel-section-gap: 25px;   /* from one section to the next title */
   --panel-bottom: 15px;        /* after the last thing */
 }
-.event-folds .tab-page.rules-tab, .event-folds .tab-page.rewards-tab,
+.event-folds .tab-page.rules-tab, .event-folds .tab-page.rewards-tab, .event-folds .tab-page.merchant-tab,
 .event-folds .tab-page.missions-tab, .event-folds .tab-page.points-tab {
   padding-top: calc(var(--panel-top) - 11.5px); padding-bottom: var(--panel-bottom);
 }
@@ -576,7 +602,7 @@
 .event-folds .tab-page > details.points-list > :not(summary) { margin-left: 0; margin-right: 0; }
 .event-folds .tab-page > details.points-list > p:first-of-type { margin-top: 0; }
 .event-folds .tab-page details .points-note.titled .note-title,
-.event-folds .rewards-tab .reward-sub {
+.event-folds .rewards-tab .reward-sub, .event-folds .merchant-tab .reward-sub {
   font-size: 14px; font-weight: 700; letter-spacing: 0; text-transform: none; color: var(--text);
 }
 
@@ -584,10 +610,13 @@
    its name as a heading in caps, the line under it, and its time and dot on the heading's
    line. The space above it sets each round apart; its Battle sits close under it. */
 .event-tree .tree-row.has-detail { align-items: start; }
-.event-tree .tree-row.has-detail .tree-when { padding-top: 21px; }
-.event-tree .tree-row.has-detail .tree-label { padding-top: 22px; }
+.event-tree .tree-row.has-detail .tree-when { padding-top: 10px; }
+.event-tree .tree-row.has-detail .tree-label { padding-top: 11px; padding-bottom: 3px; }
 .event-tree .tree-row.has-detail .tree-line { align-items: flex-start; }
-.event-tree .tree-row.has-detail .tree-step-dot { margin-top: 25px; }
+.event-tree .tree-row.has-detail .tree-step-dot { margin-top: 14px; }
+/* A row at the same moment as the row above: no time, no dot, close under it (27 Nov). */
+.event-tree .tree-row.same-time .tree-label { padding-top: 0; }
+.event-tree .tree-row.same-time .tree-when { padding-top: 0; padding-bottom: 0; }
 .event-page .tree-label.heading { font-size: 12.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); }
 .event-page .tree-label .tree-detail { display: block; margin: 3px 0 2px; font-size: 12px; font-weight: 500; line-height: 1.35;
   letter-spacing: 0; text-transform: none; color: var(--text-muted); }
@@ -609,3 +638,75 @@
 .event-page .tier-edit { padding: 2px; }
 .event-page .tier-edit .edit-icon { width: 14px; height: 14px; }
 .event-folds .tab-page > details.points-list.no-title > summary { display: none; }
+
+/* Champion's Glory: who wins them on top, the Prestige squares centred under it (Roxanne, 27 Nov). */
+.glory-rank { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.glory-rank + .glory-rank { margin-top: 25px; }
+.glory-rank-name { font-size: 14px; font-weight: 700; color: var(--text); text-align: center; }
+/* The game's tall ice frames (Roxanne's, 27 Nov): two to a row, the picture and its name inside. */
+.glory-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 132px)); justify-content: center; gap: 20px 30px; width: 100%; }
+.glory-card { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  aspect-ratio: 669 / 880; background-size: 100% 100%; background-repeat: no-repeat; padding: 28% 13% 16%; box-sizing: border-box; }
+.glory-card.top4 { aspect-ratio: 653 / 880; padding: 26% 13% 17%; }
+.glory-card img { width: 78%; aspect-ratio: 1; object-fit: contain; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35)); }
+/* Every name gets two lines' room, so the pictures of a row line up whatever the name's length. */
+.glory-card-name { min-height: 2.4em; max-width: 92%; display: flex; justify-content: center; align-items: center; font-size: 10.5px; font-weight: 700; line-height: 1.2; color: #FFFFFF; text-align: center;
+  text-shadow: 0 1px 2px rgba(10, 30, 70, 0.9); }
+/* Combatants' points ranges: the widest range is 87px, so five rewards fit one line. */
+@media (max-width: 600px) {
+  .event-folds .range-lines.combatant-ranges .reward-row { grid-template-columns: 87px 1fr; gap: 6px; }
+}
+/* Ranking lists drawn as the game draws them: every rank centred in its column, 1 to 3 as badges. */
+.ranking-badges .reward-row > .reward-label { text-align: center; }
+.ranking-badges .reward-label .rank-badge { display: block; width: 30px; height: 30px; margin: 0 auto; }
+
+/* The rank column is as wide as gives round tiles when six fill the rest (Roxanne, 27 Nov: "I like
+   round numbers"): 52 px gives 50 px tiles on a laptop and 60 px on a monitor; on a phone 56 px gives
+   36 px (32 px on a 360 px phone). */
+.event-folds { --rank-column: 52px; }
+@media (max-width: 480px) { .event-folds { --rank-column: 56px; } }
+/* Reward lists, the standard for every event (Roxanne, 27 Nov: "6 works"): six tiles a line,
+   as wide together as the panel leaves after the rank column, so every tile on a screen is
+   the same size and the amounts grow with it. Longer rows go onto a second line (the extras
+   first, see rewardLines). Rate lines (a tile and its name) and a timeline's day chests keep
+   their own shape. */
+.event-folds .reward-row:not(.day-chests .reward-row):not(.rate-lines .reward-row):not(.with-notes:not(.group-ranking) .reward-row) {
+  grid-template-columns: var(--rank-column) minmax(0, 1fr); gap: 4px;
+}
+/* The rank column fits the widest word of any rank ("Stronghold"); longer ranks break after
+   their dash ("2,000–" over "19,999"). */
+/* Labels grow with the tiles: 36% of a tile, so 13 px beside your phone's 36 px tiles, 18 px beside
+   the laptop's 50 px and about 22 px beside the monitor's 60 px (Roxanne, 27 Nov: "the numbers are
+   still tiny"). A label that still does not fit is made smaller by fitRewardLabels (main.ts). */
+.event-folds .rewards-fold, .event-folds .missions-tab { container-type: inline-size; }
+.event-folds .reward-row:not(.day-chests .reward-row):not(.rate-lines .reward-row):not(.with-notes:not(.group-ranking) .reward-row) > .reward-label {
+  white-space: normal; overflow-wrap: normal; font-size: calc((100cqw - var(--rank-column) - 24px) / 6 * 0.36);
+  /* Every label centred in its column, whatever the list (Roxanne, 27 Nov: "we're not consistent"). */
+  text-align: center;
+  /* Moved 10 px into the panel's margin and kept 10 px from the rewards (Roxanne, 27 Nov: "it's a
+     little too close to rewards for my liking"), so the tiles keep their size. */
+  margin-left: -10px; padding-right: 6px;
+}
+/* Labels and medals as big as the rank column lets them be (Roxanne, 27 Nov: "fix the numbers too.
+   See which one is the biggest and how big can it be ... Make them fit", "1, 2, 3 logos too"): the
+   widest word of any label but Winter Siege's "Stronghold" ("Chapter", Dreamscape) fits the
+   computer's 52 px column at 13 px. A medal is as big as a tile, never wider than the column. */
+.event-folds .ranking-badges { container-type: inline-size; }
+.event-folds .ranking-badges .reward-label .rank-badge {
+  width: min(var(--rank-column), (100cqw - var(--rank-column) - 24px) / 6);
+  height: auto; aspect-ratio: 1;
+}
+/* A list with no rank column (and a mission's rewards under its name) keeps the same tiles,
+   lined up under the rows' tiles (Roxanne, 27 Nov: "they have no excuse to be bigger ... they all
+   start at the same left coordinates"). */
+.event-folds .reward-flat:not(.day-chests .reward-flat), .event-folds .mission-row > .reward-items { padding-left: calc(var(--rank-column) + 4px); }
+.event-folds .reward-items:not(.day-chests .reward-items):not(.rate-lines .reward-items),
+.event-folds .reward-flat:not(.day-chests .reward-flat) {
+  display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px;
+}
+.event-folds :is(.reward-items, .reward-flat):not(.day-chests *):not(.rate-lines .reward-items) > .reward-tile {
+  width: 100%; height: auto; aspect-ratio: 1; border-radius: 16%; container-type: inline-size;
+}
+.event-folds :is(.reward-items, .reward-flat):not(.day-chests *):not(.rate-lines .reward-items) > .reward-tile .tile-top { font-size: 16cqw; }
+.event-folds :is(.reward-items, .reward-flat):not(.day-chests *):not(.rate-lines .reward-items) > .reward-tile .tile-qty { font-size: 20cqw; }
+.event-folds .reward-break { grid-column: 1 / -1; height: 0; margin-bottom: -4px; }

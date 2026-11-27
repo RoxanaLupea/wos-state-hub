@@ -126,3 +126,15 @@ Previous Presidents (before the state merger):
   2025-10-11; No.32 [PHX]singlearistocrat 2025-09-27; Supreme Invader #1274
   [WAR]Whiskey 2025-09-13; No.30 [IAM] Valkyrie 2025-08-30; Supreme [LEG]Scholly
   2025-08-16.
+
+### Alliance Championship mails, 1252 ([DUB]BAKinDUB, Ultimate tier), 27 Nov 2026
+Sent 27 Nov 2026 by the owner from her 1252 account (both mails dated 2026-11-27 13:59:59, expire
+2027-01-26 13:59:59).
+- "Congratulations to your Alliance for earning the Ultimate Alliance title decoration (valid
+  within 14 days of mailing)." Rewards: four items, each ×1, on purple tiles (the building, the
+  nameplate, the vehicle, the avatar frame: Knight of the Watch, Knight's Glory Nameplate, Knight of
+  Conquest, Knight's Glory Avatar Frame by their pictures).
+- Championship Rewards: "Your Alliance [DUB]BAKinDUB ranked no. 2 in your group in round Ultimate of
+  the Alliance Championship, participating members are entitled to the following rewards". Star
+  Rating: Ultimate, Tier 2: +1 star (green up arrow; the trophy shows 13 stars). Rewards: an orange
+  tile with a hero portrait, 25.6K; 5 min speedup ×55; resource chest ×720.

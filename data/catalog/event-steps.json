@@ -338,10 +338,52 @@
     "sortOrder": 89
   },
   {
-    "id": "st91",
-    "eventTypeId": "alliance-championship",
-    "startTimeUtc": "12:00",
-    "dayNumber": 5,
-    "sortOrder": 91
+    "id": "st98",
+    "eventTypeId": "hellfire",
+    "startTimeUtc": "00:00",
+    "dayNumber": 9,
+    "sortOrder": 9
+  },
+  {
+    "id": "st99",
+    "eventTypeId": "hellfire",
+    "startTimeUtc": "00:00",
+    "dayNumber": 11,
+    "sortOrder": 9
+  },
+  {
+    "id": "st100",
+    "eventTypeId": "hellfire",
+    "startTimeUtc": "00:00",
+    "dayNumber": 13,
+    "sortOrder": 9
+  },
+  {
+    "id": "st101",
+    "eventTypeId": "hellfire",
+    "startTimeUtc": "00:00",
+    "dayNumber": 15,
+    "sortOrder": 9
+  },
+  {
+    "id": "st102",
+    "eventTypeId": "hellfire",
+    "startTimeUtc": "00:00",
+    "dayNumber": 17,
+    "sortOrder": 9
+  },
+  {
+    "id": "st103",
+    "eventTypeId": "hellfire",
+    "startTimeUtc": "00:00",
+    "dayNumber": 19,
+    "sortOrder": 9
+  },
+  {
+    "id": "st104",
+    "eventTypeId": "hellfire",
+    "startTimeUtc": "00:00",
+    "dayNumber": 21,
+    "sortOrder": 9
   }
 ]

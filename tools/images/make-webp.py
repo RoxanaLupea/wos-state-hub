@@ -21,6 +21,8 @@ LONGEST_SIDE = {
     'items': 160,          # reward tiles
     'events': 160,         # event logos
     'experts': 200,
+    'frames': 440,         # reward frames (Champion's Glory), about 150 px wide on a computer
+    'ranks': 96,           # the 1, 2, 3 badges in ranking lists, 30 px
 }
 DEFAULT_SIDE = 256
 

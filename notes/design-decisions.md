@@ -1651,3 +1651,149 @@ like that."
 other event because they have to be the same." Results sits where it was approved, on every
 event. "I said edit will not be there": no Edit in any event's head. The date, repeat and
 alliance-time forms it opened go to the admin menu (to be designed).
+
+## Timelines (27 Nov)
+
+- No rewards row in a timeline: Alliance Championship's "Rewards sent by mail" at 12:00 repeated
+  the end's 12:00. "Something is doubled, it has to not be doubled. If there's no other rewards
+  mentions in the timeline, I don't know why you think there should be one here."
+- A phase and its first step at the same time (BATTLES and ROUND 1 at 00:00) keep their own dot
+  and time: "battle had a bigger circle than round one".
+- Compact rows, on every timeline: "let's make the distances smaller in between them on timeline
+  because we have a bunch of space", "I like this much better", "Can we make it standard for
+  timelines? ... I mean the spacing, because many of them stretch way too long because of the
+  extra spacing." Built: a row is as tall as its words, 7px above and below the words beside the
+  line, 5px above and below the date and time; a round's Battle sits closer to its round than to
+  the next one (event-panel.css).
+- Opening an event from its bar picks no row (Roxanne, 27 Nov): "it selects the entire event and
+  then we navigate through the timeline". The pin marks the current stage while the event runs;
+  the highlight is only for a row tapped in the timeline ("the highlight only when we select
+  something or expand it"). Replaces "opens its timeline, marked and scrolled to ... the phase
+  tapped" (22 Nov).
+- Lines beside each other in a timeline (Roxanne, 27 Nov): "two lines on the timeline are too close
+  to each other, let's establish a standard distance between them". Built: 20px centre to centre,
+  a part's line to the main line and two part lines to each other (event-panel.css).
+- Each moment's time is written once, on every timeline (Roxanne, 27 Nov): "I've decided we shouldn't
+  have the same time twice afterall ... for all events the time showing only once should be the
+  standard practice" (replaces the 27 Nov note that a phase and its first step each keep a dot and
+  a time). A row at the same moment as the row above has no time and no dot and sits close under
+  it; a ticket that opens at that moment starts on that row ("ELIMINATION start at 00 utc, we put
+  the round one under and the ticket line on the left also starts at 00 utc").
+- Tundra Arms League's Elimination named as Alliance Championship's rounds (Roxanne, 27 Nov): "Round 1,
+  Match Predictions, Elimination": ROUND n with Match Predictions under it where the predictions
+  open, then Elimination on its battle day. The Championship part waits for her ("i need to see the
+  rest to decide how we're gonna split this for championship too").
+- Tundra Arms League's sign-up rows (Roxanne, 27 Nov): "Legion & member registration" (Thu, day 6)
+  and "Registration deadline" (Fri, day 7, 00:00). The order of the lines beside the timeline, left
+  to right: Champion Prediction, Match Prediction, the event's line ("the order should be
+  championship tickets then elimination then the event line").
+- Tundra Arms League's rounds, both phases (Roxanne, 27 Nov: "each foundry battle will eliminate one
+  team, maybe battle is enough"): ROUND n with Match Predictions under it, Champion Prediction xN
+  under it where it opens, then Match day on the fight day ("Match day? or is that too much?", 27 Nov, after "i still don't like the
+  BAttle"); Championship's rounds numbered from 1. Match Predictions is written in its line's purple
+  ("make the purple a little more purple so we can tell it's for the purple line").
+- Tundra Arms League match results (Roxanne, 27 Nov, with an old xSK match screen): "we will want to
+  record that for the next season, the state's games, we'll decide how we build it in foundry and we
+  only change the colours for this". TAL's match results are Foundry's results element, in TAL's
+  colours; designed when Foundry's results are (data/captures/tal-match-mail-1060-vs-1040.jpg).
+- Tundra Arms League round names (Roxanne, 27 Nov): Elimination's last round is ROUND 4 – QUALIFIER ("it
+  would be the last round of elimination, cause only 4 teams get out of groups and into the
+  championship"); Championship's are ROUND 1 – GOLD & SILVER, ROUND 2 – SEMI-FINAL, ROUND 3 – FINAL
+  ("should we add them as Round 3 - FINAL"). How the Championship runs: data/captures/
+  tundra-arms-league-hall-of-heroism.md.
+- Notes on reward and mission pages (Roxanne, 27 Nov): "make the long text more white and smaller, I
+  still wanna be able to read it". Built: 10.5px in the muted (lighter) tone, every event (replaces
+  "11 px, faint" of the Reward lists entry).
+- Tundra Arms League's Rewards (Roxanne, 27 Nov): "championship glory seems like something that could
+  stand on it's own, so maybe more tabs inside rewards, for this then ranking and whatever else there
+  is?" Built for TAL (rewardListTabs): tabs Champion's Glory, Ranking, Combatant; shown to her.
+  Champion's Glory: the game's names (Champion Alliance Glory, Top 4 Alliance Glory) on top, the big
+  rewards centred under them ("the 1 and 2-4 are too vague and should stand at the top with the
+  rewards centered", "why are you cutting out the names they have already?"). Rewards and Missions use
+  the defined designs ("we should try to use the defined designs at least") and one set of text
+  styles ("the fonts are all over the place too").
+- Alliance Championship's Prestige rewards are on purple tiles, as in the game's mail (Roxanne, 27 Nov:
+  "Looks like the background was purple for ac skins").
+- Champion's Glory frames (Roxanne, 27 Nov, her own drawings of the game's frames): "They will be the
+  tall ... backgrounds for those rewards, and try to use them as they are in game". Built: each reward
+  inside the frame, picture and name inside, the castle-top frame for Champion Alliance Glory, the
+  rounded one for Top 4 Alliance Glory (public/images/frames). Every name gets two lines' room so the
+  pictures of a row line up.
+- Ranking lists (Roxanne, 27 Nov): "see how the rankings are centered in game. I think that's what we
+  want to do also. And I like the 1, 2, 3 badges." Built for Tundra Arms League (rankBadges): every rank
+  centred in its column, 1 to 3 as the game's badges (public/images/ranks, cut from the Out of Games
+  guide's screenshot; she offered better pictures if these are not good enough).
+- Rank badges (27 Nov): her three medals (gold with a red ribbon, silver-blue, bronze), cut out on squares, shown 30 x 30 px ("they're a little too big" at 36). They replaced her shields: "the other are too strong and I can't tell if they are bothering me or the rest".
+- Champion's Glory cards (27 Nov): the picture and name sit lower in the frame ("the building is too high
+  and the text is too high"), and the cards are smaller and spaced ("making them smaller and spread them ...
+  I want more to fit in one screen"): 132 px wide, 30 px apart side by side, 20 px top to bottom, names
+  10.5 px and kept inside the frame. "Yes, I like this better."
+- Tabs inside a page (27 Nov): "tabs should be centered, they don't look good if they don't take up the
+  full length". Every rank-tabs row (reward lists, tiers, missions) is centred. Tundra Arms League's
+  second row (Legion, Alliance, State Rewards) is words with no line under it, the open one underlined
+  in the event's colour: "yes, better".
+- Ranking rows with extra rewards (27 Nov): "common rewards on the 2nd row, extra on the 1st". On
+  Tundra Arms League's Legion ranking, the rewards every rank gets sit on the second line,
+  the top ranks' extras (skins, mithril) on the first: rank 1 is 4 + 5, ranks 2 to 4 are 3 + 5.
+  "ok, i like it, keep it as a practice for other rewards that overflow": every list whose rows run
+  over a phone line does the same (today only TAL's Legion ranking).
+- Rank medals on every ranking list (27 Nov): asked "should the badges and the centred ranks go on every
+  event's ranking lists?", she said "yes". Every ranking list (and Alliance Championship's Group
+  Ranking) draws 1, 2, 3 as her medals and centres every rank; the rankBadges flag is gone.
+  "it doesn't make sense to use it alone if 2-3 are numbers": medals only when rank 2 has its own row
+  (so Alliance Championship's 1, 2–3 stay numbers; Showdown's 1, 2, 3–5 keep two medals).
+  "do the same for KO1": Alliance Championship's KO1, KO2 and Defeat are centred in their column too.
+- Reward amounts (27 Nov): "200000 is 200k, we don't write big numbers on rewards like that". From
+  1,000 up the tiles write K or M with at most one decimal, as the game's 25.6K (reward-amount.ts), on
+  event and fortress tiles. Smaller amounts are written in full. From 1,000 on: "numbers can be written smarter, either use the k and m".
+- Reward standard (27 Nov): "ok, i like this 6 works, can you make sure the rewards follow these rules,
+  all of them, and send me the screens to go through them, but after we finish with tal". Six tiles a
+  line filling the panel after the rank column (52 px, 56 px on a phone; ranges break after the dash), every tile on a
+  screen the same size, lists with no rank column lined up under the rows. Built in event-panel.css.
+  The pass over every event's rewards, with screens for her, comes after Tundra Arms League.
+- Win / lose sections (27 Nov): "things like winning alliance/losing or drawing need to be tabs, it's one
+  or the other".
+- Tabs and tiles (27 Nov): "if we have 4 per line they have no excuse to be bigger, it's the same 6 per
+  line size and they all start at the same left coordinates" (flat lists and mission rewards too); "if we
+  have rewards separated by if, if it's a win or a rank or a tier, we will show them in tabs"; "if we have
+  tabs the line gets split ... the word will be centered and the whole width of the section gets
+  highlighted". TAL Combatant: Elimination / Championship, then Win / Loss ("Legion members / WIN / LOSS
+  ... also acceptable"), headings Legion members and Combatants, by Personal Arsenal Points.
+  Then "do the win loss thing i said": Legion members as two lines, Win and Loss, in the rank column;
+  Combatants, by Personal Arsenal Points with Win / Loss tabs under its heading. Every label centred.
+  Points in row labels are written short too ("i already asked for it"; "000 and 999 give us no value"):
+  "bigger or equal with 20K, smaller than 42 ... one on one row, the other one on the next": ≥20K over
+  <42K, and 180K+ as ≥180K; single points as 100K. Ranks,
+  written without commas, stay as they are.
+- Tile size (27 Nov): "you calculate the height for rewards for width to fit 6, and that's what all
+  rewards will use, except the ones that are like 2 by 2 or like 2 per row". The 6-per-line tiles are
+  never made smaller to fit a label: a long label goes onto two lines instead.
+- Two levels of tabs (27 Nov): "we do not want 2 rows of tabs, so it's tabs and then something else for
+  tabs, but not the main tabs". Only the first row of tabs inside a page splits its line; the levels
+  under it are the centred words (Legion · Alliance · State Rewards), underlined under the open word.
+  "just make them the same width, win and loss": every word of a lower level of tabs gets the widest
+  word's width, so the underlines match.
+  "all sub-tabs. Make them the same width, a little bigger than the biggest, and place them nicely in
+  the center": 10 px more on each side of the widest word, 10 px apart, the row centred.
+- Round tile sizes (27 Nov): "I like round numbers ... make them 50 and 60 ... just calculate it in a way
+  that doing it like to fill the width will give you the 50 and 60 result". Rank column 52 px on a
+  computer (tiles 50 px on her laptop, 60 px on her monitor), 56 px on a phone (36 px on hers, 32 px on
+  a 360 px phone).
+- Labels and medals fit their column (27 Nov): "fix the numbers too. See which one is the biggest and how
+  big can it be ... Make them fit", "1, 2, 3 logos too". Labels 13 px (the widest word but Winter Siege's
+  "Stronghold" is Dreamscape's "Chapter", which fits the 52 px column at 13 px); medals as big as a tile,
+  never wider than the column (36 px phone, 50 px laptop, 52 px monitor).
+- Winter Siege's Stronghold Conquest rows (27 Nov): labelled 1 to 6, not "Stronghold 1" to "Stronghold 6",
+  since the heading says it ("yes").
+- Labels and rewards (27 Nov): "it's a little too close to rewards for my liking". The label reaches
+  10 px into the panel's margin and stays 10 px from the tiles; the tiles keep their size.
+- Showdown (27 Nov): "you did not apply the tabs for showdown", then "WIN and LOSS can be on the left for
+  those cases". Daily and Star (no ranks) write Win and Loss or draw on the left; Ranking (ranks on the
+  left) has Win / Loss or draw tabs under its star tabs.
+- Merchant tab (27 Nov): "merchant has to be separate from rewards because many events have one",
+  "including TAL ... there's a shop for both types of tickets". Merchants and shops are a tab of their
+  own after Rewards (Winter Siege, Flame and Fangs, Emporium of Enigma). TAL's two ticket shops wait for
+  her screenshots.
+- TAL shops (27 Nov): "search in guides ffs", "Yes, we need these 2 shops too". Saved from Heaven
+  Guardian's guide (data/captures/tundra-arms-league-hall-of-heroism.md) as the Merchant tab's Ordinary
+  Shop (Match Stakes) and Champion Shop (Champion Stakes).

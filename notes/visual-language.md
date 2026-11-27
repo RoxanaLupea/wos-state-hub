@@ -60,8 +60,9 @@ would disagree, the later one won and the earlier is gone.
   under the same rules: circles at its times, words in its lighter colour, smaller
   font.
 - An event's whole view is one continuous timeline across all its days.
-- The timeline marks where you are: the row you came from is tinted, its dot bigger
-  with a soft halo in the phase colour, its text bold.
+- A pin marks the row that is on now, while the event runs. Only a row tapped in the
+  timeline is tinted, its dot bigger with a soft halo in the phase colour, its text bold;
+  opening an event from its bar picks no row (Roxanne, 27 Nov).
 - Each phase has its own colour. SvS preparation blue, SvS battle red, Field Triage
   mostly teal with a hint of red.
 

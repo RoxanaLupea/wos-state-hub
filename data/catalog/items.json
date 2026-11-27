@@ -904,5 +904,11 @@
   {
     "id": "fishing-mockup-club-21-3",
     "imageFile": "items/fishing-mockup/club-21-3.png"
+  },
+  {
+    "id": "custom-mythic-hero-gear-chest"
+  },
+  {
+    "id": "storm-of-destruction"
   }
 ]

@@ -4,7 +4,10 @@
     "datesLocked": true,
     "category": "state",
     "color": "#5C8FE8",
-    "logoColors": ["#146EE0", "#F23134"],
+    "logoColors": [
+      "#146EE0",
+      "#F23134"
+    ],
     "colorEnd": "#E05A5A",
     "icon": "swords",
     "imageFile": "svs-prep",
@@ -17,7 +20,10 @@
     "lineColor": "#4F78C8",
     "category": "state",
     "color": "#6E87B8",
-    "logoColors": ["#146EE0", "#F23134"],
+    "logoColors": [
+      "#146EE0",
+      "#F23134"
+    ],
     "colorEnd": "#B97C86",
     "timelineColor": "#8494B5",
     "icon": "swords",
@@ -32,7 +38,10 @@
     "lineColor": "#7C9DD6",
     "category": "state",
     "color": "#5C8FE8",
-    "logoColors": ["#146EE0", "#F23134"],
+    "logoColors": [
+      "#146EE0",
+      "#F23134"
+    ],
     "colorEnd": "#E05A5A",
     "timelineColor": "#7C9DD6",
     "icon": "swords",
@@ -48,7 +57,10 @@
     "lineColor": "#E07A7F",
     "category": "state",
     "color": "#5C8FE8",
-    "logoColors": ["#146EE0", "#F23134"],
+    "logoColors": [
+      "#146EE0",
+      "#F23134"
+    ],
     "colorEnd": "#E05A5A",
     "timelineColor": "#CF7F86",
     "icon": "swords",
@@ -80,7 +92,10 @@
     "lineColor": "#5FB8A8",
     "category": "state",
     "color": "#5FB8A8",
-    "logoColors": ["#146EE0", "#F23134"],
+    "logoColors": [
+      "#146EE0",
+      "#F23134"
+    ],
     "colorEnd": "#3E9C9A",
     "timelineColor": "#CF7F86>#5FB8A8",
     "icon": "swords",
@@ -421,8 +436,16 @@
     "noPersonalEntry": true,
     "factsInHead": true,
     "datesLocked": true,
-    "seasonOrder": ["Winter", "Spring", "Summer", "Autumn"],
-    "seasonKnown": { "firstDate": "2026-11-24", "season": "Summer" },
+    "seasonOrder": [
+      "Winter",
+      "Spring",
+      "Summer",
+      "Autumn"
+    ],
+    "seasonKnown": {
+      "firstDate": "2026-11-24",
+      "season": "Summer"
+    },
     "sortOrder": 40
   },
   {
@@ -463,11 +486,15 @@
     "category": "state",
     "color": "#E0A24A",
     "colorEnd": "#C4563C",
-    "logoColors": ["#FCDD88", "#C99B3C"],
+    "logoColors": [
+      "#FCDD88",
+      "#C99B3C"
+    ],
     "icon": "flame",
     "groupCount": "2",
     "resultType": "rank",
-    "sortOrder": 19
+    "sortOrder": 19,
+    "rewardListTabs": true
   },
   {
     "id": "tal-schedule-info",
@@ -489,7 +516,10 @@
     "id": "tal-match-prediction",
     "category": "state",
     "color": "#A07EFF",
-    "logoColors": ["#D1C2FF", "#A686FF"],
+    "logoColors": [
+      "#D1C2FF",
+      "#A686FF"
+    ],
     "icon": "star",
     "imageFile": "items/match-stake",
     "partOf": "hellfire",
@@ -543,7 +573,10 @@
     "id": "tal-champion-prediction",
     "category": "state",
     "color": "#FEC335",
-    "logoColors": ["#FFE299", "#FDB725"],
+    "logoColors": [
+      "#FFE299",
+      "#FDB725"
+    ],
     "icon": "trophy",
     "imageFile": "items/champion-stake",
     "partOf": "hellfire",

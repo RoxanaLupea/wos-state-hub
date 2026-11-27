@@ -1442,6 +1442,7 @@ function draw(): void {
   // it is hidden, so the sheet can fade at its edges into the same background.
   app.classList.toggle('sheet-open', view.isPanelOpen && view.openPage === 'calendar');
   watchScrollEdges(app);
+  fitRewardLabels(app);
   showOpenTab(app);
   const svsEditor = document.getElementById(SVS_EDIT_FORM_ID);
   if (svsEditor instanceof HTMLFormElement) updateSvsEditor(svsEditor);
@@ -1598,6 +1599,38 @@ function watchScrollEdges(app: HTMLElement): void {
     };
     update();
     box.addEventListener('scroll', update, { passive: true });
+  }
+}
+
+// A reward label grows with the tiles; when a word or a rank range (kept on one line) is wider
+// than the rank column, every label of that list is written as much smaller as the widest needs,
+// so a list keeps one size (Roxanne, 27 Nov: "the numbers are still tiny", "There is no way
+// numbers don't fit in that width on the big monitor").
+function fitRewardLabels(app: HTMLElement): void {
+  const lists = new Set<HTMLElement>();
+  for (const row of Array.from(app.querySelectorAll<HTMLElement>('.event-folds .reward-row'))) {
+    if (row.parentElement) lists.add(row.parentElement);
+  }
+  for (const list of Array.from(lists)) {
+    const labels = Array.from(list.querySelectorAll<HTMLElement>(':scope > .reward-row > .reward-label'));
+    labels.forEach(label => { label.style.fontSize = ''; });
+    let size = labels.length ? parseFloat(getComputedStyle(labels[0]).fontSize) : 0;
+    const tooWide = () => labels.some(label => label.scrollWidth > label.clientWidth + 0.5);
+    while (size > 9 && tooWide()) {
+      size -= 0.5;
+      labels.forEach(label => { label.style.fontSize = size + 'px'; });
+    }
+  }
+  // A row of tabs inside a page that is wider than the panel (Winter Siege's six tiers, King of
+  // Icefield's rankings) is written smaller until every tab shows, rather than cut off.
+  for (const row of Array.from(app.querySelectorAll<HTMLElement>('.event-folds .info-tabs.rank-tabs'))) {
+    const tabs = Array.from(row.querySelectorAll<HTMLElement>('.info-tab'));
+    tabs.forEach(tab => { tab.style.fontSize = ''; tab.style.letterSpacing = ''; });
+    let size = tabs.length ? parseFloat(getComputedStyle(tabs[0]).fontSize) : 0;
+    while (size > 8 && row.scrollWidth > row.clientWidth + 0.5) {
+      size -= 0.5;
+      tabs.forEach(tab => { tab.style.fontSize = size + 'px'; tab.style.letterSpacing = '0.02em'; });
+    }
   }
 }
 
@@ -2070,7 +2103,8 @@ function handleClicks(event: MouseEvent): void {
     return;
   }
 
-  const viewButton = target.closest<HTMLElement>('[data-view]');
+  // Only the view buttons: the toolbar itself carries data-view too, for its own look.
+  const viewButton = target.closest<HTMLElement>('button[data-view]');
   if (viewButton) {
     const nextView = viewButton.dataset.view as CalendarView;
     // From the week to the month: the month opens at its top and moves down to this week (owner, 25 Nov).

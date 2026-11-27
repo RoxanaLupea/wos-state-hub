@@ -11,6 +11,7 @@ import {
 } from '../calendar/fort-season.ts';
 import { shortDayText } from './day-names.ts';
 import { escapeForPage } from './escape.ts';
+import { rewardAmount } from './reward-amount.ts';
 import { itemImageUrl } from './event-icon.ts';
 import { colorWithAlpha, hexToRgb } from './colors.ts';
 import type { FortAssignment } from '../data/forts.ts';
@@ -47,7 +48,7 @@ export function drawnReward(reward: FortReward): string {
   return `<span class="reward-tile tile-${tile}" title="${escapeForPage(itemName(reward.itemId))}">` +
     `<img src="${escapeForPage(itemImageUrl(reward.itemId))}" alt="" loading="lazy">` +
     (label ? `<span class="tile-top">${escapeForPage(label)}</span>` : '') +
-    `<span class="tile-qty">${escapeForPage(reward.quantity.toLocaleString('en-US'))}</span></span>`;
+    `<span class="tile-qty">${escapeForPage(rewardAmount(reward.quantity))}</span></span>`;
 }
 
 // The lookup the crediting rule needs: which alliance an academy belongs to.

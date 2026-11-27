@@ -126,8 +126,19 @@ only what makes it one (the room its letters, digits or bars leave over and unde
 - A way to another page: pageButton (the edit button's style with the open icon), as
   "SvS Records".
 - Timelines: phases and stages 13px capitals; days, steps and openings 12px; the current
-  row has the pin; lines as soft as State of Power's.
+  row has the pin; lines as soft as State of Power's. A row is as tall as its words (7px above
+  and below the words, 5px above and below the date and time); lines beside each other sit
+  20px apart, centre to centre; each moment's time is written once (27 Nov).
 - Font: Roboto everywhere; the short form of an event (SvS, TAL) stays Montserrat.
+- Tabs inside a page (reward lists, tiers, missions) are centred (27 Nov: "they don't look
+  good if they don't take up the full length").
+- Reward rows longer than a phone line (6): the extra rewards on the first line, the rewards
+  every rank gets on the second, so those line up under each other (27 Nov: "keep it as a
+  practice for other rewards that overflow"). Done by rewardLines for every list.
+- Reward lists: six tiles a line, together as wide as the panel leaves after the rank
+  column, so every tile on a screen is the same size (27 Nov: "6 works"). Amounts from 1,000
+  are written short (3.6K, 200K, 25.6K). Sections that are one or the other (winning / losing) are
+  tabs, not lists one under the other (27 Nov).
 
 ## Calendar bars on a computer (standard, 26 Nov)
 - Two bars only: one line (28px) and two lines (42px). Two lines only where a bar needs

@@ -52,7 +52,7 @@ export interface TreeRow {
   // Filled in once the rows are in order.
   key?: string;
   isCurrent?: boolean;
-  // Tapped (or the day tapped on the calendar): highlighted, without the pin.
+  // Tapped in the timeline: highlighted, without the pin.
   isPicked?: boolean;
 }
 
@@ -346,6 +346,23 @@ export function buildEventTree(
     });
   }
 
+  // A ticket that opens at the same moment as a step of the event with words of its own
+  // (Tundra Arms League's ROUND 1, Match Predictions) starts on that step's row; a named
+  // opening (Champion Prediction x16) keeps its row (Roxanne, 27 Nov).
+  for (const row of rows.slice()) {
+    if (row.openingStart === undefined || options.marksOpeningsByLabel(row.eventTypeId)) continue;
+    if (rows.some(other => !other.isSideRow && other.level > 0 && other.minute === row.minute)) {
+      rows.splice(rows.indexOf(row), 1);
+    }
+  }
+
+  // A side line that ends at the same moment as another row ends on that row, so the time
+  // is never written twice (Roxanne, 27 Nov: "Something is doubled, it has to not be doubled").
+  const sideEnd = rows.find(row => row.isSideEnd);
+  if (sideEnd && rows.some(row => row !== sideEnd && !row.isSideRow && row.minute === sideEnd.minute)) {
+    rows.splice(rows.indexOf(sideEnd), 1);
+  }
+
   const ordered = orderRows(rows, isSingle);
   for (const row of ordered) row.key = row.occurrence.key + '|' + row.minute;
 
@@ -359,12 +376,13 @@ export function buildEventTree(
   const started = isRunning
     ? ordered.filter(row => row.minute <= now && !row.isSideRow && !row.isEndRow && !row.openingPartKey)
     : [];
-  // The pin marks only the row that is on now, while the event runs (owner, 25 Nov). A row
-  // tapped, or the row of the day tapped on the calendar, is highlighted instead.
+  // The pin marks only the row that is on now, while the event runs (owner, 25 Nov). Only a
+  // row tapped in the timeline is highlighted: tapping a bar opens the whole event with no
+  // row picked (Roxanne, 27 Nov: "it selects the entire event and then we navigate through
+  // the timeline").
   const current = isRunning ? started[started.length - 1] : undefined;
   if (current) current.isCurrent = true;
-  const highlighted = picked ?? (isRunning ? undefined : tappedRow(ordered, options));
-  if (highlighted) highlighted.isPicked = true;
+  if (picked) picked.isPicked = true;
 
   return {
     rows: ordered,
@@ -373,22 +391,6 @@ export function buildEventTree(
     hasPoints: ordered.some(row => row.pointSourceIds.length > 0),
     currentRowKey: current?.key ?? ''
   };
-}
-
-// The row for what was tapped: the last row of the tapped run that has started by the
-// tapped minute, or that run's first row. Without a run of its own, the last row of the
-// event started by then.
-function tappedRow(rows: TreeRow[], options: TreeOptions): TreeRow | undefined {
-  const usable = rows.filter(row => !row.isSideRow && !row.isEndRow && !row.openingPartKey);
-  if (!usable.length) return undefined;
-  const tappedKey = options.tappedKey ?? '';
-  const minute = options.tappedMinute ?? NaN;
-  const ofTapped = usable.filter(row =>
-    tappedKey === row.occurrence.key || tappedKey.startsWith(row.occurrence.key + '|'));
-  const pool = ofTapped.length ? ofTapped : usable;
-  if (Number.isNaN(minute)) return pool[0];
-  const started = pool.filter(row => row.minute <= minute);
-  return started[started.length - 1] ?? pool[0];
 }
 
 // Main-line order is kept, and the rows under a main row stay under it. Side rows slot

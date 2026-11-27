@@ -10407,7 +10407,7 @@
     "band": "Ultimate",
     "section": "prestige",
     "itemId": "knight-of-the-watch",
-    "tile": "none",
+    "tile": "purple",
     "sortOrder": 831
   },
   {
@@ -10417,7 +10417,7 @@
     "band": "Ultimate",
     "section": "prestige",
     "itemId": "knight-of-conquest",
-    "tile": "none",
+    "tile": "purple",
     "sortOrder": 832
   },
   {
@@ -10427,7 +10427,7 @@
     "band": "Ultimate",
     "section": "prestige",
     "itemId": "knights-glory-avatar-frame",
-    "tile": "none",
+    "tile": "purple",
     "sortOrder": 833
   },
   {
@@ -10437,7 +10437,7 @@
     "band": "Ultimate",
     "section": "prestige",
     "itemId": "knights-glory-nameplate",
-    "tile": "none",
+    "tile": "purple",
     "sortOrder": 834
   },
   {
@@ -17960,5 +17960,275 @@
     "itemId": "fishing-mockup-club-21-3",
     "tile": "none",
     "sortOrder": 5137
+  },
+  {
+    "id": "rw-hellfire-shop-ordinary-1-custom-mythic-hero-gear-chest",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Ordinary Shop",
+    "itemId": "custom-mythic-hero-gear-chest",
+    "tile": "orange",
+    "quantity": 1,
+    "sortOrder": 5138
+  },
+  {
+    "id": "rw-hellfire-shop-ordinary-2-fire-crystal",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Ordinary Shop",
+    "itemId": "fire-crystal",
+    "tile": "orange",
+    "quantity": 1,
+    "sortOrder": 5139
+  },
+  {
+    "id": "rw-hellfire-shop-ordinary-3-mithril",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Ordinary Shop",
+    "itemId": "mithril",
+    "tile": "orange",
+    "quantity": 1,
+    "sortOrder": 5140
+  },
+  {
+    "id": "rw-hellfire-shop-ordinary-4-essence-stones",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Ordinary Shop",
+    "itemId": "essence-stones",
+    "tile": "orange",
+    "quantity": 1,
+    "sortOrder": 5141
+  },
+  {
+    "id": "rw-hellfire-shop-ordinary-5-mythic-general-hero-shard",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Ordinary Shop",
+    "itemId": "mythic-general-hero-shard",
+    "tile": "orange",
+    "quantity": 1,
+    "sortOrder": 5142
+  },
+  {
+    "id": "rw-hellfire-shop-ordinary-6-design-plans",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Ordinary Shop",
+    "itemId": "design-plans",
+    "tile": "orange",
+    "quantity": 1,
+    "sortOrder": 5143
+  },
+  {
+    "id": "rw-hellfire-shop-ordinary-7-polishing-solution",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Ordinary Shop",
+    "itemId": "polishing-solution",
+    "tile": "purple",
+    "quantity": 1,
+    "sortOrder": 5144
+  },
+  {
+    "id": "rw-hellfire-shop-ordinary-8-hardened-alloy",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Ordinary Shop",
+    "itemId": "hardened-alloy",
+    "tile": "blue",
+    "quantity": 1,
+    "sortOrder": 5145
+  },
+  {
+    "id": "rw-hellfire-shop-ordinary-9-speedup-general-1h",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Ordinary Shop",
+    "itemId": "speedup-general-1h",
+    "tile": "blue",
+    "quantity": 1,
+    "sortOrder": 5146
+  },
+  {
+    "id": "rw-hellfire-shop-champion-1-storm-of-destruction",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Champion Shop",
+    "itemId": "storm-of-destruction",
+    "tile": "orange",
+    "quantity": 1,
+    "sortOrder": 5147
+  },
+  {
+    "id": "rw-hellfire-shop-champion-2-war-chariot",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Champion Shop",
+    "itemId": "war-chariot",
+    "tile": "orange",
+    "quantity": 1,
+    "sortOrder": 5148
+  },
+  {
+    "id": "rw-hellfire-shop-champion-3-mythic-general-hero-shard",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Champion Shop",
+    "itemId": "mythic-general-hero-shard",
+    "tile": "orange",
+    "quantity": 1,
+    "sortOrder": 5149
+  },
+  {
+    "id": "rw-hellfire-shop-champion-4-lucky-hero-gear-chest",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Champion Shop",
+    "itemId": "lucky-hero-gear-chest",
+    "tile": "orange",
+    "quantity": 7,
+    "sortOrder": 5150
+  },
+  {
+    "id": "rw-hellfire-shop-champion-5-essence-stones",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Champion Shop",
+    "itemId": "essence-stones",
+    "tile": "orange",
+    "quantity": 7,
+    "sortOrder": 5151
+  },
+  {
+    "id": "rw-hellfire-shop-champion-6-mithril",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Champion Shop",
+    "itemId": "mithril",
+    "tile": "orange",
+    "quantity": 1,
+    "sortOrder": 5152
+  },
+  {
+    "id": "rw-hellfire-shop-champion-7-design-plans",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Champion Shop",
+    "itemId": "design-plans",
+    "tile": "orange",
+    "quantity": 10,
+    "sortOrder": 5153
+  },
+  {
+    "id": "rw-hellfire-shop-champion-8-polishing-solution",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Champion Shop",
+    "itemId": "polishing-solution",
+    "tile": "purple",
+    "quantity": 50,
+    "sortOrder": 5154
+  },
+  {
+    "id": "rw-hellfire-shop-champion-9-hardened-alloy",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Champion Shop",
+    "itemId": "hardened-alloy",
+    "tile": "blue",
+    "quantity": 5000,
+    "sortOrder": 5155
+  },
+  {
+    "id": "rw-hellfire-shop-champion-10-charm-design",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Champion Shop",
+    "itemId": "charm-design",
+    "tile": "orange",
+    "quantity": 8,
+    "sortOrder": 5156
+  },
+  {
+    "id": "rw-hellfire-shop-champion-11-charm-guide",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Champion Shop",
+    "itemId": "charm-guide",
+    "tile": "orange",
+    "quantity": 8,
+    "sortOrder": 5157
+  },
+  {
+    "id": "rw-hellfire-shop-champion-12-pet-advancement-materials-custom-chest",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Champion Shop",
+    "itemId": "pet-advancement-materials-custom-chest",
+    "tile": "orange",
+    "quantity": 4,
+    "sortOrder": 5158
+  },
+  {
+    "id": "rw-hellfire-shop-champion-13-advanced-wild-mark",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Champion Shop",
+    "itemId": "advanced-wild-mark",
+    "tile": "orange",
+    "quantity": 1,
+    "sortOrder": 5159
+  },
+  {
+    "id": "rw-hellfire-shop-champion-14-fire-crystal",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Champion Shop",
+    "itemId": "fire-crystal",
+    "tile": "orange",
+    "quantity": 10,
+    "sortOrder": 5160
+  },
+  {
+    "id": "rw-hellfire-shop-champion-15-speedup-general-1h",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Champion Shop",
+    "itemId": "speedup-general-1h",
+    "tile": "blue",
+    "quantity": 5,
+    "sortOrder": 5161
+  },
+  {
+    "id": "rw-hellfire-shop-champion-16-speedup-construction-1h",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Champion Shop",
+    "itemId": "speedup-construction-1h",
+    "tile": "blue",
+    "quantity": 5,
+    "sortOrder": 5162
+  },
+  {
+    "id": "rw-hellfire-shop-champion-17-speedup-training-1h",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Champion Shop",
+    "itemId": "speedup-training-1h",
+    "tile": "blue",
+    "quantity": 5,
+    "sortOrder": 5163
+  },
+  {
+    "id": "rw-hellfire-shop-champion-18-custom-secured-resource-chest-3",
+    "eventTypeId": "hellfire",
+    "list": "shop",
+    "band": "Champion Shop",
+    "itemId": "custom-secured-resource-chest-3",
+    "tile": "purple",
+    "quantity": 1,
+    "sortOrder": 5164
   }
 ]
