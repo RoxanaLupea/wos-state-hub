@@ -67,9 +67,10 @@ She found agreed rules missing from some panels. Found by rendering every panel:
 3. The redesign list, screen by screen. For every event panel, ask whether its fold arrows
    stay (removed on Alliance Championship).
    1-4. Month view with the day card; Alliance Championship Timeline, Rules, Rewards: done.
-   5. SvS panel. <- next
-   6. SvS, Results tab.
-   7. Foundry Battle panel.
+   5-6. SvS panel and its Results tab: "It's good for now. Anything else can be updated later."
+      (27 Nov night). Later: enter the Grants and Castle Battle Ranking Rewards (data/captures/svs.md)
+      so its Rewards tab shows; the SvS rules agreed with the other state (item 0).
+   7. Foundry Battle panel. <- next
    8. Filters.
    9. The account menu.
    10. Week view.
