@@ -78,7 +78,15 @@ She found agreed rules missing from some panels. Found by rendering every panel:
 ## Questions still open (one at a time, never dropped)
 
 - Shops on the biggest screen: a proposal for scaling them is with her; she decides (27 Nov night).
-- Flame and Fangs' instruction timeline: she is sending it from Discord (27 Nov night).
+- Flame and Fangs: the preparation day on the calendar, a faded piece on the Sunday? (asked 27 Nov night)
+- Flame and Fangs' shop as in the game, with the redeem limit and no button: needs her screenshot of
+  the in-game shop (asked 27 Nov night).
+- Flame and Fangs' shop day: the old app says the event and its shop end together after day 2
+  ("seen in game 16 Nov 2026", old-app/Setup.gs 207 and 488); rules-and-open-items.md says the shop
+  stays open after the event; she says she confirmed another day. Flagged to her 27 Nov night.
+- Flame and Fangs: purple or red? Renders sent 27 Nov night (red is uncommitted in the working copy;
+  purple is in /tmp/et.bak and in git).
+- Flame and Fangs' cores on the timeline: how she wants them (the glow attempt was reverted).
 - Mine on the personal events: she said Mine is only for events with something to record; which
   keep it is asked (27 Nov night).
 
