@@ -1855,4 +1855,9 @@ alliance-time forms it opened go to the admin menu (to be designed).
   From the game: Intel refreshes daily at 00:00, 08:00 and 16:00 UTC and lasts 15 hours; Agnes'
   Efficient Recon refreshes at 00:00 UTC. Mockup: PREPARATION the day before (her plan's three windows),
   then EVENT with every Intel refresh; the claim day is not added (the site has the event as 2 days).
+- Flame and Fangs' cores (Roxanne, 27 Nov night): "if we have the core numbers, shouldn't they be in a
+  missions tab? that's what they are, no?" Built: a Missions tab (Firebeast 10, Intel mission 1, the
+  per-refresh and event totals as its note); the timeline keeps only the plan. Her rule on the plan's
+  words: "this cannot be more wordy than the discord message, we are adding all the icons we need ...
+  use the hover to show the skill"; the shop's extra day is a dotted line with no name.
 
