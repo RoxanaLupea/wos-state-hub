@@ -91,7 +91,7 @@ JS = r'''() => {
   for (const k of Object.keys(out)) out[k] = Array.from(new Set(out[k]));
   return out; }'''
 with sync_playwright() as p:
-    b = p.chromium.launch(executable_path='/usr/bin/google-chrome', args=['--no-sandbox'])
+    b = p.chromium.launch(executable_path='/usr/bin/google-chrome', args=['--no-sandbox'], ignore_default_args=['--hide-scrollbars'])  # headless hides scrollbars; show them so drawn ones are caught
     for w, h, d, kind in [(384, 832, 2.8125, 'phone'), (1920, 950, 1, 'pc')]:
         for name, acts in STATES:
             pg = page(b, w, h, d)
