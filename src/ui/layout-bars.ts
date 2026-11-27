@@ -146,8 +146,9 @@ function placeFirstPart(bar: HTMLElement): void {
   first.dataset.laidOut = first.style.left;
 }
 
-// Fishing's line starts after the event's name and sits halfway up its capitals, like
-// the line beside a heading in the game's Event Rules (Roxanne, 27 Nov).
+// Fishing's line (Roxanne, 27 Nov). On a phone the bar has two lines and the fish line is
+// its second line, starting after the big logo. On a computer, where bars are one line,
+// it is written after the name and season, halfway up their capitals, as phases are.
 function placeFishLine(bar: HTMLElement): void {
   const line = bar.querySelector<HTMLElement>('.bar-fish-line');
   const label = bar.querySelector<HTMLElement>('.bar-head .bar-label');
@@ -159,19 +160,40 @@ function placeFishLine(bar: HTMLElement): void {
   }
   const baseLeft = Number(line.dataset.baseLeft);
   const baseRight = baseLeft + Number(line.dataset.baseWidth);
-  const nameRight = nameEnd(bar, label) - bar.getBoundingClientRect().left + 10;
-  const left = Math.min(baseRight, Math.max(baseLeft, nameRight));
+  const barBox = bar.getBoundingClientRect();
+  const isOneLine = window.matchMedia('(min-width: 1000px)').matches && bar.classList.contains('one-line-wide');
+  let startAt: number;
+  let middle: number;
+  if (isOneLine) {
+    startAt = nameEnd(bar, label) - barBox.left + 10;
+    const capitals = capitalsOf(label, bar);
+    middle = capitals.top + capitals.height / 2;
+  } else {
+    // It starts where the name starts, so the two lines are aligned.
+    startAt = label.getBoundingClientRect().left - barBox.left;
+    const headBottom = (bar.querySelector<HTMLElement>('.bar-head') as HTMLElement).getBoundingClientRect().bottom - barBox.top;
+    middle = (headBottom + bar.clientHeight) / 2;
+  }
+  const left = Math.min(baseRight, Math.max(baseLeft, startAt));
   line.style.left = left + 'px';
   line.style.width = (baseRight - left) + 'px';
+  line.style.top = middle + 'px';
   line.dataset.laidOut = line.style.left;
-  const capitals = capitalsOf(label, bar);
-  line.style.top = (capitals.top + capitals.height / 2) + 'px';
   // With no room for the line and its fish, neither is drawn, nor the mark where fishing
   // ends. The mark was hidden earlier if the full name still covered it.
   const hasRoom = baseRight - left >= 40;
   line.style.display = hasRoom ? '' : 'none';
   const endMark = bar.querySelector<HTMLElement>('.bar-mark.end-mark');
-  if (endMark && line.classList.contains('ends-here')) endMark.style.display = hasRoom ? '' : 'none';
+  if (endMark && line.classList.contains('ends-here')) {
+    endMark.style.display = hasRoom ? '' : 'none';
+    // On a phone the mark stands on the second line, beside the fish, as tall as the
+    // white lines between days there; the fish line runs through its middle.
+    endMark.classList.toggle('on-line-two', !isOneLine);
+    if (!isOneLine && hasRoom) {
+      const markBox = endMark.getBoundingClientRect();
+      line.style.top = (markBox.top + markBox.height / 2 - barBox.top) + 'px';
+    }
+  }
 }
 
 // Names that do not fit:

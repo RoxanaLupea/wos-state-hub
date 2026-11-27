@@ -1603,3 +1603,6 @@ All nine are built.
 fish similar to them on the fishing box, and it's gonna end one day prior to the 27th."
 "Only what they have on the left": a white line ending with a fish. Fishing runs 24–27 Nov
 in the game; the 27th only keeps the tabs open.
+"We write on the calendar fishing, then the season in caps summer, and have that bar go at
+the bottom instead, like the one with the fish." Seasons follow winter, spring, summer,
+autumn, one a month (Century Games' help centre); 24 Nov 2026 is Summer.

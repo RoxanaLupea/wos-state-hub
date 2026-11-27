@@ -8,7 +8,7 @@
 // layout-bars.ts, once the browser knows how wide a day column is.
 
 import {
-  eventBarSubtitle, eventTypeById, eventTypeColor, eventTypeInitials, eventTypeName, eventTypeShortName, eventTypeTag,
+  eventBarSubtitle, eventTypeById, seasonOf, eventTypeColor, eventTypeInitials, eventTypeName, eventTypeShortName, eventTypeTag,
   SVS_FAMILY, eventStepsByEventType, hasLogoColors, logoColors, phaseName, showsTimesInLine, windowLabel
 } from '../data/catalog.ts';
 import { MINUTES_PER_DAY, minutesFromTime, textFromDay } from '../calendar/days.ts';
@@ -376,7 +376,8 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
 
   const hasTwoLines = piece.segments.length > 0 || piece.insideParts.length > 0 ||
     partsMode || piece.phaseParts.length > 0;
-  const sideLogo = Boolean(subtitle) || hasTwoLines;
+  // Fishing's line is its second line on a phone.
+  const sideLogo = Boolean(subtitle) || hasTwoLines || Boolean(fishLine);
   // On a computer a bar whose second line only names its phases or days, or says its
   // second name, is one line: the phases are written after the name, in their own
   // stretches (Roxanne, 26 Nov: "we have to write it in another way that lets us use one
@@ -399,10 +400,14 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
   if (isLitBar(bar.key, options.litKeys)) classes.push('lit-event');
 
   const logo = eventIcon(mainOfParts ?? bar.eventTypeId);
-  const headName = mainOfParts ? plainName(mainOfParts) : plainName(bar.eventTypeId);
+  // An event with seasons (Fishing) writes its short name, then the run's season in
+  // capitals: "Fishing SUMMER" (Roxanne, 27 Nov).
+  const season = mainOfParts ? '' : seasonOf(bar.eventTypeId, bar.startDay);
+  const headName = season ? eventTypeShortName(bar.eventTypeId)
+    : mainOfParts ? plainName(mainOfParts) : plainName(bar.eventTypeId);
   const shortName = eventTypeShortName(mainOfParts ?? bar.eventTypeId);
   // A second name players use (SvS, KE) follows the full name, written more quietly.
-  const tagText = eventTypeTag(mainOfParts ?? bar.eventTypeId);
+  const tagText = season ? season.toUpperCase() : eventTypeTag(mainOfParts ?? bar.eventTypeId);
   const tag = tagText ? `<span class="bar-tag">${escapeForPage(tagText)}</span>` : '';
 
   return `<div class="${classes.join(' ')}" style="${style}"` +

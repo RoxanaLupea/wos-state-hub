@@ -44,6 +44,11 @@ export interface EventType {
   // in the game (Fishing's last day, Roxanne 27 Nov). The bar draws a line ending with a
   // fish over the days it can be played.
   fishingEndsDaysEarly?: number;
+  // An event that changes season each run, once a month (Fishing): the seasons in their
+  // order and one run whose season is known. Fishing's order is from Century Games' help
+  // centre; Summer for 24 Nov 2026 is from Roxanne's screenshot (27 Nov).
+  seasonOrder?: string[];
+  seasonKnown?: { firstDate: string; season: string };
   // A part's colour on its whole event's timeline, held through its rows and blended
   // into the next part's (State of Power: our blue, their red, then Field Triage's green).
   lineColor?: string;
@@ -148,6 +153,22 @@ export function hasLogoColors(id: string): boolean {
 export function eventTypeColorEnd(id: string): string {
   const eventType = eventTypesById.get(id);
   return eventType?.colorEnd ?? eventType?.color ?? '#7E8AA8';
+}
+
+// The season of an event's run starting on this day, counted a season a month from the
+// run whose season is known. '' for an event without seasons.
+export function seasonOf(id: string, startDay: number): string {
+  const eventType = eventTypesById.get(id);
+  const order = eventType?.seasonOrder;
+  const known = eventType?.seasonKnown;
+  if (!order?.length || !known) return '';
+  const knownDate = new Date(known.firstDate + 'T00:00:00Z');
+  const runDate = new Date(startDay * 24 * 60 * 60 * 1000);
+  const months = (runDate.getUTCFullYear() - knownDate.getUTCFullYear()) * 12 +
+    runDate.getUTCMonth() - knownDate.getUTCMonth();
+  const knownIndex = order.indexOf(known.season);
+  if (knownIndex < 0) return '';
+  return order[(((knownIndex + months) % order.length) + order.length) % order.length];
 }
 
 export function showsTimesInLine(id: string): boolean {
