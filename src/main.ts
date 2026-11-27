@@ -2070,7 +2070,8 @@ function handleClicks(event: MouseEvent): void {
     return;
   }
 
-  const viewButton = target.closest<HTMLElement>('[data-view]');
+  // Only the view buttons: the toolbar itself carries data-view too, for its own look.
+  const viewButton = target.closest<HTMLElement>('button[data-view]');
   if (viewButton) {
     const nextView = viewButton.dataset.view as CalendarView;
     // From the week to the month: the month opens at its top and moves down to this week (owner, 25 Nov).
