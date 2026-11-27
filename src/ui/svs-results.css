@@ -125,15 +125,8 @@
 .svs-president .player-search { flex: 1; min-width: 0; }
 
 /* WIN and LOSS as words in place: the chosen one white, the other faint. */
-.svs-choices { display: inline-flex; align-items: center; height: 18px; gap: 14px; letter-spacing: inherit; margin-right: -0.14em; }
-.svs-choices label { cursor: pointer; }
-.svs-choices input { position: absolute; opacity: 0; pointer-events: none; }
-.svs-choices span { color: var(--text-faint); }
-.svs-choices input:checked + span { color: var(--text); }
-.svs-choices input:focus-visible + span { outline: 1px solid var(--section); outline-offset: 3px; border-radius: 4px; }
 /* Where a part's numbers are in, its result follows from them: the word replaces the
    choice, and Preparation's totals are the sum of its days instead of fields. */
-.editing .svs-part.computed .svs-choices, .editing .svs-part:not(.computed) .part-title .svs-computed { display: none; }
 .editing .svs-part.preparation.computed .svs-totals .svs-field,
 .editing .svs-part.preparation:not(.computed) .svs-totals strong { display: none; }
 

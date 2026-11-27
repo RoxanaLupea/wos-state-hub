@@ -1827,4 +1827,11 @@ alliance-time forms it opened go to the admin menu (to be designed).
   centered, or how they look in that white thing ... Are they higher than they are supposed to be?
   Make it like a transparent glass, right? So it is gonna be white but see-through." Built: a
   see-through white glass bar, the price in white, the digits centred on it (measured).
+- SvS results only from their numbers (Roxanne, 27 Nov night): "I do not want it to be chosen by win
+  and loss ... I want the details. Without the details, we have no records. Not from this point on.
+  We have that for old records, but that's because that's all we had ... From now on, we do things
+  right." Built: no WIN / LOSS to tap in the editor; Preparation from the days (or the two totals),
+  Battle from the longest hold; the old records keep their results.
+- Shop price bar (Roxanne, 27 Nov night): "a 4th version where they are see-through but whiter, like
+  more opaque, but still see-through."
 

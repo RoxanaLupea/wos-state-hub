@@ -215,12 +215,11 @@ function pointsField(name: string, value: number | null | undefined): string {
   return field(name, known ? String(value) : '', ' inputmode="numeric" data-points');
 }
 
-// Where the part's numbers are in, its WIN or LOSS follows from them instead.
-function outcomeChoice(name: string, outcome: Outcome): string {
-  return '<span class="svs-choices">' + (['win', 'loss'] as const).map(choice =>
-    `<label><input type="radio" name="${name}" value="${choice}"${outcome === choice ? ' checked' : ''}>` +
-    `<span>${outcomeWord(choice)}</span></label>`).join('') + '</span>' +
-    `<b class="svs-computed">${outcomeWord(outcome)}</b>`;
+// A part's WIN or LOSS is never picked: it follows from its numbers (Roxanne, 27 Nov night: "I
+// do not want it to be chosen by win and loss ... I want the details. Without the details, we
+// have no records"). Only the old records kept before the site have a result without them.
+function outcomeShown(outcome: Outcome): string {
+  return `<b class="svs-computed">${outcomeWord(outcome)}</b>`;
 }
 
 function holdRow(place: number, hold: SvsHold | null, longest = 1): string {
@@ -258,14 +257,14 @@ export function svsResultEditor(options: SvsEditOptions): string {
         numberField('opponent_state', run.opponentState) + '</span>' +
     '</div></section>' +
     `<section class="svs-part preparation${points?.days.length ? ' computed' : ''}"><h3 class="panel-title part-title">Preparation` +
-      outcomeChoice('detail_preparation', run.preparation) + '</h3>' +
+      outcomeShown(run.preparation) + '</h3>' +
       '<div class="svs-totals">' + pointsField('detail_points_ours', points?.ours) + pointsField('detail_points_theirs', points?.theirs) +
         `<strong data-sum="ours">${points ? fullPoints(points.ours) : ''}</strong>` +
         `<strong data-sum="theirs">${points ? fullPoints(points.theirs) : ''}</strong></div>` +
       splitBar(points?.ours ?? 0, points?.theirs ?? 0, true) +
       `<div class="svs-days">${days}</div></section>` +
     `<section class="svs-part battle${run.holds.length ? ' computed' : ''}"><h3 class="panel-title part-title">Battle` +
-      outcomeChoice('detail_castle_battle', run.battle) + '</h3>' +
+      outcomeShown(run.battle) + '</h3>' +
       `<div class="svs-holds">${holds}` +
       `<template data-row-template>${holdRow(0, null)}</template>` +
       `<div class="svs-plus-row"><button type="button" class="svs-plus" data-add-row aria-label="Add an alliance">${PLUS}</button></div>` +
@@ -319,6 +318,12 @@ export function preparationOutcome(days: [number, number][]): Outcome {
   if (days.length < 5 || days.some(([ours, theirs]) => !Number.isFinite(ours) || !Number.isFinite(theirs))) return '';
   const ours = days.reduce((sum, [day]) => sum + day, 0);
   const theirs = days.reduce((sum, [, day]) => sum + day, 0);
+  return totalsOutcome(ours, theirs);
+}
+
+// Preparation from its two totals, when they are typed without the days: the bigger total wins.
+export function totalsOutcome(ours: number, theirs: number): Outcome {
+  if (!Number.isFinite(ours) || !Number.isFinite(theirs)) return '';
   return ours > theirs ? 'win' : ours < theirs ? 'loss' : '';
 }
 
@@ -333,13 +338,12 @@ function setShare(bar: Element | null | undefined, ours: number, theirs: number)
 export function updateSvsEditor(form: HTMLFormElement): void {
   const preparation = form.querySelector('.svs-part.preparation');
   const battle = form.querySelector('.svs-part.battle');
-  const chosen = (name: string) => (form.querySelector<HTMLInputElement>(`input[name="${name}"]:checked`)?.value ?? '') as Outcome;
 
   // Preparation.
   const days = [1, 2, 3, 4, 5].map(day =>
     [typedPoints(form, `detail_points_ours_${day}`), typedPoints(form, `detail_points_theirs_${day}`)] as [number, number]);
   const anyDay = days.some(([ours, theirs]) => Number.isFinite(ours) || Number.isFinite(theirs));
-  let preparationResult = chosen('detail_preparation');
+  let preparationResult: Outcome = '';
   if (preparation) {
     preparation.classList.toggle('computed', anyDay);
     const dayRows = Array.from(preparation.querySelectorAll('.svs-day'));
@@ -353,13 +357,18 @@ export function updateSvsEditor(form: HTMLFormElement): void {
       if (sums[1]) sums[1].textContent = fullPoints(theirs);
       setShare(preparation.querySelector('.svs-split.total'), ours, theirs);
       preparationResult = preparationOutcome(days);
-      const word = preparation.querySelector('.svs-computed');
-      if (word) word.textContent = outcomeWord(preparationResult);
+    } else {
+      const ours = typedPoints(form, 'detail_points_ours');
+      const theirs = typedPoints(form, 'detail_points_theirs');
+      setShare(preparation.querySelector('.svs-split.total'), Number.isFinite(ours) ? ours : 0, Number.isFinite(theirs) ? theirs : 0);
+      preparationResult = totalsOutcome(ours, theirs);
     }
+    const word = preparation.querySelector('.svs-computed');
+    if (word) word.textContent = outcomeWord(preparationResult);
   }
 
   // Battle: each pill takes its state's colour, and the longest hold decides.
-  let battleResult = chosen('detail_castle_battle');
+  let battleResult: Outcome = '';
   if (battle) {
     const rows = Array.from(battle.querySelectorAll<HTMLElement>('.svs-holds [data-row]'));
     const holds = rows.map(row => {
@@ -379,9 +388,9 @@ export function updateSvsEditor(form: HTMLFormElement): void {
     if (holds.length) {
       const first = holds.reduce((best, hold) => hold.seconds > best.seconds ? hold : best);
       battleResult = first.side === 'ours' ? 'win' : 'loss';
-      const word = battle.querySelector('.svs-computed');
-      if (word) word.textContent = outcomeWord(battleResult);
     }
+    const word = battle.querySelector('.svs-computed');
+    if (word) word.textContent = outcomeWord(battleResult);
   }
 
   // State of Power, and the president's icon with it.

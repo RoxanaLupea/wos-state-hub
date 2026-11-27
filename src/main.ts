@@ -71,7 +71,7 @@ import {
   ALLIANCE_RESULT_EVENTS, addResultsHead, allianceResultsPage, championshipStars, opponentNotesPage, resultsTab, resultsTabActions, showdownScoreOf,
   svsHistorySection, sunfireHistorySection
 } from './ui/results.ts';
-import { SVS_EDIT_FORM_ID, preparationOutcome, typeHoldTime, updateSvsEditor } from './ui/svs-results.ts';
+import { SVS_EDIT_FORM_ID, preparationOutcome, totalsOutcome, typeHoldTime, updateSvsEditor } from './ui/svs-results.ts';
 import { moveRankingRow, rankingFromForm, toggleChampionshipLane } from './ui/championship-results.ts';
 import { planFirstRow, planNoteEdit } from './ui/plan-note.ts';
 import { SUBMITTED_EVENTS, fieldsOfForm, hasSubmissionsDot, submissionsPage } from './ui/submissions.ts';
@@ -2430,8 +2430,13 @@ function svsDetailsFromEdit(values: FormData, isSvs: boolean): { allianceId: str
       values.set('detail_points_ours', String(days.reduce((sum, [day]) => sum + (Number.isFinite(day) ? day : 0), 0)));
       values.set('detail_points_theirs', String(days.reduce((sum, [, day]) => sum + (Number.isFinite(day) ? day : 0), 0)));
       values.set('detail_preparation', preparationOutcome(days));
+    } else {
+      // The two totals typed without the days: the bigger total wins. Never a result picked
+      // without its numbers (Roxanne, 27 Nov night: "Without the details, we have no records").
+      values.set('detail_preparation', totalsOutcome(Number(values.get('detail_points_ours') || NaN),
+        Number(values.get('detail_points_theirs') || NaN)));
     }
-    if (holds.length) values.set('detail_castle_battle', holds[0].side === 'ours' ? 'win' : 'loss');
+    values.set('detail_castle_battle', holds.length ? (holds[0].side === 'ours' ? 'win' : 'loss') : '');
   }
   const preparation = String(values.get('detail_preparation') ?? '');
   const battle = String(values.get('detail_castle_battle') ?? '');
