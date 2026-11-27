@@ -710,8 +710,6 @@
   "pointSource.pffw1.task": "Gathering and ranking rewards are given at the end of the event, by the total Orichalcum gathered.",
   "pointSource.pffw2.dayName": "ranking|Smelter",
   "pointSource.pffw2.task": "Chiefs who held the Smelter for more than 1 second are ranked by how long they held it.",
-  "pointSource.pflw1.dayName": "shop",
-  "pointSource.pflw1.task": "Completing Lighthouse Intel gives Crystallite Cores, which are exchanged here.",
   "pointSource.phm1.task": "1 Reaper: {eventsHero} Shard ×1, Lv.2 Custom Secured Resource Chest ×10",
   "pointSource.phm2.task": "3 Reapers: {eventsHero} Shard ×2, Lucky Hero Gear Chest ×1, Lv.2 Custom Secured Resource Chest ×10",
   "pointSource.phm3.task": "5 Reapers: {eventsHero} Shard ×2, Lucky Hero Gear Chest ×1, Lv.2 Custom Secured Resource Chest ×20",

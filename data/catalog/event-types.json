@@ -296,7 +296,8 @@
     "colorEnd": "#C34C78",
     "icon": "flame",
     "imageFile": "flame_fangs",
-    "sortOrder": 33
+    "sortOrder": 33,
+    "noPersonalEntry": true
   },
   {
     "id": "armament",

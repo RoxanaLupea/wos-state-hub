@@ -1839,4 +1839,13 @@ alliance-time forms it opened go to the admin menu (to be designed).
   don't want that. The proportion we have in the mobile version is perfect. That's what we want,
   even if we are gonna center them a little more and put a bit of space in between." Built: the
   phone's card (92 x 113 px) on every screen, centred, 16 px apart on a computer.
+- Shops on big screens (Roxanne, 27 Nov night): "I guess it's fine. They're a little narrow ... The
+  edge is just a little too big on the bigger PC ... Maybe we want just to scale them a little. I
+  have no idea. Make a proposal for that, and I'll decide after. And tell me what the problems with
+  that might be."
+- Flame and Fangs (Roxanne, 27 Nov night): "we only have a shop. Mine is only for events that have
+  something to record, and we have nothing to record here. Completing Lighthouse, Intel gives
+  Crystallite. We do not need this, okay? So what we will have here is a shop, and a timeline, but
+  not an event timeline, but an instruction timeline." She is sending the instruction timeline from
+  Discord. Built: no Mine, no note; the Shop alone until the timeline comes.
 

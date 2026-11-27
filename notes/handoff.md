@@ -77,6 +77,11 @@ She found agreed rules missing from some panels. Found by rendering every panel:
 
 ## Questions still open (one at a time, never dropped)
 
+- Shops on the biggest screen: a proposal for scaling them is with her; she decides (27 Nov night).
+- Flame and Fangs' instruction timeline: she is sending it from Discord (27 Nov night).
+- Mine on the personal events: she said Mine is only for events with something to record; which
+  keep it is asked (27 Nov night).
+
 - Fishing's ranks with 7 rewards: how should the 7 sit? (built as 3 + 4, not confirmed)
 - How many days old is 1458? (the Champion Shop's amounts depend on it; saved: over 448 days)
 - Alliance Championship Ultimate rank 2: is the 25.6K orange tile the Championship Badge, and

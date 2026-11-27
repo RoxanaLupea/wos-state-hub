@@ -2813,12 +2813,6 @@
     "sortOrder": 1598
   },
   {
-    "id": "pflw1",
-    "eventTypeId": "flame-and-fang",
-    "list": "rewards",
-    "sortOrder": 1601
-  },
-  {
     "id": "plw1",
     "eventTypeId": "lucky-wheel",
     "list": "rules",
