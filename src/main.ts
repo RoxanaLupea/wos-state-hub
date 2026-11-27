@@ -493,7 +493,8 @@ function tierLineOf(occurrence: Occurrence): string {
   const tier = String(record?.[field] ?? (new Set(bands).size === 1 ? bands[0] : ''));
   const mayEdit = Boolean(view.myAllianceId) && leadsAlliance(person, view.myAllianceId as string);
   if (!tier && !mayEdit) return '';
-  return `<span class="tier-head">${escapeForPage(tier || 'Set tier')}` +
+  // With no tier yet, R4s read "Set tier" as written, not in capitals (Roxanne, 27 Nov).
+  return `<span class="tier-head${tier ? '' : ' unset'}">${escapeForPage(tier || 'Set tier')}` +
     (mayEdit ? `<button type="button" class="edit-button tier-edit" data-edit="tier|${escapeForPage(occurrence.key)}"` +
       ` aria-label="Change the tier">${EDIT_ICON}</button>` : '') + '</span>';
 }

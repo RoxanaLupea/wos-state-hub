@@ -605,6 +605,7 @@
    R4s right after it. */
 .tier-head { display: inline-flex; align-items: center; gap: 6px; margin-top: 3px; font-size: 12px; font-weight: 800;
   letter-spacing: 0.08em; text-transform: uppercase; color: var(--text); }
+.tier-head.unset { text-transform: none; letter-spacing: 0; font-size: 13px; font-weight: 700; }
 .event-page .tier-edit { padding: 2px; }
 .event-page .tier-edit .edit-icon { width: 14px; height: 14px; }
 .event-folds .tab-page > details.points-list.no-title > summary { display: none; }
