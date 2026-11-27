@@ -11,6 +11,7 @@ import { allianceTag } from '../data/alliances.ts';
 import { longDayText } from './day-names.ts';
 import { dayFromText } from '../calendar/days.ts';
 import './submissions.css';
+import { personChip, type PersonShown } from './person-chip.ts';
 
 // The events whose results members can submit.
 export const SUBMITTED_EVENTS = ['alliance-championship'];
@@ -41,15 +42,15 @@ export function isOpen(row: Row): boolean {
 export interface SubmissionsPageOptions {
   rows: Row[] | null;
   userId: string;
-  playerNameOf: (userId: string) => string;
+  playerOf: (userId: string) => PersonShown;
   leads: (allianceId: string) => boolean;
 }
 
-function statusText(row: Row, nameOf: (userId: string) => string): string {
+function statusText(row: Row, playerOf: (userId: string) => PersonShown): string {
   if (row.status === 'open') return '<span class="sub-status open">Waiting for an R4</span>';
-  const by = row.resolved_by ? nameOf(String(row.resolved_by)) : '';
-  const word = row.status === 'approved' ? 'Approved' : 'Rejected';
-  return `<span class="sub-status ${escapeForPage(String(row.status))}">${word}${by ? ' by ' + escapeForPage(by) : ''}</span>`;
+  const word = row.status === 'approved' ? 'Approved by' : 'Rejected by';
+  return `<span class="sub-status ${escapeForPage(String(row.status))}">${word}` +
+    (row.resolved_by ? personChip(playerOf(String(row.resolved_by))) : '') + '</span>';
 }
 
 // The Submissions page: every ticket this person may see, open ones first, newest first.
@@ -63,8 +64,8 @@ export function submissionsPage(options: SubmissionsPageOptions): string {
     return `<button type="button" class="sub-item${isOpen(row) ? ' open' : ''}" data-open-submission="${escapeForPage(String(row.id))}">` +
       `<span class="sub-event">${reviews ? '<i class="sub-dot" aria-label="To review"></i>' : ''}${escapeForPage(event)}</span>` +
       `<span class="sub-who">${escapeForPage(allianceTag(String(row.alliance_id)))} · Submitted by ` +
-      `${escapeForPage(options.playerNameOf(String(row.submitted_by)) || 'a member')}</span>` +
-      statusText(row, options.playerNameOf) + '</button>';
+      `${personChip(options.playerOf(String(row.submitted_by)))}</span>` +
+      statusText(row, options.playerOf) + '</button>';
   }).join('');
   return '<div class="work-page submissions"><section class="work-section"><div class="work-head"><h2>Submissions</h2></div>' +
     (items ? `<div class="sub-list">${items}</div>` : '<p class="work-empty">Nothing has been submitted yet.</p>') +

@@ -34,8 +34,8 @@ button.ac-lane::after { content: ''; position: absolute; inset: -9px 0; }
 .ac-move button:active { background: rgba(255, 255, 255, 0.08); }
 .ac-move svg { display: block; width: 16px; height: 10px; fill: none; stroke: url(#ac-move-colour); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
 /* Credit to whoever put the results in. */
-.ac-credit { margin: 0 0 18px; font-size: 12.5px; font-weight: 600; color: var(--text-faint); }
-.ac-credit b { font-weight: 800; color: var(--text-muted); }
+.ac-credit { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 0 0 18px; }
+.ac-credit > span:first-child { font-size: 12.5px; font-weight: 600; color: var(--text-faint); }
 .ac-result .form-message:empty { display: none; }
 .ac-result .form-message { margin: 0; color: var(--danger); font-size: 13px; }
 

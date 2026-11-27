@@ -1,0 +1,6 @@
+/* A player: their round picture and their name, as in New group. */
+.person-chip { display: inline-flex; align-items: center; gap: 7px; min-width: 0; vertical-align: middle; }
+.person-chip > i { flex: none; width: 24px; height: 24px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center;
+  font-style: normal; font-size: 11px; font-weight: 800; color: var(--text-muted); background: var(--glass-strong); }
+.person-chip > i img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
+.person-chip > span { font-size: 13px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

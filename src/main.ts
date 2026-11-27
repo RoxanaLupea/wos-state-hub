@@ -550,7 +550,7 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
     context: workContext(), eventTypeId: occurrence.eventTypeId, runDate: resultRunDate(occurrence, nearby),
     stateNumber: Number(STATE_NUMBER), isSwitchedOff: resultsSwitchedOff,
     hasStarted: occurrence.startMinute <= nowMinute(), roundsFought: roundsFoughtIn(occurrence),
-    playerNameOf
+    playerOf
   };
   return eventPanel(occurrence, {
     tree, day, dayOfEvent: dayInEvent,
@@ -1104,12 +1104,13 @@ function openSubmission(id: string): void {
   startAtTop.panel = true;
 }
 
-// A person's name in the game: the name of their main account (or their first account).
-function playerNameOf(userId: string): string {
+// A person as the game shows them: the name and picture of their main account (or their
+// first account).
+function playerOf(userId: string): { name: string; avatar: string | null } {
   const accounts = (rowsOf('game_accounts') ?? []).filter(one => one.owner_id === userId && one.kind !== 'farm')
     .sort((left, right) => (left.kind === 'main' ? 0 : 1) - (right.kind === 'main' ? 0 : 1) || Number(left.sort_order) - Number(right.sort_order));
-  const account = accounts[0];
-  return account ? gameOfAccount(String(account.in_game_id))?.name ?? '' : '';
+  const game = accounts[0] ? gameOfAccount(String(accounts[0].in_game_id)) : null;
+  return { name: game?.name ?? '', avatar: game?.avatar ?? null };
 }
 
 // The plan the player's alliance keeps for an event, set by its R4s (Roxanne, 27 Nov).
@@ -1178,7 +1179,7 @@ function workingPageMarkup(openPage: string, subPage: string): string {
   if (openPage === 'submissions' && person) {
     const signedIn = person;
     markSubmissionsSeen();
-    return submissionsPage({ rows: rowsOf('result_submissions'), userId: signedIn.userId, playerNameOf,
+    return submissionsPage({ rows: rowsOf('result_submissions'), userId: signedIn.userId, playerOf,
       leads: allianceId => leadsAlliance(signedIn, allianceId) });
   }
   if (key === 'map|territory') return territoryPage(workContext());
@@ -3372,7 +3373,16 @@ async function saveWorkingForm(
     const submissionId = text('submission_id');
     const submission = submissionId
       ? (tableRows.get('result_submissions') ?? []).find(one => String(one.id) === submissionId) : undefined;
-    if (submission) values.set('detail_submitted_by', String(submission.submitted_by));
+    // Everyone who put results in is credited, each once (Roxanne, 27 Nov): the member
+    // whose submission is approved, or the R4 saving them.
+    if (ALLIANCE_RESULT_EVENTS.includes(eventTypeId)) {
+      const before = String((tableRows.get('result_details') ?? [])
+        .find(one => String(one.result_id) === existingId && one.detail_key === 'submitted_by')?.detail_value ?? '');
+      const contributors = before.split(',').filter(Boolean);
+      const contributor = submission ? String(submission.submitted_by) : userId;
+      if (!contributors.includes(contributor)) contributors.push(contributor);
+      values.set('detail_submitted_by', contributors.join(','));
+    }
     const whole = (name: string) => {
       if (!text(name)) return null;
       const number = Number(text(name));

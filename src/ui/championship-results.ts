@@ -56,8 +56,9 @@ export interface ChampionshipDrawOptions {
   addRankingEdit: string;
   // The add icon the site's add buttons use.
   addIcon: string;
-  // Who put the results in, to give them credit (Roxanne, 27 Nov).
-  submittedBy: string;
+  // Everyone who put results in, each once, in the order they did, to give them credit
+  // (Roxanne, 27 Nov): their picture and name, drawn already.
+  contributors: string[];
   // A member's submission being reviewed by an R4: its ticket.
   submissionId: string;
 }
@@ -222,7 +223,7 @@ export function championshipResult(options: ChampionshipDrawOptions): string {
       body + (options.submissionId ? `<input type="hidden" name="submission_id" value="${escapeForPage(options.submissionId)}">` : '') +
       '<p class="form-message" data-form-message></p></form>'
     : `<div class="svs-result ac-result">${body}` +
-      (options.submittedBy ? `<p class="ac-credit">Submitted by <b>${escapeForPage(options.submittedBy)}</b></p>` : '') + '</div>';
+      (options.contributors.length ? `<div class="ac-credit"><span>Submitted by</span>${options.contributors.join('')}</div>` : '') + '</div>';
 }
 
 // A lane tapped while adding: it turns won or lost, and its round's flags follow.

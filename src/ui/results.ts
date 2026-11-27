@@ -20,6 +20,7 @@ import talHistory from '../../seed/tal-results.json';
 import { ADD_ICON } from './invite-row.ts';
 import { CHAMPIONSHIP_EDIT_FORM_ID, addResultsButton, championshipResult, championshipViewOf, championshipViewOfFields } from './championship-results.ts';
 import { SUBMITTED_EVENTS } from './submissions.ts';
+import { personChip, type PersonShown } from './person-chip.ts';
 
 // The events an alliance records for itself.
 export const ALLIANCE_RESULT_EVENTS = ['showdown', 'foundry', 'canyon', 'winter-siege', 'alliance-championship'];
@@ -37,8 +38,8 @@ export interface ResultsOptions {
   // only what already happened is asked for.
   hasStarted: boolean;
   roundsFought: number;
-  // A person's name in the game, from their account id.
-  playerNameOf: (userId: string) => string;
+  // A person as the game shows them (name and picture), from their account id.
+  playerOf: (userId: string) => PersonShown;
 }
 
 interface ResultView {
@@ -704,7 +705,8 @@ function championshipResults(options: ResultsOptions, allianceId: string, record
     submissionId: submission ? String(submission.id) : '',
     formKey: formKey('alliance-championship', options.runDate, allianceId, existing),
     addRankingEdit: context.leads(allianceId) ? edit + '|ranking' : '', addIcon: ADD_ICON,
-    submittedBy: existing ? options.playerNameOf(existing.details.get('submitted_by') || String(existing.row.updated_by ?? '')) : ''
+    contributors: existing ? (existing.details.get('submitted_by') || String(existing.row.updated_by ?? ''))
+      .split(',').filter(Boolean).map(userId => personChip(options.playerOf(userId))) : []
   });
 }
 

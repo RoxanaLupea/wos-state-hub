@@ -4,6 +4,7 @@
   font: inherit; color: var(--text); text-align: left; cursor: pointer; }
 .sub-item.open { background: rgba(255, 255, 255, 0.08); }
 .sub-event { display: flex; align-items: center; gap: 8px; font-size: 14.5px; font-weight: 800; }
+.sub-who, .sub-status { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .sub-who { font-size: 12.5px; font-weight: 600; color: var(--text-muted); }
 .sub-status { font-size: 12.5px; font-weight: 700; color: var(--text-faint); }
 .sub-status.open { color: var(--ours); }

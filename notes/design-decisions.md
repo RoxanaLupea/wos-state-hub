@@ -1444,3 +1444,8 @@ All nine are built.
   a thing ... it jumps to the top ... I don't want my list to jump when I'm selecting things."
   Every box that scrolls on its own is put back where it was after each drawing (main.ts
   KEPT_BOXES), PC and phone.
+- Contributors (Roxanne, 27 Nov): results are added round by round, so several members may
+  submit for one results screen; each one whose results are approved is added once, in order,
+  and all are shown under the results. "I want them to be displayed like with their picture and
+  their name from in-game ... I want every spot where a user is shown to be that user, not just
+  text." (person-chip.ts, used under results and on Submissions.)
