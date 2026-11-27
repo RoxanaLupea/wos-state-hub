@@ -1922,3 +1922,8 @@ alliance-time forms it opened go to the admin menu (to be designed).
   title's person shown as a real player, picture and name, never plain text. Member points are recorded
   too, "collapsed, and we can expand that for each legion". Tracking members across events (as the xSK
   Alliance Records spreadsheets did, with the Foundry spreadsheet) is wanted, but not on the event.
+- Foundry legion result, first mockup (Roxanne, 27 Nov night): "put the state numbers with the alliance
+  tags and write the name under"; the win does not go on the Arsenal Points line, "Arsenal points need
+  to be like centered"; Control, Gathering, Loot rows "look kind of okay"; the Legion Tally (MVPs) "is
+  plain, it's boring, and it's blue and red from ... SvS"; the tabs "have to say Legion 1 and Legion 2";
+  "it took me a while to read all of this. How come all of this fits better in the game?"
