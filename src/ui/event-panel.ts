@@ -737,6 +737,8 @@ export function renderEventTree(tree: EventTree, firstRow?: FirstRowPlan): strin
 }
 
 export interface EventPanelOptions {
+  // The alliance's tier for this run, with its edit for R4s, under the event's name.
+  tierLineHtml?: string;
   tree: EventTree;
   // The day the player was looking at when they opened it.
   day: number;
@@ -830,9 +832,6 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
   // The run's season, beside its kind (Fishing's Summer, Roxanne 27 Nov).
   const season = seasonOf(eventTypeId, occurrence.startDay);
   if (season) facts.push(season);
-  // The alliance's tier, for an event with tiers (Alliance Championship).
-  const tier = rewardsOf(eventTypeId, 'group').find(row => row.band)?.band ?? '';
-  if (tier) facts.push(rewardBandName(tier) + ' tier');
   if (occurrence.wasCancelled) facts.push('Cancelled');
   if (occurrence.wasChanged) facts.push('Date or time changed');
 
@@ -939,6 +938,9 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
     (occurrence.wasCancelled ? '<span class="cancelled-mark" aria-label="Cancelled">&times;</span> ' : '') +
     escapeForPage(eventTypeName(headEventTypeId) + options.allianceTags) + '</h2>' +
     `<span class="event-note">${escapeForPage(spanText(headStart, headEnd))}</span>` +
+    // The alliance's tier under the name, in capitals, with a tiny edit for R4s (Roxanne,
+    // 27 Nov: "we are not gonna write tier").
+    (options.tierLineHtml ?? '') +
     (factsInHead ? factsHtml : '') +
     `</div><div class="row-buttons">${options.headPencils}</div></div>` +
     // The other name, the event's note and this date's note go with the name, not in a tab.
