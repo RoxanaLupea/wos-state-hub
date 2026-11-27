@@ -9,6 +9,13 @@ fishing! Explore a huge realm of fishing treasures and awesome Club rewards." Un
 rules there is a "Trial Stages" button. The 27 Nov Event Rules screenshots match the
 sections below.
 
+## Seasons
+The game's Guide rule: "Seasonal Fishing: events are cyclical, corresponding to the four
+seasons." It does not give the order. The Guide tab showed "Current season: Summer" for the
+run of 24–27 Nov 2026 (the owner's screenshot, 27 Nov).
+Source outside the game, Century Games' help centre (FAQ 6640, checked 27 Nov 2026): the
+season changes in the order winter, spring, summer, fall. So the next run is autumn.
+
 ## Tokens and Points
 1. Join the Fishing Tournament while in season to earn Fishing Points and Fishing Tokens.
 2. Fishing Points grant Club rewards and a higher ranking on the Master Fisher Leaderboard.
