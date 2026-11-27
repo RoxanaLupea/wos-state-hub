@@ -62,7 +62,7 @@ data/captures/fishing.md (from WoS Guru, not shown yet).
   where it was approved. No Edit in any head (date, repeat and alliance-time edits come back
   later in a design that makes sense; alliance times will be edited in place).
 - The alliance's tier under the name in capitals (no word "tier"), a tiny edit for R4s only.
-  Open: what R4s see when no tier is set (now "TIER NOT SET"; she does not want the word).
+  With no tier set, R4s see "SET TIER" (her words, 27 Nov); members see nothing.
   To build: the tiny edit's picker, and the tier saved per run (a new run takes the current
   tier; a change applies from that run on; past runs keep theirs). Today the tier is per
   alliance (alliance_records.championship_tier, winter_siege_tier); no alliance has one set.
