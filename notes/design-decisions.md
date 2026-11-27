@@ -1889,3 +1889,18 @@ alliance-time forms it opened go to the admin menu (to be designed).
   the shop's day joined at both ends. A try with one dot spacing, a colour going to the event's red, the
   shop text and less space under the headings was called worse and reverted. Accepted ("this is done").
 - Flame and Fangs' colours are red (Roxanne, 27 Nov night: "It's mostly red"), used everywhere since.
+- Foundry Battle (Roxanne, 27 Nov night): no Mine ("Mine makes no sense"), no Alliance Times as it was.
+  From Registration until battle day, a button to set the legions' times: the main alliance's Legion 1
+  is required, Legion 2 and the academies' legions optional; "We shouldn't display any of the times if
+  they're not set. So we have an option to set the time, and that will tell us the legions." Results
+  for a legion can be added once its time has passed, "not before". The calendar shows every legion
+  ("just put all the legions there. It's fine. It doesn't matter which one is mine"); notifications
+  later. Mockup: legions on the Timeline under Battle (option A); "I like the add Legion thing", "I like
+  how it's highlighted once the time is there".
+- Alliance tags in a row (Roxanne, 27 Nov night): "The alias tags have to be the same width", as wide
+  as "www[w]", so any alliance's tag fits.
+- Setting Foundry's legions (Roxanne, 27 Nov night): pick the time, the alliance (main or any declared
+  academy) and the legion ("Maybe I want to set the Legion one in main or academy").
+- Foundry results (Roxanne, 27 Nov night): each result is connected to one of the set legions; one
+  Results tab with a tab per legion that has results ("it won't be 3 result tabs, just one tab with 3
+  legions"). She is sending her Foundry instruction screenshots next.
