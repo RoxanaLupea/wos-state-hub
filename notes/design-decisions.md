@@ -1593,3 +1593,6 @@ All nine are built.
   remove it for Alliance Championship and ask me if we're gonna keep it for other events as we
   move on." Done for Alliance Championship (event-panel.css); ask for each other event in the
   review.
+- Alliance Championship rules and rewards (Roxanne, 27 Nov): they are from the game ("If you
+  have full rewards, then they are from the game. Because there's no way I give you all those
+  details without giving you everything").
