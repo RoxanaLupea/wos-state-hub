@@ -1835,4 +1835,8 @@ alliance-time forms it opened go to the admin menu (to be designed).
 - Shop price bar (Roxanne, 27 Nov night): "a 4th version where they are see-through but whiter, like
   more opaque, but still see-through."
 - Shops accepted (Roxanne, 27 Nov night): "Ok, the shops are perfect" (the 4th version).
+- Shops on the computer (Roxanne, 27 Nov night): "for PC you are making them feel the width, and we
+  don't want that. The proportion we have in the mobile version is perfect. That's what we want,
+  even if we are gonna center them a little more and put a bit of space in between." Built: the
+  phone's card (92 x 113 px) on every screen, centred, 16 px apart on a computer.
 
