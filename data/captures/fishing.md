@@ -189,3 +189,15 @@ collection's reward is two decorations (claim).
 "A fine Fishing Kit Set to help you concentrate on the rarest and most valuable fish!" 500 gems,
 (grey stone, red hammer) x3, (treasure chart) x1, (conch) x1, (ticket) x1, Fishing Tokens (200,
 cut off); 5580%; 4,99 RON; "Event Remaining: 1"; 500 (gift points).
+
+## Daily and Season Missions (from WoS Guru, not the game)
+
+Source outside the game: wosguru.com/fishing, "Updated 22 Nov 2026", read 27 Nov 2026 at the
+owner's ask. Not yet seen in her screenshots.
+- Daily missions: point milestones each day at 100, 500, 1,000, 1,500 and 2,000 Fishing
+  Points; each day pays out separately. Rewards named there: Hero EXP, Enhancement XP,
+  Speedups, Secured Resources and a Lucky Hero Chest (amounts not given).
+- Season Missions (the game's patch notes, 1.29.20, 22 Dec 2025: "obtaining specified Fishing
+  Points allows you to claim the Daybreak Island decoration 'Fantasy Aquarium'"): one aquarium
+  token at each of 10,000, 16,000, 20,000, 35,000 and 50,000 Fishing Points in one event;
+  58 tokens max the decoration; each level raises Troops Defense.
