@@ -1823,4 +1823,8 @@ alliance-time forms it opened go to the admin menu (to be designed).
 - Ticket lines (Roxanne, 27 Nov night, TAL): "At round 1, the tickets start only when round 1 is
   written, but the 0 is at elimination. So make sure the ticket always is on the right time. Like, it
   has to start at elimination." A ticket line starts on the first row at its moment.
+- Shop price bar (Roxanne, 27 Nov night): "I don't like the white. It's too white ... How numbers are
+  centered, or how they look in that white thing ... Are they higher than they are supposed to be?
+  Make it like a transparent glass, right? So it is gonna be white but see-through." Built: a
+  see-through white glass bar, the price in white, the digits centred on it (measured).
 
