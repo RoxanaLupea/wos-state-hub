@@ -338,7 +338,8 @@ function rewardListHtml(list: string, band: string, bandCount: number, shown: Re
             `<div class="prestige-reward">${rewardTile({ ...row, tile: 'blue' })}` +
             `<span class="prestige-name">${escapeForPage(itemName(row.itemId).replace(/-/g, '\u2011'))}</span></div>`).join('') + '</div>'
         : '') +
-      `<div class="reward-sub">${escapeForPage(rewardListName(eventTypeId, 'group'))}</div>` +
+      // The game's name for these: rewards by the alliance's rank in its group.
+      '<div class="reward-sub">Group Ranking</div>' +
       (ranks.length > 1
         ? `<div class="reward-tabs" style="grid-template-columns:repeat(${ranks.length},1fr)">` + ranks.map(rank =>
           `<button type="button" class="reward-tab${rank === openRank ? ' on' : ''}"` +
