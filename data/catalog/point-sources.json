@@ -2853,5 +2853,132 @@
     "eventTypeId": "treasure-hunt-drill",
     "list": "missions",
     "sortOrder": 1641
+  },
+  {
+    "id": "pfi1",
+    "eventTypeId": "fishing",
+    "list": "how-to",
+    "sortOrder": 1700
+  },
+  {
+    "id": "pfi2",
+    "eventTypeId": "fishing",
+    "list": "rewards",
+    "sortOrder": 1720
+  },
+  {
+    "id": "pfi3",
+    "eventTypeId": "fishing",
+    "list": "rewards",
+    "sortOrder": 1721
+  },
+  {
+    "id": "pfi4",
+    "eventTypeId": "fishing",
+    "list": "rewards",
+    "sortOrder": 1722
+  },
+  {
+    "id": "pfi5",
+    "eventTypeId": "fishing",
+    "list": "rewards",
+    "sortOrder": 1723
+  },
+  {
+    "id": "pfi6",
+    "eventTypeId": "fishing",
+    "list": "how-to",
+    "sortOrder": 1712
+  },
+  {
+    "id": "pfh1",
+    "eventTypeId": "fishing",
+    "list": "how-to",
+    "sortOrder": 1702,
+    "imageFile": "items/picture-to-come.png"
+  },
+  {
+    "id": "pfh2",
+    "eventTypeId": "fishing",
+    "list": "how-to",
+    "sortOrder": 1703,
+    "imageFile": "items/treasure-chart.png"
+  },
+  {
+    "id": "pfh3",
+    "eventTypeId": "fishing",
+    "list": "how-to",
+    "sortOrder": 1704
+  },
+  {
+    "id": "pfh4a",
+    "eventTypeId": "fishing",
+    "list": "how-to",
+    "sortOrder": 1706,
+    "imageFile": "items/fishing-voucher.png"
+  },
+  {
+    "id": "pfh4b",
+    "eventTypeId": "fishing",
+    "list": "how-to",
+    "sortOrder": 1707,
+    "imageFile": "items/picture-to-come.png"
+  },
+  {
+    "id": "pfh4c",
+    "eventTypeId": "fishing",
+    "list": "how-to",
+    "sortOrder": 1708,
+    "imageFile": "items/picture-to-come.png"
+  },
+  {
+    "id": "pfh4d",
+    "eventTypeId": "fishing",
+    "list": "how-to",
+    "sortOrder": 1709,
+    "imageFile": "items/picture-to-come.png"
+  },
+  {
+    "id": "pfh4e",
+    "eventTypeId": "fishing",
+    "list": "how-to",
+    "sortOrder": 1710,
+    "imageFile": "items/picture-to-come.png"
+  },
+  {
+    "id": "pfh4f",
+    "eventTypeId": "fishing",
+    "list": "how-to",
+    "sortOrder": 1705
+  },
+  {
+    "id": "pfh5",
+    "eventTypeId": "fishing",
+    "list": "how-to",
+    "sortOrder": 1711
+  },
+  {
+    "id": "pfc1",
+    "eventTypeId": "fishing",
+    "list": "chances",
+    "sortOrder": 1711
+  },
+  {
+    "id": "pfc2",
+    "eventTypeId": "fishing",
+    "list": "chances",
+    "sortOrder": 1712
+  },
+  {
+    "id": "pfc3",
+    "eventTypeId": "fishing",
+    "list": "chances",
+    "sortOrder": 1713
+  },
+  {
+    "id": "pfi7",
+    "eventTypeId": "fishing",
+    "list": "how-to",
+    "sortOrder": 1701
   }
 ]

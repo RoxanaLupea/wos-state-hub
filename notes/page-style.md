@@ -128,3 +128,21 @@ only what makes it one (the room its letters, digits or bars leave over and unde
 - Timelines: phases and stages 13px capitals; days, steps and openings 12px; the current
   row has the pin; lines as soft as State of Power's.
 - Font: Roboto everywhere; the short form of an event (SvS, TAL) stays Montserrat.
+
+## Calendar bars on a computer (standard, 26 Nov)
+- Two bars only: one line (28px) and two lines (42px). Two lines only where a bar needs
+  them: SvS (parts over its days) and a week with tickets.
+- Every event logo 22px; the name 14px, written as it is; the short form (SvS, TAL) 10px
+  in Inter, on the name's line.
+- Every smaller word on a bar is 12px. A phase is in capitals (weight 800), centred in
+  its stretch, or in the room after the name when its stretch starts under the name, and
+  never closer than 12px to the name (Roxanne, 26 Nov: "center it"). On a two-line
+  bar the days under the parts stay as written, centred in their days.
+- In the day's card a phase under an event's name is in capitals too, and the logos are
+  sized to the two lines beside them (32px; 24px in the timeline).
+
+## Room around text (standard, Roxanne 26 Nov)
+- Any box holding text, above all one that cuts what does not fit, keeps at least 3px
+  above and below the letters and 5px after them, so no letter or shadow is clipped (a
+  B's or a T's edge). The layout keeps its place: the room is taken back with a negative
+  margin. Spaces between things are measured from the letters, not from that room.

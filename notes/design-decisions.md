@@ -875,8 +875,8 @@ there before discussing it again.
   replaces the category chips of 17 Nov. No filled blue buttons and no count badges, ever.
 - Today shows only when today is out of sight (another month or week); the month name
   keeps its place. UTC is one word with a swap icon that flips to MINE.
-- On a computer the two rows are one: Today and the month on the left, with arrows
-  either side of the month (a computer cannot swipe); the views, UTC and Filters on the
+- On a computer the two rows are one: the month on the left, then the pin and the arrows
+  (a computer cannot swipe; see 26 Nov below); the views, UTC and Filters on the
   right. Filters opens as a panel under it, three events to a row, the page not dimmed.
   Shown 24 Nov (cal-desk); the arrows were added in the build.
 - Today is always in sight when the calendar opens (the site, the section, Today, another
@@ -1338,6 +1338,143 @@ All nine are built.
 - Yellow events mockup (25 Nov, rejected): "they look the same to me, shitty yellow almost brown, depressing and ugly, worse than what we had".
 - Deals and Packs (25 Nov): "This is part of deals, idk why or how these work, we'll keep them separate and decide if we want to merge them, deals might be tied to missions in game, packs we just buy them". Packs are what is bought in the Top-up Center.
 - Foundry power reminder (25 Nov, replaces "every 2 weeks"): "I want it when registration opens because that's when they can check". The number turns red with a dot when a Foundry Battle registration opens after it was set.
+
+## Redesign for the common screen (branch common-size, 26 Nov)
+
+- The site is designed for a common monitor (1920 × 1080), then made to look the same on
+  every screen; nothing stays squeezed or cut because a narrow width once forced it
+  (Roxanne, 26 Nov: "take back all the poor decisions we made because we didn't have
+  enough width").
+- Calendar bars (26 Nov): "we need to define 2 calendar rows or bars, one of 1 line, one
+  of 2 lines, and be efficient about how we display them." Fonts and heights the same
+  everywhere.
+- Phases on one-line bars (26 Nov): "they have to be written in caps", "leave a certain
+  amount of space that makes it clear that it's different, and then add the face there",
+  "the name of the events will be in normal font", "I do not want that change for events
+  where we have 2 rows ... the sub faces stay written like they are right now", and in the
+  day's card "where we have registration, battles, those are again faces, need to be
+  written in uppercase". The card's icons were "too big for those fonts".
+- Rows (26 Nov): an event's battle day goes on the same row as its Voting and
+  Registration ("tied together in the same row, even though we have like 2 days of gap");
+  a run that is ending and the next one starting do not have to share a row (Hall of
+  Heroes). The top band "takes up a lot of the screen, and it shouldn't"; the sections in
+  the site's font; no scrollbar on the calendar ("I never asked for a scroll bar"); equal
+  edges on both sides; day names never cut; dates a little smaller.
+- Text in boxes (26 Nov): "make sure you have at least 2-3 pixels of padding around the
+  text in the box ... At least 5 pixels to the right, so you can either center it if it's
+  centered or align it to the left and still have room for it to grow."
+- Phases on one-line bars, after trying them 12px after the name (26 Nov): "I don't like
+  this ... I want it centered ... Yeah, center it." Preview and Matchmaking too.
+- Short forms on bars with phases (26 Nov): "we have the AC there because in the case it
+  does not fit, then we will use the AC instead of Alliance Championship ... we should have
+  in uppercase AC and then the face ... Mobilization, Showdown, Championship are also
+  accepted." Built: the full name, then the short name, then the short form, whichever
+  shows the phases.
+- Top bar (26 Nov): "the logo can be bigger. It does not need that much space in between
+  the top and the bottom ... Half of it maybe. And the calendar fortress, the navigation,
+  they cannot possibly be that small ... at least as big as ... the state hub."
+- Clock and account (26 Nov), from three versions: "The name is enough ... I have the
+  picture and the name ... I like the UTC exactly how it was before, so just adjust it for
+  the size. And I like how the line looks. Oh, and the arrow down, but ... make it look
+  like the site and like icons." Built: UTC over the time (12px / 20px), the thin line,
+  the round picture with the page's ring, the name, the arrow in the icons' style; no box.
+- Calendar head (26 Nov): "a lot of spacing for Monday, Tuesday ... and then the numbers
+  ... that bar at the top for the dates becomes quite tall." Built: 8px from the day names
+  to the first dates, dates 6px under a week's line and 4px over its bars.
+- The calendar's fade at the bottom (26 Nov): "it should be like half a row, maximum 1
+  row. We're wasting a lot of information at the bottom." Built: 16px, half a bar row.
+- Calendar month controls like Invites (Roxanne, 26 Nov): "The arrows, I think we already
+  established that we are gonna do them in the same style as the icons, and that they will be
+  after the month, and the pin icon is missing for when we go to other months ... it has to be
+  the same format here too, and on the phone, it has to be consistent". Built: the date, then
+  the pin back to today (only while today is out of sight, the icon alone), then the two arrows
+  in the icons' style; on a phone the pin after the date and no arrows. The date keeps the room
+  of its longest title so the pin and arrows don't move.
+- Screen 1 review, computer (Roxanne, 26 Nov):
+  - Today's line under the day name: "almost stuck to 26th. It can go up a pixel or two."
+  - "Bear Hunt is not BH ... Bear Hunt is BT, because it's Bear Trap 1, Bear Trap 2."
+  - SvS Castle Battle: "I don't think we should write Castle Battle under Battle ... just put
+    the icon of the castle and the lines where they need to be."
+  - The day's card: "if we have timeline and all day, why can't we have the date included in
+    that and the panel go higher a little?"; "if we don't have an event set, then it only
+    makes sense that the panel borrows the accent of the calendar ... blue, but also some of
+    that warm ... peach". Built: the date and "Game time (UTC)" as the card's head, the
+    card in the calendar logo's blue and peach.
+  - "I do not want a round picture. And make sure it's not stuck on the bottom row."
+  - "the clock can be bigger. The numbers ... heavier and bigger, and the UTC is good as it
+    is", the clock about the photo's size.
+  - Next up and Then: "We either put the face or we don't ... The date has to be in the same
+    font, same spot too, and the size of the icon has to be the same ... I would put all 4
+    rows aligned to the left and make the icon bigger." Built on the computer; the phone
+    tiles are as approved.
+- Calendar controls on a computer (Roxanne, 26 Nov): "The entire bar from above the calendar
+  can have bigger everything ... the month, I like that it's not as big as before, but this
+  is ridiculous. This is way too small. It should still have space at the top, but like be
+  positioned better in general, like lower and bigger font ... all the icons to be bigger.
+  They're so tiny that you don't even know what you're clicking ... make sure all of those
+  are aligned with the arrows, and filters in UTC should be at least as big as the selected
+  view". Built: the month 28px ("I need like 28, I think"), every icon 24px (arrows and pin 22px), Filters and UTC 15px,
+  all centred on one line, lower in the same row: "The space between the calendar and the top
+  needs to be exactly the same" (the calendar starts where it did).
+- Calendar views on a computer (Roxanne, 26 Nov): "two icons for weekly and monthly are too
+  close together ... put a little space in between now and in between them and the rest":
+  12px between them, 20px on each side of the line after them.
+- The day's card head on a computer (Roxanne, 26 Nov): "what is that game time UTC note? I
+  don't think I asked for it, and maybe we wanna write timeline in caps, and then the day,
+  like the date after that on the same line. There's no point in having like 1, 2, 3, 4 of
+  them". Built: "TIMELINE" in capitals in the section's colour and the date after it on one
+  line, then All day; the "Game time (UTC)" line is gone there (the UTC button says it).
+- The phone too (Roxanne, 26 Nov): "apply these changes to the phone too, because we're also
+  defining like the panel ... By these I mean the logic changes in like where we moved
+  things, not sizes." Built on the phone: the day's card with TIMELINE and the date on one
+  line, no "Game time (UTC)" line, the calendar's two colours; Next up and Then with their
+  phase on both and the four lines beside the logo, the logos level from the top. Phone
+  sizes unchanged (logo, month, icons, spacing).
+- Phone tiles (Roxanne, 26 Nov): "it's gonna be next up, it's gonna be SVS and matchmaking,
+  but I don't understand why you didn't use AC for Alliance Championship ... I don't
+  remember us setting like the title on 2 lines. So it's gonna be AC and registration, and
+  like all 4 lines will be aligned and the entire panel should be narrower. It's way too
+  tall now for no reason." Built: on a phone the name is one line, the event's short form
+  where it has one (SvS, AC); both tiles' four lines level.
+- Tile logos (Roxanne, 26 Nov): "We care that they are the same in their own card ... maybe
+  5 pixel padding to the left and right, and then centered vertically would be better for
+  any icon we'll have from now on. That gives the text also more space, and I like it
+  centered on the left and with the date on the same alignment." Built: 5px from the card's
+  edge to the logo and from the logo to the text, the logo centred on the four lines.
+- Phone bars (Roxanne, 26 Nov): "make the Sunfire Castle logo bigger, center it in the
+  battle space, and align it with the text"; "Aren't like all the stages too high? ...
+  Preparation, Battle, Field Triage is higher than State of Power. That shouldn't be
+  possible. That should be centered. And then City, Basic Skills ... should be centered
+  with those lines ... the entire line can still display all of this, but be less tall";
+  "You forgot to make matchmaking uppercase ... State of Power and Matchmaking are a pair
+  ... they don't have to be so far apart, and second, they have to be centered in the
+  space they have. TAL and Preview, the same." Built: every two-line bar on a phone 32px
+  (was 34), the name and the parts on one baseline, line 2 close under it with each white
+  line centred on its letters, a phase under the name in capitals; the castle 14px in the
+  middle of Battle, level with line 2, without its own lines (no room on a phone; the
+  computer keeps them).
+- Next up / Then, an idea kept for later (Roxanne, 26 Nov): "What if next up and then are
+  actually above, are written above the logo and in a whiter font, and then the 3 rows and
+  the logo are centered under that." Tried and taken back the same evening: "I like the
+  idea, but everything is too low and too much to the left ... I want to put the cards
+  layout back and just keep this as an idea for the future when I have time to go over it
+  ... it looked better before." The tiles stay label, name, phase and date beside the logo.
+- Phone bars, second pass (Roxanne, 26 Nov): "I think we need like 1 or 2 more pixels in
+  between them, but also they have too much padding on the top and the bottom right now.
+  Make sure all the subfaces and everything have the same size. Like battle and field
+  triage in preparation in SVS are for sure smaller than the others." Built: two-line bars
+  30px, 2px more between the lines and less above and below; every smaller word 9px (the
+  parts were 7.5px, the second names 7.9px).
+- Calendar rows (Roxanne, 26 Nov): "I want Foundry and Canyon closer together ...
+  mobilization is gonna run for most of the week. It's actually the longest run, which is
+  why I would put it first. Then I would put Fortress Battle and TAL because they take up
+  a lot of space. Then Alliance Championship and State of Power because then again they take
+  up a lot of space ... I like that all the bears are on the same line interconnected with
+  the Crazy Joe, because it gives you a bigger picture". Tried: events are packed into rows
+  as before, then the fullest rows go first (not yet confirmed).
+- SvS's BATTLE on a phone (Roxanne, 27 Nov): asked whether BATTLE may stay smaller or be cut
+  like other names that don't fit: "Yes, it was for battle being an exception". BATTLE stays
+  7.5px; every other smaller word on a phone bar is 9px.
 - Invites groups (Roxanne, 27 Nov): "I don't see it sorted to have groups together after I
   save" and "Creating it should count as saving it. No?" Built: Create in New group saves the
   group at once (editing stays on); saving puts a group's people together on their list, from
@@ -1452,3 +1589,65 @@ All nine are built.
 - Submissions GIFs (Roxanne, 27 Nov): "To make the app fun, remind me to add GIFs on the
   submission page. We need something for approved, rejected, and submissions for when they are
   empty." Open: she adds the GIFs; remind her when the Submissions page is next worked on.
+- Folds in tabs (Roxanne, 27 Nov): "we do not need the arrow now, since we split it into tabs ...
+  remove it for Alliance Championship and ask me if we're gonna keep it for other events as we
+  move on." Done for Alliance Championship (event-panel.css); ask for each other event in the
+  review.
+- Alliance Championship rules and rewards (Roxanne, 27 Nov): they are from the game ("If you
+  have full rewards, then they are from the game. Because there's no way I give you all those
+  details without giving you everything").
+
+## Fishing's line (27 Nov)
+
+"I really like how they drew the line with the fish, and we are gonna draw a line with the
+fish similar to them on the fishing box, and it's gonna end one day prior to the 27th."
+"Only what they have on the left": a white line ending with a fish. Fishing runs 24–27 Nov
+in the game; the 27th only keeps the tabs open.
+"We write on the calendar fishing, then the season in caps summer, and have that bar go at
+the bottom instead, like the one with the fish." Seasons follow winter, spring, summer,
+autumn, one a month (Century Games' help centre); 24 Nov 2026 is Summer.
+Fishing's bar (27 Nov, 08:38), accepted: one line, "Fishing SUMMER", the fish and a white mark
+where fishing ends (end of the 26th); under the bar a white line over the fishing days and a
+Sunken Treasure Hunt line to the event's end. "Ok, keep it like that and I'll get these 2
+logos from the top bars" (the game's tab logos; the Hunt's colour and logo are stand-ins
+until then).
+Changed 08:40: "the blue phishing square thingy is the phishing event, and it's gonna have a
+vertical line with the fish before it, telling us that the actual phishing ended, and then only
+have the golden line with the sunken treasure logo at the end." No white line under the bar.
+No Timeline for Fishing (27 Nov): "I don't think we need a timeline for fishing. Like, we
+already have the start at the top, so, and like the time, so it's fine." The right panel
+shows SUMMER under Fishing Tournament, like a phase.
+Fishing's panel (27 Nov): tabs Rules, How to fish, Chances; no Edit ("there is nothing to
+edit about this fishing tournament"); no Mine ("we're not gonna record shit here"); Mini-game
+and the season in the head ("add it to the tournament, not to the rules"). The chances are
+Summer's: "So these are the chances for summer. Ask me for the next one next time."
+Chances (27 Nov, 08:56): "don't mark them as these are chances in summer, because it's
+confusing. We are gonna see what changes next time... save them but don't display them for now.
+Don't show the tab for now." They stay in point-sources (list "chances"), with no tab.
+Reward tracks (27 Nov): the Ice Fishing Club is drawn like the game, a band per track under
+its medal (free, first pack, second pack), no lines between levels. "This layout will be used
+for more than just this, because many events unlock things like this, so it's just new, not
+unique." Built as one element for every event with tracks. "I don't like how it looks centered
+like that."
+
+## Reward lists (27 Nov)
+
+- Rank columns, every event: "rank columns will have the number aligned to the right, and then
+  the rewards aligned to the left."
+- Notes in a Rewards tab are only notes: lighter and smaller; the mail note in two rows.
+- Prestige-type rewards (named rewards): "I want the rewards from Prestige to be 2x2, even if
+  that means they're much bigger... This is how we're gonna display like this type of rewards."
+  The note under Prestige Rewards on one line.
+- Alliance Championship: Prestige, Tier and KO Rewards one after another, not behind buttons:
+  "It's one type, tier it's another type, KO it's another type. I don't like how they're split
+  like this and have a bunch of text that repeats and empty pages." Group Ranking: "+2 ★".
+- The tier: "we need to have the tier set and saved somewhere... all the events that have it,
+  we need to be able to set the tier." She did not like "TIER Ultimate" as a line; shown for
+  now as a chip in the head ("Ultimate tier").
+
+## Event head (27 Nov)
+
+"If I approved something for the header of Alliance Championship, it's approved for every
+other event because they have to be the same." Results sits where it was approved, on every
+event. "I said edit will not be there": no Edit in any event's head. The date, repeat and
+alliance-time forms it opened go to the admin menu (to be designed).

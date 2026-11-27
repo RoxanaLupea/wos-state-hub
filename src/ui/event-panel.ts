@@ -10,6 +10,7 @@ import {
   eventTypeLabel, itemImageFile, itemLabel, itemName, phaseName, playerRequirement,
   pointSourceDayName, pointSourceTask, pointSourcesForDay, pointSourcesInList, pointsNote,
   pointsTitle, rewardsOf, type PointSource, type RewardRow
+, listTitle, seasonOf
 } from '../data/catalog.ts';
 import { clockText, nowMinute, shownDayOf } from '../calendar/time-mode.ts';
 import { spanText } from '../calendar/spans.ts';
@@ -99,7 +100,8 @@ function noteRow(written: string, imageFile: string): string {
   if (!title) {
     return `<p class="points-note${picture ? ' with-picture' : ''}">${picture}${bodyHtml}</p>`;
   }
-  const isShort = lines.length <= 1 && body.length <= 40;
+  // A row with a picture always keeps its title on its own line, like the others beside it.
+  const isShort = !picture && lines.length <= 1 && body.length <= 40;
   return `<p class="points-note${isShort ? '' : ' titled'}${picture ? ' with-picture' : ''}">` +
     `${picture}<b class="note-title">${escapeForPage(title)}${isShort ? ':' : ''}</b>` +
     `${isShort ? ' ' : ''}${bodyHtml}</p>`;
@@ -125,13 +127,14 @@ function pointsList(eventTypeId: string, sources: PointSource[], isOpen: boolean
 }
 
 // A fold of plain notes from one named list.
-function notesFold(eventTypeId: string, list: string, title: string): string {
+function notesFold(eventTypeId: string, list: string, title: string, hidesTitle = false): string {
   // A rewards note written for one list or band shows with that list, under its
   // buttons, as in the game; only the notes for all the rewards stay on top.
   const notes = pointSourcesInList(eventTypeId, list)
     .filter(source => list !== 'rewards' || !pointSourceDayName(source.id));
   if (!notes.length) return '';
-  return `<details class="points-list" open><summary>${escapeForPage(title)}</summary>` +
+  // A tab that already names the list draws its fold without the title (Fishing).
+  return `<details class="points-list${hidesTitle ? ' no-title' : ''}" open><summary>${escapeForPage(title)}</summary>` +
     notes.map(source => noteRow(pointSourceTask(source.id, heroDay), source.imageFile)).join('') +
     '</details>';
 }
@@ -245,6 +248,9 @@ export interface RewardViewState {
 // Rewards that share their left words (a rank, a points target, a stronghold) make one
 // row of tiles, with those words on the left and the first reward's note small under
 // them, each part of the note on its own line.
+const STAR_PICTURE = '<svg class="note-star" viewBox="0 0 24 24" aria-label="star">' +
+  '<path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg>';
+
 function rewardLines(rows: RewardRow[]): string {
   const order: string[] = [];
   const byLabel = new Map<string, RewardRow[]>();
@@ -255,8 +261,10 @@ function rewardLines(rows: RewardRow[]): string {
   return order.map(label => {
     const inRow = byLabel.get(label) ?? [];
     const note = inRow[0]?.note ?? '';
+    // A star in a note ("+2 ★", Alliance Championship's Star Rating) is drawn as the
+    // game's star (Roxanne, 27 Nov: "we're gonna put 1 star there and be done with it").
     const noteHtml = note
-      ? note.split(' · ').map(part => `<small>${escapeForPage(part)}</small>`).join('') : '';
+      ? note.split(' · ').map(part => `<small>${escapeForPage(part).replace(' ★', STAR_PICTURE)}</small>`).join('') : '';
     return `<div class="reward-row"><span class="reward-label">${escapeForPage(label)}${noteHtml}</span>` +
       `<span class="reward-items">${inRow.map(rewardTile).join('')}</span></div>`;
   }).join('');
@@ -291,7 +299,7 @@ const SHOP_CURRENCIES: Record<string, string> = {
 // The list itself, laid out the way the game lays out that kind of list, as the old
 // app did.
 function rewardListHtml(list: string, band: string, bandCount: number, shown: RewardRow[],
-    eventTypeId: string): string {
+    eventTypeId: string, listNoteHtml = '', tierTabsHtml = ''): string {
   if (list === 'glory') {
     return sectionsOf(shown).map(section =>
       sectionHeading(list, section) + namedTiles(shown.filter(row => row.section === section))).join('');
@@ -310,16 +318,58 @@ function rewardListHtml(list: string, band: string, bandCount: number, shown: Re
     const hasNotes = shown.some(row => row.note);
     return (list === 'targets' && band && bandCount === 1
       ? `<div class="reward-sub">${escapeForPage(band)}</div>` : '') +
-      `<div class="range-lines${hasNotes ? ' with-notes' : ''}">${rewardLines(shown)}</div>`;
+      `<div class="range-lines${hasNotes ? ' with-notes' : ''}${list === 'ko' ? ' group-ranking' : ''}">${rewardLines(shown)}</div>`;
   }
   if (list === 'group') {
-    // Alliance Championship: the tier, its Prestige Rewards with their names, then a row
-    // per group rank.
+    // Alliance Championship (Roxanne, 27 Nov): the tiers are tabs, the alliance's own open
+    // first; under the open tier its Prestige Rewards when it has them (big squares, a quiet
+    // note) and its group ranks, each with the stars it gains or loses and its rewards.
     const prestige = shown.filter(row => row.section === 'prestige');
-    return (band && bandCount === 1 ? `<div class="reward-sub">${escapeForPage(band)}</div>` : '') +
-      (prestige.length ? '<div class="reward-sub">Prestige Rewards</div>' + namedTiles(prestige) : '') +
-      '<div class="reward-sub">Group Ranking</div><div class="range-lines with-notes">' +
+    return (tierTabsHtml ?? '') +
+      (prestige.length
+        ? '<div class="reward-sub">Prestige Rewards</div>' +
+          (listNoteHtml ? listNoteHtml : '') +
+          '<div class="prestige-grid">' + prestige.map(row => {
+            // How long it lasts ("(14d)", "(14-Day)") is a label on the reward, not part of
+            // its name (Roxanne, 27 Nov).
+            const full = itemName(row.itemId);
+            const days = full.match(/\s*\((\d+)(?:d|-Day)\)\s*$/i);
+            const name = days ? full.slice(0, days.index) : full;
+            const tile = rewardTile({ ...row, tile: 'blue' });
+            const labelled = days
+              ? tile.replace(/<\/span>$/, `<span class="tile-top">${days[1]} days</span></span>`) : tile;
+            return `<div class="prestige-reward">${labelled}` +
+              `<span class="prestige-name">${escapeForPage(name)}</span></div>`;
+          }).join('') + '</div>' +
+          '<div class="reward-sub">Group Ranking</div>'
+        : '') +
+      '<div class="range-lines with-notes group-ranking">' +
       rewardLines(shown.filter(row => row.section !== 'prestige')) + '</div>';
+  }
+  if (list === 'club') {
+    // Fishing's Ice Fishing Club (mockup, Roxanne 27 Nov): drawn like the game, three
+    // tracks side by side, each in its own band under its medal: free, then silver (one
+    // pack), then gold (the second pack, two rewards a level). No lines between levels.
+    const medal = (name: string) =>
+      `<img src="${escapeForPage(imageUrl('items/fishing-mockup/medal-' + name))}" alt="">`;
+    const levels: string[] = [];
+    const byLevel = new Map<string, RewardRow[]>();
+    for (const row of shown) {
+      if (!byLevel.has(row.rowLabel)) { byLevel.set(row.rowLabel, []); levels.push(row.rowLabel); }
+      byLevel.get(row.rowLabel)?.push(row);
+    }
+    return '<div class="club-grid">' +
+      '<span class="club-level"></span>' +
+      `<span class="club-cell free head">${medal('bronze')}</span>` +
+      `<span class="club-cell silver head">${medal('silver')}</span>` +
+      `<span class="club-cell gold head">${medal('gold')}</span>` +
+      levels.map(level => {
+        const tiles = (byLevel.get(level) ?? []).map(rewardTile);
+        return `<span class="club-level">${escapeForPage(level)}</span>` +
+          `<span class="club-cell free">${tiles[0] ?? ''}</span>` +
+          `<span class="club-cell silver">${tiles[1] ?? ''}</span>` +
+          `<span class="club-cell gold">${tiles.slice(2).join('')}</span>`;
+      }).join('') + '</div>';
   }
   if (list === 'rates') {
     // Lucky Wheel: a row per reward, its chance, then the item with its name.
@@ -345,13 +395,13 @@ function rewardListHtml(list: string, band: string, bandCount: number, shown: Re
   }
   if (list === 'tier') {
     // Win Streak, Victory and Loss, each with how the tier changes.
-    return ['streak', 'win', 'lose'].map(section => {
+    return '<div class="tier-rows">' + ['streak', 'win', 'lose'].map(section => {
       const inSection = shown.filter(row => row.section === section);
       if (!inSection.length) return '';
       return `<div class="reward-row"><span class="reward-label">${escapeForPage(rewardSectionName(list, section))}` +
         `<small>Tier ${escapeForPage(inSection[0].rowLabel.replace('-', '−'))}</small></span>` +
         `<span class="reward-items">${inSection.map(rewardTile).join('')}</span></div>`;
-    }).join('');
+    }).join('') + '</div>';
   }
   if (list === 'merchant' || list === 'shop') {
     // Each offer: the item, its price in the shop's currency and how many can be bought.
@@ -400,6 +450,41 @@ function rewardsFold(eventTypeId: string, state: RewardViewState): string {
   }
 
   let html = '<details class="points-list rewards-fold" open><summary>Rewards</summary>';
+  // Every list one after another, each under its own heading, its tiers or bands as tabs
+  // (Alliance Championship's look, for every event, Roxanne 27 Nov).
+  if (lists.length) {
+    for (const one of lists) {
+      const oneRows = rewardsOf(eventTypeId, one);
+      const oneBands: string[] = [];
+      for (const row of oneRows) if (row.band && !oneBands.includes(row.band)) oneBands.push(row.band);
+      // The alliance's own tier opens first; the other tiers stay one tap away.
+      const chosenOne = state.openBand.get(eventTypeId + '|' + one);
+      const ownOne = state.ownBand.get(eventTypeId + '|' + one);
+      const oneBand = chosenOne && oneBands.includes(chosenOne) ? chosenOne
+        : ownOne && oneBands.includes(ownOne) ? ownOne : oneBands[0] ?? '';
+      const oneShown = oneBand ? oneRows.filter(row => row.band === oneBand) : oneRows;
+      // The tiers are tabs like the event's own tabs (Roxanne, 27 Nov).
+      const bandButtons = oneBands.length > 1
+        ? `<div class="info-tabs rank-tabs" role="tablist" style="--tab-color:${escapeForPage(eventTypeColor(eventTypeId))}">` +
+          oneBands.map(item =>
+            `<button type="button" class="info-tab" role="tab" aria-selected="${item === oneBand}"` +
+            ` data-reward-band="${escapeForPage(eventTypeId + '|' + one + '|' + item)}">` +
+            `${escapeForPage(rewardBandName(item))}</button>`).join('') + '</div>'
+        : '';
+      const note = pointSourcesInList(eventTypeId, 'rewards').find(source => {
+        const where = pointSourceDayName(source.id);
+        return where === one + '|' + oneBand || (!oneBand && where === one);
+      });
+      const noteHtml = note
+        ? `<p class="points-note reward-note">${escapeForPage(pointSourceTask(note.id, heroDay))}</p>` : '';
+      html += one === 'group'
+        ? `<div class="reward-sub">${escapeForPage(rewardListName(eventTypeId, one))}</div>` +
+          rewardListHtml(one, oneBand, 1, oneShown, eventTypeId, noteHtml, bandButtons)
+        : (lists.length > 1 ? `<div class="reward-sub">${escapeForPage(rewardListName(eventTypeId, one))}</div>` : '') +
+          bandButtons + noteHtml + rewardListHtml(one, oneBand, oneBands.length, oneShown, eventTypeId);
+    }
+    return html + '</details>';
+  }
   if (lists.length > 1) {
     html += `<div class="reward-tabs" style="grid-template-columns:repeat(${lists.length},1fr)">` +
       lists.map(one =>
@@ -422,11 +507,12 @@ function rewardsFold(eventTypeId: string, state: RewardViewState): string {
     const where = pointSourceDayName(source.id);
     return where === list + '|' + band || (!band && where === list);
   });
-  if (listNote) {
-    html += `<p class="points-note reward-note">${escapeForPage(pointSourceTask(listNote.id, heroDay))}</p>`;
-  }
+  const listNoteHtml = listNote
+    ? `<p class="points-note reward-note">${escapeForPage(pointSourceTask(listNote.id, heroDay))}</p>` : '';
+  // Alliance Championship's tier list places its note under its Prestige Rewards heading.
+  if (list !== 'group') html += listNoteHtml;
 
-  html += rewardListHtml(list, band, bands.length, shown, eventTypeId);
+  html += rewardListHtml(list, band, bands.length, shown, eventTypeId, list === 'group' ? listNoteHtml : '');
 
   if (shown.some(row => row.source === 'guides')) {
     html += '<p class="reward-source">From guides, not checked in game yet.</p>';
@@ -665,6 +751,8 @@ export function renderEventTree(tree: EventTree, firstRow?: FirstRowPlan): strin
 }
 
 export interface EventPanelOptions {
+  // The alliance's tier for this run, with its edit for R4s, under the event's name.
+  tierLineHtml?: string;
   tree: EventTree;
   // The day the player was looking at when they opened it.
   day: number;
@@ -734,7 +822,7 @@ function joinFolds(first: string, second: string): string {
 function rulesPage(eventTypeId: string, requirements: string): string {
   const parts = [
     requirements,
-    notesFold(eventTypeId, 'rules', 'Rules'),
+    notesFold(eventTypeId, 'rules', listTitle(eventTypeId, 'rules', 'Rules')),
     notesFold(eventTypeId, 'predictions', 'Predictions')
   ].filter(Boolean);
   return parts.join('');
@@ -755,6 +843,9 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
   const facts: string[] = [];
   const typeLabel = eventTypeLabel(eventTypeId);
   if (typeLabel) facts.push(typeLabel);
+  // The run's season, beside its kind (Fishing's Summer, Roxanne 27 Nov).
+  const season = seasonOf(eventTypeId, occurrence.startDay);
+  if (season) facts.push(season);
   if (occurrence.wasCancelled) facts.push('Cancelled');
   if (occurrence.wasChanged) facts.push('Date or time changed');
 
@@ -794,12 +885,22 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
   // The same tabs, in the same order, on every event; an event shows only the ones it
   // has. Timeline first; Rules holds the requirements, the rules and the predictions;
   // the tabs only one kind of event needs come after Rewards.
+  const splitRules = pointSourcesInList(eventTypeId, 'how-to').length > 0 && !requirements;
   const tabs: InfoTab[] = [
     { id: 'timeline', label: 'Timeline', html: timelineHtml },
+    // An event whose rules are split into tabs (Fishing: Guide and Rewards,
+    // Roxanne 27 Nov) writes no heading inside them: the tab already names its page.
     { id: 'rules', label: 'Rules', html: rulesPage(eventTypeId, requirements) },
+    { id: 'how-to', label: listTitle(eventTypeId, 'how-to', 'How to play'),
+      html: notesFold(eventTypeId, 'how-to', listTitle(eventTypeId, 'how-to', 'How to play'), true) },
+    // Fishing's chances are saved (list 'chances') but not shown for now (Roxanne, 27 Nov:
+    // "save them but don't display them for now").
     tabFromFold('points', ownPoints),
-    tabFromFold('rewards', joinFolds(
-      notesFold(eventTypeId, 'rewards', 'Rewards'), rewardsFold(eventTypeId, options.rewardView))),
+    splitRules
+      ? { id: 'rewards', label: 'Rewards', html: joinFolds(
+        notesFold(eventTypeId, 'rewards', 'Rewards', true), rewardsFold(eventTypeId, options.rewardView)) }
+      : tabFromFold('rewards', joinFolds(
+        notesFold(eventTypeId, 'rewards', 'Rewards'), rewardsFold(eventTypeId, options.rewardView))),
     { id: 'battles', label: 'Battles', html: options.fortBattlesHtml },
     { id: 'score', label: 'Total score', html: options.scoreHtml },
     { id: 'alliance-times', label: 'Alliance times', html: allianceTimesHtml },
@@ -834,16 +935,27 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
         (showsTabLine ? '' : `<h3 class="tab-page-title">${escapeForPage(openTab.label)}</h3>`) +
         `${openTab.html}</div></div>`;
 
+  const factsHtml = facts.length
+    ? '<div class="event-facts">' +
+      facts.map(fact => `<span class="event-fact">${escapeForPage(fact)}</span>`).join('') + '</div>'
+    : '';
+  // An event can show its facts (Mini-game, Summer) in its head, with its name, rather
+  // than in a tab (Fishing, Roxanne 27 Nov: "add it to the tournament, not to the rules").
+  const factsInHead = Boolean(eventTypeById(eventTypeId)?.factsInHead);
   const headEventTypeId = options.wholeEvent?.eventTypeId ?? eventTypeId;
   const headStart = options.wholeEvent?.startMinute ?? occurrence.startMinute;
   const headEnd = options.wholeEvent?.endMinute ?? occurrence.endMinute;
   let html = backLinks(options.backToDay) +
-    `<section class="day-section glass event-page" style="${tintedPanelStyle(color, colorEnd)}--event-color:${escapeForPage(color)};">` +
+    `<section class="day-section glass event-page" data-event-type="${escapeForPage(headEventTypeId)}" style="${tintedPanelStyle(color, colorEnd)}--event-color:${escapeForPage(color)};">` +
     `<div class="event-page-head">${eventBadge(headEventTypeId, 'large')}` +
     '<div class="event-page-title"><h2>' +
     (occurrence.wasCancelled ? '<span class="cancelled-mark" aria-label="Cancelled">&times;</span> ' : '') +
     escapeForPage(eventTypeName(headEventTypeId) + options.allianceTags) + '</h2>' +
     `<span class="event-note">${escapeForPage(spanText(headStart, headEnd))}</span>` +
+    // The alliance's tier under the name, in capitals, with a tiny edit for R4s (Roxanne,
+    // 27 Nov: "we are not gonna write tier").
+    (options.tierLineHtml ?? '') +
+    (factsInHead ? factsHtml : '') +
     `</div><div class="row-buttons">${options.headPencils}</div></div>` +
     // The other name, the event's note and this date's note go with the name, not in a tab.
     (notes.length ? `<div class="event-notes">${notes.join('')}</div>` : '') +
@@ -851,11 +963,7 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
     tabsHtml +
     '<div class="event-page-body">';
 
-  if (facts.length) {
-    html += '<div class="event-facts">' +
-      facts.map(fact => `<span class="event-fact">${escapeForPage(fact)}</span>`).join('') +
-      '</div>';
-  }
+  if (!factsInHead) html += factsHtml;
 
   html += options.editFormHtml;
   html += openHtml;

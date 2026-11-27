@@ -35,7 +35,8 @@ import { loadDateChanges, loadSchedules, loadSettings } from './data/schedules.t
 import {
   categoryOf, dayNameOf, eventStepsByEventType, eventTypeById, eventTypeName, eventTypeShortName, eventTypeStageName, wholeEventTypeOf,
   isDetailsOnly, partOfByEventTypeId, phaseName, phaseNameForDay, phaseShortName, phasesByEventType,
-  phaseNote, pointSourcesForDay, showsTimesInLine, sortOrderOf, stepDetail, stepLabel, stepNote
+  phaseNote, pointSourcesForDay, seasonOf, showsTimesInLine, sortOrderOf, stepDetail, stepLabel, stepNote,
+  rewardsOf
 } from './data/catalog.ts';
 import {
   minutesFromTime, startOfMonth, startOfWeek, textFromDay, todayNumber, yearAndMonthOf, dayFromText, MINUTES_PER_DAY
@@ -58,7 +59,7 @@ import {
 import {
   cleanTime, saveAllianceTime, saveDateChange, saveFortAssignment, saveScheduleRepeat
 } from './data/editing.ts';
-import { PENCIL_ICON, allianceTimeForm, dateChangeForm, editButton, fortForm, pencilButton, scheduleForm } from './ui/edit-forms.ts';
+import { EDIT_ICON, PENCIL_ICON, allianceTimeForm, dateChangeForm, editButton, fortForm, pencilButton, scheduleForm } from './ui/edit-forms.ts';
 import { deleteRow, loadRows, saveRow, type Row } from './data/records.ts';
 import { removeGameAccount, saveGameAccount, setGameAccountKinds } from './data/player-profile.ts';
 import {
@@ -362,7 +363,7 @@ function panelContents(): string {
     day,
     {
       stepsByEventType: eventStepsByEventType, nameOf: eventTypeName, stepLabel,
-      phaseNameForDay, dayNameOf, myAllianceIds, timesInLine: showsTimesInLine,
+      phaseNameForDay, dayNameOf, myAllianceIds, timesInLine: showsTimesInLine, seasonOf,
       allianceTagsOf: one => one.allianceIds.length
         ? ' · ' + one.allianceIds.filter(id => myAllianceIds.includes(id)).map(allianceTag).join(', ')
         : '',
@@ -466,11 +467,35 @@ function allianceTimeFormFor(occurrence: Occurrence): string {
 // One edit button in an event's head, for anyone who may change something about it. It
 // opens every form they may use: this date (admins), the event's dates and repeat
 // (the owner), or their alliance's own time (its R4 or R5).
+// No Edit in an event's head, on any event (Roxanne, 27 Nov: "I said edit will not be
+// there"). The date, repeat and alliance-time forms move to the admin menu, still to design.
 function headPencilsOf(occurrence: Occurrence): string {
+  return '';
   if (eventTypeById(occurrence.eventTypeId)?.datesLocked) return '';
   const ownTime = occurrence.allianceIds.length > 0;
   const mayEdit = isAdmin(person) || (ownTime && mayChangeAllianceTime(occurrence));
   return mayEdit ? editButton('head|' + occurrence.key) : '';
+}
+
+// The alliance's tier for an event with tiers, under the event's name (mockup: the tier
+// comes from the alliance's record, else the only tier we have rewards for). R4s get a tiny
+// edit after it.
+function tierLineOf(occurrence: Occurrence): string {
+  const fields: Record<string, string> = {
+    'alliance-championship': 'championship_tier', 'winter-siege': 'winter_siege_tier'
+  };
+  const field = fields[occurrence.eventTypeId];
+  if (!field) return '';
+  const record = view.myAllianceId
+    ? (rowsOf('alliance_records') ?? []).find(one => one.alliance_id === view.myAllianceId) : undefined;
+  const bands = rewardsOf(occurrence.eventTypeId, occurrence.eventTypeId === 'winter-siege' ? 'tier' : 'group')
+    .map(row => row.band).filter(Boolean);
+  const tier = String(record?.[field] ?? (new Set(bands).size === 1 ? bands[0] : ''));
+  const mayEdit = Boolean(view.myAllianceId) && leadsAlliance(person, view.myAllianceId as string);
+  if (!tier && !mayEdit) return '';
+  return `<span class="tier-head">${escapeForPage(tier || 'Tier not set')}` +
+    (mayEdit ? `<button type="button" class="edit-button tier-edit" data-edit="tier|${escapeForPage(occurrence.key)}"` +
+      ` aria-label="Change the tier">${EDIT_ICON}</button>` : '') + '</span>';
 }
 
 // The forms the head's edit button opened, for this event.
@@ -566,6 +591,7 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
     backToDay: view.openedFromDay,
     openTab: view.openInfoTab,
     headPencils: headPencilsOf(occurrence) + addResultsHead(resultsOptions),
+    tierLineHtml: tierLineOf(occurrence),
     editFormHtml: headFormOf(occurrence),
     fortBattlesHtml: occurrence.eventTypeId === 'fortress-battles'
       ? fortBattlesHtmlOf(occurrence.startDay, occurrence.endDay, myAllianceIds) : '',
@@ -577,7 +603,7 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
       isEditing: view.editing === planNoteEdit(occurrence.eventTypeId)
     }),
     wholeEvent,
-    personalHtml: personalEntryForm({
+    personalHtml: eventTypeById(occurrence.eventTypeId)?.noPersonalEntry ? '' : personalEntryForm({
       occurrence, category: categoryOf(occurrence.eventTypeId), userId: person?.userId ?? null,
       entries: person ? rowsOf('personal_entries') : []
     }),

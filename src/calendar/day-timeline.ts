@@ -172,6 +172,9 @@ export interface AllDayItem {
   // What this day of the event is: its phase, the day's name and the day's steps that
   // have no time of their own, as in the old app ("Preparation · Hero Development").
   shortLine: string;
+  // The phase alone, the first part of the line when the day has one, so it can be
+  // written as a phase (in capitals) and the rest as it is.
+  phase: string;
 }
 
 export interface DayContents {
@@ -181,6 +184,8 @@ export interface DayContents {
 
 export interface DayOptions extends MomentOptions {
   phaseNameForDay: (eventTypeId: string, dayOfEvent: number) => string;
+  // The season of a run that has one (Fishing's Summer), shown as its phase.
+  seasonOf?: (eventTypeId: string, startDay: number) => string;
   // The name the game gives a day of the event, if it has one.
   dayNameOf: (eventTypeId: string, dayOfEvent: number) => string;
   // The alliances whose times the player wants to see. A run set for any other
@@ -228,9 +233,11 @@ export function contentsOfDay(
     const playWindows = options.timesInLine?.(occurrence.eventTypeId)
       ? playWindowsIn(occurrence, options.stepsByEventType.get(occurrence.eventTypeId) ?? [], window) : null;
     if (!isTimedOneDay) {
+      const season = options.seasonOf?.(occurrence.eventTypeId, occurrence.startDay) ?? '';
       allDayItems.push({
         occurrence, name,
-        shortLine: allDayLine(occurrence, dayOfEvent(occurrence, day), options),
+        shortLine: season || allDayLine(occurrence, dayOfEvent(occurrence, day), options),
+        phase: season || options.phaseNameForDay(occurrence.eventTypeId, dayOfEvent(occurrence, day)).split(' · ')[0],
         ...(playWindows ? { playWindows, dayWindow: window } : {})
       });
     }

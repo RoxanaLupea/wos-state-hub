@@ -18,6 +18,13 @@ function colorWithOpacity(color: string, opacity: number): string {
   return `rgba(${red}, ${green}, ${blue}, ${opacity})`;
 }
 
+// The line under an event's name: its phase written as a phase, in capitals, and the
+// day's name and steps after it as they are (Roxanne, 26 Nov).
+function noteMarkup(line: string, phase: string): string {
+  if (!phase || !line.startsWith(phase)) return escapeForPage(line);
+  return `<span class="phase-word">${escapeForPage(phase)}</span>${escapeForPage(line.slice(phase.length))}`;
+}
+
 // An event running all day. The whole row is a button that opens the event, with an
 // arrow in the event's colour, as in the old app.
 function allDayItemMarkup(item: AllDayItem): string {
@@ -28,7 +35,7 @@ function allDayItemMarkup(item: AllDayItem): string {
     ${eventBadge(item.occurrence.eventTypeId)}
     <span class="all-day-text">
       <span class="event-title">${mark}${escapeForPage(item.name)}</span>
-      ${item.shortLine ? `<span class="event-note">${escapeForPage(item.shortLine)}</span>` : ''}
+      ${item.shortLine ? `<span class="event-note">${noteMarkup(item.shortLine, item.phase)}</span>` : ''}
       ${item.playWindows && item.dayWindow
         ? playLineMarkup(item.occurrence.eventTypeId, item.playWindows, item.dayWindow) : ''}
     </span>
@@ -69,16 +76,24 @@ export function dayPanel(day: number, contents: DayContents, options: DayPanelOp
       <span>${escapeForPage(timeModeText())}</span>
     </div></div>`;
 
+  // On a computer the date is the card's own head and the card moves up (Roxanne, 26 Nov:
+  // "if we have timeline and all day, why can't we have the date included in that and the
+  // panel go higher a little?"). The phone keeps its heading above the card.
+  // One line: TIMELINE in capitals, then the date (Roxanne, 26 Nov: "write timeline in caps,
+  // and then the day ... on the same line"); no "Game time (UTC)" note, the UTC button says it.
+  const cardHead = `<div class="day-card-head"><span class="day-card-label">Timeline</span>` +
+    `<h2>${escapeForPage(longDayText(day))}</h2></div>`;
   const alliancePrompt = options.needsAlliancePick
-    ? '<div class="day-empty glass">Pick your alliance to see its times.' +
+    ? `<div class="day-empty glass day-card">${cardHead}Pick your alliance to see its times.` +
       `<div class="chips alliance-pick">${options.allianceChoices.map(one =>
         `<button type="button" class="chip" data-my-alliance="${escapeForPage(one.id)}">${escapeForPage(one.tag)}</button>`).join('')}</div></div>`
     : '';
 
   const nothingToShow = !contents.allDayItems.length && !contents.moments.length;
+  const headHere = options.needsAlliancePick ? '' : cardHead;
   const body = nothingToShow
-    ? '<div class="day-empty glass">Nothing in the ticked filters on this day.</div>'
-    : `<section class="day-section glass"><h3>Timeline</h3>
+    ? `<div class="day-empty glass day-card">${headHere}Nothing in the ticked filters on this day.</div>`
+    : `<section class="day-section glass day-card">${headHere}<h3>Timeline</h3>
         ${contents.allDayItems.length ? `<div class="all-day-list">
           <span class="all-day-label">All day</span>
           ${contents.allDayItems.map(allDayItemMarkup).join('')}

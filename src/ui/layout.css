@@ -94,11 +94,37 @@
   .calendar-panel, .calendar-panel .weeks, .calendar-panel .weekday-names { scrollbar-gutter: auto; scrollbar-width: none; }
   .calendar-panel::-webkit-scrollbar, .calendar-panel .weeks::-webkit-scrollbar, .calendar-panel .weekday-names::-webkit-scrollbar { display: none; }
 }
+@media (min-width: 1000px) {
+  .calendar-panel .weeks.more-above {
+    -webkit-mask-image: linear-gradient(to bottom, #000 26px, transparent 26px, #000 46px);
+    mask-image: linear-gradient(to bottom, #000 26px, transparent 26px, #000 46px);
+  }
+  .calendar-panel .weeks.more-above.more-below {
+    -webkit-mask-image: linear-gradient(to bottom, #000 26px, transparent 26px, #000 46px, #000 calc(100% - 48px), transparent);
+    mask-image: linear-gradient(to bottom, #000 26px, transparent 26px, #000 46px, #000 calc(100% - 48px), transparent);
+  }
+}
+@media (min-width: 1000px) { .calendar-panel .held-dates { margin-bottom: -26px; } }
+/* The day names never give up height to the weeks (they were squeezed and cut on short
+   screens). */
+@media (min-width: 1000px) { .calendar-panel .weekday-names { flex: none; } }
 /* The day's card lines up with the tiles above it on both sides, and scrolls without a
    scrollbar drawn, like the calendar (26 Nov). */
 @media (min-width: 1000px) {
   .day-panel { margin-right: 0; padding-right: 0; scrollbar-gutter: auto; scrollbar-width: none; }
   .day-panel::-webkit-scrollbar { display: none; }
+}
+/* The calendar's weeks fade out over half a bar row at the bottom, not 48px, so less of
+   the month is lost (Roxanne, 26 Nov: "half a row, maximum 1 row"). */
+@media (min-width: 1000px) {
+  .calendar-panel .weeks.more-below {
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 16px), transparent);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 16px), transparent);
+  }
+  .calendar-panel .weeks.more-above.more-below {
+    -webkit-mask-image: linear-gradient(to bottom, #000 26px, transparent 26px, #000 46px, #000 calc(100% - 16px), transparent);
+    mask-image: linear-gradient(to bottom, #000 26px, transparent 26px, #000 46px, #000 calc(100% - 16px), transparent);
+  }
 }
 /* Every box that scrolls does it with no scrollbar drawn (Roxanne, 27 Nov: "We do not want a
    scroll bar. But we want all items to scroll on both PC and mobile"). */

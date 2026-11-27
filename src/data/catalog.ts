@@ -40,6 +40,22 @@ export interface EventType {
   // The game sets this event's dates and times, and nobody changes them on the site (no
   // date, repeat or alliance-time pencil): State of Power and Sunfire Castle (25 Nov).
   datesLocked?: boolean;
+  // How many days before its end the event stops being played, though its tabs stay open
+  // in the game (Fishing's last day, Roxanne 27 Nov). The bar draws a line ending with a
+  // fish over the days it can be played.
+  fishingEndsDaysEarly?: number;
+  // A personal event with nothing for a player to record: no Mine tab (Fishing, 27 Nov).
+  noPersonalEntry?: boolean;
+  // Its facts (Mini-game, the season) sit in the panel's head with its name (Fishing).
+  factsInHead?: boolean;
+  // Its reward lists one after another on one page instead of behind buttons (Alliance
+  // Championship: Prestige, Tier and KO Rewards, Roxanne 27 Nov).
+  rewardListsTogether?: boolean;
+  // An event that changes season each run, once a month (Fishing): the seasons in their
+  // order and one run whose season is known. Fishing's order is from Century Games' help
+  // centre; Summer for 24 Nov 2026 is from Roxanne's screenshot (27 Nov).
+  seasonOrder?: string[];
+  seasonKnown?: { firstDate: string; season: string };
   // A part's colour on its whole event's timeline, held through its rows and blended
   // into the next part's (State of Power: our blue, their red, then Field Triage's green).
   lineColor?: string;
@@ -144,6 +160,22 @@ export function hasLogoColors(id: string): boolean {
 export function eventTypeColorEnd(id: string): string {
   const eventType = eventTypesById.get(id);
   return eventType?.colorEnd ?? eventType?.color ?? '#7E8AA8';
+}
+
+// The season of an event's run starting on this day, counted a season a month from the
+// run whose season is known. '' for an event without seasons.
+export function seasonOf(id: string, startDay: number): string {
+  const eventType = eventTypesById.get(id);
+  const order = eventType?.seasonOrder;
+  const known = eventType?.seasonKnown;
+  if (!order?.length || !known) return '';
+  const knownDate = new Date(known.firstDate + 'T00:00:00Z');
+  const runDate = new Date(startDay * 24 * 60 * 60 * 1000);
+  const months = (runDate.getUTCFullYear() - knownDate.getUTCFullYear()) * 12 +
+    runDate.getUTCMonth() - knownDate.getUTCMonth();
+  const knownIndex = order.indexOf(known.season);
+  if (knownIndex < 0) return '';
+  return order[(((knownIndex + months) % order.length) + order.length) % order.length];
 }
 
 export function showsTimesInLine(id: string): boolean {
@@ -356,6 +388,11 @@ export function pointSourcesOf(eventTypeId: string): PointSource[] {
 export function pointSourcesForDay(eventTypeId: string, dayOfEvent: number): PointSource[] {
   return (pointSourcesByEvent.get(eventTypeId) ?? [])
     .filter(source => !source.list && (!source.dayNumber || source.dayNumber === dayOfEvent));
+}
+
+// The heading an event gives one of its lists of notes ("How to fish"), or the usual one.
+export function listTitle(eventTypeId: string, list: string, usual: string): string {
+  return text['eventType.' + eventTypeId + '.list.' + list] ?? usual;
 }
 
 export function pointSourcesInList(eventTypeId: string, list: string): PointSource[] {

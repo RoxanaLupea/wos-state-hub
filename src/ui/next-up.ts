@@ -3,7 +3,7 @@
 // count, because those are the ones everyone has to be somewhere for.
 import './next-up.css';
 import { clockText, nowMinute, shownDayOf } from '../calendar/time-mode.ts';
-import { categoryOf, eventTypeColor, eventTypeColorEnd, eventTypeName, eventTypeShortName, eventTypeStageName, eventTypeTag, partOfByEventTypeId, sortOrderOf, wholeEventTypeOf } from '../data/catalog.ts';
+import { categoryOf, eventTypeColor, eventTypeColorEnd, eventTypeName, eventTypeShortName, eventTypeStageName, eventTypeTag, partOfByEventTypeId, phaseName, phasesByEventType, sortOrderOf, wholeEventTypeOf } from '../data/catalog.ts';
 import { familyOccurrences } from '../calendar/event-tree.ts';
 import { colorWithAlpha } from './colors.ts';
 import { shortDayText } from './day-names.ts';
@@ -65,7 +65,12 @@ export function nextUpTiles(occurrences: Occurrence[]): string {
   return shown.map(tile => {
     const label = tile.isNow ? 'Now' : comingCount++ === 0 ? 'Next up' : 'Then';
     const tag = tile.stageId ? eventTypeTag(tile.eventTypeId) : '';
+    // Every tile names its phase (Roxanne, 26 Nov: "We either put the face or we don't"): a
+    // whole event its stage, any other event the phase it opens with.
+    const firstPhase = tile.stageId ? undefined
+      : (phasesByEventType.get(tile.eventTypeId) ?? []).slice().sort((left, right) => left.fromDay - right.fromDay)[0];
     const stage = tile.stageId ? eventTypeStageName(tile.stageId) : '';
+    const phase = stage || (firstPhase ? phaseName(firstPhase.id) : '');
     const color = eventTypeColor(tile.eventTypeId);
     const startText = clockText(tile.startMinute);
     // Coming: when it starts. Running: when its stage ends.
@@ -78,19 +83,26 @@ export function nextUpTiles(occurrences: Occurrence[]): string {
       `<div class="next-tile-head">${eventBadge(tile.eventTypeId)}` +
       `<div class="next-tile-names"><span class="next-tile-label">${label}</span>` +
       (tile.stageId
-        ? `<span class="next-tile-title fitted" data-short-name="${escapeForPage(eventTypeShortName(tile.eventTypeId))}">` +
+        ? `<span class="next-tile-title fitted" data-short-name="${escapeForPage(eventTypeShortName(tile.eventTypeId))}"` +
+          ` data-tag="${escapeForPage(eventTypeTag(tile.eventTypeId))}">` +
           `<span class="next-tile-name">${escapeForPage(eventTypeName(tile.eventTypeId))}</span>` +
           (tag ? ` <span class="next-tile-tag">${escapeForPage(tag)}</span>` : '') + '</span>'
-        : `<span class="next-tile-title">${escapeForPage(eventTypeName(tile.eventTypeId))}</span>`) +
-      (stage ? `<span class="next-tile-stage">${escapeForPage(stage)}</span>` : '') + '</div></div>' +
+        : `<span class="next-tile-title fitted-wide" data-short-name="${escapeForPage(eventTypeShortName(tile.eventTypeId))}"` +
+          ` data-tag="${escapeForPage(eventTypeTag(tile.eventTypeId))}">` +
+          `<span class="next-tile-name">${escapeForPage(eventTypeName(tile.eventTypeId))}</span></span>`) +
+      (phase ? `<span class="next-tile-stage">${escapeForPage(phase)}</span>` : '') + '</div></div>' +
       `<span class="event-note">${escapeForPage(when)}</span></div>`;
   }).join('');
 }
 
-// As on the calendar's bars: the full name and its short form only where they fit on
-// one line; then the name alone; then only the short name ("SvS").
+// As on the calendar's bars, on a computer: the full name and its short form only where
+// they fit on one line; then the name alone; then only the short name. On a phone the
+// event's short form where it has one, as SvS and AC (Roxanne, 26 Nov: "it's gonna be SVS
+// and matchmaking ... it's gonna be AC and registration"); otherwise the full name, or its
+// short name where that does not fit on one line.
 export function fitNextTiles(root: ParentNode): void {
-  const titles = Array.from(root.querySelectorAll<HTMLElement>('.next-tile-title.fitted'));
+  const titles = Array.from(root.querySelectorAll<HTMLElement>('.next-tile-title.fitted, .next-tile-title.fitted-wide'));
+  const onPhone = window.innerWidth < 1000;
   for (const title of titles) {
     const name = title.querySelector<HTMLElement>('.next-tile-name');
     const tag = title.querySelector<HTMLElement>('.next-tile-tag');
@@ -100,6 +112,12 @@ export function fitNextTiles(root: ParentNode): void {
     name.textContent = fullName;
     if (tag) tag.style.display = '';
     const fits = () => title.scrollWidth <= title.clientWidth + 0.5;
+    if (onPhone) {
+      if (tag) tag.style.display = 'none';
+      if (title.dataset.tag) name.textContent = title.dataset.tag;
+      else if (!fits()) name.textContent = title.dataset.shortName || fullName;
+      continue;
+    }
     if (fits()) continue;
     if (tag) tag.style.display = 'none';
     if (fits()) continue;

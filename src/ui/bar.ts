@@ -8,7 +8,7 @@
 // layout-bars.ts, once the browser knows how wide a day column is.
 
 import {
-  eventBarSubtitle, eventTypeById, eventTypeColor, eventTypeInitials, eventTypeName, eventTypeShortName, eventTypeTag,
+  eventBarSubtitle, eventTypeById, seasonOf, eventTypeColor, eventTypeInitials, eventTypeName, eventTypeShortName, eventTypeTag,
   SVS_FAMILY, eventStepsByEventType, hasLogoColors, logoColors, phaseName, showsTimesInLine, windowLabel
 } from '../data/catalog.ts';
 import { MINUTES_PER_DAY, minutesFromTime, textFromDay } from '../calendar/days.ts';
@@ -47,6 +47,21 @@ export function barFadeColors(eventTypeId: string): {
     light: hslToHex(second.hue, second.saturation, top + 0.10)
   };
 }
+
+// The fish at the end of Fishing's line, drawn after the game's: a forked tail, a spine
+// with two ribs and a round head pointing right.
+const FISH_BONE = '<svg class="fish-bone" viewBox="0 0 22 12" aria-hidden="true">' +
+  '<path d="M0 1.2 L3.4 4.9 H13 V7.1 H3.4 L0 10.8 L1.5 6 Z"/>' +
+  '<rect x="6" y="2.2" width="2" height="7.6" rx="1"/>' +
+  '<rect x="9.4" y="2.2" width="2" height="7.6" rx="1"/>' +
+  '<path d="M13.4 0.8 C17.4 0.8 20.4 3.6 22 6 C20.4 8.4 17.4 11.2 13.4 11.2 C12.5 8 12.5 4 13.4 0.8 Z"/></svg>';
+
+// Stand-ins for the Sunken Treasure Hunt's line and logo in the mockup.
+const HUNT_STAND_IN_COLOR = '#E8B64A';
+const HUNT_STAND_IN_LOGO = '<svg class="hunt-stand-in" viewBox="0 0 20 20" aria-hidden="true">' +
+  '<rect x="2" y="6" width="16" height="11" rx="2" fill="#B9772C"/>' +
+  '<rect x="2" y="3" width="16" height="6" rx="2" fill="#E8B64A"/>' +
+  '<rect x="8.5" y="7" width="3" height="4" rx="1" fill="#FFF2C4"/></svg>';
 
 // A white line across a bar where something starts or ends.
 export function barMark(minute: number, kind: string, what: string): string {
@@ -228,7 +243,7 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
         lineOne += barMark(part.start, 'part-line', what + ' starts') +
           barMark(part.start, 'divider', what + ' starts');
       }
-      lineOne += `<span class="bar-part${index === 0 ? ' first-part' : ''}" role="button" tabindex="0"` +
+      lineOne += `<span class="bar-part${index === 0 ? ' first-part' : ''}" data-event-type="${escapeForPage(part.bar.eventTypeId)}" role="button" tabindex="0"` +
         ` data-open-event="${escapeForPage(part.bar.key)}"` +
         ` data-start-minute="${part.start}" data-end-minute="${part.end}"` +
         ` title="${escapeForPage(what + ' · ' + spanText(part.bar.startMinute, part.bar.endMinute))}">` +
@@ -236,6 +251,25 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
       // The first part's second line is its named days, handled above.
       if (index === 0) return;
       const inside = part.insideParts ?? [];
+      // A part inside a part (Castle Battle in SvS's Battle) is its logo, at its own time,
+      // between its own white lines (Roxanne, 26 Nov: "just put the icon of the castle and
+      // the lines where they need to be").
+      // On a phone there is no room for its own lines: the logo, bigger, sits in the middle
+      // of the part, level with the words on line 2 (Roxanne, 26 Nov: "make the Sunfire
+      // Castle logo bigger, center it in the battle space, and align it with the text").
+      if (inside.length) {
+        for (const one of inside) {
+          const oneName = eventTypeName(one.eventTypeId);
+          const title = ` title="${escapeForPage(oneName + ' · ' + spanText(one.startMinute, one.endMinute))}"`;
+          if (one.startMinute > part.start) lineTwo += barMark(one.startMinute, 'divider own-time', oneName + ' starts');
+          if (one.endMinute < part.end) lineTwo += barMark(one.endMinute, 'divider own-time', oneName + ' ends');
+          lineTwo += `<span class="bar-inside own-time" role="button" tabindex="0" data-open-event="${escapeForPage(one.key)}"` +
+            ` data-start-minute="${one.startMinute}" data-end-minute="${one.endMinute}"${title}>${eventIcon(one.eventTypeId)}</span>` +
+            `<span class="bar-inside in-part-middle" role="button" tabindex="0" data-open-event="${escapeForPage(one.key)}"` +
+            ` data-start-minute="${part.start}" data-end-minute="${part.end}"${title}>${eventIcon(one.eventTypeId)}</span>`;
+        }
+        return;
+      }
       const below = inside.length
         ? inside.map(one => eventTypeName(one.eventTypeId)).join(' · ')
         : eventBarSubtitle(part.bar.eventTypeId);
@@ -304,6 +338,25 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
         ` aria-label="${escapeForPage(eventTypeName(bar.eventTypeId) + ' ' + times)}"></span>`;
     }).join('');
 
+  // Fishing (Roxanne, 27 Nov): the bar is the fishing event. Where fishing ends (a day
+  // before the event's end) a white mark stands with the fish before it. Under the bar one
+  // golden line, the Sunken Treasure Hunt, open to the event's last day, with its logo at
+  // the end (a stand-in until Roxanne sends the logo).
+  const fishingDaysEarly = eventTypeById(bar.eventTypeId)?.fishingEndsDaysEarly ?? 0;
+  const fishingEnd = bar.endMinute - fishingDaysEarly * MINUTES_PER_DAY;
+  const fishingLines = fishingDaysEarly > 0
+    ? (fishingEnd <= piece.end && fishingEnd > piece.start
+        ? `<span class="bar-stripe-end" data-end-minute="${fishingEnd}" title="Fishing">${FISH_BONE}</span>` +
+          (fishingEnd < piece.end ? barMark(fishingEnd, 'end-mark', 'Fishing ends') : '')
+        : '') +
+      `<span class="bar-stripe" style="background:${HUNT_STAND_IN_COLOR};bottom:-6px"` +
+      ` data-start-minute="${bar.startMinute}" data-end-minute="${bar.endMinute}"></span>` +
+      (bar.endMinute <= piece.end
+        ? `<span class="bar-stripe-end" data-end-minute="${bar.endMinute}" data-at-bar-end="yes"` +
+          ` title="Sunken Treasure Hunt">${HUNT_STAND_IN_LOGO}</span>`
+        : '')
+    : '';
+
   if (subtitle) lineTwo += `<span class="bar-sub">${escapeForPage(subtitle)}</span>`;
 
   // The parts running alongside this event: a line under the bar in the part's own
@@ -337,8 +390,14 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
   const hasTwoLines = piece.segments.length > 0 || piece.insideParts.length > 0 ||
     partsMode || piece.phaseParts.length > 0;
   const sideLogo = Boolean(subtitle) || hasTwoLines;
+  // On a computer a bar whose second line only names its phases or days, or says its
+  // second name, is one line: the phases are written after the name, in their own
+  // stretches (Roxanne, 26 Nov: "we have to write it in another way that lets us use one
+  // single row"). SvS keeps its two lines, and so does a week with tickets on line 2.
+  const oneLineOnComputer = sideLogo && !partsMode && !phaseOnLineOne && piece.insideParts.length === 0;
 
   const classes = ['bar', 'clickable'];
+  if (oneLineOnComputer) classes.push('one-line-wide');
   if (sideLogo) classes.push('phase-lines');
   if (hasTwoLines) classes.push('two-lines', 'day-lines');
   if (partsMode) classes.push('parts-bar');
@@ -346,17 +405,21 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
   // second line of text, not centred in the bar.
   const lineTwoNames = (lineTwo.match(/class="bar-segment-name/g) ?? []).length;
   if (lineTwoNames === 1) classes.push('one-segment');
-  const trailCount = bar.stripes.length;
+  const trailCount = bar.stripes.length + (fishingLines ? 1 : 0);
   if (trailCount) classes.push('has-trail');
   if (bar.wasCancelled) classes.push('cancelled');
   if (bar.isProvisional) classes.push('provisional');
   if (isLitBar(bar.key, options.litKeys)) classes.push('lit-event');
 
   const logo = eventIcon(mainOfParts ?? bar.eventTypeId);
-  const headName = mainOfParts ? plainName(mainOfParts) : plainName(bar.eventTypeId);
+  // An event with seasons (Fishing) writes its short name, then the run's season in
+  // capitals: "Fishing SUMMER" (Roxanne, 27 Nov).
+  const season = mainOfParts ? '' : seasonOf(bar.eventTypeId, bar.startDay);
+  const headName = season ? eventTypeShortName(bar.eventTypeId)
+    : mainOfParts ? plainName(mainOfParts) : plainName(bar.eventTypeId);
   const shortName = eventTypeShortName(mainOfParts ?? bar.eventTypeId);
   // A second name players use (SvS, KE) follows the full name, written more quietly.
-  const tagText = eventTypeTag(mainOfParts ?? bar.eventTypeId);
+  const tagText = season ? season.toUpperCase() : eventTypeTag(mainOfParts ?? bar.eventTypeId);
   const tag = tagText ? `<span class="bar-tag">${escapeForPage(tagText)}</span>` : '';
 
   return `<div class="${classes.join(' ')}" style="${style}"` +
@@ -374,10 +437,17 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
     light +
     (sideLogo ? `<span class="bar-side-icon">${logo}</span>` : '') +
     lineOne +
-    `<span class="bar-head">${sideLogo ? '' : logo}` +
+    `<span class="bar-head">${sideLogo ? (oneLineOnComputer ? `<span class="head-logo">${logo}</span>` : '') : logo}` +
     (bar.wasCancelled ? '<span class="cancelled-mark" aria-label="Cancelled">&times;</span>' : '') +
-    `<span class="bar-label">${escapeForPage(headName)}</span>${tag}${timeText}</span>` +
-    lineTwo + stripes + windowLines + '</div>';
+    `<span class="bar-label">${escapeForPage(headName)}</span>${tag}` +
+    `${timeText}</span>` +
+    // On a computer the second name is written on the one line too, centred in the room
+    // after the name like every phase (Roxanne, 26 Nov: "center it").
+    (oneLineOnComputer && subtitle
+      ? `<span class="bar-segment wide-only" data-start-minute="${piece.start}" data-end-minute="${piece.end}">` +
+        `<span class="bar-segment-name">${escapeForPage(subtitle)}</span></span>`
+      : '') +
+    lineTwo + stripes + fishingLines + windowLines + '</div>';
 }
 
 // A bar that shows only its marked times, as logos, instead of a block across the

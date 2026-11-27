@@ -173,8 +173,6 @@
     position: sticky; top: var(--top-bar-height, 0px); z-index: 6; }
   .page > .toolbar.stuck { background-color: var(--page-color); background-image: var(--page-background); background-attachment: fixed; }
   .toolbar-month, .toolbar-views { display: contents; }
-  .today-slot { display: none; }
-  .today-button { order: 0; margin-right: -4px; }
   .month-steps { order: 1; margin-right: auto; min-width: 0; }
   .page > .toolbar .period-title { font-size: 18px; }
   .view-icons { order: 2; gap: 2px; }
@@ -199,10 +197,23 @@
 .time-word-box { display: inline-grid; }
 .time-word-box > span { grid-area: 1 / 1; justify-self: start; }
 .time-word-box > span:not(.shown) { visibility: hidden; }
-/* The arrows step a month (or week, or year). A phone swipes instead, so it has none. */
-.step-arrow { display: none; width: 28px; height: 28px; align-items: center; justify-content: center; padding: 0;
-  border: none; border-radius: 8px; background: none; color: var(--text-muted); cursor: pointer; }
-@media (hover: hover) { .step-arrow:hover { color: var(--text); background: rgba(255, 255, 255, 0.06); } }
+/* After the date, as on the Invites page (Roxanne, 26 Nov): the pin back to today, only
+   while today is out of sight, then the arrows that step a month (or week). A phone swipes
+   instead, so it has the pin alone. */
+.month-steps { gap: 10px; }
+.step-controls { display: inline-flex; align-items: center; gap: 2px; }
+.month-steps .today-button { padding: 0 3px; }
+.step-arrow { display: none; width: 26px; height: 26px; align-items: center; justify-content: center; padding: 0;
+  border: none; border-radius: 8px; background: none; cursor: pointer; }
+.step-arrow svg { width: 19px; height: 19px; filter: drop-shadow(0 0 3px color-mix(in srgb, var(--section) 55%, transparent)); }
+@media (min-width: 1000px) {
+  .month-steps .today-button { margin-right: 8px; }
+  .month-steps .today-button svg { width: 19px; height: 19px; }
+  /* The date keeps the room of its longest title, so the pin and arrows stay put from one
+     month or week to the next, as Invites' date does. */
+  .toolbar[data-view="month"] .period-title { min-width: 152px; }
+  .toolbar[data-view="week"] .period-title { min-width: 190px; }
+}
 /* A thin upright line between a page's views and its other controls (Roxanne, 26 Nov: "make
    this separator standard for other pages too, like the calendar"). */
 .control-divider { flex: none; align-self: center; width: 1px; height: 26px; background: var(--glass-border); }
@@ -222,9 +233,7 @@
 @media (min-width: 1000px) {
   .toolbar { display: flex; align-items: center; gap: 26px; padding: 0 0 14px; }
   .toolbar-month, .toolbar-views { display: contents; }
-  .today-slot { display: none; }
-  .today-button { order: 1; }
-  .month-steps { order: 2; gap: 6px; }
+  .month-steps { order: 2; }
   .step-arrow { display: inline-flex; }
   .period-title { font-size: 24px; }
   .period-title .title-long { display: inline; }
@@ -318,3 +327,79 @@
 .account-choice-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .account-menu-plus { flex: none; width: 30px; text-align: center; font-size: 20px; font-weight: 600; color: var(--text-muted); }
 .account-menu-item.danger { color: var(--danger); }
+
+/* ---------- Computers: a slimmer band (Roxanne, 26 Nov: "it's a navigation", "they need
+   to be tighter") ---------- The sections are written in the site's font (the buttons
+   were taking the browser's own), the logo is smaller, and the month's title too. */
+@media (min-width: 1000px) {
+  .top-bar { min-height: 56px; height: 56px; }
+  body::before { height: 56px; }
+  /* The logo as tall as before (36px) with about half the room above and below it; the
+     sections written as large as STATE in the logo (Roxanne, 26 Nov). */
+  .brand .logo { height: 36px; }
+  .nav-tab { font: inherit; font-size: 18px; font-weight: 700; }
+  .nav-tab[aria-current="page"] { font-weight: 800; }
+  .nav-tab[aria-current="page"] .event-icon { width: 26px; height: 26px; }
+  .top-bar #meButton { min-height: 38px; }
+  .period-title { font-size: 20px; }
+}
+/* The name on the account button in the site's font, not the browser's own for buttons. */
+.me-button { font-family: inherit; }
+
+/* ---------- Computers: the clock and the account (Roxanne, 26 Nov) ----------
+   The clock as it was (UTC over the time), sized for the band; a thin line; then the
+   account as its picture and name only, with no box around it, and an arrow to its menu
+   drawn like the site's icons. Phones keep theirs. */
+.top-divider, .me-arrow { display: none; }
+@media (min-width: 1000px) {
+  .clock-time { font-size: 20px; }
+  .clock-zone { font-size: 12px; }
+  .top-divider { display: block; flex: none; width: 1px; height: 30px; background: var(--glass-border); }
+  .top-bar #meButton, .top-bar .me-button {
+    min-height: 0; padding: 0; gap: 12px; border: none; background: none; box-shadow: none;
+    -webkit-backdrop-filter: none; backdrop-filter: none; font-size: 17px; font-weight: 800;
+  }
+  .top-bar .me-button:has(.me-pic) { padding-left: 0; }
+  .me-button .me-pic {
+    width: 40px; height: 40px; border-radius: 50%; font-size: 17px; color: var(--text);
+    box-shadow: 0 0 0 2px var(--page-color, #141B2C), 0 0 0 4px var(--section),
+      0 0 12px 2px color-mix(in srgb, var(--section) 45%, transparent);
+  }
+  .me-arrow { display: block; flex: none; width: 18px; height: 18px; margin-left: -2px; color: var(--section);
+    filter: drop-shadow(0 0 3px color-mix(in srgb, var(--section) 55%, transparent)); }
+}
+@media (min-width: 1000px) { .top-bar > .account-menu-wrap { display: flex; align-items: center; align-self: stretch; } }
+/* The picture a rounded square, not round, with room above and below it in the band; the
+   clock's numbers bigger and heavier, the whole clock about as tall as the picture with its
+   ring (Roxanne, 26 Nov: "I do not want a round picture ... not stuck on the bottom row",
+   "the clock can be bigger ... heavier"). */
+@media (min-width: 1000px) {
+  .me-button .me-pic { width: 34px; height: 34px; border-radius: 9px; font-size: 15px; }
+  .clock-time { font-size: 26px; font-weight: 900; }
+}
+/* The calendar's controls bigger and lower, closer to the calendar they belong to, with
+   room above them under the band (Roxanne, 26 Nov: "this is way too small ... positioned
+   better in general, like lower and bigger font"; the icons "so tiny that you don't even
+   know what you're clicking"; Filters and UTC "at least as big as the selected view").
+   The month 28px (Roxanne, 26 Nov: "I need like 28"); every icon on the line
+   24px, all centred on one line with the arrows. */
+@media (min-width: 1000px) {
+  /* The row keeps its height, so the calendar starts where it did (Roxanne, 26 Nov: "The
+     space between the calendar and the top needs to be exactly the same"). */
+  .page > .toolbar { padding: 4px 0 6px; }
+  .page > .toolbar .period-title { font-size: 28px; }
+  .page > .toolbar .step-arrow { width: 30px; height: 30px; }
+  .page > .toolbar .step-arrow svg, .page > .toolbar .month-steps .today-button svg { width: 22px; height: 22px; }
+  .page > .toolbar .view-icon svg { width: 24px; height: 24px; }
+  .page > .toolbar .filters-button svg, .page > .toolbar .time-word svg { width: 24px; height: 24px; }
+  .page > .toolbar .filters-button, .page > .toolbar .time-word { gap: 8px; font-size: 15px; }
+  .page > .toolbar .control-divider { height: 30px; }
+  .toolbar[data-view="month"] .period-title { min-width: 212px; }
+  .toolbar[data-view="week"] .period-title { min-width: 265px; }
+}
+/* Room between the two views and around them (Roxanne, 26 Nov: "too close together ... put
+   a little space in between now and in between them and the rest"). */
+@media (min-width: 1000px) {
+  .page > .toolbar .view-icons { gap: 12px; }
+  .page > .toolbar .control-divider { margin: 0 -6px; }
+}
