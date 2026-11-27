@@ -466,7 +466,10 @@ function allianceTimeFormFor(occurrence: Occurrence): string {
 // One edit button in an event's head, for anyone who may change something about it. It
 // opens every form they may use: this date (admins), the event's dates and repeat
 // (the owner), or their alliance's own time (its R4 or R5).
+// No Edit in an event's head, on any event (Roxanne, 27 Nov: "I said edit will not be
+// there"). The date, repeat and alliance-time forms move to the admin menu, still to design.
 function headPencilsOf(occurrence: Occurrence): string {
+  return '';
   if (eventTypeById(occurrence.eventTypeId)?.datesLocked) return '';
   const ownTime = occurrence.allianceIds.length > 0;
   const mayEdit = isAdmin(person) || (ownTime && mayChangeAllianceTime(occurrence));

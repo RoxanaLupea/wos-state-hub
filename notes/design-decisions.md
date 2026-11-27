@@ -1644,3 +1644,10 @@ like that."
 - The tier: "we need to have the tier set and saved somewhere... all the events that have it,
   we need to be able to set the tier." She did not like "TIER Ultimate" as a line; shown for
   now as a chip in the head ("Ultimate tier").
+
+## Event head (27 Nov)
+
+"If I approved something for the header of Alliance Championship, it's approved for every
+other event because they have to be the same." Results sits where it was approved, on every
+event. "I said edit will not be there": no Edit in any event's head. The date, repeat and
+alliance-time forms it opened go to the admin menu (to be designed).
