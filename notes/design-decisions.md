@@ -1589,3 +1589,7 @@ All nine are built.
 - Submissions GIFs (Roxanne, 27 Nov): "To make the app fun, remind me to add GIFs on the
   submission page. We need something for approved, rejected, and submissions for when they are
   empty." Open: she adds the GIFs; remind her when the Submissions page is next worked on.
+- Folds in tabs (Roxanne, 27 Nov): "we do not need the arrow now, since we split it into tabs ...
+  remove it for Alliance Championship and ask me if we're gonna keep it for other events as we
+  move on." Done for Alliance Championship (event-panel.css); ask for each other event in the
+  review.

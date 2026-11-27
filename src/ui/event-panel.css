@@ -535,3 +535,9 @@
 .event-page .tree-label.heading { font-size: 12.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); }
 .event-page .tree-label .tree-detail { display: block; margin: 3px 0 2px; font-size: 12px; font-weight: 500; line-height: 1.35;
   letter-spacing: 0; text-transform: none; color: var(--text-muted); }
+
+/* Events whose tabs show their sections whole, with no arrow to fold them: the tabs already
+   split the information (Roxanne, 27 Nov, Alliance Championship first; each other event is
+   asked as it comes up in the review). */
+.event-page[data-event-type="alliance-championship"] .tab-page details.points-list > summary { pointer-events: none; cursor: default; }
+.event-page[data-event-type="alliance-championship"] .tab-page details.points-list > summary::after { display: none; }

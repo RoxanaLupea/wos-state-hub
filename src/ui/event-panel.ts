@@ -838,7 +838,7 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
   const headStart = options.wholeEvent?.startMinute ?? occurrence.startMinute;
   const headEnd = options.wholeEvent?.endMinute ?? occurrence.endMinute;
   let html = backLinks(options.backToDay) +
-    `<section class="day-section glass event-page" style="${tintedPanelStyle(color, colorEnd)}--event-color:${escapeForPage(color)};">` +
+    `<section class="day-section glass event-page" data-event-type="${escapeForPage(headEventTypeId)}" style="${tintedPanelStyle(color, colorEnd)}--event-color:${escapeForPage(color)};">` +
     `<div class="event-page-head">${eventBadge(headEventTypeId, 'large')}` +
     '<div class="event-page-title"><h2>' +
     (occurrence.wasCancelled ? '<span class="cancelled-mark" aria-label="Cancelled">&times;</span> ' : '') +
