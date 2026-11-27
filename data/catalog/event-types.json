@@ -148,7 +148,6 @@
     "datesLocked": true,
     "factsInHead": true,
     "rewardListsTogether": true,
-    "tiers": ["Iron", "Bronze", "Silver", "Gold", "Diamond", "Ultimate"],
     "category": "alliance",
     "color": "#3E60A8",
     "colorEnd": "#BC5247",
@@ -184,8 +183,7 @@
     "icon": "castle",
     "imageFile": "wintersiege",
     "resultType": "winloss",
-    "sortOrder": 23,
-    "tiers": ["Rookie", "Stalwart", "Pioneer", "Exalted", "Mythic", "Legendary"]
+    "sortOrder": 23
   },
   {
     "id": "crazy-joe",
