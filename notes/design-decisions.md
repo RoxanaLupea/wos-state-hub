@@ -1806,3 +1806,21 @@ alliance-time forms it opened go to the admin menu (to be designed).
   use these to design the shops to keep the familiarity, so instead of a transparent box we'll add
   a graphical element that is drawn based on event and we'll display the shops like this". The tab
   is Shop; each offer is a card drawn like the game's (item, limit, price), in the event's colours.
+- Shop cards, first look (Roxanne, 27 Nov night): "the cards are perfect in color. What they're not
+  perfect in is like shape and size ... and texture ... I just want it to be more glassy, even if
+  it's a glass that you cannot see through. It's more thick. It still has to be glass ... the thing
+  on the bottom that's white where we put the prices, that is too tall ... We are gonna optimize it
+  just a little bit on the aspect, but other than that, I love them."
+- Results button, every event (Roxanne, 27 Nov night): "Yes, I like the add results." The SvS will
+  also get rules: "We are gonna also add rules here so everyone can know what we agreed with the
+  other state, but that's specific to SES. We're gonna discuss it further along the way".
+- SvS results are worked out, never chosen (Roxanne, 27 Nov night): "please tell me the win or loss
+  is determined, not chosen, because it's gonna be based on the total of preparation, whoever has
+  the bigger total. And then battle ... whomever the state that has the winning alliance, that's the
+  winner. So you don't add the times for every single alliance ... you only keep track of the
+  biggest time. If the alliance that held it the most is from our state, then we won. If not, we
+  lost."
+- Ticket lines (Roxanne, 27 Nov night, TAL): "At round 1, the tickets start only when round 1 is
+  written, but the 0 is at elimination. So make sure the ticket always is on the right time. Like, it
+  has to start at elimination." A ticket line starts on the first row at its moment.
+

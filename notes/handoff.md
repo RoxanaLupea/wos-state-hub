@@ -34,7 +34,7 @@ chats applied her rules only on the page she was looking at; she found the gaps 
 ## Now: the panel audit (27 Nov, night)
 
 She found agreed rules missing from some panels. Found by rendering every panel:
-1. Results (built and committed on wip-27-nov, shown to her, waiting for her verdict): one rule for every event with results, from the event's own entry in
+1. Results (accepted 27 Nov night: "Yes, I like the add results"; committed on wip-27-nov): one rule for every event with results, from the event's own entry in
    event-types.json; no Results tab until the run has results; the trophy Results button in
    the head for whoever may add them, once there is something to record. Was coded only for
    alliance events: SvS and Sunfire showed a Results tab with only the Records link and no
@@ -44,13 +44,16 @@ She found agreed rules missing from some panels. Found by rendering every panel:
    Hero's Mission and Vision of Dawn rewards, Wander Theater's Bizarre Bazaar. The Emporium of
    Enigma shop shows nowhere from Frosty Fortune; Crazy Joe's rewards are saved but not shown.
 3. Shops (her answer, 27 Nov night, design-decisions.md "Shops"): the Merchant tab becomes Shop,
-   each offer a card drawn like the game's shop cards in the event's colours. Mockup shown 27 Nov
-   night (Flame and Fangs, TAL, Winter Siege), not committed until she accepts it.
+   each offer a card drawn like the game's shop cards in the event's colours. Colours accepted;
+   second version (thicker glass, lower price bar, shorter cards) shown 27 Nov night, not committed
+   until she accepts it.
 4. Timelines on wip-27-nov: checked row by row, no rewards or mail row anywhere, no time
    written twice.
 
 ## Next
 
+0. To remember (her ask, 27 Nov night): SvS gets rules, so everyone knows what we agreed with the
+   other state. Specific to SvS; to be discussed with her later. Don't forget it.
 1. Finish the audit fixes above, show her the screens (phone first, full screens).
 2. The rewards pass (notes/rewards-requests.md 32): every event's Rewards and Merchant tabs
    follow her rules. Found and not fixed yet:
