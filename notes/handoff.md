@@ -7,7 +7,8 @@ Do CLAUDE.md's setup first. Updated 27 Nov 2026.
 ### Pushed 27 Nov, 13:00 (her time): the calendar redesign (common-size) merged into main
 
 Everything on common-size went live with her yes ("Push all our work because we're doing a
-handover"). The branch is deleted; work goes on main from now on.
+handover"). Build green. common-size is fully merged; deleting it on GitHub is refused from
+Claude's session, so it stays there unused. Work goes on main from now on.
 
 ## The redesign plan (her words: "highly important")
 
