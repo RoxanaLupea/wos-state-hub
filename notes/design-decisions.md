@@ -1432,3 +1432,11 @@ All nine are built.
 - Credit for results (Roxanne, 27 Nov): "when we approve something, we will have a message below
   the results saying submitted by and then the user. We want to give credit to them." The
   ranking's up and down arrows look like the site's buttons, so it is clear the rows can be moved.
+- Submissions, first version (Roxanne, 27 Nov): "It's enough to have them just as links": a
+  Submissions item in the menu with a red dot when something is submitted, opening a page
+  reached only from there, "basically just a list for now", each one taking the R4 "to the
+  exact page that the result is submitted for", to review it and "approve it or reject it".
+  "I don't really care how it looks. I need it to work." The design is revisited later.
+- Scrollbars (Roxanne, 27 Nov): "Don't want any scroll bars anywhere. It should just be
+  scrollable. We tell them that it's scrollable by having it faded a little at the bottom.
+  That's the standard practice for the entire site."

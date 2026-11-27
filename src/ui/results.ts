@@ -18,7 +18,8 @@ import svsHistory from '../../seed/svs-results.json';
 import sunfireHistory from '../../seed/sunfire-results.json';
 import talHistory from '../../seed/tal-results.json';
 import { ADD_ICON } from './invite-row.ts';
-import { CHAMPIONSHIP_EDIT_FORM_ID, addResultsButton, championshipResult, championshipViewOf } from './championship-results.ts';
+import { CHAMPIONSHIP_EDIT_FORM_ID, addResultsButton, championshipResult, championshipViewOf, championshipViewOfFields } from './championship-results.ts';
+import { SUBMITTED_EVENTS } from './submissions.ts';
 
 // The events an alliance records for itself.
 export const ALLIANCE_RESULT_EVENTS = ['showdown', 'foundry', 'canyon', 'winter-siege', 'alliance-championship'];
@@ -666,7 +667,9 @@ function championshipEdit(runDate: string): string {
 export function addResultsHead(options: ResultsOptions): string {
   const { context, eventTypeId } = options;
   const allianceId = context.myAllianceId;
-  if (!ALLIANCE_RESULT_EVENTS.includes(eventTypeId) || !allianceId || !context.leads(allianceId)) return '';
+  if (!ALLIANCE_RESULT_EVENTS.includes(eventTypeId) || !allianceId) return '';
+  // Its R4s add results; for the events members may submit, any signed-in member does.
+  if (!context.leads(allianceId) && !(SUBMITTED_EVENTS.includes(eventTypeId) && context.userId)) return '';
   if (options.isSwitchedOff(allianceId, eventTypeId)) return '';
   if (eventTypeId === 'alliance-championship' ? options.roundsFought < 1 : !options.hasStarted) return '';
   const recorded = resultsOf(context, eventTypeId);
@@ -679,9 +682,15 @@ function championshipResults(options: ResultsOptions, allianceId: string, record
   const { context } = options;
   const existing = recorded.find(one => one.row.alliance_id === allianceId && one.row.event_date === options.runDate);
   const edit = championshipEdit(options.runDate);
-  const isEditing = Boolean(context.editing?.startsWith(edit)) && context.leads(allianceId);
+  const mayAdd = context.leads(allianceId) || Boolean(context.userId);
+  const isEditing = Boolean(context.editing?.startsWith(edit)) && mayAdd;
+  // An R4 reviewing a member's submission: what was submitted, to fix, approve or reject.
+  const reviewId = context.leads(allianceId) ? /\|review\|(\d+)$/.exec(context.editing ?? '')?.[1] ?? '' : '';
+  const submission = reviewId ? (context.rowsOf('result_submissions') ?? []).find(one => String(one.id) === reviewId) : undefined;
   if (!existing && !isEditing) return '';
-  const view = existing
+  const view = submission
+    ? championshipViewOfFields(submission.fields as Record<string, string[]>)
+    : existing
     ? championshipViewOf(existing.details, existing.opponents.map(one => ({
         slot: Number(one.slot), state: one.opponent_state ? String(one.opponent_state) : '',
         alliance: one.opponent_alliance ? String(one.opponent_alliance) : '' })),
@@ -692,9 +701,10 @@ function championshipResults(options: ResultsOptions, allianceId: string, record
     view, ourState: options.stateNumber, ourAlliance: ours ? `[${ours.tag}]${ours.name}` : allianceTag(allianceId),
     roundsFought: options.roundsFought, isEditing,
     withRanking: isEditing && (context.editing === edit + '|ranking' || view.ranking.length > 0),
+    submissionId: submission ? String(submission.id) : '',
     formKey: formKey('alliance-championship', options.runDate, allianceId, existing),
     addRankingEdit: context.leads(allianceId) ? edit + '|ranking' : '', addIcon: ADD_ICON,
-    submittedBy: existing?.row.updated_by ? options.playerNameOf(String(existing.row.updated_by)) : ''
+    submittedBy: existing ? options.playerNameOf(existing.details.get('submitted_by') || String(existing.row.updated_by ?? '')) : ''
   });
 }
 
@@ -703,11 +713,19 @@ function championshipResults(options: ResultsOptions, allianceId: string, record
 function championshipTabActions(options: ResultsOptions): string {
   const { context } = options;
   const allianceId = context.myAllianceId;
-  if (!allianceId || !context.leads(allianceId)) return '';
+  if (!allianceId || !context.userId) return '';
   const edit = championshipEdit(options.runDate);
+  const submit = (word: string) => saveWord(word).replace('type="submit"', `type="submit" form="${CHAMPIONSHIP_EDIT_FORM_ID}"`);
   if (context.editing?.startsWith(edit)) {
-    return cancelWord() + saveWord('Save').replace('type="submit"', `type="submit" form="${CHAMPIONSHIP_EDIT_FORM_ID}"`);
+    // An R4 reviewing a submission rejects or approves it; an R4 saves; a member submits.
+    const reviewId = /\|review\|(\d+)$/.exec(context.editing)?.[1];
+    if (reviewId && context.leads(allianceId)) {
+      return `<button type="button" class="quiet-word cancel" data-reject-submission="${escapeForPage(reviewId)}">` +
+        '<span class="words">Reject</span></button>' + submit('Approve');
+    }
+    return cancelWord() + submit(context.leads(allianceId) ? 'Save' : 'Submit');
   }
+  if (!context.leads(allianceId)) return '';
   const recorded = resultsOf(context, 'alliance-championship');
   const existing = recorded?.find(one => one.row.alliance_id === allianceId && one.row.event_date === options.runDate);
   return existing ? editButton(edit) : '';

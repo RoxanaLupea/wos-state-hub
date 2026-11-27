@@ -73,6 +73,7 @@ import {
 import { SVS_EDIT_FORM_ID, preparationOutcome, typeHoldTime, updateSvsEditor } from './ui/svs-results.ts';
 import { moveRankingRow, rankingFromForm, toggleChampionshipLane } from './ui/championship-results.ts';
 import { planFirstRow, planNoteEdit } from './ui/plan-note.ts';
+import { SUBMITTED_EVENTS, fieldsOfForm, hasSubmissionsDot, submissionsPage } from './ui/submissions.ts';
 import { personalEntryForm, personalEntryOf } from './ui/personal-entry.ts';
 import {
   academiesPage, availabilityPage, facilitiesPage, membersPage, planPage, requestsPage, rolesPage,
@@ -1056,6 +1057,53 @@ function troopsOfAccount(inGameId: string): Record<string, { tier: string; skill
 // The date a result is recorded under: the run's first day; for SvS, the day of its
 // battle, as the SvS history has always been kept; for a part of a bigger event, the
 // first day of the whole event.
+// A red dot on the menu: a ticket waits for this R4, or one of this member's was resolved
+// since they last opened Submissions.
+const SUBMISSIONS_SEEN = 'submissionsSeenUntil';
+function submissionsDot(): boolean {
+  if (!person) return false;
+  const signedIn = person;
+  let seen = '';
+  try { seen = window.localStorage.getItem(SUBMISSIONS_SEEN) ?? ''; } catch { seen = ''; }
+  return hasSubmissionsDot(rowsOf('result_submissions'), signedIn.userId, allianceId => leadsAlliance(signedIn, allianceId), seen);
+}
+
+// Opening Submissions counts as having seen how this member's tickets were resolved.
+function markSubmissionsSeen(): void {
+  const latest = (rowsOf('result_submissions') ?? []).filter(one => one.submitted_by === person?.userId && one.resolved_at)
+    .map(one => String(one.resolved_at)).sort().pop();
+  if (!latest) return;
+  try { window.localStorage.setItem(SUBMISSIONS_SEEN, latest); } catch { /* a browser that keeps nothing */ }
+}
+
+// A ticket opened from Submissions: the event's Results on that date, with what was
+// submitted ready to fix, approve or reject for its R4s.
+function openSubmission(id: string): void {
+  const row = (rowsOf('result_submissions') ?? []).find(one => String(one.id) === id);
+  if (!row) return;
+  const day = dayFromText(String(row.event_date));
+  const nearby = runsBetween(day - 40, day + 40);
+  const occurrence = nearby.find(one => one.eventTypeId === row.event_type_id && resultRunDate(one, nearby) === String(row.event_date));
+  if (!occurrence) return;
+  view.openPage = 'calendar';
+  view.openSubPage = '';
+  view.focusDay = day;
+  view.chosenDay = day;
+  view.openEventKey = occurrence.key;
+  view.openEventDay = day;
+  view.pickedRowKey = null;
+  view.openedFromDay = null;
+  view.tappedKey = occurrence.key;
+  view.tappedMinute = NaN;
+  view.isPanelOpen = true;
+  view.openInfoTab = 'results';
+  view.editing = row.status === 'open' && leadsAlliance(person, String(row.alliance_id))
+    ? `championship-result|${String(row.event_date)}|review|${id}` : null;
+  // The page moves to the event: the review it opens is kept, not closed as a move would.
+  editingPlace = view.openPage + '|' + (view.openEventKey ?? '') + '|' + view.chosenDay;
+  startAtTop.panel = true;
+}
+
 // A person's name in the game: the name of their main account (or their first account).
 function playerNameOf(userId: string): string {
   const accounts = (rowsOf('game_accounts') ?? []).filter(one => one.owner_id === userId && one.kind !== 'farm')
@@ -1126,6 +1174,12 @@ function workingPageMarkup(openPage: string, subPage: string): string {
   if (key === 'alliance|results') return allianceResultsPage(workContext());
   if (key === 'alliance|opponents') {
     return opponentNotesPage(workContext(), workChoices.get('opponents-others') === 'on', workChoices.get('opponents-all') === 'on');
+  }
+  if (openPage === 'submissions' && person) {
+    const signedIn = person;
+    markSubmissionsSeen();
+    return submissionsPage({ rows: rowsOf('result_submissions'), userId: signedIn.userId, playerNameOf,
+      leads: allianceId => leadsAlliance(signedIn, allianceId) });
   }
   if (key === 'map|territory') return territoryPage(workContext());
   if (key === 'map|facilities') return facilitiesPage(workContext());
@@ -1531,7 +1585,8 @@ function drawPage(app: HTMLElement): void {
     // Signed in: the name and picture of the game account they are on, otherwise "Me".
     playerName: person ? (onAccount ? barAccountOf(onAccount).name : '') || 'Me' : null,
     playerPicture: onAccount ? barAccountOf(onAccount).avatar : null,
-    accountMenu: person ? accountMenu(isAdmin(person)) : null,
+    accountMenu: person ? accountMenu(isAdmin(person), submissionsDot()) : null,
+    menuDot: submissionsDot(),
     eventTypeId: currentEventTypeId()
   });
   // The open section's colour goes on the page's root, so the band, the page and any
@@ -1819,6 +1874,18 @@ function handleClicks(event: MouseEvent): void {
     return;
   }
 
+  const submissionButton = target.closest<HTMLElement>('[data-open-submission]');
+  if (submissionButton) { openSubmission(submissionButton.dataset.openSubmission as string); draw(); return; }
+  const rejectButton = target.closest<HTMLElement>('[data-reject-submission]');
+  if (rejectButton && person) {
+    const signedIn = person;
+    rejectButton.setAttribute('disabled', '');
+    void saveRow('result_submissions', { id: Number(rejectButton.dataset.rejectSubmission), status: 'rejected',
+      resolved_by: signedIn.userId, resolved_at: new Date().toISOString() })
+      .then(async () => { view.editing = null; await rereadTables('result_submissions'); draw(); })
+      .catch(() => rejectButton.removeAttribute('disabled'));
+    return;
+  }
   const pageButton = target.closest<HTMLElement>('[data-page]');
   if (pageButton) {
     // "Profile" shows the account the player is on, whatever was open before.
@@ -3263,6 +3330,31 @@ async function saveWorkingForm(
   if (formName === 'result') {
     const [eventTypeId, date, keyAllianceId, existingId] = key.split('|');
     const allianceId = keyAllianceId || orNull('alliance_id');
+    // A Championship round left as it was (no opponent typed, no lane tapped) is not
+    // a result yet: it is left out rather than kept as a 0:3 loss.
+    if (eventTypeId === 'alliance-championship') {
+      for (let round = 1; round <= 5; round++) {
+        const suffix = round === 1 ? '' : '_' + round;
+        if (!text('opponent_state' + suffix) && !text('opponent_alliance' + suffix) && text(`detail_round${round}_lanes`) === 'ttt') {
+          for (const part of ['lanes', 'ours', 'theirs']) values.delete(`detail_round${round}_${part}`);
+        }
+      }
+    }
+    // A member's results go to the alliance's R4s as a ticket, saved once one approves them
+    // (Roxanne, 27 Nov).
+    if (allianceId && SUBMITTED_EVENTS.includes(eventTypeId) && !leadsAlliance(person, allianceId)) {
+      await saveRow('result_submissions', {
+        event_type_id: eventTypeId, event_date: date, alliance_id: allianceId, fields: fieldsOfForm(values),
+        submitted_by: userId, submitted_at: now, status: 'open'
+      });
+      return ['result_submissions'];
+    }
+    // An R4 approving a member's submission: the results are saved as approved, with the
+    // member credited for them.
+    const submissionId = text('submission_id');
+    const submission = submissionId
+      ? (tableRows.get('result_submissions') ?? []).find(one => String(one.id) === submissionId) : undefined;
+    if (submission) values.set('detail_submitted_by', String(submission.submitted_by));
     const whole = (name: string) => {
       if (!text(name)) return null;
       const number = Number(text(name));
@@ -3347,7 +3439,10 @@ async function saveWorkingForm(
           opponent_state: whole('opponent_state' + suffix), opponent_alliance: orNull('opponent_alliance' + suffix) }, 'result_id,slot');
       }
     }
-    return ['results', 'result_details', 'result_opponents', 'alliance_records'];
+    if (submission) {
+      await saveRow('result_submissions', { id: submission.id, status: 'approved', resolved_by: userId, resolved_at: now });
+    }
+    return ['results', 'result_details', 'result_opponents', 'alliance_records', 'result_submissions'];
   }
   if (formName === 'personal') {
     const [scheduleId, originalDate, existingId] = key.split('|');

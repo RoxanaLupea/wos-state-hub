@@ -58,6 +58,8 @@ export interface ChampionshipDrawOptions {
   addIcon: string;
   // Who put the results in, to give them credit (Roxanne, 27 Nov).
   submittedBy: string;
+  // A member's submission being reviewed by an R4: its ticket.
+  submissionId: string;
 }
 
 function lanesWon(lanes: string): number {
@@ -87,6 +89,25 @@ export function championshipViewOf(details: Map<string, string>, opponents: { sl
     ranking = [];
   }
   return { rounds, ranking, rank };
+}
+
+// What a member submitted (the result form's fields), drawn back for an R4 to review.
+export function championshipViewOfFields(fields: Record<string, string[]>): ChampionshipView {
+  const first = (name: string) => fields[name]?.[0] ?? '';
+  const rounds: ChampionshipRound[] = [];
+  for (let number = 1; number <= CHAMPIONSHIP_ROUND_COUNT; number++) {
+    const lanes = fields[`detail_round${number}_lanes`]?.[0];
+    if (lanes === undefined) continue;
+    rounds.push({ number, lanes: fullLanes(lanes), opponentState: first(opponentName('opponent_state', number)),
+      opponentAlliance: first(opponentName('opponent_alliance', number)) });
+  }
+  const states = fields.ranking_state ?? [];
+  const ranking: RankingRow[] = states.map((state, index) => ({
+    state, alliance: fields.ranking_alliance?.[index] ?? '', points: fields.ranking_points?.[index] ?? '',
+    flags: fields.ranking_flags?.[index] ?? '', defeated: fields.ranking_defeated?.[index] ?? '',
+    isUs: fields.ranking_us?.[index] === '1'
+  }));
+  return { rounds, ranking, rank: null };
 }
 
 function lanesBar(lanes: string, isEditing: boolean, roundNumber: number): string {
@@ -198,7 +219,8 @@ export function championshipResult(options: ChampionshipDrawOptions): string {
   const body = rounds + ranking + keptRanking;
   return isEditing
     ? `<form class="svs-result ac-result ac-editing" id="${CHAMPIONSHIP_EDIT_FORM_ID}" data-form="result" data-key="${escapeForPage(options.formKey)}">` +
-      body + '<p class="form-message" data-form-message></p></form>'
+      body + (options.submissionId ? `<input type="hidden" name="submission_id" value="${escapeForPage(options.submissionId)}">` : '') +
+      '<p class="form-message" data-form-message></p></form>'
     : `<div class="svs-result ac-result">${body}` +
       (options.submittedBy ? `<p class="ac-credit">Submitted by <b>${escapeForPage(options.submittedBy)}</b></p>` : '') + '</div>';
 }

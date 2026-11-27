@@ -98,6 +98,8 @@ export interface TopBarOptions {
   // The picture of the game account they are on, from the game; null before the game has one.
   playerPicture?: string | null;
   accountMenu: string | null;
+  // A red dot on the name: something in the menu waits for this person.
+  menuDot?: boolean;
   // The event the event section is about, so the open section can show its logo and name.
   eventTypeId: string | null;
 }
@@ -149,6 +151,7 @@ export function topBar(options: TopBarOptions): string {
         `<span class="me-pic" aria-hidden="true">${options.playerPicture ? playerPictureMarkup(options.playerPicture)
           : escapeForPage((Array.from(options.playerName).find(letter => /[\p{L}\p{N}]/u.test(letter)) ?? '').toUpperCase())}</span>` +
         `<span class="me-name">${escapeForPage(options.playerName)}</span>` +
+        (options.menuDot ? '<i class="menu-dot" aria-hidden="true"></i>' : '') +
         `</button>${options.accountMenu ?? ''}</div>`
       : '<button type="button" class="ghost-button" data-page="player">Sign in</button>'}
   </header>`;

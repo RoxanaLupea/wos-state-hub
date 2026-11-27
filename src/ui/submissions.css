@@ -1,0 +1,15 @@
+/* The Submissions page: a plain list for now (Roxanne, 27 Nov: the design comes later). */
+.submissions .sub-list { display: flex; flex-direction: column; gap: 6px; }
+.sub-item { display: grid; gap: 3px; padding: 10px 12px; border: none; border-radius: 10px; background: rgba(255, 255, 255, 0.04);
+  font: inherit; color: var(--text); text-align: left; cursor: pointer; }
+.sub-item.open { background: rgba(255, 255, 255, 0.08); }
+.sub-event { display: flex; align-items: center; gap: 8px; font-size: 14.5px; font-weight: 800; }
+.sub-who { font-size: 12.5px; font-weight: 600; color: var(--text-muted); }
+.sub-status { font-size: 12.5px; font-weight: 700; color: var(--text-faint); }
+.sub-status.open { color: var(--ours); }
+.sub-status.approved { color: #7FD39A; }
+.sub-status.rejected { color: var(--theirs); }
+.sub-dot, .menu-dot { display: inline-block; flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--notice-red); }
+.me-button { position: relative; }
+.me-button .menu-dot { position: absolute; top: 2px; right: 2px; box-shadow: 0 0 0 2px #121A2B; }
+.account-menu-item .menu-dot { margin-left: 8px; }

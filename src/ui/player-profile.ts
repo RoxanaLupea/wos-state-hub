@@ -724,12 +724,19 @@ const ACCOUNT_KIND_NAMES: Record<string, string> = { main: 'Main', alt: 'Alt' };
 // The menu under the name (24 Nov): no list of characters, since the photos on the profile
 // swap between them, and no Edit or Add, which sit beside the characters on the profile
 // (owner, 25 Nov). In her order: Admin for admins, the profile, signing out.
-export function accountMenu(isAdmin: boolean): string {
+// Submissions (Roxanne, 27 Nov): results members sent for their R4s to approve; a red dot
+// while one waits for this person.
+const SUBMISSIONS_ICON = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"' +
+  ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 13l2.5-7h11L20 13v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/>' +
+  '<path d="M4 13h4.5l1.5 2.5h4l1.5-2.5H20"/></svg>';
+
+export function accountMenu(isAdmin: boolean, submissionsDot = false): string {
   const item = (attributes: string, icon: string, label: string, extra = '') =>
     `<button type="button" class="account-menu-item${extra}" role="menuitem" ${attributes}>` +
     `<span class="account-menu-plus">${icon}</span>${label}</button>`;
   return '<div class="account-menu glass" role="menu">' +
     (isAdmin ? item('data-page="admin"', GEAR, 'Admin') : '') +
+    item('data-page="submissions"', SUBMISSIONS_ICON, 'Submissions' + (submissionsDot ? '<i class="menu-dot" aria-label="Waiting"></i>' : '')) +
     item('data-page="player"', PROFILE_ICON, 'Profile') +
     item('data-sign-out', SIGN_OUT_ICON, 'Sign out', ' danger') + '</div>';
 }
