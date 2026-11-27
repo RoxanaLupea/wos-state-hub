@@ -18,6 +18,7 @@ import { shortDayText } from './day-names.ts';
 import { escapeForPage } from './escape.ts';
 import { rewardAmount } from './reward-amount.ts';
 import { eventBadge, eventIcon, imageUrl } from './event-icon.ts';
+import { MINUTES_PER_DAY } from '../calendar/days.ts';
 import { barFadeColors } from './bar.ts';
 import {
   EXPERT_CHEST_HOSTS, NUMBERED_REWARD_LISTS, rewardBandName, rewardListName,
@@ -670,6 +671,25 @@ function rewardsFold(eventTypeId: string, state: RewardViewState, merchant = fal
   return html + '</details>';
 }
 
+// A plan's words (Flame and Fangs): as short as the alliance's own message, with the game's
+// pictures in place of words and their details on hover (Roxanne, 27 Nov night: "this cannot be
+// more wordy than the discord message, we are adding all the icons we need ... use the hover").
+// {agnes} is Agnes, {core} a Crystallite Core, **x** bold.
+const PLAN_PICTURES: Record<string, { file: string; title: string }> = {
+  agnes: { file: 'experts/agnes', title: "Agnes' Efficient Recon: Execute All and 8 extra Intel missions a day" },
+  core: { file: 'items/crystallite-core', title: 'Crystallite Core' }
+};
+function planWords(written: string): string {
+  const picture = (name: string) => {
+    const known = PLAN_PICTURES[name];
+    return known ? `<img class="plan-icon" src="${escapeForPage(imageUrl(known.file))}" alt="${escapeForPage(known.title)}"` +
+      ` title="${escapeForPage(known.title)}">` : '';
+  };
+  return escapeForPage(written)
+    .replace(/\{(\w+)\}/g, (_all, name: string) => picture(name))
+    .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+}
+
 // The whole run as one timeline.
 // The rows whose points the player opened, so they stay open when the page is drawn
 // again (a table arriving, a tab, another row picked).
@@ -686,8 +706,20 @@ export interface FirstRowPlan {
 }
 
 export function renderEventTree(tree: EventTree, firstRow?: FirstRowPlan): string {
-  const rows = tree.rows;
+  let rows = tree.rows;
   const side = tree.side;
+  // A shop that stays open after the event (Flame and Fangs, Roxanne 27 Nov night: "the shop being
+  // available for an extra day, we show that with a dotted line"): the event's end is a step with
+  // no name, and a dotted line runs on to the shop's close.
+  const shopDays = eventTypeById(rows[0]?.eventTypeId ?? '')?.shopDaysAfter ?? 0;
+  let dottedFrom = -1;
+  const last = rows[rows.length - 1];
+  if (shopDays && last?.isEndRow) {
+    rows = rows.slice(0, -1).concat(
+      { ...last, isEndRow: false, level: 1, label: '' },
+      { ...last, minute: last.minute + shopDays * MINUTES_PER_DAY, key: (last.key ?? '') + '|shop' });
+    dottedFrom = rows.length - 2;
+  }
 
   // Each part that opens and closes gets a narrow column of its own, always two wide
   // so the rows line up whether there is one part or two.
@@ -832,9 +864,13 @@ export function renderEventTree(tree: EventTree, firstRow?: FirstRowPlan): strin
     const isLitBelow = isPlayTimeline && row.playOpensUntil !== undefined;
     const isLitAbove = isPlayTimeline && Boolean(row.isPlayClose);
     const playState = playStateOf(index);
-    const lineAbove = !isPlayTimeline ? linePiece(index - 0.5, index)
+    const dotted = (from: number) =>
+      `repeating-linear-gradient(to bottom,${lineColorAt(from)} 0 4px,transparent 4px 8px)`;
+    const lineAbove = dottedFrom >= 0 && index > dottedFrom ? dotted(index - 0.5)
+      : !isPlayTimeline ? linePiece(index - 0.5, index)
       : isLitAbove ? litLine() : quietLine;
-    const lineBelow = !isPlayTimeline ? linePiece(index, index + 0.5)
+    const lineBelow = dottedFrom >= 0 && index >= dottedFrom ? dotted(index)
+      : !isPlayTimeline ? linePiece(index, index + 0.5)
       : isLitBelow ? litLine() : quietLine;
     const dotColor = isPlayTimeline ? (playState ? playLight : 'rgba(255,255,255,0.35)')
       : row.isSideRow ? fadeColorAt(row.eventTypeId, lineAt(index)) : lineColorAt(index);
@@ -885,7 +921,8 @@ export function renderEventTree(tree: EventTree, firstRow?: FirstRowPlan): strin
       (isNewDay && !repeatsTime ? `<b>${escapeForPage(shortDayText(rowDay))}</b>` : '') +
       (repeatsTime ? '' : `<span>${escapeForPage(clockText(row.minute))}</span>`) + '</span>' +
       sideCell + (openingColumns.length ? openingCells(index) : '') + mainLine +
-      `<span class="tree-label${row.level === 0 && !row.isEndRow ? ' main' : ''}${row.isStage ? ' stage' : ''}${row.detail ? ' heading' : ''}` +
+      `<span class="tree-label${row.level === 0 && !row.isEndRow ? ' main' : ''}${row.isStage ? ' stage' : ''}` +
+      `${eventTypeById(row.eventTypeId)?.instructionSteps && row.level > 0 ? ' instructions' : row.detail ? ' heading' : ''}` +
       `${row.isSideRow || row.isEndRow ? ' side-row' : ''}"` +
       // A ticket's rows are written in the ticket's own colour, like its line; other
       // rows beside the event use the light end of their bar.
@@ -893,10 +930,10 @@ export function renderEventTree(tree: EventTree, firstRow?: FirstRowPlan): strin
         : row.isSideRow ? ` style="color:${barFadeColors(row.eventTypeId).light}"` : '') + '>' +
       (row.isCurrent ? PIN_ICON : '') +
       (row.isCancelled ? '<span class="cancelled-mark" aria-label="Cancelled">&times;</span> ' : '') +
-      escapeForPage(row.label) +
+      (eventTypeById(row.eventTypeId)?.instructionSteps ? planWords(row.label) : escapeForPage(row.label)) +
       (row.subLabel ? `<span class="tree-sub">${escapeForPage(row.subLabel)}</span>` : '') +
       (row.detail ? `<span class="tree-detail"${detailColorAt.has(index) ? ` style="color:${detailColorAt.get(index)}"` : ''}>` +
-        `${escapeForPage(row.detail)}</span>` : '') +
+        `${eventTypeById(row.eventTypeId)?.instructionSteps ? planWords(row.detail) : escapeForPage(row.detail)}</span>` : '') +
 
       '</span>' +
       (hasPoints || row.note
@@ -913,6 +950,8 @@ export function renderEventTree(tree: EventTree, firstRow?: FirstRowPlan): strin
       (plan?.banner ? ' has-plan' : '') +
       (row.level === 0 ? ' main' : row.isSideRow ? ' side' : ' nested') +
       (row.detail ? ' has-detail' : '') +
+      // A plan's step written on two lines keeps its time and dot level with its first line.
+      (eventTypeById(row.eventTypeId)?.instructionSteps && row.label.includes('\n') ? ' plan-lines' : '') +
       (repeatsTime ? ' same-time' : '') +
       (row.isCurrent ? ' current' : '') +
       (row.isPicked ? ' picked' : '') +
@@ -1093,11 +1132,12 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
         notesFold(eventTypeId, 'rewards', 'Rewards', true), rewardsFold(eventTypeId, options.rewardView)) }
       : tabFromFold('rewards', joinFolds(
         notesFold(eventTypeId, 'rewards', 'Rewards'), rewardsFold(eventTypeId, options.rewardView))),
-    tabFromFold('merchant', rewardsFold(eventTypeId, options.rewardView, true)),
     { id: 'battles', label: 'Battles', html: options.fortBattlesHtml },
     { id: 'score', label: 'Total score', html: options.scoreHtml },
     { id: 'alliance-times', label: 'Alliance times', html: allianceTimesHtml },
     tabFromFold('missions', missionsFold(eventTypeId, options.rewardView)),
+    // The shop always comes after Missions (Roxanne, 27 Nov night: "shop is always after missions").
+    tabFromFold('merchant', rewardsFold(eventTypeId, options.rewardView, true)),
     { id: 'results', label: 'Results', html: options.resultsHtml },
     { id: 'mine', label: 'Mine', html: options.personalHtml }
   ].filter(tab => tab.html);

@@ -130,6 +130,8 @@ only what makes it one (the room its letters, digits or bars leave over and unde
   and below the words, 5px above and below the date and time); lines beside each other sit
   20px apart, centre to centre; each moment's time is written once (27 Nov).
 - Font: Roboto everywhere; the short form of an event (SvS, TAL) stays Montserrat.
+- An event's Shop tab always comes after its Missions tab (Roxanne, 27 Nov night: "shop is always
+  after missions").
 - Tabs inside a page (reward lists, tiers, missions) are centred (27 Nov: "they don't look
   good if they don't take up the full length").
 - Reward rows longer than a phone line (6): the extra rewards on the first line, the rewards

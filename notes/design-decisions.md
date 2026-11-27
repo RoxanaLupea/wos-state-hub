@@ -1860,4 +1860,4 @@ alliance-time forms it opened go to the admin menu (to be designed).
   per-refresh and event totals as its note); the timeline keeps only the plan. Her rule on the plan's
   words: "this cannot be more wordy than the discord message, we are adding all the icons we need ...
   use the hover to show the skill"; the shop's extra day is a dotted line with no name.
-
+- Tab order (Roxanne, 27 Nov night): "no, timeline, missions, shop, shop is always after missions".
