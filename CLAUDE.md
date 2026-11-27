@@ -75,6 +75,10 @@ notes/rules-and-open-items.md (game rules).
   A simple fault with one obvious fix (something shown twice, a stray row) is just fixed,
   not asked about: "This is a simple fix. So you shouldn't be asking for simple fixes like
   this. Something is doubled, it has to not be doubled" (27 Nov).
+- When we brainstorm, she sees the ideas rendered before she decides: render each option that is
+  on the table and show them, never only describe them and ask which to build (27 Nov night: "When
+  we're brainstorming, shouldn't I see what you're doing? Or like what we can do before I can
+  decide? I thought we established this a long time ago.").
 - When she asks how something should work or where it should go, ask how she wants it before
   mocking or proposing anything: she usually has the idea already (27 Nov). Send screenshots as
   soon as they exist, never hold them back.
