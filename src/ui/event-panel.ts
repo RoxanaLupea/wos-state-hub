@@ -413,6 +413,16 @@ function rewardListHtml(list: string, band: string, bandCount: number, shown: Re
   }).join('');
 }
 
+// The tabs of a reward list's tiers or bands, drawn like the list buttons above them: three
+// to a row when there are more than four. A tier without rewards yet stays dim.
+function tierTabs(eventTypeId: string, list: string, names: string[], withRewards: string[], open: string): string {
+  const columns = names.length > 4 ? 3 : names.length;
+  return `<div class="reward-tabs tier-tabs" style="grid-template-columns:repeat(${columns},1fr)">` + names.map(name =>
+    `<button type="button" class="reward-tab${name === open ? ' on' : ''}"` +
+    (withRewards.includes(name) ? ` data-reward-band="${escapeForPage(eventTypeId + '|' + list + '|' + name)}"` : ' disabled') +
+    `>${escapeForPage(rewardBandName(name))}</button>`).join('') + '</div>';
+}
+
 function rewardsFold(eventTypeId: string, state: RewardViewState): string {
   const all = rewardsOf(eventTypeId);
   if (!all.length) return '';
@@ -446,17 +456,14 @@ function rewardsFold(eventTypeId: string, state: RewardViewState): string {
       const oneRows = rewardsOf(eventTypeId, one);
       const oneBands: string[] = [];
       for (const row of oneRows) if (row.band && !oneBands.includes(row.band)) oneBands.push(row.band);
-      // The alliance's own tier opens first; the other tiers stay one tap away.
+      // Every tier has a tab, the alliance's own tier open first; a tier whose rewards
+      // are not in yet cannot be opened (Roxanne, 27 Nov).
+      const tierNames = one === 'group' ? eventTypeById(eventTypeId)?.tiers ?? oneBands : oneBands;
       const chosenOne = state.openBand.get(eventTypeId + '|' + one);
       const ownOne = state.ownBand.get(eventTypeId + '|' + one);
       const oneBand = chosenOne && oneBands.includes(chosenOne) ? chosenOne
         : ownOne && oneBands.includes(ownOne) ? ownOne : oneBands[0] ?? '';
-      const bandButtons = oneBands.length > 1
-        ? `<div class="reward-bands">` + oneBands.map(item =>
-          `<button type="button" class="reward-band${item === oneBand ? ' on' : ''}"` +
-          ` data-reward-band="${escapeForPage(eventTypeId + '|' + one + '|' + item)}">` +
-          `${escapeForPage(rewardBandName(item))}</button>`).join('') + '</div>'
-        : '';
+      const bandButtons = tierNames.length > 1 ? tierTabs(eventTypeId, one, tierNames, oneBands, oneBand) : '';
       const oneShown = oneBand ? oneRows.filter(row => row.band === oneBand) : oneRows;
       const note = pointSourcesInList(eventTypeId, 'rewards').find(source => {
         const where = pointSourceDayName(source.id);
@@ -480,12 +487,7 @@ function rewardsFold(eventTypeId: string, state: RewardViewState): string {
       '</div>';
   }
   if (bands.length > 1) {
-    const hasLongNames = bands.some(one => one.length > 8);
-    html += `<div class="reward-bands${hasLongNames ? ' long-names' : ''}">` +
-      bands.map(one =>
-        `<button type="button" class="reward-band${one === band ? ' on' : ''}"` +
-        ` data-reward-band="${escapeForPage(eventTypeId + '|' + list + '|' + one)}">` +
-        `${escapeForPage(rewardBandName(one))}</button>`).join('') + '</div>';
+    html += tierTabs(eventTypeId, list, bands, bands, band);
   }
 
   // The note written for this list, and band, of this event's rewards.

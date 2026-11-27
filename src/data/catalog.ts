@@ -51,6 +51,8 @@ export interface EventType {
   // Its reward lists one after another on one page instead of behind buttons (Alliance
   // Championship: Prestige, Tier and KO Rewards, Roxanne 27 Nov).
   rewardListsTogether?: boolean;
+  // The tiers an alliance can be in, lowest first, as the game names them.
+  tiers?: string[];
   // An event that changes season each run, once a month (Fishing): the seasons in their
   // order and one run whose season is known. Fishing's order is from Century Games' help
   // centre; Summer for 24 Nov 2026 is from Roxanne's screenshot (27 Nov).
