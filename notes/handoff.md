@@ -6,10 +6,14 @@ Do CLAUDE.md's setup first. Updated 27 Nov 2026, evening.
 
 ### Branches
 
-- main (live): everything up to the evening of 27 Nov, pushed with her yes ("push the wip
-  branch"). wip-27-nov was merged into it; work goes on main again.
-- After the push, check the rewards with her on her two monitors (Claude in Chrome sees the live
-  site in her real Chrome, one window per monitor).
+- main (live) = this morning's site plus two fixes pushed alone with her yes: the calendar's
+  Filters and UTC switch (dead since the 13:06 push), and the held week dates that stuck mid-
+  calendar after zooming Chrome in and out (a phone offset never cleared on a computer).
+- wip-27-nov (not live) = all of the 27 Nov evening work, with both fixes. Work from it:
+  `git fetch origin wip-27-nov && git checkout wip-27-nov`, commit and push there. It goes into
+  main only with her yes; she does not want it live before it is checked ("i don't trust").
+  After it is live, check it with her on her two monitors (Claude in Chrome sees the live site
+  in her real Chrome, one window per monitor).
 - Whatever she accepts is committed right away (CLAUDE.md, 27 Nov).
 
 ### What was done on 27 Nov evening

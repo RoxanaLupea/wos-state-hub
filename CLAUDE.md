@@ -7,6 +7,8 @@ Read this first in every chat. Roxanne should never have to explain the setup ag
 1. Attach the repo with add_repo: owner RoxanaLupea, repo wos-state-hub, access "push". If
    it is refused, ask her in one line to confirm push access, then ask again.
 2. Clone it to /home/claude/wos-state-hub, then call register_repo_root with that folder.
+   If notes/handoff.md on main names a work branch that is not live yet, check it out
+   and work there (27 Nov: wip-27-nov).
 3. Last build: `gh run list -R RoxanaLupea/wos-state-hub -L 1`.
 4. Database: Supabase project "wos-state-hub", id tnfghlayeguyheoyrakq. Calls to outside
    websites go through the database's admin_tools.http (supabase/admin-tools.sql); the
