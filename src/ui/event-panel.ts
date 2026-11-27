@@ -356,8 +356,11 @@ function rewardListHtml(list: string, band: string, bandCount: number, shown: Re
           ` data-reward-band="${escapeForPage(eventTypeId + '|group-rank|' + rank)}">${escapeForPage(rank)}</button>`).join('') +
           '</div>'
         : '') +
-      `<div class="rank-rewards"><span class="rank-stars">${escapeForPage(stars).replace(' ★', STAR_PICTURE)}</span>` +
-      `<span class="reward-items">${inRank.map(rewardTile).join('')}</span></div>`;
+      // The open rank's stars and rewards sit where KO1, KO2 and Defeat sit below: the
+      // stars in the rank column, the rewards from the same line (Roxanne, 27 Nov).
+      '<div class="range-lines with-notes group-ranking"><div class="reward-row">' +
+      `<span class="reward-label rank-stars">${escapeForPage(stars).replace(' ★', STAR_PICTURE)}</span>` +
+      `<span class="reward-items">${inRank.map(rewardTile).join('')}</span></div></div>`;
   }
   if (list === 'club') {
     // Fishing's Ice Fishing Club (mockup, Roxanne 27 Nov): drawn like the game, three

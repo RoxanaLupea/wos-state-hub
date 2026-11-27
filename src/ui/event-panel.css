@@ -274,9 +274,7 @@
 .tier-rows .reward-label { overflow-wrap: normal; }
 /* Alliance Championship's Tier Rewards for the open group rank: its stars, then its rewards. */
 .rank-tabs { margin: 0 0 10px; }
-.rank-rewards { display: grid; grid-template-columns: 56px 1fr 56px; align-items: center; margin: 4px 0 2px; }
-.rank-rewards .reward-items { justify-content: center; }
-.rank-stars { display: inline-flex; align-items: center; gap: 3px; font-size: 15px; font-weight: 800; color: var(--text); white-space: nowrap; }
+.rank-stars { display: inline-flex; align-items: center; justify-content: flex-end; gap: 2px; white-space: nowrap; }
 .rank-stars .note-star { width: 16px; height: 16px; vertical-align: 0; }
 .note-star { width: 1.1em; height: 1.1em; margin-left: 1px; vertical-align: -0.18em; fill: #F0C070; }
 .club-grid { display: grid; grid-template-columns: 56px auto auto auto; justify-content: start; column-gap: 8px; margin-top: 4px; }
