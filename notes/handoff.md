@@ -4,6 +4,9 @@ Do CLAUDE.md's setup first. Updated 27 Nov 2026.
 
 ## Now
 
+Next Fishing run (Autumn, a month after 24 Nov 2026): ask Roxanne for that season's
+chances (her ask, 27 Nov).
+
 ### The calendar review on common-size: the screens
 
 The 19 screenshots under review are Claude's renders of the branch (26 Nov), on a computer

@@ -1617,3 +1617,7 @@ have the golden line with the sunken treasure logo at the end." No white line un
 No Timeline for Fishing (27 Nov): "I don't think we need a timeline for fishing. Like, we
 already have the start at the top, so, and like the time, so it's fine." The right panel
 shows SUMMER under Fishing Tournament, like a phase.
+Fishing's panel (27 Nov): tabs Rules, How to fish, Chances; no Edit ("there is nothing to
+edit about this fishing tournament"); no Mine ("we're not gonna record shit here"); Mini-game
+and the season in the head ("add it to the tournament, not to the rules"). The chances are
+Summer's: "So these are the chances for summer. Ask me for the next one next time."
