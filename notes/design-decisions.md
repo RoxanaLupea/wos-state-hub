@@ -1410,3 +1410,7 @@ All nine are built.
   open tickets. When they are solved, they don't get red dots. But all of them can see the
   history of open tickets and see how it was resolved." The one who submitted gets a
   notification that it was approved (or rejected).
+- Add results button (Roxanne, 27 Nov, accepted): a trophy with a plus and "Results" under it, at
+  the top right of the event's head ("Yes, I like it. And we're gonna keep it at that for now").
+  R4s can edit submitted results before accepting them, "so they can accept the input and just
+  fix the mistakes if there are any, without having to write everything from the start."
