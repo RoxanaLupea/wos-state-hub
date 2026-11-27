@@ -6,6 +6,7 @@ import {
   type FortAssignment, type RallyLead, type BuffAllocation
 } from './data/forts.ts';
 import { escapeForPage } from './ui/escape.ts';
+import { watchBrokenPictures } from './ui/broken-picture.ts';
 import { battleDayOf, phaseOf, seasonNumberOf, seasonStartFor, FORT_PHASES } from './calendar/fort-season.ts';
 import { fortressBoard, seasonTable, seasonTotals, type InPlaceEditing } from './ui/fortress.ts';
 import { loadGenerationsOfState, loadTransferDates, loadTransferGroups } from './data/transfer-groups.ts';
@@ -3811,6 +3812,7 @@ function rememberBattleDays(): void {
 }
 
 async function start(): Promise<void> {
+  watchBrokenPictures();
   const app = document.getElementById('app');
   if (!app) throw new Error('The page is missing its #app element.');
   app.className = 'app';

@@ -148,3 +148,11 @@ button { color: inherit; }
   backdrop-filter: var(--blur);
   -webkit-backdrop-filter: var(--blur);
 }
+
+/* A player's picture that did not load: the game's logo under a dark veil with the
+   torn-picture sign (Roxanne, 27 Nov), in the shape of whatever holds the picture. */
+.pic-broken { position: relative; display: block; flex: none; width: 100% !important; height: 100% !important; border-radius: inherit; overflow: hidden; }
+.pic-broken > img { position: absolute; inset: 0; width: 100% !important; height: 100% !important; margin: 0 !important; object-fit: cover; border-radius: inherit !important; }
+.pic-veil { position: absolute; inset: 0; display: flex !important; align-items: center; justify-content: center; border-radius: inherit;
+  background: rgba(10, 16, 28, 0.5); color: rgba(255, 255, 255, 0.9); }
+.pic-torn { width: 52% !important; height: 52% !important; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6)); }

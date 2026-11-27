@@ -17,6 +17,7 @@ const ADD_ICON = '<svg class="edit-icon" viewBox="0 0 24 24" aria-hidden="true">
   '<stop offset="0" style="stop-color: var(--edit-colour)"/><stop offset="1" style="stop-color: var(--text)"/></linearGradient></defs>' +
   '<path d="M12 4.5v15M4.5 12h15" fill="none" stroke="url(#add-icon-colour)" stroke-width="2.2" stroke-linecap="round"/></svg>';
 import './player-profile.css';
+import { playerPictureMarkup } from './broken-picture.ts';
 import { escapeForPage } from './escape.ts';
 import { imageUrl } from './event-icon.ts';
 import type { Alliance } from '../data/alliances.ts';
@@ -293,8 +294,9 @@ function firstLetter(name: string): string {
 }
 
 // An account's picture from the game; before the game has one, the name's first letter.
+// A picture that fails to load shows the game's logo marked as not loaded (broken-picture.ts).
 export function pictureOf(avatar: string | null, name: string): string {
-  return avatar ? `<img src="${escapeForPage(avatar)}" alt="">` : `<span>${escapeForPage(firstLetter(name))}</span>`;
+  return avatar ? playerPictureMarkup(avatar) : `<span>${escapeForPage(firstLetter(name))}</span>`;
 }
 
 // A hero's stars as the game draws them: five six-petal stars, one petal per step, lit

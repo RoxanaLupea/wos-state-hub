@@ -2,6 +2,7 @@
 // sign in, plus the toolbar above the calendar.
 import './shell.css';
 import { currentTimeMode, gameClockText, nowMinute } from '../calendar/time-mode.ts';
+import { playerPictureMarkup } from './broken-picture.ts';
 import { escapeForPage } from './escape.ts';
 import { logoSvg } from './logo.ts';
 import { eventIcon, imageUrl } from './event-icon.ts';
@@ -145,7 +146,7 @@ export function topBar(options: TopBarOptions): string {
     ${options.playerName
       ? `<div class="account-menu-wrap"><button type="button" class="ghost-button me-button" data-account-menu` +
         ` aria-haspopup="menu" aria-expanded="false" aria-label="${escapeForPage(options.playerName)}">` +
-        `<span class="me-pic" aria-hidden="true">${options.playerPicture ? `<img src="${escapeForPage(options.playerPicture)}" alt="">`
+        `<span class="me-pic" aria-hidden="true">${options.playerPicture ? playerPictureMarkup(options.playerPicture)
           : escapeForPage((Array.from(options.playerName).find(letter => /[\p{L}\p{N}]/u.test(letter)) ?? '').toUpperCase())}</span>` +
         `<span class="me-name">${escapeForPage(options.playerName)}</span>` +
         `</button>${options.accountMenu ?? ''}</div>`

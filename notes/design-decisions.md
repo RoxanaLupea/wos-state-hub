@@ -1348,3 +1348,9 @@ All nine are built.
   or sheet is open, the page behind does not scroll (tokens.css).
 - Rows never touch (Roxanne, 27 Nov): "It is not acceptable to have items stuck to each other.
   Never ... items never stick together on PC either." (New group's ticked rows.)
+- Broken player pictures (Roxanne, 27 Nov): "I still wanted to show something, but like it has
+  to be clear that it's not the picture"; with the Whiteout Survival logo she sent: "Put a
+  transparent picture is not loading over that." Accepted ("That's it."): the logo filling the
+  picture's shape, a half-transparent dark veil and a white torn-picture sign in the middle.
+  A player with no picture yet keeps their first letter. Built in broken-picture.ts, used by
+  every player picture (pictureOf, the top bar).
