@@ -1366,3 +1366,8 @@ All nine are built.
   those points, but if the points are equal, then the flags are gonna be what matters." The
   game's mails (27 Nov) say a win earns 3 Championship Points and a loss none, and flags are
   the lanes won (data/captures/other-states.md).
+- Alliance Championship results that alliances fill in (Roxanne, 27 Nov): the site does not
+  work out points or flags, because the other games of a round are not known. "If they want to
+  add them, great. If not, we show it without the ranking. So if they don't fill up the ranking,
+  only show the results for the round if that's what they fill up. It's not mandatory for them
+  to fill both."
