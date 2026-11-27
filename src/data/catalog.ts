@@ -212,6 +212,11 @@ export function stepNote(stepId: string): string {
   return text['eventStep.' + stepId + '.note'] ?? '';
 }
 
+// A line always shown under a step's name ("Adjust lanes" under "Round 1").
+export function stepDetail(stepId: string): string {
+  return text['eventStep.' + stepId + '.detail'] ?? '';
+}
+
 // The steps of each event, in the order the game runs them.
 export const eventStepsByEventType = (() => {
   const rows = eventStepRows as {

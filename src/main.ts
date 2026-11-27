@@ -35,7 +35,7 @@ import { loadDateChanges, loadSchedules, loadSettings } from './data/schedules.t
 import {
   categoryOf, dayNameOf, eventStepsByEventType, eventTypeById, eventTypeName, eventTypeShortName, eventTypeStageName, wholeEventTypeOf,
   isDetailsOnly, partOfByEventTypeId, phaseName, phaseNameForDay, phaseShortName, phasesByEventType,
-  phaseNote, pointSourcesForDay, showsTimesInLine, sortOrderOf, stepLabel, stepNote
+  phaseNote, pointSourcesForDay, showsTimesInLine, sortOrderOf, stepDetail, stepLabel, stepNote
 } from './data/catalog.ts';
 import {
   minutesFromTime, startOfMonth, startOfWeek, textFromDay, todayNumber, yearAndMonthOf, dayFromText, MINUTES_PER_DAY
@@ -67,10 +67,12 @@ import {
 } from './ui/player-profile.ts';
 import { askGameRefresh, lookUpGameAccount, readGamePlayers, readGameRosters, readPlayerAlliances, readStateRanks, readSkillLevels, setSkillLevel, settleAllianceMove } from './data/game-data.ts';
 import {
-  ALLIANCE_RESULT_EVENTS, allianceResultsPage, championshipStars, opponentNotesPage, resultsTab, resultsTabActions, showdownScoreOf,
+  ALLIANCE_RESULT_EVENTS, addResultsHead, allianceResultsPage, championshipStars, opponentNotesPage, resultsTab, resultsTabActions, showdownScoreOf,
   svsHistorySection, sunfireHistorySection
 } from './ui/results.ts';
 import { SVS_EDIT_FORM_ID, preparationOutcome, typeHoldTime, updateSvsEditor } from './ui/svs-results.ts';
+import { moveRankingRow, rankingFromForm, toggleChampionshipLane } from './ui/championship-results.ts';
+import { planFirstRow, planNoteEdit } from './ui/plan-note.ts';
 import { personalEntryForm, personalEntryOf } from './ui/personal-entry.ts';
 import {
   academiesPage, availabilityPage, facilitiesPage, membersPage, planPage, requestsPage, rolesPage,
@@ -509,7 +511,7 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
     phasesByEventType, stepsByEventType: eventStepsByEventType, minutesFromTime,
     partOfByEventTypeId, nameOf: eventTypeName, stageNameOf: eventTypeStageName, shortNameOf: eventTypeShortName,
     phaseNameOf: phaseName, stepLabel, dayNameOf,
-    phaseNoteOf: phaseNote, stepNoteOf: stepNote, timesInLine: showsTimesInLine,
+    phaseNoteOf: phaseNote, stepNoteOf: stepNote, stepDetailOf: stepDetail, timesInLine: showsTimesInLine,
     pointSourceIdsForDay: (eventTypeId, dayNumber) =>
       pointSourcesForDay(eventTypeId, dayNumber).map(source => source.id),
     hasOwnPoints: (eventTypeId, dayNumber) =>
@@ -545,7 +547,8 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
   view.rewardView.ownBand = ownRewardBands();
   const resultsOptions = {
     context: workContext(), eventTypeId: occurrence.eventTypeId, runDate: resultRunDate(occurrence, nearby),
-    stateNumber: Number(STATE_NUMBER), isSwitchedOff: resultsSwitchedOff
+    stateNumber: Number(STATE_NUMBER), isSwitchedOff: resultsSwitchedOff,
+    hasStarted: occurrence.startMinute <= nowMinute(), roundsFought: roundsFoughtIn(occurrence)
   };
   return eventPanel(occurrence, {
     tree, day, dayOfEvent: dayInEvent,
@@ -559,12 +562,17 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
     changeNote: occurrence.note,
     backToDay: view.openedFromDay,
     openTab: view.openInfoTab,
-    headPencils: headPencilsOf(occurrence),
+    headPencils: headPencilsOf(occurrence) + addResultsHead(resultsOptions),
     editFormHtml: headFormOf(occurrence),
     fortBattlesHtml: occurrence.eventTypeId === 'fortress-battles'
       ? fortBattlesHtmlOf(occurrence.startDay, occurrence.endDay, myAllianceIds) : '',
     resultsHtml: resultsTab(resultsOptions),
     tabActions: { results: resultsTabActions(resultsOptions) },
+    firstRowPlan: planFirstRow({
+      eventTypeId: occurrence.eventTypeId, allianceId: view.myAllianceId, note: planNoteOf(occurrence.eventTypeId),
+      mayEdit: Boolean(view.myAllianceId) && leadsAlliance(person, view.myAllianceId as string),
+      isEditing: view.editing === planNoteEdit(occurrence.eventTypeId)
+    }),
     wholeEvent,
     personalHtml: personalEntryForm({
       occurrence, category: categoryOf(occurrence.eventTypeId), userId: person?.userId ?? null,
@@ -1047,6 +1055,24 @@ function troopsOfAccount(inGameId: string): Record<string, { tier: string; skill
 // The date a result is recorded under: the run's first day; for SvS, the day of its
 // battle, as the SvS history has always been kept; for a part of a bigger event, the
 // first day of the whole event.
+// The plan the player's alliance keeps for an event, set by its R4s (Roxanne, 27 Nov).
+function planNoteOf(eventTypeId: string): string {
+  const record = view.myAllianceId
+    ? (rowsOf('alliance_records') ?? []).find(one => one.alliance_id === view.myAllianceId) : undefined;
+  const notes = record?.event_notes as Record<string, unknown> | null | undefined;
+  return notes && typeof notes[eventTypeId] === 'string' ? String(notes[eventTypeId]) : '';
+}
+
+// The Championship rounds whose battle has started: only those are asked for when its
+// results are added (Roxanne, 27 Nov).
+function roundsFoughtIn(occurrence: Occurrence): number {
+  if (occurrence.eventTypeId !== 'alliance-championship') return 0;
+  const now = nowMinute();
+  return (eventStepsByEventType.get(occurrence.eventTypeId) ?? []).filter(step => step.startTimeUtc &&
+    stepLabel(step.id) === 'Battle' &&
+    (occurrence.startDay + step.dayNumber - 1) * MINUTES_PER_DAY + minutesFromTime(step.startTimeUtc) <= now).length;
+}
+
 function resultRunDate(occurrence: Occurrence, nearby: Occurrence[]): string {
   if (partOfByEventTypeId.get(occurrence.eventTypeId) === 'svs') {
     const battle = nearby.filter(one => one.eventTypeId === 'svs-battle' && one.startDay >= occurrence.startDay - 1)
@@ -2001,8 +2027,15 @@ function handleClicks(event: MouseEvent): void {
     void removeFromWorkingPage(editButton.dataset.edit as string);
     return;
   }
+  // Adding results: a lane tapped turns won or lost, a ranking row moves up or down.
+  const lane = target.closest<HTMLElement>('[data-ac-lane]');
+  if (lane) { toggleChampionshipLane(lane); return; }
+  const move = target.closest<HTMLElement>('[data-ac-move]');
+  if (move) { moveRankingRow(move); return; }
   if (editButton) {
     view.editing = view.editing === editButton.dataset.edit ? null : editButton.dataset.edit as string;
+    // Adding results opens the Results tab, being filled in.
+    if (/^(championship-result|add-result)\|/.test(view.editing ?? '')) view.openInfoTab = 'results';
     // The head's forms open at the top of the event's page.
     if (view.editing?.startsWith('head|')) startAtTop.panel = true;
     draw();
@@ -2149,7 +2182,7 @@ function handleClicks(event: MouseEvent): void {
 }
 
 const WORKING_FORMS = ['rally-lead', 'fort-reserve', 'buff-share', 'availability', 'roster', 'roster-member', 'plan', 'academy', 'facility', 'setting', 'role',
-  'result', 'personal', 'alliance-records', 'opponent-note', 'blacklist'];
+  'result', 'personal', 'alliance-records', 'opponent-note', 'blacklist', 'plan-note'];
 
 // An SvS's points as whole numbers: "7,480,314,895" and "7480314895" are the same; "11.03B"
 // and "645.9M" are read too.
@@ -3231,6 +3264,13 @@ async function saveWorkingForm(
     // its outcome too.
     const outcome = orNull('outcome') ?? (['win', 'loss'].includes(text('detail_outcome')) ? text('detail_outcome') : null);
     const before = (tableRows.get('results') ?? []).find(one => String(one.id) === existingId);
+    // A Championship's ranking is sorted by points and flags as it is saved, and our place
+    // in it is the run's rank.
+    const ranking = eventTypeId === 'alliance-championship' ? rankingFromForm(values) : null;
+    if (ranking) {
+      values.set('detail_ranking', JSON.stringify(ranking.rows));
+      values.set('rank', ranking.rank === null ? '' : String(ranking.rank));
+    }
     const rank = whole('rank');
     // An SvS or Sunfire Castle edited in place: its points, Occupation Ranking and
     // president are turned into the details and columns it is kept as, and the SvS's State
@@ -3309,6 +3349,18 @@ async function saveWorkingForm(
       my_time: cleanTime(text('my_time')), rank, note: orNull('note'), updated_at: now
     });
     return ['personal_entries'];
+  }
+  // An alliance's plan for an event, kept for every run of it after (Roxanne, 27 Nov).
+  if (formName === 'plan-note') {
+    const [eventTypeId, allianceId] = key.split('|');
+    await rereadTables('alliance_records');
+    const record = (tableRows.get('alliance_records') ?? []).find(one => one.alliance_id === allianceId);
+    const notes = { ...((record?.event_notes as Record<string, string> | null | undefined) ?? {}) };
+    const note = String(values.get('note') ?? '').trim();
+    if (note) notes[eventTypeId] = note;
+    else delete notes[eventTypeId];
+    await saveRow('alliance_records', { alliance_id: allianceId, event_notes: notes, updated_by: userId, updated_at: now }, 'alliance_id');
+    return ['alliance_records'];
   }
   if (formName === 'alliance-records') {
     const stars = text('championship_stars') ? Number(text('championship_stars')) : null;
