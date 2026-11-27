@@ -2,8 +2,8 @@
 
 Source: Roxanne's game screenshots, sent 27 Nov 2026 (the event's Guide, 8 pages, and Rules
 Overview, Rules and Other tabs), kept on the screenshots branch in foundry-battle/. The map with
-the buildings' names came with them. Guide pages 2, 5, 6, 7 and 8 are cut off at the bottom; the
-Building Details and Rewards tabs were not sent yet.
+the buildings' names came with them. Guide pages 2, 5, 6, 7 and 8 are cut off at the bottom. The
+Building Details and Rewards tabs came in a second batch the same evening.
 
 ## The field (map)
 Imperial Foundry in the centre; Mercenary above it and Munitions below it; Prototype 1 and 2;
@@ -77,3 +77,59 @@ Repair 1 to 4; Boiler; Transit.
 - Cities burn faster on the field; a City whose defenders are beaten and whose fire is not put out
   quickly is moved to a safe zone. A Chief forced out can rejoin after a 12-minute cooldown.
 - Tech, VIP, Chief Gear and Skin bonuses stay active.
+
+## Building Details
+Second batch of her screenshots, 27 Nov 2026 (foundry-battle/ on the screenshots branch). Each
+building gives Alliance and Personal Arsenal Points at First Control and then per minute of
+Ongoing Occupation.
+
+| Building | Alliance, first | Alliance, per minute | Personal, first | Personal, per minute | Bonus Effect |
+|---|---|---|---|---|---|
+| Imperial Foundry | 9,000 | 1,800 | 4,500 | 900 | |
+| Prototype Site I and II | 6,000 | 1,200 | 3,000 | 600 | |
+| Repair Facility I to IV | 3,000 | 600 | 1,500 | 300 | |
+| Munitions Warehouse | 1,200 | 240 | 600 | 120 | Troop damage boost +15%, Troop damage reduction -15% |
+| Mercenary Camp | 1,200 | 240 | 600 | 120 | |
+| Transit Station | 1,200 | 240 | 600 | 120 | Teleport cooldown reduction -50% |
+| Boiler Room | 1,200 | 240 | 600 | 120 | Reduced control time needed -50% |
+
+The game's texts: the Prototype Sites lie to the southwest and northeast; the four Repair
+Facilities in different corners; the Mercenary Camp sends up to four increasingly damaging strike
+teams against an enemy building, lowering the enemy's Attack and Defense; the Transit Station
+shortens the free Advanced Teleporter's cooldown; the Boiler Room raises Arsenal Point gains and
+gives a battlefield boost.
+
+## Rewards
+- Expert Bonus: Arsenal Tokens from the event +100% (an expert's portrait on the token).
+- Alliance Rewards, every member, by Legion 1's result:
+  - Legion 1 wins: Arsenal Tokens 4,000; the blue crystals marked 100 x6; a purple-tile statue x2;
+    a gold key x4; 10K Meat x80; 10K Wood x80; 10K Coal x16.
+  - Legion 1 loses: Arsenal Tokens 3,000; the blue crystals marked 100 x3; the statue x1; the key
+    x2; 10K Meat x40; 10K Wood x40; 10K Coal x8.
+- Personal Rewards, bonus for the combatants by Personal Arsenal Points. Items, in the game's order:
+  Arsenal Tokens; the blue crystals marked 100; an orange puzzle piece; a grey chest with a "?"; a
+  gold ticket; a 1h speedup with a soldier's face; a 5K EXP bottle.
+
+  Winning Legion:
+
+  | Personal Arsenal Points | Tokens | Crystals 100 | Puzzle | Chest | Ticket | 1h speedup | 5K EXP |
+  |---|---|---|---|---|---|---|---|
+  | 2,000 - 19,999 | 4,800 | 4 | 2 | 8 | 1 | 4 | 40 |
+  | 20,000 - 41,999 | 9,600 | 8 | 4 | 10 | 1 | 8 | 45 |
+  | 42,000 - 89,999 | 14.4K | 12 | 6 | 12 | 2 | 12 | 50 |
+  | 90,000 - 179,999 | 19.2K | 16 | 8 | 14 | 2 | 16 | 55 |
+  | 180,000+ | 24K | 20 | 10 | 16 | 3 | 20 | 60 |
+
+  Losing Legion:
+
+  | Personal Arsenal Points | Tokens | Crystals 100 | Puzzle | Chest | Ticket | 1h speedup | 5K EXP |
+  |---|---|---|---|---|---|---|---|
+  | 2,000 - 19,999 | 2,400 | 2 | 1 | 6 | none | 2 | 15 |
+  | 20,000 - 41,999 | 4,800 | 4 | 2 | 8 | none | 4 | 20 |
+  | 42,000 - 89,999 | 7,200 | 6 | 3 | 10 | 1 | 6 | 25 |
+  | 90,000 - 179,999 | 9,600 | 8 | 4 | 12 | 1 | 8 | 30 |
+  | 180,000+ | 12K | 10 | 5 | 14 | 2 | 10 | 35 |
+
+  The items without a game name here (crystals, statue, puzzle piece, chest, ticket, speedup, EXP
+  bottle) are named only by their pictures; their names are to be confirmed with her before they
+  are entered as data.
