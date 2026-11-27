@@ -102,6 +102,9 @@ before she finds them. The notes give the site's look; they do not design the pa
    hierarchy, what the eye sees first, whether it feels like its subject. Act on that
    critique before she sees it; show it only when the honest answer is yes (25 Nov).
 4. Show one result, phone first, full-screen screenshots, the fewest that show it.
+   The computer versions (laptop 1536 x 864 at 1.25, monitor 2560 x 1440 at 1) are never skipped: a
+   design is not settled, and building is not proposed, until she has seen it on the computer too
+   (28 Nov: "You will never ever just ignore the PC versions").
    For how pages look on real screens (laptop 1920 x 1080 at 125%, monitor 2560 x 1440 at
    100%), ask her for screenshots from her two monitors and judge from those, not from
    renders (26 Nov: "I don't trust"). Check with players who have no game data yet, as the
