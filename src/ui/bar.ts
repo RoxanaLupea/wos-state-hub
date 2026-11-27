@@ -48,6 +48,14 @@ export function barFadeColors(eventTypeId: string): {
   };
 }
 
+// The fish at the end of Fishing's line, drawn after the game's: a forked tail, a spine
+// with two ribs and a round head pointing right.
+const FISH_BONE = '<svg class="fish-bone" viewBox="0 0 22 12" aria-hidden="true">' +
+  '<path d="M0 1.2 L3.4 4.9 H13 V7.1 H3.4 L0 10.8 L1.5 6 Z"/>' +
+  '<rect x="6" y="2.2" width="2" height="7.6" rx="1"/>' +
+  '<rect x="9.4" y="2.2" width="2" height="7.6" rx="1"/>' +
+  '<path d="M13.4 0.8 C17.4 0.8 20.4 3.6 22 6 C20.4 8.4 17.4 11.2 13.4 11.2 C12.5 8 12.5 4 13.4 0.8 Z"/></svg>';
+
 // A white line across a bar where something starts or ends.
 export function barMark(minute: number, kind: string, what: string): string {
   const time = clockText(minute);
@@ -323,6 +331,17 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
         ` aria-label="${escapeForPage(eventTypeName(bar.eventTypeId) + ' ' + times)}"></span>`;
     }).join('');
 
+  // Fishing: a white line along the bottom of the bar over the days fishing is open,
+  // ending with a fish like the lines beside the headings of the game's Event Rules
+  // (Roxanne, 27 Nov). The last day the event's tabs are still open but nobody can fish.
+  const fishingDaysEarly = eventTypeById(bar.eventTypeId)?.fishingEndsDaysEarly ?? 0;
+  const fishingEnd = bar.endMinute - fishingDaysEarly * MINUTES_PER_DAY;
+  const fishLine = fishingDaysEarly > 0 && fishingEnd > piece.start && bar.startMinute < piece.end
+    ? `<span class="bar-fish-line${fishingEnd <= piece.end ? ' ends-here' : ''}"` +
+      ` data-start-minute="${bar.startMinute}" data-end-minute="${fishingEnd}">` +
+      `<span class="fish-rule"></span>${fishingEnd <= piece.end ? FISH_BONE : ''}</span>`
+    : '';
+
   if (subtitle) lineTwo += `<span class="bar-sub">${escapeForPage(subtitle)}</span>`;
 
   // The parts running alongside this event: a line under the bar in the part's own
@@ -409,7 +428,7 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
       ? `<span class="bar-segment wide-only" data-start-minute="${piece.start}" data-end-minute="${piece.end}">` +
         `<span class="bar-segment-name">${escapeForPage(subtitle)}</span></span>`
       : '') +
-    lineTwo + stripes + windowLines + '</div>';
+    lineTwo + stripes + windowLines + fishLine + '</div>';
 }
 
 // A bar that shows only its marked times, as logos, instead of a block across the

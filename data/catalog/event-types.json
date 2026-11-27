@@ -415,6 +415,7 @@
     "color": "#5FB4C9",
     "icon": "target",
     "imageFile": "fishing",
+    "fishingEndsDaysEarly": 1,
     "sortOrder": 40
   },
   {

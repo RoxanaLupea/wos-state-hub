@@ -40,6 +40,10 @@ export interface EventType {
   // The game sets this event's dates and times, and nobody changes them on the site (no
   // date, repeat or alliance-time pencil): State of Power and Sunfire Castle (25 Nov).
   datesLocked?: boolean;
+  // How many days before its end the event stops being played, though its tabs stay open
+  // in the game (Fishing's last day, Roxanne 27 Nov). The bar draws a line ending with a
+  // fish over the days it can be played.
+  fishingEndsDaysEarly?: number;
   // A part's colour on its whole event's timeline, held through its rows and blended
   // into the next part's (State of Power: our blue, their red, then Field Triage's green).
   lineColor?: string;

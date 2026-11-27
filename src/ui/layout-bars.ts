@@ -74,7 +74,7 @@ export function layoutBars(panel: HTMLElement): void {
         ? left + parseFloat(window.getComputedStyle(bar).paddingLeft) - 4
         : left;
 
-      bar.querySelectorAll<HTMLElement>('.bar-segment, .bar-inside, .bar-light, .bar-stripe, .bar-part, .bar-window')
+      bar.querySelectorAll<HTMLElement>('.bar-segment, .bar-inside, .bar-light, .bar-stripe, .bar-part, .bar-window, .bar-fish-line')
         .forEach(element => {
           const isLineTwo = element.classList.contains('bar-segment') ||
             element.classList.contains('bar-inside') || element.classList.contains('bar-part');
@@ -97,6 +97,7 @@ export function layoutBars(panel: HTMLElement): void {
         });
 
       placeFirstPart(bar);
+      placeFishLine(bar);
 
       // A part's logo on line two fits between the two lines.
       bar.querySelectorAll<HTMLElement>('.bar-inside .event-icon').forEach(icon => {
@@ -143,6 +144,30 @@ function placeFirstPart(bar: HTMLElement): void {
   first.style.left = left + 'px';
   first.style.width = (baseRight - left) + 'px';
   first.dataset.laidOut = first.style.left;
+}
+
+// Fishing's line starts after the event's name and sits halfway up its capitals, like
+// the line beside a heading in the game's Event Rules (Roxanne, 27 Nov).
+function placeFishLine(bar: HTMLElement): void {
+  const line = bar.querySelector<HTMLElement>('.bar-fish-line');
+  const label = bar.querySelector<HTMLElement>('.bar-head .bar-label');
+  if (!line || !label) return;
+  // Its own place is kept from the last layout, as the name may be shortened later.
+  if (line.dataset.baseLeft === undefined || line.dataset.laidOut !== line.style.left) {
+    line.dataset.baseLeft = String(parseFloat(line.style.left) || 0);
+    line.dataset.baseWidth = String(parseFloat(line.style.width) || 0);
+  }
+  const baseLeft = Number(line.dataset.baseLeft);
+  const baseRight = baseLeft + Number(line.dataset.baseWidth);
+  const nameRight = nameEnd(bar, label) - bar.getBoundingClientRect().left + 10;
+  const left = Math.min(baseRight, Math.max(baseLeft, nameRight));
+  line.style.left = left + 'px';
+  line.style.width = (baseRight - left) + 'px';
+  line.dataset.laidOut = line.style.left;
+  const capitals = capitalsOf(label, bar);
+  line.style.top = (capitals.top + capitals.height / 2) + 'px';
+  // With no room for the line and its fish, neither is drawn.
+  line.style.display = baseRight - left < 40 ? 'none' : '';
 }
 
 // Names that do not fit:
@@ -453,6 +478,8 @@ export function fitBarLabels(panel: HTMLElement): void {
     }
 
     for (const bar of bars) placeAfterName(bar, fits);
+    // Fishing's line once the names are settled.
+    for (const bar of bars) placeFishLine(bar);
   });
 }
 

@@ -1596,3 +1596,10 @@ All nine are built.
 - Alliance Championship rules and rewards (Roxanne, 27 Nov): they are from the game ("If you
   have full rewards, then they are from the game. Because there's no way I give you all those
   details without giving you everything").
+
+## Fishing's line (27 Nov)
+
+"I really like how they drew the line with the fish, and we are gonna draw a line with the
+fish similar to them on the fishing box, and it's gonna end one day prior to the 27th."
+"Only what they have on the left": a white line ending with a fish. Fishing runs 24–27 Nov
+in the game; the 27th only keeps the tabs open.
