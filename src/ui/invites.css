@@ -729,6 +729,9 @@
 .inv .stats.prof { position: relative; }
 .inv .prof-close { position: absolute; right: 0; top: -44px; }
 .inv .profile-sheet .prof-card { border-radius: 22px 22px 0 0; max-height: 88vh; }
+/* The profile scrolls inside its sheet, the page behind staying still (27 Nov). */
+.inv .profile-sheet .prof-card { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+.inv .profile-sheet .prof-card::-webkit-scrollbar { display: none; }
 .inv .sheet-wrap.record-profile { align-items: flex-end; padding: 0; }
 @media (min-width: 1000px) {
   .inv .sheet-wrap.record-profile { align-items: center !important; padding: 20px !important; }
