@@ -228,7 +228,7 @@ export function renderBar(piece: WeekPiece, options: BarRenderOptions): string {
         lineOne += barMark(part.start, 'part-line', what + ' starts') +
           barMark(part.start, 'divider', what + ' starts');
       }
-      lineOne += `<span class="bar-part${index === 0 ? ' first-part' : ''}" role="button" tabindex="0"` +
+      lineOne += `<span class="bar-part${index === 0 ? ' first-part' : ''}" data-event-type="${escapeForPage(part.bar.eventTypeId)}" role="button" tabindex="0"` +
         ` data-open-event="${escapeForPage(part.bar.key)}"` +
         ` data-start-minute="${part.start}" data-end-minute="${part.end}"` +
         ` title="${escapeForPage(what + ' · ' + spanText(part.bar.startMinute, part.bar.endMinute))}">` +

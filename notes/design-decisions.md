@@ -1472,3 +1472,6 @@ All nine are built.
   up a lot of space ... I like that all the bears are on the same line interconnected with
   the Crazy Joe, because it gives you a bigger picture". Tried: events are packed into rows
   as before, then the fullest rows go first (not yet confirmed).
+- SvS's BATTLE on a phone (Roxanne, 27 Nov): asked whether BATTLE may stay smaller or be cut
+  like other names that don't fit: "Yes, it was for battle being an exception". BATTLE stays
+  7.5px; every other smaller word on a phone bar is 9px.

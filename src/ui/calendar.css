@@ -464,6 +464,15 @@
      subfaces and everything have the same size"): the parts, the days, a phase under the
      name and the second name, all 9px, as the computer has one size for them. */
   .bar.parts-bar .bar-part-text, .bar .bar-head .bar-tag { font-size: 9px; }
+  /* The one exception: SvS's Battle keeps the smaller size, so its word fits its half day
+     (Roxanne, 27 Nov: "it was for battle being an exception"). */
+  .bar.parts-bar .bar-part[data-event-type="svs-battle"] .bar-part-text { font-size: 7.5px; }
+  /* A one-phase bar with logos on line 2 (TAL's stakes): its phase on the name's line at the
+     same size, the logos and their numbers centred on line 2 like the castle. */
+  .bar .bar-part.phase-line-one .bar-part-text { font-size: 9px; }
+  .bar .bar-part.phase-line-one { top: 1px; }
+  .bar.phase-lines.day-lines .bar-segment.opening-mark { bottom: auto; top: 15px; height: 14px; align-items: center; }
+  .bar.phase-lines.day-lines .bar-segment.opening-mark .opening-mark-inside { align-items: center; line-height: 1; }
   .bar .bar-inside.in-part-middle img.event-icon { --logo-size: 14px; width: 14px; height: 14px; }
 }
 /* The castle's own lines and logo at its own time are the computer's; the phone has the
