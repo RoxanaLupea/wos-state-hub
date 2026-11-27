@@ -1423,3 +1423,6 @@ All nine are built.
   see just Registration. It must look different from an instruction: "These are actual
   instructions, a plan to follow ... it has to be like a banner or something that screams at
   them, look at this."
+- Alliance Championship dates (Roxanne, 27 Nov): no Edit in its head. "These are fixed. These
+  are not gonna change. It's a fixed event. Those are the times, period. Remove it."
+  (datesLocked in event-types.json.)

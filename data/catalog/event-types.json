@@ -145,6 +145,7 @@
   },
   {
     "id": "alliance-championship",
+    "datesLocked": true,
     "category": "alliance",
     "color": "#3E60A8",
     "colorEnd": "#BC5247",
