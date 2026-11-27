@@ -1848,4 +1848,11 @@ alliance-time forms it opened go to the admin menu (to be designed).
   Crystallite. We do not need this, okay? So what we will have here is a shop, and a timeline, but
   not an event timeline, but an instruction timeline." She is sending the instruction timeline from
   Discord. Built: no Mine, no note; the Shop alone until the timeline comes.
+- Flame and Fangs' plan (Roxanne, 27 Nov night, with xSK's Discord plan, the Lighthouse Intel rules and
+  Agnes' Efficient Recon; screenshots branch flame-and-fangs/): "it would be a how to that starts before
+  the event, some kind of preparation"; "We can include it in the timeline but then we have to add the
+  mission refreshes for the event duration, it's 2 days and one to claim rewards if I'm not mistaken".
+  From the game: Intel refreshes daily at 00:00, 08:00 and 16:00 UTC and lasts 15 hours; Agnes'
+  Efficient Recon refreshes at 00:00 UTC. Mockup: PREPARATION the day before (her plan's three windows),
+  then EVENT with every Intel refresh; the claim day is not added (the site has the event as 2 days).
 
