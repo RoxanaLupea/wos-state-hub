@@ -9,7 +9,7 @@ Sent 27 Nov 2026 by the owner from her 1252 account: four round mails, the Group
 round 4, the Schedule of all five rounds and a replay. A win earns 3 Championship Points and a
 loss none ("earning 3 Championship Points" / "earning no Championship Points"); flags are the
 lanes won (DUB: 2+3+2+1 = 8 flags, 3 wins = 9 points). Each lane is fought by 20 a side; the
-mail gives each side's remaining/fought per lane. Rounds are fought at 01:08 and 13:08 UTC.
+mail gives each side's remaining/fought per lane. The round mails arrive at about 01:08 and 13:08 UTC, after the battles (they start at 11:00 and 23:00 UTC, her times).
 
 | Round | Mail time (UTC) | Our match | Score | Lanes (ours remaining/fought : theirs) | Points |
 |---|---|---|---|---|---|
