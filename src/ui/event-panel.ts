@@ -299,7 +299,7 @@ const SHOP_CURRENCIES: Record<string, string> = {
 // The list itself, laid out the way the game lays out that kind of list, as the old
 // app did.
 function rewardListHtml(list: string, band: string, bandCount: number, shown: RewardRow[],
-    eventTypeId: string, listNoteHtml = ''): string {
+    eventTypeId: string, listNoteHtml = '', rankOpen = ''): string {
   if (list === 'glory') {
     return sectionsOf(shown).map(section =>
       sectionHeading(list, section) + namedTiles(shown.filter(row => row.section === section))).join('');
@@ -321,10 +321,16 @@ function rewardListHtml(list: string, band: string, bandCount: number, shown: Re
       `<div class="range-lines${hasNotes ? ' with-notes' : ''}${list === 'ko' ? ' group-ranking' : ''}">${rewardLines(shown)}</div>`;
   }
   if (list === 'group') {
-    // Alliance Championship (Roxanne, 27 Nov): the tier first, clearly a tier; then the
-    // Prestige Rewards with their note, kept quiet, and the rewards as big squares; then
-    // a row per group rank.
+    // Alliance Championship (Roxanne, 27 Nov): the Prestige Rewards with their note, kept
+    // quiet, and the rewards as big squares; then the Tier Rewards with a tab per group rank
+    // (1, 2–3, 4–5, 6) and, for the open one, the stars gained or lost and its rewards.
     const prestige = shown.filter(row => row.section === 'prestige');
+    const ranked = shown.filter(row => row.section !== 'prestige');
+    const ranks: string[] = [];
+    for (const row of ranked) if (!ranks.includes(row.rowLabel)) ranks.push(row.rowLabel);
+    const openRank = rankOpen && ranks.includes(rankOpen) ? rankOpen : ranks[0] ?? '';
+    const inRank = ranked.filter(row => row.rowLabel === openRank);
+    const stars = inRank[0]?.note ?? '';
     return (prestige.length
         ? '<div class="reward-sub">Prestige Rewards</div>' +
           (listNoteHtml ? listNoteHtml : '') +
@@ -333,8 +339,14 @@ function rewardListHtml(list: string, band: string, bandCount: number, shown: Re
             `<span class="prestige-name">${escapeForPage(itemName(row.itemId).replace(/-/g, '\u2011'))}</span></div>`).join('') + '</div>'
         : '') +
       `<div class="reward-sub">${escapeForPage(rewardListName(eventTypeId, 'group'))}</div>` +
-      '<div class="range-lines with-notes group-ranking">' +
-      rewardLines(shown.filter(row => row.section !== 'prestige')) + '</div>';
+      (ranks.length > 1
+        ? `<div class="reward-tabs" style="grid-template-columns:repeat(${ranks.length},1fr)">` + ranks.map(rank =>
+          `<button type="button" class="reward-tab${rank === openRank ? ' on' : ''}"` +
+          ` data-reward-band="${escapeForPage(eventTypeId + '|group-rank|' + rank)}">${escapeForPage(rank)}</button>`).join('') +
+          '</div>'
+        : '') +
+      `<div class="rank-rewards"><span class="rank-stars">${escapeForPage(stars).replace(' ★', STAR_PICTURE)}</span>` +
+      `<span class="reward-items">${inRank.map(rewardTile).join('')}</span></div>`;
   }
   if (list === 'club') {
     // Fishing's Ice Fishing Club (mockup, Roxanne 27 Nov): drawn like the game, three
@@ -465,7 +477,8 @@ function rewardsFold(eventTypeId: string, state: RewardViewState): string {
       const noteHtml = note
         ? `<p class="points-note reward-note">${escapeForPage(pointSourceTask(note.id, heroDay))}</p>` : '';
       html += bandButtons + (one === 'group'
-        ? rewardListHtml(one, oneBand, 1, oneShown, eventTypeId, noteHtml)
+        ? rewardListHtml(one, oneBand, 1, oneShown, eventTypeId, noteHtml,
+          state.openBand.get(eventTypeId + '|group-rank') ?? '')
         : `<div class="reward-sub">${escapeForPage(rewardListName(eventTypeId, one))}</div>` + noteHtml +
           rewardListHtml(one, oneBand, 1, oneShown, eventTypeId));
     }
