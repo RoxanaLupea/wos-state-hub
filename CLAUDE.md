@@ -41,6 +41,10 @@ notes/rules-and-open-items.md (game rules).
 - When she says "me" about who may do something, she means admins. She says "owner" when
   she wants something locked that tight (25 Nov).
 
+- Use her Chrome (Claude in Chrome) to look things up and to see pictures on the web yourself:
+  guides, in-game screenshots on guide sites. Never ask her to fetch what the browser can reach
+  (27 Nov night: "Use the chrome from my pc ffs, why do you have it if not to use it so I don't
+  have to do that myself?"). Pictures from a site are guide material, not her confirmation.
 - Talk to her while working: say what you are about to do before doing it, and never work
   silently for minutes (27 Nov: "you're not talking to me ... i have no idea what you're doing").
 - When she asks for a standard to be applied, apply it to every case it covers, check every
