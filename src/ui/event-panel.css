@@ -646,6 +646,36 @@
 /* A row at the same moment as the row above: no time, no dot, close under it (27 Nov). */
 .event-tree .tree-row.same-time .tree-label { padding-top: 0; }
 .event-tree .tree-row.same-time .tree-when { padding-top: 0; padding-bottom: 0; }
+/* A plan's step (Flame and Fangs): written as any step (12px), the game's pictures in the words. */
+.event-tree .tree-row.plan-lines { align-items: start; }
+.event-tree .tree-row.plan-lines .tree-line { align-items: flex-start; }
+.event-tree .tree-row.plan-lines .tree-when { padding-top: 7px; }
+.event-tree .tree-row.plan-lines .tree-step-dot { margin-top: 11px; }
+/* A plan's instructions are what matters most: white, at the step's weight (Roxanne, 27 Nov night:
+   "I don't like that the instructions are not the most visible", "we have white without bold too");
+   only the warnings bold. */
+.event-page .tree-row.nested .tree-label.instructions { color: var(--text); font-weight: 400; }
+/* What a plan's step brings (2 Firebeasts, 8 Intel missions): secondary, in the faint tone. */
+.event-page .tree-label.instructions .tree-detail { color: var(--text-faint); font-weight: 400; }
+.event-page .plan-icon { width: 15px; height: 15px; object-fit: contain; vertical-align: -3px; margin-left: 2px; }
+.event-page .plan-warning { font-weight: 800; color: var(--text); }
+/* A picture's details in the site's tip (drawn as the Invites tip): on hover, or tapped on a phone. */
+.event-page .plan-tip { position: relative; display: inline-block; outline: none; cursor: help; }
+.event-page .plan-tip .tip { display: none; position: absolute; z-index: 30; bottom: calc(100% + 8px); right: -10px;
+  width: max-content; max-width: 220px; padding: 9px 12px; border-radius: 10px;
+  background: #18213A; border: 1px solid var(--glass-border); box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+  text-align: left; white-space: normal; font-size: 12.5px; font-weight: 600; line-height: 1.35; color: var(--text-muted); }
+.event-page .plan-tip .tip b { display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--text); margin-bottom: 2px; }
+.event-page .plan-tip:focus .tip { display: block; }
+@media (hover: hover) { .event-page .plan-tip:hover .tip { display: block; } }
+.event-page .plan-gain { display: inline-flex; align-items: center; gap: 3px; margin-left: 8px; vertical-align: 2px;
+  font-size: 13px; font-weight: 800; letter-spacing: 0; text-transform: none; color: var(--text); cursor: help; }
+.event-page .plan-gain i { display: block; flex: none; border-radius: 50%; }
+.event-page .plan-gain i.small { width: 4px; height: 4px; background: var(--gain-from); }
+.event-page .plan-gain i.bigger { width: 5px; height: 5px; background: color-mix(in srgb, var(--gain-from) 50%, var(--gain-to)); }
+.event-page .plan-gain i.biggest { width: 6px; height: 6px; background: var(--gain-to); }
+.event-page .plan-gain .plan-icon { width: 16px; height: 16px; margin: 0 0 0 2px; vertical-align: 0; }
 .event-page .tree-label.heading { font-size: 12.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); }
 .event-page .tree-label .tree-detail { display: block; margin: 3px 0 2px; font-size: 12px; font-weight: 500; line-height: 1.35;
   letter-spacing: 0; text-transform: none; color: var(--text-muted); }
@@ -739,3 +769,14 @@
 .event-folds :is(.reward-items, .reward-flat):not(.day-chests *):not(.rate-lines .reward-items) > .reward-tile .tile-top { font-size: 16cqw; }
 .event-folds :is(.reward-items, .reward-flat):not(.day-chests *):not(.rate-lines .reward-items) > .reward-tile .tile-qty { font-size: 20cqw; }
 .event-folds .reward-break { grid-column: 1 / -1; height: 0; margin-bottom: -4px; }
+
+/* The dots between a timeline's points (layOutTimelineDots): the preparation's grow toward each
+   point where something is done, as on the calendar; the shop's extra day is a dashed line. */
+.event-tree.has-gap-dots { position: relative; }
+.tree-gap-dots { position: absolute; transform: translateX(-50%); display: flex; flex-direction: column;
+  align-items: center; justify-content: space-evenly; pointer-events: none; }
+.tree-gap-dots i { display: block; flex: none; border-radius: 50%; }
+.tree-gap-dots.grow i.small { width: 5px; height: 5px; background: var(--dots-from); opacity: 0.7; }
+.tree-gap-dots.grow i.bigger { width: 7px; height: 7px; background: color-mix(in srgb, var(--dots-from) 50%, var(--dots-to)); opacity: 0.85; }
+.tree-gap-dots.even { justify-content: space-between; }
+.tree-gap-dots.even i { width: 3px; height: 5px; border-radius: 0; background: var(--dots-to); }

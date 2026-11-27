@@ -292,12 +292,24 @@
   {
     "id": "flame-and-fang",
     "category": "personal",
-    "color": "#6E5AB4",
-    "colorEnd": "#C34C78",
+    "color": "#B23B3B",
+    "colorEnd": "#E0683C",
     "icon": "flame",
     "imageFile": "flame_fangs",
     "sortOrder": 33,
-    "noPersonalEntry": true
+    "noPersonalEntry": true,
+    "instructionSteps": true,
+    "shopDaysAfter": 1,
+    "planGains": {
+      "Preparation": [
+        24,
+        "Most from preparation: Sunday's 08:00 and 16:00 Intel missions and Agnes' 8, claimed on Monday"
+      ],
+      "Event": [
+        184,
+        "Most from the event: 6 refreshes × 28 (2 Firebeasts × 10 + 8 Intel missions) + Agnes' 8 on each day"
+      ]
+    }
   },
   {
     "id": "armament",

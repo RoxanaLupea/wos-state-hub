@@ -674,20 +674,43 @@ function rewardsFold(eventTypeId: string, state: RewardViewState, merchant = fal
 // A plan's words (Flame and Fangs): as short as the alliance's own message, with the game's
 // pictures in place of words and their details on hover (Roxanne, 27 Nov night: "this cannot be
 // more wordy than the discord message, we are adding all the icons we need ... use the hover").
-// {agnes} is Agnes, {core} a Crystallite Core, **x** bold.
-const PLAN_PICTURES: Record<string, { file: string; title: string }> = {
-  agnes: { file: 'experts/agnes', title: "Agnes' Efficient Recon: Execute All and 8 extra Intel missions a day" },
+// {agnes} is Agnes, {core} a Crystallite Core, **x** a warning.
+// The details show in the site's tip (the Invites one): on hover on a computer, on a tap on a phone.
+const PLAN_PICTURES: Record<string, { file: string; title: string; tip?: [string, string] }> = {
+  agnes: { file: 'experts/agnes', title: 'Agnes',
+    tip: ['Efficient Recon', 'Execute All, and 8 extra Intel missions a day. Refreshes at 00:00 UTC.'] },
   core: { file: 'items/crystallite-core', title: 'Crystallite Core' }
 };
 function planWords(written: string): string {
   const picture = (name: string) => {
     const known = PLAN_PICTURES[name];
-    return known ? `<img class="plan-icon" src="${escapeForPage(imageUrl(known.file))}" alt="${escapeForPage(known.title)}"` +
-      ` title="${escapeForPage(known.title)}">` : '';
+    if (!known) return '';
+    const image = `<img class="plan-icon" src="${escapeForPage(imageUrl(known.file))}" alt="${escapeForPage(known.title)}">`;
+    return known.tip
+      ? `<span class="plan-tip" tabindex="0">${image}<span class="tip"><b>${escapeForPage(known.tip[0])}</b>` +
+        `${escapeForPage(known.tip[1])}</span></span>`
+      : image;
   };
   return escapeForPage(written)
     .replace(/\{(\w+)\}/g, (_all, name: string) => picture(name))
-    .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+    // The warnings stand out in bold white (Don't claim; Don't use Agnes' skill before 08:00 on
+    // Sunday); nothing else is bold (Roxanne, 27 Nov night: "we should add a don't touch agnes maybe
+    // before 8utc in bold, then agnes at 8utc stays normal").
+    .replace(/\*\*(.+?)\*\*/g, '<b class="plan-warning">$1</b>');
+}
+
+// The most a plan's phase brings, right after the phase's name (Roxanne, 27 Nov night: "after the
+// preparation or event ... we put the 3 dots increasing in size, and then the core, and then the
+// number"; "just 3 discrete dots"): three small growing dots in the event's colours, the game's
+// picture, the amount; how it adds up on hover.
+function planGainOf(eventTypeId: string, phaseLabel: string): string {
+  const gain = phaseLabel ? eventTypeById(eventTypeId)?.planGains?.[phaseLabel] : undefined;
+  if (!gain) return '';
+  const core = PLAN_PICTURES.core;
+  const colors = `--gain-from:${eventTypeColor(eventTypeId)};--gain-to:${eventTypeColorEnd(eventTypeId)}`;
+  return `<span class="plan-gain" style="${escapeForPage(colors)}" title="${escapeForPage(gain[1])}">` +
+    '<i class="small"></i><i class="bigger"></i><i class="biggest"></i>' +
+    `<img class="plan-icon" src="${escapeForPage(imageUrl(core.file))}" alt="${escapeForPage(core.title)}">${gain[0]}</span>`;
 }
 
 // The whole run as one timeline.
@@ -720,6 +743,9 @@ export function renderEventTree(tree: EventTree, firstRow?: FirstRowPlan): strin
       { ...last, minute: last.minute + shopDays * MINUTES_PER_DAY, key: (last.key ?? '') + '|shop' });
     dottedFrom = rows.length - 2;
   }
+  // Where a plan's event starts after its preparation (Flame and Fangs); everything else starts with it.
+  const planEventStart = rows.length && eventTypeById(rows[0].eventTypeId)?.instructionSteps
+    ? rows[0].occurrence.startMinute : -Infinity;
 
   // Each part that opens and closes gets a narrow column of its own, always two wide
   // so the rows line up whether there is one part or two.
@@ -828,8 +854,15 @@ export function renderEventTree(tree: EventTree, firstRow?: FirstRowPlan): strin
     const above = Math.floor(at), below = Math.ceil(at);
     return above === below ? lineColorOf(above) : mixColors(lineColorOf(above), lineColorOf(below), at - above);
   };
+  // A plan's event (Flame and Fangs) is drawn in the event's own colours, the same as its calendar
+  // (Roxanne, 27 Nov night: "the timeline is not in the event colors").
+  const isPlan = Boolean(eventTypeById(mainEventTypeId)?.instructionSteps);
+  const planStartIndex = isPlan ? Math.max(0, rows.findIndex(row => row.minute >= planEventStart)) : 0;
+  const planColorAt = (place: number): string => mixColors(eventTypeColor(mainEventTypeId), eventTypeColorEnd(mainEventTypeId),
+    Math.min(1, Math.max(0, (place - planStartIndex) / Math.max(1, lastIndex - planStartIndex))));
   const lineColorAt = (place: number): string =>
-    hasPartColors ? partColorAt(place) : softLineColor(fadeColorAt(mainEventTypeId, lineAt(place)));
+    hasPartColors ? partColorAt(place) : isPlan ? planColorAt(place)
+      : softLineColor(fadeColorAt(mainEventTypeId, lineAt(place)));
   const linePiece = (from: number, to: number): string => `linear-gradient(${lineColorAt(from)},${lineColorAt(to)})`;
 
   // An event played at set times each day (Wild Brawl): the line is quiet, and lit in
@@ -864,15 +897,24 @@ export function renderEventTree(tree: EventTree, firstRow?: FirstRowPlan): strin
     const isLitBelow = isPlayTimeline && row.playOpensUntil !== undefined;
     const isLitAbove = isPlayTimeline && Boolean(row.isPlayClose);
     const playState = playStateOf(index);
-    const dotted = (from: number) =>
-      `repeating-linear-gradient(to bottom,${lineColorAt(from)} 0 4px,transparent 4px 8px)`;
+    // The shop's extra day and a plan's preparation have no line: dots run between their points
+    // instead, laid out once the page is drawn (layOutTimelineDots). The preparation's grow, small,
+    // bigger, then the big dot where something is done (Roxanne, 27 Nov night: "each of the big dots
+    // should mark the point where we do something"); the shop's are even.
+    const dotted = (_from: number) => 'transparent';
+    const faded = () => 'transparent';
+    const isPrepAbove = index > 0 && rows[index - 1].minute < planEventStart;
+    const isPrepBelow = row.minute < planEventStart;
     const lineAbove = dottedFrom >= 0 && index > dottedFrom ? dotted(index - 0.5)
+      : isPrepAbove ? faded()
       : !isPlayTimeline ? linePiece(index - 0.5, index)
       : isLitAbove ? litLine() : quietLine;
     const lineBelow = dottedFrom >= 0 && index >= dottedFrom ? dotted(index)
+      : isPrepBelow ? faded()
       : !isPlayTimeline ? linePiece(index, index + 0.5)
       : isLitBelow ? litLine() : quietLine;
-    const dotColor = isPlayTimeline ? (playState ? playLight : 'rgba(255,255,255,0.35)')
+    const dotColor = row.minute < planEventStart ? eventTypeColorEnd(row.eventTypeId)
+      : isPlayTimeline ? (playState ? playLight : 'rgba(255,255,255,0.35)')
       : row.isSideRow ? fadeColorAt(row.eventTypeId, lineAt(index)) : lineColorAt(index);
     const lineClass = (index === 0 ? ' first' : index === rows.length - 1 ? ' last' : '') +
       (isLitAbove ? ' lit-above' : '') + (isLitBelow ? ' lit-below' : '') +
@@ -882,13 +924,16 @@ export function renderEventTree(tree: EventTree, firstRow?: FirstRowPlan): strin
     // once should be the standard practice"): a row at the same moment as the row above it has
     // no time and no dot of its own, and sits close under it.
     const repeatsTime = index > 0 && rows[index - 1].minute === row.minute && !row.isEndRow;
+    const isGrowStop = isPlan && !repeatsTime && (row.minute < planEventStart || index === planStartIndex);
+    const isEvenStop = dottedFrom >= 0 && index >= dottedFrom;
+    const stop = isGrowStop ? ' data-dots="grow"' : isEvenStop ? ' data-dots="even"' : '';
     const mainLine = `<span class="tree-line${lineClass}"` +
       ` style="--line-above:${lineAbove};--line-below:${lineBelow}">` +
       (repeatsTime ? ''
-        : row.isEndRow ? `<span class="tree-cap" style="background:${dotColor}"></span>`
-        : row.level === 0 ? `<span class="tree-dot" style="background:${dotColor}"></span>`
+        : row.isEndRow ? `<span class="tree-cap" style="background:${dotColor}"${stop}></span>`
+        : row.level === 0 ? `<span class="tree-dot" style="background:${dotColor}"${stop}></span>`
         : row.isSideRow ? ''
-        : `<span class="tree-step-dot" style="background:${dotColor}"></span>`) + '</span>';
+        : `<span class="tree-step-dot" style="background:${dotColor}"${stop}></span>`) + '</span>';
 
     let sideCell = '';
     if (side) {
@@ -931,6 +976,7 @@ export function renderEventTree(tree: EventTree, firstRow?: FirstRowPlan): strin
       (row.isCurrent ? PIN_ICON : '') +
       (row.isCancelled ? '<span class="cancelled-mark" aria-label="Cancelled">&times;</span> ' : '') +
       (eventTypeById(row.eventTypeId)?.instructionSteps ? planWords(row.label) : escapeForPage(row.label)) +
+      planGainOf(row.eventTypeId, row.level === 0 ? row.label : '') +
       (row.subLabel ? `<span class="tree-sub">${escapeForPage(row.subLabel)}</span>` : '') +
       (row.detail ? `<span class="tree-detail"${detailColorAt.has(index) ? ` style="color:${detailColorAt.get(index)}"` : ''}>` +
         `${eventTypeById(row.eventTypeId)?.instructionSteps ? planWords(row.detail) : escapeForPage(row.detail)}</span>` : '') +
@@ -949,9 +995,10 @@ export function renderEventTree(tree: EventTree, firstRow?: FirstRowPlan): strin
     const rowClass = 'tree-row' +
       (plan?.banner ? ' has-plan' : '') +
       (row.level === 0 ? ' main' : row.isSideRow ? ' side' : ' nested') +
-      (row.detail ? ' has-detail' : '') +
-      // A plan's step written on two lines keeps its time and dot level with its first line.
-      (eventTypeById(row.eventTypeId)?.instructionSteps && row.label.includes('\n') ? ' plan-lines' : '') +
+      // A plan's step on more than one line keeps its time and dot level with its first line.
+      (eventTypeById(row.eventTypeId)?.instructionSteps && row.level > 0
+        ? (row.label.includes('\n') || row.detail ? ' plan-lines' : '')
+        : row.detail ? ' has-detail' : '') +
       (repeatsTime ? ' same-time' : '') +
       (row.isCurrent ? ' current' : '') +
       (row.isPicked ? ' picked' : '') +
@@ -977,8 +1024,39 @@ export function renderEventTree(tree: EventTree, firstRow?: FirstRowPlan): strin
       `">${noteHtml}${pointRows(row.eventTypeId, sources)}${chestsHtml}</div></details>`;
   }).join('');
 
+  const dotColors = isPlan || dottedFrom >= 0
+    ? ` style="--dots-from:${eventTypeColor(mainEventTypeId)};--dots-to:${eventTypeColorEnd(mainEventTypeId)}"` : '';
   return `<div class="event-tree${side ? ' has-side' : ''}` +
-    `${openingColumns.length ? ' has-two-sides' : ''}">${body}</div>`;
+    `${openingColumns.length ? ' has-two-sides' : ''}${dotColors ? ' has-gap-dots' : ''}"${dotColors}>${body}</div>`;
+}
+
+// The dots between a timeline's marked points, placed once the page is drawn, since only then are
+// the rows' heights known: between two "grow" points a small and a bigger dot, as on the calendar's
+// preparation; between two "even" points (the shop's extra day) dots of one size. The gaps are
+// even, from the edge of one point to the edge of the next.
+export function layOutTimelineDots(root: ParentNode): void {
+  for (const tree of Array.from(root.querySelectorAll<HTMLElement>('.event-tree'))) {
+    for (const old of Array.from(tree.querySelectorAll('.tree-gap-dots'))) old.remove();
+    if (!tree.offsetHeight) continue;
+    const box = tree.getBoundingClientRect();
+    for (const kind of ['grow', 'even']) {
+      const stops = Array.from(tree.querySelectorAll<HTMLElement>(`[data-dots="${kind}"]`));
+      for (let index = 1; index < stops.length; index++) {
+        const above = stops[index - 1].getBoundingClientRect();
+        const below = stops[index].getBoundingClientRect();
+        const gap = document.createElement('span');
+        gap.className = 'tree-gap-dots ' + kind;
+        gap.style.left = (above.left + above.width / 2 - box.left) + 'px';
+        gap.style.top = (above.bottom - box.top) + 'px';
+        gap.style.height = Math.max(0, below.top - above.bottom) + 'px';
+        // The shop's day is a dashed line touching the circle above and the end below (Roxanne, 27 Nov
+        // night: "it's connected to the end, it's connected to the big circle in front of it").
+        gap.innerHTML = kind === 'grow' ? '<i class="small"></i><i class="bigger"></i>'
+          : '<i></i>'.repeat(Math.max(2, Math.round((below.top - above.bottom + 4) / 9)));
+        tree.appendChild(gap);
+      }
+    }
+  }
 }
 
 export interface EventPanelOptions {

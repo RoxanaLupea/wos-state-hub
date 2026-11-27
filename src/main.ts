@@ -93,7 +93,7 @@ import { weekTitle, weekView } from './ui/week-view.ts';
 import { yearView } from './ui/year-view.ts';
 import { yearOverview } from './ui/year-overview.ts';
 import { dayPanel } from './ui/day-panel.ts';
-import { eventPanel, groupPanel, type RewardViewState, setOpenPointRows } from './ui/event-panel.ts';
+import { eventPanel, groupPanel, layOutTimelineDots, type RewardViewState, setOpenPointRows } from './ui/event-panel.ts';
 import { partOpenings } from './ui/bar.ts';
 import { fitNextTiles, nextUpTiles } from './ui/next-up.ts';
 import { watchForNewVersion } from './ui/new-version.ts';
@@ -1460,6 +1460,7 @@ function draw(): void {
   // it is hidden, so the sheet can fade at its edges into the same background.
   app.classList.toggle('sheet-open', view.isPanelOpen && view.openPage === 'calendar');
   watchScrollEdges(app);
+  layOutTimelineDots(app);
   fitRewardLabels(app);
   showOpenTab(app);
   const svsEditor = document.getElementById(SVS_EDIT_FORM_ID);
@@ -2340,7 +2341,8 @@ function handleClicks(event: MouseEvent): void {
   }
 
   // Any other tap on a row marks the row. The fold under it must not open or close.
-  const rowButton = target.closest<HTMLElement>('[data-row-key]');
+  // Tapping a picture's tip in a timeline shows the tip; it does not pick the row.
+  const rowButton = target.closest('.plan-tip') ? null : target.closest<HTMLElement>('[data-row-key]');
   if (rowButton) {
     event.preventDefault();
     const key = rowButton.dataset.rowKey as string;
@@ -4249,6 +4251,9 @@ async function start(): Promise<void> {
       sizeLanes(panel);
     };
     window.addEventListener('resize', layOutCalendarAgain);
+    // The dots between a timeline's points follow its rows' heights.
+    window.addEventListener('resize', () => layOutTimelineDots(document));
+    void document.fonts?.ready.then(() => layOutTimelineDots(document));
     // On a phone the day names stay under the top bar while the weeks scroll; they take
     // the bar's tone only once they are held there.
     const holdDayNames = () => {

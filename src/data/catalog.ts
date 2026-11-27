@@ -70,6 +70,16 @@ export interface EventType {
   // The phase or step from which a run has something to record (Foundry's Battle, a
   // Championship's first battle); without it, from the run's start.
   resultsFrom?: string;
+  // Its timeline is a plan of what to do (Flame and Fangs, Roxanne 27 Nov night: "an instruction
+  // timeline", "a how to that starts before the event"): each step's instructions are lines
+  // under it, not a heading.
+  instructionSteps?: boolean;
+  // Days its shop stays open after the event ends (Flame and Fangs: 1), drawn as a dotted line.
+  shopDaysAfter?: number;
+  // The most a plan's phase can bring, by phase name: the amount and how it adds up (Flame and Fangs'
+  // cores, Roxanne 27 Nov night: "we write how many cores we get from preparation and how many from
+  // the event, the max ofc").
+  planGains?: Record<string, [number, string]>;
 }
 
 interface PhaseRow {

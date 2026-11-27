@@ -385,5 +385,68 @@
     "startTimeUtc": "00:00",
     "dayNumber": 21,
     "sortOrder": 9
+  },
+  {
+    "id": "st105",
+    "eventTypeId": "flame-and-fang",
+    "startTimeUtc": "00:00",
+    "dayNumber": 0,
+    "sortOrder": 105
+  },
+  {
+    "id": "st106",
+    "eventTypeId": "flame-and-fang",
+    "startTimeUtc": "08:00",
+    "dayNumber": 0,
+    "sortOrder": 106
+  },
+  {
+    "id": "st107",
+    "eventTypeId": "flame-and-fang",
+    "startTimeUtc": "16:00",
+    "dayNumber": 0,
+    "sortOrder": 107
+  },
+  {
+    "id": "st108",
+    "eventTypeId": "flame-and-fang",
+    "startTimeUtc": "00:00",
+    "dayNumber": 1,
+    "sortOrder": 108
+  },
+  {
+    "id": "st109",
+    "eventTypeId": "flame-and-fang",
+    "startTimeUtc": "08:00",
+    "dayNumber": 1,
+    "sortOrder": 109
+  },
+  {
+    "id": "st110",
+    "eventTypeId": "flame-and-fang",
+    "startTimeUtc": "16:00",
+    "dayNumber": 1,
+    "sortOrder": 110
+  },
+  {
+    "id": "st111",
+    "eventTypeId": "flame-and-fang",
+    "startTimeUtc": "00:00",
+    "dayNumber": 2,
+    "sortOrder": 111
+  },
+  {
+    "id": "st112",
+    "eventTypeId": "flame-and-fang",
+    "startTimeUtc": "08:00",
+    "dayNumber": 2,
+    "sortOrder": 112
+  },
+  {
+    "id": "st113",
+    "eventTypeId": "flame-and-fang",
+    "startTimeUtc": "16:00",
+    "dayNumber": 2,
+    "sortOrder": 113
   }
 ]
