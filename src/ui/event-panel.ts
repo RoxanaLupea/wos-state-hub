@@ -334,9 +334,18 @@ function rewardListHtml(list: string, band: string, bandCount: number, shown: Re
     return (prestige.length
         ? '<div class="reward-sub">Prestige Rewards</div>' +
           (listNoteHtml ? listNoteHtml : '') +
-          '<div class="prestige-grid">' + prestige.map(row =>
-            `<div class="prestige-reward">${rewardTile({ ...row, tile: 'blue' })}` +
-            `<span class="prestige-name">${escapeForPage(itemName(row.itemId).replace(/-/g, '\u2011'))}</span></div>`).join('') + '</div>'
+          '<div class="prestige-grid">' + prestige.map(row => {
+            // How long it lasts ("(14d)", "(14-Day)") is a label on the reward, not part of
+            // its name (Roxanne, 27 Nov).
+            const full = itemName(row.itemId);
+            const days = full.match(/\s*\((\d+)(?:d|-Day)\)\s*$/i);
+            const name = days ? full.slice(0, days.index) : full;
+            const tile = rewardTile({ ...row, tile: 'blue' });
+            const labelled = days
+              ? tile.replace(/<\/span>$/, `<span class="tile-top">${days[1]} days</span></span>`) : tile;
+            return `<div class="prestige-reward">${labelled}` +
+              `<span class="prestige-name">${escapeForPage(name)}</span></div>`;
+          }).join('') + '</div>'
         : '') +
       // The game's name for these: rewards by the alliance's rank in its group.
       '<div class="reward-sub">Group Ranking</div>' +
