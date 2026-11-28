@@ -85,7 +85,7 @@ She found agreed rules missing from some panels. Found by rendering every panel:
       me, but after we see the foundry and push it"). Later: Fabian with his skills on the Rewards tab.
    8. Filters.
    9. The account menu.
-   10. Week view.
+   10. Week view: "exactly like the month, but for a week" (28 Nov night).
    11. Year view.
    12-19. The other pages (Fortress season and rewards, Invites, New group, the State page, My
        alliance pages, the player profile, Submissions, Transfers), one at a time.

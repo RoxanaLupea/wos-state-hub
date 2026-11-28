@@ -2002,3 +2002,4 @@ alliance-time forms it opened go to the admin menu (to be designed).
   and the name on the bar, and just put the MVP under ... the horns ... have to be yellow. I don't know why you're
   giving me white horns. And also the records, the whatever history you're keeping, that's not a thing." No list of
   earlier runs on the tab; the horns are the gold horn (items/horn-gold).
+- Week view (Roxanne, 28 Nov night): "the week should just follow the month. It's exactly like the month, but for a week."
