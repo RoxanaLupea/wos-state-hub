@@ -92,6 +92,9 @@ She found agreed rules missing from some panels. Found by rendering every panel:
 
 ## Questions still open (one at a time, never dropped)
 
+- Showdown's trucks (Roxanne, 28 Nov night): "we don't explain what they are, how they work, if they give anything,
+  what do they give. And there's an expert for it too. I don't know. Maybe later." To come back to.
+
 - Shops on the biggest screen: a proposal for scaling them is with her; she decides (27 Nov night).
 - Flame and Fangs' shop, Fire Crystals: a guide site's picture shows x5 with "Left: 6", the site has
   x9 with limit 8. Needs her game check before anything changes.
