@@ -2025,3 +2025,8 @@ alliance-time forms it opened go to the admin menu (to be designed).
   legions. Maybe even setting up a legion from a different alliance. But that's for each member. Like they could pick someone
   else's alliance legion and just go there and play with them." "the ad should not disappear after we add a legion. It should
   be there still. I don't like how it's just positioned to the right because it looks bad on PC. It's just alone there."
+- Following other alliances' times (Roxanne, 28 Nov, idea, not settled): "maybe from the state thing we can let people for the
+  other events from the other alliances, we need to have a button that says add to my timeline or something. So whenever they
+  pick that from there, they can add one of the bears or other events to their timeline, even if it's another legion, another
+  alliance." Foundry mockup (28 Nov): the add icon right after BATTLE, no words ("right after battle, and I want the icon, not
+  the words"), and it stays while editing.
