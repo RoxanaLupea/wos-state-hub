@@ -49,7 +49,7 @@ MOCK = r"""
   const lineStyle = `--line-above:${below};--line-below:${below}`;
   const dot = battle.querySelector('.tree-dot').style.background;
   const label = battle.querySelector('.tree-label');
-  if (!editing) { label.classList.add('with-add'); label.insertAdjacentHTML('beforeend', addButton); }
+  label.classList.add('with-add'); label.insertAdjacentHTML('beforeend', addButton);
 
   const picks = (choices, picked) => `<span class="pick-words">${choices.map(c => `<button type="button" class="pick-word${c === picked ? ' on' : ''}">${c}</button>`).join('')}</span>`;
   const rowHtml = (one, i) => {

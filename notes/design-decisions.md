@@ -2021,3 +2021,7 @@ alliance-time forms it opened go to the admin menu (to be designed).
 - Adding a legion's time stays possible after the first time (Roxanne, 28 Nov: "We always need the button because they
   might add a new [legion]"). Her idea, under discussion: "put the button to add a time for legion on the timeline for
   battle, like on the row with battle", so it does not overlap the Results button in the head.
+- Foundry legions, the add button (Roxanne, 28 Nov, on the Battle row mockup): "It should basically be an unlimited number of
+  legions. Maybe even setting up a legion from a different alliance. But that's for each member. Like they could pick someone
+  else's alliance legion and just go there and play with them." "the ad should not disappear after we add a legion. It should
+  be there still. I don't like how it's just positioned to the right because it looks bad on PC. It's just alone there."
