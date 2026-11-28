@@ -36,6 +36,20 @@ MOCK = r"""
     .sd .mvp .pic { width: 22px; height: 22px; border-radius: 50%; overflow: hidden; flex: none; }
     .sd .mvp .pic img { width: 100%; height: 100%; object-fit: cover; }
     .sd .mvp i { display: block; font-style: normal; font-size: 10.5px; color: var(--text-muted); }
+    .sd .days { display: flex; flex-direction: column; gap: 18px; margin-top: 4px; }
+    .sd .line1 { display: grid; grid-template-columns: minmax(0, 1fr) 40px 34px 92px; align-items: center; column-gap: 6px; }
+    .sd .dname { font-size: 13.5px; font-weight: 700; color: var(--text); }
+    .sd .horns { display: inline-flex; align-items: center; gap: 4px; justify-content: flex-end; font-size: 14px; font-weight: 800; color: var(--text); }
+    .sd .horns img { width: 16px; height: 16px; object-fit: contain; }
+    .sd .line1 .p { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; line-height: 1.2; color: var(--text); }
+    .sd .line1 .pic { width: 24px; height: 24px; border-radius: 50%; overflow: hidden; flex: none; }
+    .sd .line1 .pic img { width: 100%; height: 100%; object-fit: cover; }
+    .sd .line1 .p i { display: block; font-style: normal; font-size: 10.5px; color: var(--text-muted); }
+    .sd .line2 { display: grid; grid-template-columns: 50px minmax(0, 1fr) 50px; align-items: center; column-gap: 10px; margin-top: 6px; }
+    .sd .line2 > span { font-size: 13px; font-weight: 800; color: var(--text-faint); font-variant-numeric: tabular-nums; }
+    .sd .line2 > span.led { color: var(--text); }
+    .sd .line2 > span:last-child { text-align: right; }
+    .sd .line2 .svs-split { margin-top: 0; }
     .sd .earlier { margin-top: 25px; }
     .sd .earlier td { font-size: 13px; }
     .sd .earlier .d { color: var(--text-muted); font-weight: 600; } .sd .earlier .o { font-weight: 800; color: var(--text); }
@@ -61,11 +75,16 @@ MOCK = r"""
     '<div class="score-head"><span class="tag us">DVL</span>' +
     `<span class="total">${horn}<span class="us">9</span><span class="dash">–</span><span class="them">2</span>${horn}</span><span class="tag them">MIS</span>` +
     '<span class="names"><span class="name">DEVILEMPIRE <b>#1458</b></span><span class="name them">LegacyofMisfits <b>#1040</b></span></span></div>' +
-    `<table><tr><th class="stage">Stage</th><th>Day</th><th class="num">${horn}</th><th>Alliance</th><th>MVP</th></tr>` +
-    days.map(([day, worth, who, ours, theirs, mvps], i) => `<tr><td class="stage">${roman[i]}</td>` +
-      `<td class="day"><b>${day}</b><small><span class="us">${ours}</span> <span class="dash">–</span> <span class="them">${theirs}</span></small></td>` +
-      `<td class="num">${who === 'tie' ? '–' : worth}</td><td class="who ${who}">${who === 'us' ? 'DVL' : who === 'them' ? 'MIS' : 'Tie'}</td>` +
-      `<td class="mvp">${mvps.map(([p, tag, n]) => user(p, tag, n)).join('')}</td></tr>`).join('') + '</table>' +
+    '<div class="days">' + days.map(([day, worth, who, ours, theirs, mvps]) => {
+      const value = v => parseFloat(v);
+      const share = (100 * value(ours) / (value(ours) + value(theirs))).toFixed(1);
+      const [p, tag, n] = mvps[0];
+      return `<div class="day-item"><div class="line1"><b class="dname">${day}</b>` +
+        `<span class="horns">${who === 'tie' ? '–' : worth + horn}</span>` +
+        `<span class="who ${who}">${who === 'us' ? 'DVL' : who === 'them' ? 'MIS' : 'Tie'}</span>${user(p, tag, n)}</div>` +
+        `<div class="line2"><span class="${value(ours) >= value(theirs) ? 'led' : ''}">${ours}</span>` +
+        `<div class="svs-split" style="--share:${share}"></div>` +
+        `<span class="${value(theirs) >= value(ours) ? 'led' : ''}">${theirs}</span></div></div>`; }).join('') + '</div>' +
     '<table class="earlier"><tr><th>Date</th><th>Opponent</th><th style="text-align:right">Result</th></tr>' +
     [['Mon 2 Nov', 'XYZ #1102', '8–3'], ['Mon 26 Oct', 'LLC #1385', '4–7'], ['Mon 19 Oct', 'MIS #1040', '10–1']].map(([d, o, r]) =>
       `<tr><td class="d">${d}</td><td class="o">${o}</td><td class="r">${r}</td></tr>`).join('') + '</table>' +

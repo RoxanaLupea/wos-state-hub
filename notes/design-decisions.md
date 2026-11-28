@@ -1994,3 +1994,7 @@ alliance-time forms it opened go to the admin menu (to be designed).
   the day." Mockup: tools/render/mockups/showdown-results.py (replaces the banner one).
 - Showdown's MVP on a tied day (Roxanne, 28 Nov night: "Do we still have 2 MVPs if it's a tie? ... I don't think that's
   possible"): one MVP always; on a tied day the top scorer of both alliances (the game's rule, psr4).
+- Showdown's Results days (Roxanne, 28 Nov night): "Instead of having the whole header, which is nonsense, and the table
+  format ... the first row is gonna be the name of the day, how many horns we want, the number and the horn, then the
+  alliance, then the player. And underneath on the second row, we're gonna have the points left and right and the bar
+  that we're used to in between." "It's how we represent points in everything else ... every single day from SvS."
