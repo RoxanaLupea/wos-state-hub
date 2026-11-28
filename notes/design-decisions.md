@@ -1940,3 +1940,16 @@ alliance-time forms it opened go to the admin menu (to be designed).
   edge, tinting the whole panel ("it changes the whole page"), tinted bands, a red Members arrow.
 - Legion times mockup: tools/render/mockups/foundry-legion-times.py (option A: legions on the Timeline
   under Battle, Times button at the top right, editing in place with alliance and legion pickers).
+- Foundry legion result, the game's banner (Roxanne, 28 Nov night, replacing "settled for now"): drawn from
+  her event screen, "try this drawing instead and fade": blue and red glass halves with big rounded tops,
+  fading out downwards. Then "Remove the logo of the alliances. Remove the whatever that is behind the VS. Add
+  the VS normally between the alliance names. Align them to left and right and put the VS in the middle...
+  the cut in the middle, please make it a real V." Victory (yellow, with its glow) or Defeat (red) sits above
+  the halves. "The MVPs have to go immediately after the thing. It doesn't matter that some of the color from
+  the thing before it shows in their background." MVPs title bigger; the reward rows as wide as the blue and
+  red totals; "align every text to the left and then every text to the right" (names, totals and row numbers
+  on one left and one right edge). Yellow numbers, white names. The panel: "the normal panel without taking
+  the color from the event... like the generic one" (plain glass, no event glows, no event-coloured edge),
+  and its lines (tab underlines, Edit, the Members arrow) in the site's colour, not the event's. "Okay, this
+  is better. This will also be the template for TAL results for each of the games, because it's still a
+  Foundry game." Mockup: tools/render/mockups/foundry-legion-result-game.py (and -pc).
