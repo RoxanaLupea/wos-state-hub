@@ -2041,3 +2041,10 @@ alliance-time forms it opened go to the admin menu (to be designed).
   mode where they see everything and they can check or uncheck those with the eyes, which are way to the right. I don't like
   that." Editing: "the remove thing is for the legions they added. Like, I don't know why we're still showing all design with
   big DVL, tiny DVL, legion 1, legion 2 ... they don't make sense."
+- Foundry legions mockup, round 3 (Roxanne, 28 Nov): the button is "Follow another legion" ("I don't like the name Choose
+  Legions ... To follow another legion. That's a good button"); every legion with its time, in time order: "that's perfect";
+  "I like the edit". Removing a legion asks in the pop-up: "I need the pop-up that confirms the deletion. That's how we did it
+  everywhere. We never did tap again to remove. That's not a concept". "this will be used from the phone, but mostly from the
+  PC. It has to be solid for PC too." Adding: "on add legion, I should be able to pick the alliance and if it's legion 1 or
+  legion 2, not them packed together like that. Of course, having them suggested is nice". Add legion before Cancel and Save:
+  "it feels weird ... but I think it's also logical."

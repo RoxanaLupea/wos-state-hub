@@ -1,6 +1,6 @@
 # Foundry's legions under Battle (Roxanne, 28 Nov): every member shows or hides legions in their own timeline with an eye,
 # and opens "Other legions" to add another alliance's legion; R4s and admins get Edit on the Battle row, which opens every
-# legion in place (time box, alliance and legion words), a bin on each with the site's "Tap again to remove" (no pop-up),
+# legion in place (time box), a bin after each name that asks in the site's pop-up,
 # "Add legion" after the last one, then Cancel and Save. Phone, laptop, monitor. Pictures go to /tmp/fbl.
 import sys, json, os, re
 sys.path.insert(0, '/home/claude/wos-state-hub/tools/render')
@@ -33,7 +33,8 @@ MOCK = r"""
     .event-page .legion-label.editing { flex-wrap: wrap; row-gap: 2px; }
     .event-page .legion-label.editing .legion-remove { margin-left: auto; }
     .event-page .legion-picks .pick-words { gap: 0 14px; }
-    .event-page .legion-picks .pick-word { font-size: 12px; padding: 2px 0; }
+    .event-page .legion-picks .pick-word { font-size: 12px; font-weight: 600; padding: 2px 0; }
+    .event-page .legion-picks .pick-word.on { font-weight: 800; }
     .event-page .edit-actions { display: flex; gap: 22px; }
     .event-page .legion-remove { padding: 2px 0; flex: none; }
     .event-page .legion-remove .line-icon { width: 16px; height: 16px; }
@@ -59,7 +60,7 @@ MOCK = r"""
                    { tag: 'SKY', legion: 'Legion 1', time: '15:00' }, { tag: 'TOP', legion: 'Legion 2', time: '19:00' } ];
   const byTime = list => list.slice().sort((a, b) => a.time.localeCompare(b.time) || a.tag.localeCompare(b.tag));
   const isR4 = state.startsWith('r4');
-  const editing = state === 'r4-edit' || state === 'r4-add';
+  const editing = ['r4-edit', 'r4-add', 'r4-remove'].includes(state);
   const choosing = state === 'choose';
   // What a member follows: their alliance's legions by default; in 'after' they added TOP · Legion 1 and hid DVL · Legion 2.
   let followed = ours.slice();
@@ -85,15 +86,15 @@ MOCK = r"""
   if (editing) {
     // Saved legions stay what they are: only the time changes, or the bin removes them (second tap, no pop-up).
     ours.forEach((one, i) => {
-      const asking = state === 'r4-edit' && i === 1;
-      const bin = `<button type="button" class="quiet-word remove legion-remove${asking ? ' asking' : ''}" style="--word-tint: var(--notice-red)">${lineIcon('m-bin-' + i, BIN)}${asking ? '<span class="words">Tap again to remove</span>' : ''}</button>`;
+      const bin = `<button type="button" class="quiet-word remove legion-remove" style="--word-tint: var(--notice-red)" aria-label="Remove ${one.tag} · ${one.legion}">${lineIcon('m-bin-' + i, BIN)}</button>`;
       html += row(`<input class="svs-field mock-time" value="${one.time}">`, solid, after(name(one) + bin));
     });
     if (state === 'r4-add') {
-      // The new row offers only the legions our alliance has not set yet (DVL has both, so the academy's two).
-      const left = ['dvl · Legion 1', 'dvl · Legion 2'];
+      // The new row: the alliance and the legion picked separately, suggested on the first one not set yet
+      // (DVL has both, so dvl · Legion 1 comes picked).
+      const picks = (choices, chosen) => `<span class="pick-words">${choices.map(c => `<button type="button" class="pick-word${c === chosen ? ' on' : ''}">${c}</button>`).join('')}</span>`;
       html += row(`<input class="svs-field mock-time" value="" placeholder="--:--">`, hollow,
-        `<span class="pick-words">${left.map((w, i) => `<button type="button" class="pick-word${i === 0 ? ' on' : ''}">${w}</button>`).join('')}</span>`);
+        `<span class="legion-picks">${picks(['DVL', 'dvl'], 'dvl')}${picks(['Legion 1', 'Legion 2'], 'Legion 1')}</span>`);
     }
     html += row('', null, `<button type="button" class="edit-button" style="--edit-colour: var(--event-color)">${CLOCK_ADD}<span><span class="words">Add legion</span></span></button>`);
     html += row('', null, `<span class="edit-actions">${quiet('cancel', 'var(--notice-red)', 'm-cancel', CROSS, 'Cancel')}${quiet('confirm', 'var(--save-green)', 'm-save', TICK, 'Save', state !== 'r4-add')}</span>`);
@@ -103,17 +104,21 @@ MOCK = r"""
     all.forEach(one => { html += row(`<span>${one.time}</span>`, one.on ? solid : hollow, after(name(one, !one.on) + eye(one.on))); });
     html += row('', null, `<button type="button" class="quiet-word other-legions" style="--word-tint: var(--save-green)">${lineIcon('m-done', TICK)}<span class="words">Done</span></button>`);
   } else {
-    // Viewing: only the legions I follow, nothing faint, no eyes; "Choose legions" under them opens the choosing.
+    // Viewing: only the legions I follow, nothing faint, no eyes; "Follow another legion" under them opens the choosing.
     followed.forEach(one => { html += row(`<span>${one.time}</span>`, solid, name(one)); });
-    html += row('', null, `<button type="button" class="quiet-word other-legions" style="--word-tint: var(--accent)">${lineIcon('m-choose', EYE, 2)}<span class="words">Choose legions</span></button>`);
+    html += row('', null, `<button type="button" class="quiet-word other-legions" style="--word-tint: var(--accent)">${lineIcon('m-choose', EYE, 2)}<span class="words">Follow another legion</span></button>`);
   }
   battle.insertAdjacentHTML('afterend', html);
+  // Tapping a bin asks in the site's pop-up, as everywhere (Roxanne, 28 Nov).
+  if (state === 'r4-remove') document.body.insertAdjacentHTML('beforeend', '<div class="leave-prompt"><div class="leave-prompt-box glass" role="dialog" aria-modal="true">' +
+    '<p class="leave-prompt-text">Are you sure you want to remove <span style="white-space:nowrap">DVL · Legion 2</span>?</p>' +
+    '<div class="leave-prompt-actions"><button type="button" class="ghost-button">Cancel</button><button type="button" class="danger-button">Remove</button></div></div></div>');
 }
 """
 
 os.makedirs('/tmp/fbl', exist_ok=True)
 shoot.serve('/tmp/rb', 8836)
-STATES = ['member', 'choose', 'after', 'r4', 'r4-edit', 'r4-add']
+STATES = ['member', 'choose', 'after', 'r4', 'r4-edit', 'r4-remove', 'r4-add']
 with sync_playwright() as p:
     b = p.chromium.launch(executable_path='/usr/bin/google-chrome', args=['--no-sandbox'])
     for W, H, S, tag in [(384, 832, 2.8125, 'phone'), (1536, 864, 1.25, 'laptop'), (2560, 1440, 1, 'monitor')]:
