@@ -152,3 +152,11 @@ confirmation. Kept on the screenshots branch as foundry-battle/2026-11-28-from-a
   Points from Building Occupation, from Gathering and from Enemy KOs (each with its MVP), Sieged by
   Mercenaries; then Personal Arsenal Points, ranked, the top three with medals.
 - An older defeat mail (2025-01) shows a Personal tally of the reader's own points instead.
+
+## The event screen before the battle (her screenshot, 28 Nov 2026)
+foundry-battle/2026-11-28-event-screen-legion-1-before-battle.png on the screenshots branch. Foundry
+Battle, Tier: S; the expert's portrait (Lv. 80); buttons for the rules, rewards, rankings and the shop;
+tabs Legion 1 and Legion 2; "Battle Starts In 1d 18:51:30"; the two sides as blue and red halves with
+rounded tops that dip toward a dark VS diamond and fade out downwards: #1252 [DUB]BAKinDUB, power
+269,132, 30 combatants, against ???, 266,598, 21 (the opponent shows as ??? before the battle);
+Combatants and Enter Battlefield at the bottom.
