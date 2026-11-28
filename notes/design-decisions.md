@@ -2061,3 +2061,6 @@ alliance-time forms it opened go to the admin menu (to be designed).
   registered, and after a defeat they are not able to participate anymore, so the records are important there ... after the
   day of the battle, if we battled today, at the end of today, we will know who we're gonna battle the next time and what the
   time is." Then: "Take this and push it, because I wanna tap on things myself to see how it works."
+- Bear, Crazy Joe and Mercenaries have no row of their own to hang times on (no state-wide run for Bear and Crazy Joe; the
+  Mercenaries' panel has no timeline). Roxanne, 28 Nov: "Then we need to have add time per event." Where it sits on each of
+  the three: to settle with her after Foundry and Canyon.

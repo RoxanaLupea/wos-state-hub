@@ -743,7 +743,15 @@ export interface FirstRowPlan {
   banner: string;
 }
 
-export function renderEventTree(tree: EventTree, firstRow?: FirstRowPlan): string {
+// The alliances' own times under one of the timeline's rows (alliance-times-rows.ts): the row by its
+// name, what goes after that name (Edit), and the rows, drawn in the line's colours at that row.
+export interface TimesAtRow {
+  label: string;
+  head: string;
+  rows: (line: string, dot: string) => string;
+}
+
+export function renderEventTree(tree: EventTree, firstRow?: FirstRowPlan, timesAt?: TimesAtRow): string {
   let rows = tree.rows;
   const side = tree.side;
   // A shop that stays open after the event (Flame and Fangs, Roxanne 27 Nov night: "the shop being
@@ -969,6 +977,10 @@ export function renderEventTree(tree: EventTree, firstRow?: FirstRowPlan): strin
     }
 
     const sideGoesOn = sideStateAt(index) === 'start' || sideStateAt(index) === 'middle';
+    // The row the alliances' times hang under (Foundry's and Canyon's Battle).
+    const isTimesRow = Boolean(timesAt) && row.level === 0 && !row.isEndRow && !row.isSideRow &&
+      row.label.toLowerCase() === (timesAt?.label ?? '').toLowerCase();
+    const timesRows = isTimesRow && timesAt ? timesAt.rows(lineBelow, dotColor) : '';
     const chestsHtml = row.dayNumber ? dayChests(row.eventTypeId, row.dayNumber) : '';
     const hasPoints = row.pointSourceIds.length > 0 || Boolean(chestsHtml);
     const noteHtml = row.note ? `<p class="tree-instructions">${escapeForPage(row.note)}</p>` : '';
@@ -995,7 +1007,7 @@ export function renderEventTree(tree: EventTree, firstRow?: FirstRowPlan): strin
       (row.subLabel ? `<span class="tree-sub">${escapeForPage(row.subLabel)}</span>` : '') +
       (row.detail ? `<span class="tree-detail"${detailColorAt.has(index) ? ` style="color:${detailColorAt.get(index)}"` : ''}>` +
         `${eventTypeById(row.eventTypeId)?.instructionSteps ? planWords(row.detail) : escapeForPage(row.detail)}</span>` : '') +
-
+      (isTimesRow ? timesAt?.head ?? '' : '') +
       '</span>' +
       (hasPoints || row.note
         ? `<span class="tree-arrow" style="--arrow-color:${dotColor}"></span>` : '<span></span>');
@@ -1023,7 +1035,7 @@ export function renderEventTree(tree: EventTree, firstRow?: FirstRowPlan): strin
       (row.isPicked ? ` style="--current-color:${dotColor}"` : '');
 
     if (!hasPoints && !noteHtml) {
-      return `<div class="${rowClass}"${rowKey}>${rowInside}</div>`;
+      return `<div class="${rowClass}${isTimesRow && timesAt?.head ? ' times-head-row' : ''}"${rowKey}>${rowInside}</div>` + timesRows;
     }
     const sources = pointSourcesForDay(row.eventTypeId, row.dayNumber ?? 1)
       .filter(source => row.pointSourceIds.includes(source.id));
@@ -1109,6 +1121,9 @@ export interface EventPanelOptions {
   tabActions?: Record<string, string>;
   // The alliance's plan on the timeline's first row, for the events that have one.
   firstRowPlan?: FirstRowPlan;
+  // The alliances' own times under the event's row, and the pop-up that asks before removing one.
+  timesAt?: TimesAtRow;
+  timesAskHtml?: string;
   // A stage (State of Power's Matchmaking, Preparation, Battle, Field Triage) opens its
   // whole event: the head names the event and spans all of it.
   wholeEvent?: { eventTypeId: string; startMinute: number; endMinute: number };
@@ -1227,7 +1242,7 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
       '</details>'
     : '';
 
-  const timelineHtml = options.tree.rows.length ? renderEventTree(options.tree, options.firstRowPlan) : '';
+  const timelineHtml = options.tree.rows.length ? renderEventTree(options.tree, options.firstRowPlan, options.timesAt) : '';
   // The event's own scoring list, unless the timeline already shows points per day.
   const ownPoints = options.tree.hasPoints
     ? '' : pointsList(eventTypeId, pointSourcesForDay(eventTypeId, options.dayOfEvent), true);
@@ -1332,7 +1347,7 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
 
   html += options.editFormHtml;
   html += openHtml;
-  return html + '</div></section>';
+  return html + '</div></section>' + (options.timesAskHtml ?? '');
 }
 
 // The panel behind a gathered bar ("Bear Hunt x16"): every alliance's time of that

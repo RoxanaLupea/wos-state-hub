@@ -49,16 +49,19 @@ import { fortBattleIsShown, fortBattlesOnDay, fortPhaseOfDay } from './calendar/
 import { fortBattlesSection } from './ui/fort-battles.ts';
 import { showdownScoreSection } from './ui/showdown-score.ts';
 import { fortFullName } from './calendar/fort-season.ts';
-import { buildEventTree, familyOccurrences } from './calendar/event-tree.ts';
-import { currentTimeMode, gameClockText, nowMinute, setTimeMode, type TimeMode } from './calendar/time-mode.ts';
+import { buildEventTree, familyOccurrences, type EventTree } from './calendar/event-tree.ts';
+import { clockText, currentTimeMode, gameClockText, nowMinute, setTimeMode, type TimeMode } from './calendar/time-mode.ts';
 import { preferencesFrom, readPreferences, savePreferencesWithLogin, writePreferences, type Preferences } from './data/preferences.ts';
 import {
   isAdmin, isOwner, leadsAlliance, managesBattles, managesState, signInWith, signOut,
   signedInPerson, type SignedInPerson, type SignInProvider
 } from './data/auth.ts';
 import {
-  cleanTime, saveAllianceTime, saveDateChange, saveFortAssignment, saveScheduleRepeat
+  addAllianceTime, cleanTime, removeAllianceTime, saveAllianceTime, saveDateChange, saveFortAssignment, saveScheduleRepeat
 } from './data/editing.ts';
+import {
+  allianceTimesAsk, allianceTimesHead, allianceTimesRows, type AllianceTimeEntry, type AllianceTimesRowsOptions
+} from './ui/alliance-times-rows.ts';
 import { EDIT_ICON, PENCIL_ICON, allianceTimeForm, dateChangeForm, editButton, fortForm, pencilButton, scheduleForm } from './ui/edit-forms.ts';
 import { deleteRow, loadRows, saveRow, type Row } from './data/records.ts';
 import { removeGameAccount, saveGameAccount, setGameAccountKinds } from './data/player-profile.ts';
@@ -158,6 +161,12 @@ const view = {
   pickedRowKey: null as string | null,
   // Which alliance times the player follows, by schedule.
   followedScheduleIds: new Set<string>(),
+  // Their own alliance's times they took out of their timeline with the eye.
+  hiddenScheduleIds: new Set<string>(),
+  // The alliance-times rows of the open event: choosing what to follow, or editing (R4s, admins),
+  // with what is being edited until Save.
+  timesMode: null as null | { runKey: string; mode: 'choose' | 'edit' },
+  timesDraft: { times: new Map<string, string>(), removed: new Set<string>(), adding: null as null | { allianceId: string; group: number; time: string }, asking: null as string | null },
   // The rows of the open event whose points are open.
   openPointRows: new Set<string>(),
   // The form a pencil opened: "schedule|<id>", "alliance|<id>", "date|<id>|<date>" or
@@ -532,6 +541,149 @@ function nameOfAllianceTime(occurrence: Occurrence): string {
   return tags + group;
 }
 
+// The alliance-times feature (alliance-times-rows.ts) for the open run: every alliance's times on the
+// day of the event's named row (Foundry's and Canyon's Battle), what the player follows, and who may edit.
+interface OpenTimes {
+  runKey: string;
+  eventTypeId: string;
+  day: number;
+  repeatEveryDays: number | null;
+  label: string;
+  options: AllianceTimesRowsOptions;
+}
+let openTimes: OpenTimes | null = null;
+
+function timesOf(occurrence: Occurrence, tree: EventTree, nearby: Occurrence[], myAllianceIds: string[]): OpenTimes | null {
+  const type = eventTypeById(occurrence.eventTypeId);
+  if (!type?.timesOnRow || occurrence.allianceIds.length > 0) return null;
+  const row = tree.rows.find(one => one.level === 0 && !one.isEndRow && !one.isSideRow &&
+    one.label.toLowerCase() === (type.timesOnRow as string).toLowerCase());
+  if (!row) return null;
+  const day = Math.floor(row.minute / MINUTES_PER_DAY);
+  const tagOf = (id: string) => allianceTag(id);
+  const entries: AllianceTimeEntry[] = nearby
+    .filter(one => one.eventTypeId === occurrence.eventTypeId && one.allianceIds.length > 0 && one.startDay === day)
+    .sort((left, right) => left.startMinute - right.startMinute ||
+      tagOf(left.allianceIds[0]).localeCompare(tagOf(right.allianceIds[0])) || (left.groupNumber ?? 0) - (right.groupNumber ?? 0))
+    .map(one => {
+      const isOurs = one.allianceIds.some(id => myAllianceIds.includes(id));
+      const schedule = schedules.find(each => each.id === one.scheduleId);
+      return {
+        scheduleId: one.scheduleId, allianceId: one.allianceIds[0], tag: tagOf(one.allianceIds[0]),
+        group: one.groupNumber ?? 1, timeText: clockText(one.startMinute),
+        timeUtc: (schedule?.startTimeUtc ?? '').slice(0, 5), isOurs,
+        isShown: isOurs ? !view.hiddenScheduleIds.has(one.scheduleId) : view.followedScheduleIds.has(one.scheduleId)
+      };
+    });
+  const runKey = occurrence.eventTypeId + '|' + day;
+  const mode = view.timesMode?.runKey === runKey ? view.timesMode.mode : 'view';
+  // Admins may set every alliance's times; an R4 or R5 their own alliance's and its academies'.
+  const here = alliances.filter(one => !one.leftOn);
+  const ordered = here.filter(one => !one.mainAllianceId).sort((left, right) => left.sortOrder - right.sortOrder)
+    .flatMap(main => [main, ...here.filter(one => one.mainAllianceId === main.id)]);
+  const editableAlliances = ordered
+    .filter(one => isAdmin(person) || leadsAlliance(person, one.id) || (one.mainAllianceId !== null && leadsAlliance(person, one.mainAllianceId)))
+    .map(one => ({ id: one.id, tag: one.tag }));
+  const schedule = schedules.find(one => one.id === occurrence.scheduleId);
+  openTimes = {
+    runKey, eventTypeId: occurrence.eventTypeId, day, repeatEveryDays: schedule?.repeatEveryDays ?? null,
+    label: type.timesOnRow,
+    options: {
+      groupWord: type.groupWord ?? 'Time', groupCount: Number(type.groupCount ?? 1) || 1, entries, mode,
+      mayEdit: editableAlliances.length > 0, editableAlliances, draft: view.timesDraft
+    }
+  };
+  return openTimes;
+}
+
+function closeTimes(): void {
+  view.timesMode = null;
+  view.timesDraft = { times: new Map(), removed: new Set(), adding: null, asking: null };
+}
+
+// The first alliance and group this person may add that has no time yet: the suggestion
+// (Roxanne, 28 Nov: "having them suggested is nice").
+function suggestedTime(times: OpenTimes): { allianceId: string; group: number; time: string } {
+  const taken = new Set(times.options.entries.map(one => one.allianceId + '|' + one.group));
+  for (const alliance of times.options.editableAlliances) {
+    for (let group = 1; group <= times.options.groupCount; group++) {
+      if (!taken.has(alliance.id + '|' + group)) return { allianceId: alliance.id, group, time: '' };
+    }
+  }
+  return { allianceId: times.options.editableAlliances[0]?.id ?? '', group: 1, time: '' };
+}
+
+// A tap on the alliance-times rows. Returns whether it was one.
+function handleTimesTap(target: HTMLElement): boolean {
+  const button = target.closest<HTMLElement>('[data-times]');
+  if (!button || !openTimes) return false;
+  // A tap inside the pop-up's box, not on one of its buttons, does nothing.
+  if (target.closest('.leave-prompt-box') && !target.closest('button')) return true;
+  const [action, value] = (button.dataset.times as string).split('|');
+  const times = openTimes;
+  const draft = view.timesDraft;
+  if (action === 'edit') { closeTimes(); view.timesMode = { runKey: times.runKey, mode: 'edit' }; }
+  else if (action === 'choose') view.timesMode = { runKey: times.runKey, mode: 'choose' };
+  else if (action === 'done' || action === 'cancel') closeTimes();
+  else if (action === 'eye') {
+    const entry = times.options.entries.find(one => one.scheduleId === value);
+    if (entry?.isOurs) {
+      if (view.hiddenScheduleIds.has(value)) view.hiddenScheduleIds.delete(value); else view.hiddenScheduleIds.add(value);
+    } else if (entry) {
+      if (view.followedScheduleIds.has(value)) view.followedScheduleIds.delete(value); else view.followedScheduleIds.add(value);
+    }
+  }
+  else if (action === 'add') draft.adding = draft.adding ?? suggestedTime(times);
+  else if (action === 'pick-alliance' && draft.adding) draft.adding.allianceId = value;
+  else if (action === 'pick-group' && draft.adding) draft.adding.group = Number(value);
+  else if (action === 'remove') draft.asking = value;
+  else if (action === 'ask-cancel') draft.asking = null;
+  else if (action === 'ask-remove') {
+    // Removed at once once confirmed, as on the profile.
+    draft.asking = null;
+    draft.times.delete(value);
+    void removeAllianceTime(value).then(() => reloadAfterEdit('times')).catch(error => window.alert((error as Error).message));
+    return true;
+  } else if (action === 'save') {
+    void saveTimes(times).catch(error => window.alert((error as Error).message));
+    return true;
+  }
+  draw();
+  return true;
+}
+
+async function saveTimes(times: OpenTimes): Promise<void> {
+  const userId = person?.userId;
+  if (!userId) throw new Error('Sign in to change times.');
+  const draft = view.timesDraft;
+  for (const [scheduleId, typed] of Array.from(draft.times)) {
+    const entry = times.options.entries.find(one => one.scheduleId === scheduleId);
+    const time = cleanTime(typed);
+    if (!entry || !time || time === entry.timeUtc) continue;
+    await saveAllianceTime(scheduleId, { startTimeUtc: time, endTimeUtc: null }, userId);
+  }
+  if (draft.adding) {
+    const time = cleanTime(draft.adding.time);
+    if (!time) throw new Error('Type a time for the new ' + times.options.groupWord.toLowerCase() + '.');
+    await addAllianceTime({
+      eventTypeId: times.eventTypeId, allianceId: draft.adding.allianceId, group: draft.adding.group,
+      firstDate: textFromDay(times.day), repeatEveryDays: times.repeatEveryDays, startTimeUtc: time
+    }, userId);
+  }
+  closeTimes();
+  await reloadAfterEdit('times');
+}
+
+// Typing in a time box keeps what is typed and lights Save, without redrawing.
+function handleTimesTyping(target: HTMLElement): void {
+  if (!(target instanceof HTMLInputElement) || !target.dataset.timesBox) return;
+  const id = target.dataset.timesBox;
+  if (id === 'new') { if (view.timesDraft.adding) view.timesDraft.adding.time = target.value; }
+  else view.timesDraft.times.set(id, target.value);
+  const save = target.closest('.event-tree')?.querySelector<HTMLButtonElement>('[data-times="save"]');
+  if (save) save.disabled = false;
+}
+
 function openEventMarkup(key: string, day: number, myAllianceIds: string[]): string | null {
   if (key.startsWith('group|')) return groupPanelMarkup(key, myAllianceIds);
 
@@ -580,6 +732,7 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
   } : undefined;
 
   view.rewardView.ownBand = ownRewardBands();
+  const times = timesOf(occurrence, tree, nearby, myAllianceIds);
   const resultsOptions = {
     context: workContext(), eventTypeId: occurrence.eventTypeId, runDate: resultRunDate(occurrence, nearby),
     stateNumber: Number(STATE_NUMBER), isSwitchedOff: resultsSwitchedOff,
@@ -612,6 +765,11 @@ function openEventMarkup(key: string, day: number, myAllianceIds: string[]): str
       isEditing: view.editing === planNoteEdit(occurrence.eventTypeId)
     }),
     wholeEvent,
+    timesAt: times ? {
+      label: times.label, head: allianceTimesHead(times.options, EDIT_ICON),
+      rows: (line, dot) => allianceTimesRows(times.options, line, dot)
+    } : undefined,
+    timesAskHtml: times ? allianceTimesAsk(times.options) : '',
     personalHtml: eventTypeById(occurrence.eventTypeId)?.noPersonalEntry ? '' : personalEntryForm({
       occurrence, category: categoryOf(occurrence.eventTypeId), userId: person?.userId ?? null,
       entries: person ? rowsOf('personal_entries') : []
@@ -1443,6 +1601,7 @@ function draw(): void {
   const place = view.openPage + '|' + (view.openEventKey ?? '') + '|' + view.chosenDay;
   if (place !== editingPlace) {
     if (editingPlace) view.editing = null;
+    if (editingPlace) closeTimes();
     // Another event's rows start closed.
     if (editingPlace.split('|')[1] !== (view.openEventKey ?? '')) view.openPointRows.clear();
     editingPlace = place;
@@ -1488,6 +1647,7 @@ function rememberChoices(): void {
     categories: Array.from(view.shownCategories),
     hiddenEvents: Array.from(view.hiddenEvents),
     followedScheduleIds: Array.from(view.followedScheduleIds),
+    hiddenScheduleIds: Array.from(view.hiddenScheduleIds),
     calendarView: view.calendarView,
     timeMode: currentTimeMode(),
     myAllianceId: view.myAllianceId,
@@ -1533,6 +1693,7 @@ function applyKeptChoices(): void {
   }
   if (kept.hiddenEvents) view.hiddenEvents = new Set(kept.hiddenEvents);
   if (kept.followedScheduleIds) view.followedScheduleIds = new Set(kept.followedScheduleIds);
+  if (kept.hiddenScheduleIds) view.hiddenScheduleIds = new Set(kept.hiddenScheduleIds);
   if (kept.calendarView) view.calendarView = kept.calendarView;
   // A year view kept from before it was set aside opens as the month.
   if (view.calendarView === 'year' && !YEAR_VIEW_SHOWN) view.calendarView = 'month';
@@ -1881,6 +2042,7 @@ function handleClicks(event: MouseEvent): void {
   if (!target) return;
   if (answerWhichAccount(target)) return;
   if (handlePlayerSearchClick(target)) return;
+  if (handleTimesTap(target)) return;
 
   // Transfers · Invites and Records handle their own taps; leaving Invites with changes
   // not saved asks first.
@@ -4183,6 +4345,7 @@ async function start(): Promise<void> {
     document.addEventListener('click', handleClicks);
     document.addEventListener('submit', handleSubmits);
     document.addEventListener('input', filterPlayerTyping);
+    document.addEventListener('input', event => { if (event.target instanceof HTMLElement) handleTimesTyping(event.target); });
     document.addEventListener('input', event => {
       if (event.target instanceof HTMLElement) handlePlayerSearchInput(event.target, playerSources);
     });

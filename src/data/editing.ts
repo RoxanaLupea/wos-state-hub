@@ -106,3 +106,38 @@ export async function saveFortAssignment(
   }, { onConflict: 'season,phase,fort' });
   failed('the fort', error);
 }
+
+// An alliance's new time for an event with set times (a Foundry or Canyon legion, a Bear trap),
+// repeating with the event's runs from that day (Roxanne, 28 Nov: "once we set a time for one of
+// them, the following events will still follow that time").
+export interface NewAllianceTime {
+  eventTypeId: string;
+  allianceId: string;
+  group: number;
+  firstDate: string;
+  repeatEveryDays: number | null;
+  startTimeUtc: string;
+}
+
+export async function addAllianceTime(time: NewAllianceTime, userId: string): Promise<void> {
+  const { error } = await database().from('schedules').upsert({
+    id: `d-${time.allianceId}-${time.eventTypeId}-${time.group}`,
+    event_type_id: time.eventTypeId,
+    first_date: time.firstDate,
+    repeat_every_days: time.repeatEveryDays,
+    length_days: 1,
+    start_time_utc: time.startTimeUtc,
+    end_time_utc: null,
+    alliance_ids: time.allianceId,
+    group_number: time.group,
+    updated_by: userId,
+    updated_at: new Date().toISOString()
+  });
+  failed('the new time', error);
+}
+
+// An alliance's time taken away, after the pop-up asked.
+export async function removeAllianceTime(scheduleId: string): Promise<void> {
+  const { error } = await database().from('schedules').delete().eq('id', scheduleId);
+  failed('the removal', error);
+}

@@ -811,3 +811,33 @@
 /* The game writes a bonus's value in green. */
 .building-bonus .plan-tip > b { font-size: 14px; font-weight: 800; color: #86D45E; }
 .event-page .building-bonus .tip { left: -12px; right: auto; }
+
+/* The alliances' own times take the panel's own colour, like its Edit: the event's on a tinted
+   panel, the site's on a plain one. */
+.event-page { --times-colour: var(--event-color); }
+.event-page.plain-panel { --times-colour: var(--accent); }
+.event-tree .times-follow, .event-tree .times-eye.on { --word-tint: var(--times-colour); }
+.event-tree .times-eye { --word-tint: var(--text-faint); }
+
+/* The alliances' own times under an event's row (alliance-times-rows.ts; mockup
+   tools/render/mockups/foundry-battle-legions.py, accepted by Roxanne 28 Nov). Edit sits 20px after
+   the row's name; a time reads "DVL · Legion 1"; the eye and the bin sit right after the name. */
+.event-tree .times-head-row .tree-label { display: flex; align-items: center; gap: 20px; }
+.event-tree .times-head-row .times-edit { text-transform: none; letter-spacing: 0; margin: -6px 0; }
+.event-tree .times-name { font-size: 12px; font-weight: 600; color: var(--text); white-space: nowrap; }
+.event-tree .times-name b { font-weight: 800; }
+.event-tree .times-name.faint { color: var(--text-faint); }
+.event-tree .times-line { display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; }
+.event-tree .times-eye { display: inline-flex; padding: 2px; margin: -2px 0; border: none; background: none; cursor: pointer; }
+.event-tree .times-eye .line-icon { width: 18px; height: 18px; display: block; overflow: visible; }
+.event-tree .times-row .quiet-word { font-size: 12.5px; }
+.event-tree .times-remove { padding: 2px; margin: -2px 0; }
+.event-tree .times-remove .line-icon { width: 16px; height: 16px; }
+.event-tree .times-box { width: 3.4em; height: 22px; padding: 0 4px; margin-left: auto; display: block;
+  font-size: 12px; font-weight: 700; text-align: center; color: var(--text); }
+.event-tree .times-picks { display: flex; flex-direction: column; gap: 2px; }
+.event-tree .times-picks .pick-words { gap: 0 14px; }
+.event-tree .times-picks .pick-word { font-size: 12px; font-weight: 600; padding: 2px 0; }
+.event-tree .times-picks .pick-word.on { font-weight: 800; }
+.event-tree .times-actions { display: flex; gap: 22px; }
+.times-nowrap { white-space: nowrap; }

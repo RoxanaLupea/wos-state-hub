@@ -236,6 +236,8 @@
     "noPersonalEntry": true,
     "noAllianceTimesTab": true,
     "allianceTimesOpenPanel": true,
+    "timesOnRow": "Battle",
+    "groupWord": "Legion",
     "rewardLinesByTile": true
   },
   {
@@ -248,6 +250,10 @@
     "opponentCount": "2",
     "opponentHasAlliance": "yes",
     "resultType": "winloss",
+    "noAllianceTimesTab": true,
+    "allianceTimesOpenPanel": true,
+    "timesOnRow": "Battle",
+    "groupWord": "Legion",
     "sortOrder": 10,
     "resultsBy": "alliance",
     "resultsFrom": "ph12"

@@ -91,6 +91,11 @@ export interface EventType {
   // (Foundry, Roxanne 28 Nov: "remove the cards from the battle because we are not going to use that. It
   // has to open the same card").
   allianceTimesOpenPanel?: boolean;
+  // The timeline row the alliances' own times hang under, by its name (Foundry's and Canyon's
+  // "Battle"), and what one time is called ("Legion"): the alliance-times feature, one for every
+  // event with set times (Roxanne, 28 Nov: "it's one feature for all of them").
+  timesOnRow?: string;
+  groupWord?: string;
   // Reward rows split by tile colour, 4 and 3 (Foundry, Roxanne 28 Nov night: "the golden one, then the
   // 3 purple one, on the second round the blue... below it will be all the golden ones, then the purple
   // gems on the second row first, and then the 2 blue"); Showdown's Daily, "split by purple and blue".

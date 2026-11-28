@@ -12,6 +12,9 @@ export interface Preferences {
   categories: string[];
   hiddenEvents: string[];
   followedScheduleIds: string[];
+  // Times of their own alliance a player took out of their timeline with the eye (the
+  // alliance-times feature, 28 Nov); other alliances' times they added are followedScheduleIds.
+  hiddenScheduleIds?: string[];
   calendarView: 'week' | 'month' | 'year';
   timeMode: 'game' | 'local';
   myAllianceId: string | null;
@@ -51,6 +54,8 @@ export function preferencesFrom(value: unknown): Partial<Preferences> {
     if (hiddenEvents) read.hiddenEvents = hiddenEvents;
     const followed = strings(stored.followedScheduleIds);
     if (followed) read.followedScheduleIds = followed;
+    const hiddenTimes = strings(stored.hiddenScheduleIds);
+    if (hiddenTimes) read.hiddenScheduleIds = hiddenTimes;
     if (stored.calendarView === 'week' || stored.calendarView === 'month' || stored.calendarView === 'year') {
       read.calendarView = stored.calendarView;
     }
