@@ -910,5 +910,21 @@
   },
   {
     "id": "storm-of-destruction"
+  },
+  {
+    "id": "foundry-statue",
+    "imageFile": "foundry/item-statue.png"
+  },
+  {
+    "id": "foundry-puzzle-piece",
+    "imageFile": "foundry/item-puzzle-piece.png"
+  },
+  {
+    "id": "foundry-chest",
+    "imageFile": "foundry/item-chest.png"
+  },
+  {
+    "id": "foundry-ticket",
+    "imageFile": "foundry/item-ticket.png"
   }
 ]

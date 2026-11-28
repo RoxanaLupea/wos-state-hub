@@ -10,7 +10,7 @@ import {
   eventTypeLabel, itemImageFile, itemLabel, itemName, phaseName, playerRequirement,
   pointSourceDayName, pointSourceTask, pointSourcesForDay, pointSourcesInList, pointsNote,
   pointsTitle, rewardsOf, type PointSource, type RewardRow
-, listTitle, seasonOf
+, listTitle, seasonOf, buildingsOf, buildingName, buildingDescription, buildingBonusName, membersRewardsTitle
 } from '../data/catalog.ts';
 import { clockText, nowMinute, shownDayOf } from '../calendar/time-mode.ts';
 import { spanText } from '../calendar/spans.ts';
@@ -273,8 +273,9 @@ function combatantRewards(shown: RewardRow[], side: string, sideButtons: string)
   const members = shown.filter(row => row.section === 'win' || row.section === 'lose')
     .map(row => ({ ...row, rowLabel: row.section === 'win' ? 'Win' : 'Loss' }));
   const ranges = shown.filter(row => row.section === (side ? 'personal-' + side : 'personal-win'));
+  const ownTitle = membersRewardsTitle(shown[0]?.eventTypeId ?? '');
   return (members.length
-    ? sectionHeading('combatant', 'win') +
+    ? (ownTitle ? `<div class="reward-sub">${escapeForPage(ownTitle)}</div>` : sectionHeading('combatant', 'win')) +
       withRankBadges(`<div class="range-lines">${rewardLines(members)}</div>`) : '') +
     (ranges.length
       ? sectionHeading('combatant', 'personal-win') + sideButtons +
@@ -319,7 +320,14 @@ function rewardLines(rows: RewardRow[]): string {
     // A row with no extras of its own that still runs over a line (Fishing's 7, Showdown's daily 8)
     // splits into two even lines, the shorter first, so no line is left with a single reward.
     const half = Math.floor(inRow.length / 2);
-    const tiles = extrasOnOwnLine && extras.length && shared.length
+    // An event whose rewards split by colour (Foundry): every member's rewards break before the
+    // first blue tile, a combatant's before the first tile that is not gold.
+    const byTile = eventTypeById(inRow[0]?.eventTypeId ?? '')?.rewardLinesByTile;
+    const tileBreak = !byTile ? -1 : inRow.findIndex(row =>
+      row.section.startsWith('personal') ? row.tile !== 'orange' : row.tile === 'blue');
+    const tiles = tileBreak > 0
+      ? inRow.slice(0, tileBreak).map(rewardTile).join('') + '<span class="reward-break"></span>' + inRow.slice(tileBreak).map(rewardTile).join('')
+      : extrasOnOwnLine && extras.length && shared.length
       ? extras.map(rewardTile).join('') + '<span class="reward-break"></span>' + shared.map(rewardTile).join('')
       : inRow.length > REWARDS_PER_PHONE_LINE
         ? inRow.slice(0, half).map(rewardTile).join('') + '<span class="reward-break"></span>' + inRow.slice(half).map(rewardTile).join('')
@@ -1128,6 +1136,32 @@ function joinFolds(first: string, second: string): string {
 
 // The Rules tab: the requirements, the rules and the predictions, each under its own
 // heading, as one page.
+// An event's buildings (Foundry Battle, Roxanne 28 Nov night: "crop each of the buildings and recreate all
+// the information they put there in a tab, including with the bonuses and the hover"): one line each, the
+// game's picture, name and text, Alliance and Personal Arsenal Points at first control and per minute, and
+// its bonuses with the game's tooltip on hover or tap.
+function buildingsPage(eventTypeId: string): string {
+  const buildings = buildingsOf(eventTypeId);
+  if (!buildings.length) return '';
+  const alliance = escapeForPage(imageUrl('foundry/points-alliance'));
+  const personal = escapeForPage(imageUrl('foundry/points-personal'));
+  const first = (picture: string, value: number) =>
+    `<span><img src="${picture}" alt="">${escapeForPage(value.toLocaleString('en-US'))}</span>`;
+  const perMinute = (picture: string, value: number) =>
+    `<span><img src="${picture}" alt="">+${escapeForPage(value.toLocaleString('en-US'))}<small>/m</small></span>`;
+  return '<div class="building-list"><div class="building-columns"><span></span><span>First control</span><span>Ongoing</span></div>' +
+    buildings.map(building => '<div class="building">' +
+      `<span class="building-picture"><img src="${escapeForPage(imageUrl(building.imageFile.replace(/\.png$/, '')))}" alt=""></span><div>` +
+      `<div class="building-name">${escapeForPage(buildingName(building.id))}</div>` +
+      `<div class="building-text">${escapeForPage(buildingDescription(building.id))}</div>` +
+      '<div class="building-points"><em>Alliance</em>' + first(alliance, building.alliancePoints[0]) + perMinute(alliance, building.alliancePoints[1]) +
+      '<em>Personal</em>' + first(personal, building.personalPoints[0]) + perMinute(personal, building.personalPoints[1]) + '</div>' +
+      (building.bonuses.length ? '<div class="building-bonus"><em>Bonus</em>' + building.bonuses.map(bonus =>
+        `<span class="plan-tip" tabindex="0"><img src="${escapeForPage(imageUrl(bonus.imageFile.replace(/\.png$/, '')))}" alt="">` +
+        `<b>${escapeForPage(bonus.value)}</b><span class="tip">${escapeForPage(buildingBonusName(bonus.id) + ': ' + bonus.value)}</span></span>`).join('') + '</div>' : '') +
+      '</div></div>').join('') + '</div>';
+}
+
 function rulesPage(eventTypeId: string, requirements: string): string {
   const parts = [
     requirements,
@@ -1200,6 +1234,7 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
     // An event whose rules are split into tabs (Fishing: Guide and Rewards,
     // Roxanne 27 Nov) writes no heading inside them: the tab already names its page.
     { id: 'rules', label: 'Rules', html: rulesPage(eventTypeId, requirements) },
+    { id: 'buildings', label: 'Buildings', html: buildingsPage(eventTypeId) },
     { id: 'how-to', label: listTitle(eventTypeId, 'how-to', 'How to play'),
       html: notesFold(eventTypeId, 'how-to', listTitle(eventTypeId, 'how-to', 'How to play'), true) },
     // Fishing's chances are saved (list 'chances') but not shown for now (Roxanne, 27 Nov:
@@ -1212,7 +1247,7 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
         notesFold(eventTypeId, 'rewards', 'Rewards'), rewardsFold(eventTypeId, options.rewardView))),
     { id: 'battles', label: 'Battles', html: options.fortBattlesHtml },
     { id: 'score', label: 'Total score', html: options.scoreHtml },
-    { id: 'alliance-times', label: 'Alliance times', html: allianceTimesHtml },
+    { id: 'alliance-times', label: 'Alliance times', html: eventTypeById(eventTypeId)?.noAllianceTimesTab ? '' : allianceTimesHtml },
     tabFromFold('missions', missionsFold(eventTypeId, options.rewardView)),
     // The shop always comes after Missions (Roxanne, 27 Nov night: "shop is always after missions").
     tabFromFold('merchant', rewardsFold(eventTypeId, options.rewardView, true)),
@@ -1254,10 +1289,11 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
   // than in a tab (Fishing, Roxanne 27 Nov: "add it to the tournament, not to the rules").
   const factsInHead = Boolean(eventTypeById(eventTypeId)?.factsInHead);
   const headEventTypeId = options.wholeEvent?.eventTypeId ?? eventTypeId;
+  const plainPanel = Boolean(eventTypeById(headEventTypeId)?.plainPanel);
   const headStart = options.wholeEvent?.startMinute ?? occurrence.startMinute;
   const headEnd = options.wholeEvent?.endMinute ?? occurrence.endMinute;
   let html = backLinks(options.backToDay) +
-    `<section class="day-section glass event-page" data-event-type="${escapeForPage(headEventTypeId)}" style="${tintedPanelStyle(color, colorEnd)}--event-color:${escapeForPage(color)};">` +
+    `<section class="day-section glass event-page${plainPanel ? ' plain-panel' : ''}" data-event-type="${escapeForPage(headEventTypeId)}" style="${plainPanel ? '' : tintedPanelStyle(color, colorEnd)}--event-color:${escapeForPage(color)};">` +
     `<div class="event-page-head">${eventBadge(headEventTypeId, 'large')}` +
     '<div class="event-page-title"><h2>' +
     (occurrence.wasCancelled ? '<span class="cancelled-mark" aria-label="Cancelled">&times;</span> ' : '') +

@@ -1,0 +1,130 @@
+[
+  {
+    "id": "imperial-foundry",
+    "eventTypeId": "foundry",
+    "imageFile": "foundry/building-imperial-foundry.png",
+    "alliancePoints": [
+      9000,
+      1800
+    ],
+    "personalPoints": [
+      4500,
+      900
+    ],
+    "bonuses": [],
+    "sortOrder": 1
+  },
+  {
+    "id": "prototype-site",
+    "eventTypeId": "foundry",
+    "imageFile": "foundry/building-prototype-site.png",
+    "alliancePoints": [
+      6000,
+      1200
+    ],
+    "personalPoints": [
+      3000,
+      600
+    ],
+    "bonuses": [],
+    "sortOrder": 2
+  },
+  {
+    "id": "repair-facility",
+    "eventTypeId": "foundry",
+    "imageFile": "foundry/building-repair-facility.png",
+    "alliancePoints": [
+      3000,
+      600
+    ],
+    "personalPoints": [
+      1500,
+      300
+    ],
+    "bonuses": [],
+    "sortOrder": 3
+  },
+  {
+    "id": "munitions-warehouse",
+    "eventTypeId": "foundry",
+    "imageFile": "foundry/building-munitions-warehouse.png",
+    "alliancePoints": [
+      1200,
+      240
+    ],
+    "personalPoints": [
+      600,
+      120
+    ],
+    "bonuses": [
+      {
+        "id": "damage-boost",
+        "imageFile": "foundry/bonus-damage-boost.png",
+        "value": "+15%"
+      },
+      {
+        "id": "damage-reduction",
+        "imageFile": "foundry/bonus-damage-reduction.png",
+        "value": "-15%"
+      }
+    ],
+    "sortOrder": 4
+  },
+  {
+    "id": "mercenary-camp",
+    "eventTypeId": "foundry",
+    "imageFile": "foundry/building-mercenary-camp.png",
+    "alliancePoints": [
+      1200,
+      240
+    ],
+    "personalPoints": [
+      600,
+      120
+    ],
+    "bonuses": [],
+    "sortOrder": 5
+  },
+  {
+    "id": "transit-station",
+    "eventTypeId": "foundry",
+    "imageFile": "foundry/building-transit-station.png",
+    "alliancePoints": [
+      1200,
+      240
+    ],
+    "personalPoints": [
+      600,
+      120
+    ],
+    "bonuses": [
+      {
+        "id": "teleport-cooldown",
+        "imageFile": "foundry/bonus-teleport-cooldown.png",
+        "value": "-50%"
+      }
+    ],
+    "sortOrder": 6
+  },
+  {
+    "id": "boiler-room",
+    "eventTypeId": "foundry",
+    "imageFile": "foundry/building-boiler-room.png",
+    "alliancePoints": [
+      1200,
+      240
+    ],
+    "personalPoints": [
+      600,
+      120
+    ],
+    "bonuses": [
+      {
+        "id": "control-time",
+        "imageFile": "foundry/bonus-control-time.png",
+        "value": "-50%"
+      }
+    ],
+    "sortOrder": 7
+  }
+]

@@ -229,7 +229,11 @@
     "resultType": "winloss",
     "sortOrder": 9,
     "resultsBy": "alliance",
-    "resultsFrom": "ph8"
+    "resultsFrom": "ph8",
+    "plainPanel": true,
+    "noPersonalEntry": true,
+    "noAllianceTimesTab": true,
+    "rewardLinesByTile": true
   },
   {
     "id": "canyon",

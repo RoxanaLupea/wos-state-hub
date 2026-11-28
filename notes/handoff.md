@@ -75,6 +75,13 @@ She found agreed rules missing from some panels. Found by rendering every panel:
       academies under their main alliance), results per legion with the settled layout, no Mine, no
       Alliance times tab, no rule line. Facts: data/captures/foundry-battle.md. Open: how many MVPs the
       Legion Tally has (her screenshot after a battle); the reward items' names before entering them.
+   7b. Foundry built 28 Nov night (not pushed yet): the generic glass panel with lines in the site's colour,
+      no rule line, no Mine, no Alliance times tab, the Buildings tab, Rules and Rewards (split 4 and 3 by
+      colour). Still to build, needing database changes and her yes first: legions with their kept times
+      (the Times button) and results saved per legion, which the result banner shows (mockup accepted:
+      tools/render/mockups/foundry-legion-result-game.py). Her crops to check: notes/crops.md.
+      After Foundry is pushed: show her Fishing and Showdown split 4 and 3 by colour ("you will have to show
+      me, but after we see the foundry and push it"). Later: Fabian with his skills on the Rewards tab.
    8. Filters.
    9. The account menu.
    10. Week view.

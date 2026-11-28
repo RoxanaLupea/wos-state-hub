@@ -2974,5 +2974,66 @@
     "eventTypeId": "fishing",
     "list": "how-to",
     "sortOrder": 1701
+  },
+  {
+    "id": "pfb1",
+    "eventTypeId": "foundry",
+    "list": "rules",
+    "sortOrder": 1601
+  },
+  {
+    "id": "pfb2",
+    "eventTypeId": "foundry",
+    "list": "rules",
+    "sortOrder": 1602
+  },
+  {
+    "id": "pfb3",
+    "eventTypeId": "foundry",
+    "list": "rules",
+    "sortOrder": 1603
+  },
+  {
+    "id": "pfb4",
+    "eventTypeId": "foundry",
+    "list": "rules",
+    "sortOrder": 1604
+  },
+  {
+    "id": "pfb5",
+    "eventTypeId": "foundry",
+    "list": "rules",
+    "sortOrder": 1605
+  },
+  {
+    "id": "pfb6",
+    "eventTypeId": "foundry",
+    "list": "rules",
+    "sortOrder": 1606
+  },
+  {
+    "id": "pfb7",
+    "eventTypeId": "foundry",
+    "list": "rules",
+    "sortOrder": 1607
+  },
+  {
+    "id": "pfb8",
+    "eventTypeId": "foundry",
+    "list": "rules",
+    "sortOrder": 1608
+  },
+  {
+    "id": "pfb9",
+    "eventTypeId": "foundry",
+    "list": "rules",
+    "sortOrder": 1609
+  },
+  {
+    "id": "pfbw1",
+    "eventTypeId": "foundry",
+    "list": "rewards",
+    "imageFile": "items/arsenal-token.png",
+    "sortOrder": 1651
   }
 ]

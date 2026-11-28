@@ -8,6 +8,7 @@ import pointSourceRows from '../../data/catalog/point-sources.json' with { type:
 import rewardRows from '../../data/catalog/rewards.json' with { type: 'json' };
 import itemRows from '../../data/catalog/items.json' with { type: 'json' };
 import fortRewardRows from '../../data/catalog/fort-rewards.json' with { type: 'json' };
+import buildingRows from '../../data/catalog/event-buildings.json' with { type: 'json' };
 import englishText from '../../data/text/en.json' with { type: 'json' };
 import type { EventPhase } from '../calendar/bars.ts';
 import type { EventStep } from '../calendar/day-timeline.ts';
@@ -80,6 +81,16 @@ export interface EventType {
   // cores, Roxanne 27 Nov night: "we write how many cores we get from preparation and how many from
   // the event, the max ofc").
   planGains?: Record<string, [number, string]>;
+  // The generic glass panel, not tinted with the event's colours, its lines (tabs, Edit, fold
+  // arrows) in the site's own colour (Foundry, Roxanne 28 Nov night: "the normal panel without taking
+  // the color from the event... like the generic one").
+  plainPanel?: boolean;
+  // No Alliance times tab (Foundry, 27 Nov night: the legions' times are set in the event).
+  noAllianceTimesTab?: boolean;
+  // Reward rows split by tile colour, 4 and 3 (Foundry, Roxanne 28 Nov night: "the golden one, then the
+  // 3 purple one, on the second round the blue... below it will be all the golden ones, then the purple
+  // gems on the second row first, and then the 2 blue").
+  rewardLinesByTile?: boolean;
 }
 
 interface PhaseRow {
@@ -559,4 +570,39 @@ export function fortRewardOf(fort: string, phase: number, battleDay?: number): F
   const written = fortRewards.find(row => row.fort === fort && row.phase === phase);
   if (!written || battleDay === undefined) return written;
   return { ...written, itemId: heroShardsOnDay(written.itemId, battleDay) };
+}
+
+// An event's buildings, as the game's Building Details tab gives them (Foundry Battle): each one's
+// picture, its Alliance and Personal Arsenal Points at first control and per minute, and its bonuses.
+export interface EventBuilding {
+  id: string;
+  eventTypeId: string;
+  imageFile: string;
+  alliancePoints: [number, number];
+  personalPoints: [number, number];
+  bonuses: { id: string; imageFile: string; value: string }[];
+  sortOrder: number;
+}
+
+export function buildingsOf(eventTypeId: string): EventBuilding[] {
+  return (buildingRows as EventBuilding[]).filter(building => building.eventTypeId === eventTypeId)
+    .sort((a, b) => a.sortOrder - b.sortOrder);
+}
+
+export function buildingName(id: string): string {
+  return text['building.' + id + '.name'] ?? id;
+}
+
+export function buildingDescription(id: string): string {
+  return text['building.' + id + '.description'] ?? '';
+}
+
+export function buildingBonusName(id: string): string {
+  return text['buildingBonus.' + id + '.name'] ?? id;
+}
+
+// The title over the rewards every member gets for the legion's win or loss, when the event words it
+// its own way (Foundry: "Alliance members, by Legion 1's result").
+export function membersRewardsTitle(eventTypeId: string): string {
+  return text['eventType.' + eventTypeId + '.membersRewardsTitle'] ?? '';
 }
