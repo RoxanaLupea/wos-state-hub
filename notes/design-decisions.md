@@ -1998,3 +1998,7 @@ alliance-time forms it opened go to the admin menu (to be designed).
   format ... the first row is gonna be the name of the day, how many horns we want, the number and the horn, then the
   alliance, then the player. And underneath on the second row, we're gonna have the points left and right and the bar
   that we're used to in between." "It's how we represent points in everything else ... every single day from SvS."
+- Showdown's Results, SvS days (Roxanne, 28 Nov night): "do the whole thing with left and right with the [alliances]
+  and the name on the bar, and just put the MVP under ... the horns ... have to be yellow. I don't know why you're
+  giving me white horns. And also the records, the whatever history you're keeping, that's not a thing." No list of
+  earlier runs on the tab; the horns are the gold horn (items/horn-gold).

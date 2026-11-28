@@ -37,23 +37,21 @@ MOCK = r"""
     .sd .mvp .pic img { width: 100%; height: 100%; object-fit: cover; }
     .sd .mvp i { display: block; font-style: normal; font-size: 10.5px; color: var(--text-muted); }
     .sd .days { display: flex; flex-direction: column; gap: 18px; margin-top: 4px; }
-    .sd .line1 { display: grid; grid-template-columns: minmax(0, 1fr) 40px 34px 92px; align-items: center; column-gap: 6px; }
-    .sd .dname { font-size: 13.5px; font-weight: 700; color: var(--text); }
-    .sd .horns { display: inline-flex; align-items: center; gap: 4px; justify-content: flex-end; font-size: 14px; font-weight: 800; color: var(--text); }
-    .sd .horns img { width: 16px; height: 16px; object-fit: contain; }
-    .sd .line1 .p { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; line-height: 1.2; color: var(--text); }
-    .sd .line1 .pic { width: 24px; height: 24px; border-radius: 50%; overflow: hidden; flex: none; }
-    .sd .line1 .pic img { width: 100%; height: 100%; object-fit: cover; }
-    .sd .line1 .p i { display: block; font-style: normal; font-size: 10.5px; color: var(--text-muted); }
-    .sd .line2 { display: grid; grid-template-columns: 50px minmax(0, 1fr) 50px; align-items: center; column-gap: 10px; margin-top: 6px; }
-    .sd .line2 > span { font-size: 13px; font-weight: 800; color: var(--text-faint); font-variant-numeric: tabular-nums; }
-    .sd .line2 > span.led { color: var(--text); }
-    .sd .line2 > span:last-child { text-align: right; }
-    .sd .line2 .svs-split { margin-top: 0; }
-    .sd .earlier { margin-top: 25px; }
-    .sd .earlier td { font-size: 13px; }
-    .sd .earlier .d { color: var(--text-muted); font-weight: 600; } .sd .earlier .o { font-weight: 800; color: var(--text); }
-    .sd .earlier .r { font-weight: 800; color: var(--text); text-align: right; }
+    .sd .line1 { display: grid; grid-template-columns: 60px minmax(0, 1fr) 60px; align-items: baseline; }
+    .sd .line1 > span { font-size: 15px; font-weight: 800; color: var(--text-faint); font-variant-numeric: tabular-nums; }
+    .sd .line1 > span.led { color: var(--text); }
+    .sd .line1 > span:last-child { text-align: right; }
+    .sd .dname { font-size: 12.5px; font-weight: 700; color: var(--text-muted); text-align: center; }
+    .sd .day-item .svs-split { margin-top: 5px; }
+    .sd .line2 { display: grid; grid-template-columns: 60px minmax(0, 1fr) 60px; align-items: center; margin-top: 7px; }
+    .sd .line2 > .p { justify-self: center; }
+    .sd .line2 > span:last-child { justify-self: end; }
+    .sd .horns { display: inline-flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 800; color: #F4CF63; }
+    .sd .horns img { width: 18px; height: 18px; object-fit: contain; }
+    .sd .line2 .p { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--text); }
+    .sd .line2 .pic { width: 22px; height: 22px; border-radius: 50%; overflow: hidden; flex: none; }
+    .sd .line2 .pic img { width: 100%; height: 100%; object-fit: cover; }
+    .sd .line2 .p i { font-style: normal; color: var(--text-muted); }
   `;
   document.head.appendChild(style);
   // one Results tab instead of Total score and Results
@@ -63,7 +61,7 @@ MOCK = r"""
     ['Timeline', 'Rules', 'Rewards', 'Results'].map(t => `<button type="button" class="info-tab" role="tab" aria-selected="${t === 'Results'}">${t}</button>`).join('') + '</div>' +
     `<span class="tab-actions"><button type="button" class="edit-button"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M4 20h4l10-10-4-4L4 16v4zM13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><span class="words">Edit</span></span></button></span></div>`;
   panel.querySelector('.row-buttons')?.replaceChildren();
-  const horn = '<img src="./images/items/showdown-win-horn.webp" alt="">';
+  const horn = '<img src="./images/items/horn-gold.webp" alt="">';
   const pics = ['heroes/jeronimo', 'heroes/natalia', 'heroes/molly', 'heroes/zinman', 'heroes/gordon', 'heroes/hector', 'heroes/flint'];
   const user = (i, tag, n) => `<span class="p"><span class="pic"><img src="./images/${pics[i]}.webp" alt=""></span><span><i>[${tag}]</i>${n}</span></span>`;
   // day, its horns, the winner, our points, theirs, its MVPs
@@ -79,15 +77,11 @@ MOCK = r"""
       const value = v => parseFloat(v);
       const share = (100 * value(ours) / (value(ours) + value(theirs))).toFixed(1);
       const [p, tag, n] = mvps[0];
-      return `<div class="day-item"><div class="line1"><b class="dname">${day}</b>` +
-        `<span class="horns">${who === 'tie' ? '–' : worth + horn}</span>` +
-        `<span class="who ${who}">${who === 'us' ? 'DVL' : who === 'them' ? 'MIS' : 'Tie'}</span>${user(p, tag, n)}</div>` +
-        `<div class="line2"><span class="${value(ours) >= value(theirs) ? 'led' : ''}">${ours}</span>` +
+      const won = side => who === side ? `<span class="horns">${worth}${horn}</span>` : '<span></span>';
+      return `<div class="day-item"><div class="line1"><span class="${value(ours) >= value(theirs) ? 'led' : ''}">${ours}</span>` +
+        `<b class="dname">${day}</b><span class="${value(theirs) >= value(ours) ? 'led' : ''}">${theirs}</span></div>` +
         `<div class="svs-split" style="--share:${share}"></div>` +
-        `<span class="${value(theirs) >= value(ours) ? 'led' : ''}">${theirs}</span></div></div>`; }).join('') + '</div>' +
-    '<table class="earlier"><tr><th>Date</th><th>Opponent</th><th style="text-align:right">Result</th></tr>' +
-    [['Mon 2 Nov', 'XYZ #1102', '8–3'], ['Mon 26 Oct', 'LLC #1385', '4–7'], ['Mon 19 Oct', 'MIS #1040', '10–1']].map(([d, o, r]) =>
-      `<tr><td class="d">${d}</td><td class="o">${o}</td><td class="r">${r}</td></tr>`).join('') + '</table>' +
+        `<div class="line2">${won('us')}${user(p, tag, n)}${won('them')}</div></div>`; }).join('') + '</div>' +
     '</div></div></div>';
   panel.querySelector('.event-page-body').innerHTML = html;
 }
