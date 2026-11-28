@@ -54,7 +54,7 @@ MOCK = r"""
   const user = (i, tag, n) => `<span class="p"><span class="pic"><img src="./images/${pics[i]}.webp" alt=""></span><span><i>[${tag}]</i>${n}</span></span>`;
   // day, its horns, the winner, our points, theirs, its MVPs
   const days = [['Rise of the City', 1, 'us', '18.4M', '15.2M', [[0, 'DVL', 'Roxanne']]], ['Hero Development', 2, 'them', '9.6M', '12.1M', [[5, 'MIS', 'Starling']]],
-    ['Pet Training', 2, 'us', '14.0M', '8.7M', [[2, 'DVL', 'Moonfang']]], ['Gear Enhancement', 2, 'tie', '11.3M', '11.3M', [[3, 'DVL', 'Blitz'], [6, 'MIS', 'Noirin']]],
+    ['Pet Training', 2, 'us', '14.0M', '8.7M', [[2, 'DVL', 'Moonfang']]], ['Gear Enhancement', 2, 'tie', '11.3M', '11.3M', [[6, 'MIS', 'Noirin']]],
     ['Trade Dominion', 2, 'us', '20.7M', '16.9M', [[0, 'DVL', 'Roxanne']]], ['Full-Scale Competition', 4, 'us', '35.2M', '28.4M', [[1, 'DVL', 'Kael']]]];
   const roman = ['I', 'II', 'III', 'IV', 'V', 'VI'];
   const html = '<div class="event-folds"><div class="points-list tab-page results-tab"><div class="sd">' +

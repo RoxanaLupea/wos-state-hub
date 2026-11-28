@@ -1992,3 +1992,5 @@ alliance-time forms it opened go to the admin menu (to be designed).
   will be last, and it will be a user, and the score will be filled in based on the how many horns we won ... for each
   day we also have like a number of points to one side and the other, and we can put that underneath like the name of
   the day." Mockup: tools/render/mockups/showdown-results.py (replaces the banner one).
+- Showdown's MVP on a tied day (Roxanne, 28 Nov night: "Do we still have 2 MVPs if it's a tie? ... I don't think that's
+  possible"): one MVP always; on a tied day the top scorer of both alliances (the game's rule, psr4).
