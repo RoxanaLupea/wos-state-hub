@@ -1976,3 +1976,8 @@ alliance-time forms it opened go to the admin menu (to be designed).
 - Showdown (Roxanne, 28 Nov night): Daily "split by purple and blue"; Star and Ranking "okay like this"; "we are
   missing the tier on Showdown" (the alliance's Star Rating, which the old app kept); Victory Points: "I don't
   know what the victory points are" (they are a day's win, by day; the tabs wrongly said stars, now Day 1-6).
+- Showdown results (Roxanne, 28 Nov night): "why do we have total score and results? I don't understand that at
+  all. And besides that, we need to make the graphic better. Of course, the MVPs will have their icon too, and
+  name. What the hell is a tie? Does that even happen? ... We also need to save the star rating somewhere."
+  "This is the equivalent of a tier." (The Star Rating is already saved on My alliance, Results, set by R4/R5,
+  and opens the alliance's own band in Rewards; the Showdown panel does not show it.)
