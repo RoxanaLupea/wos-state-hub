@@ -149,7 +149,8 @@
     "icon": "shield",
     "resultType": "winloss",
     "sortOrder": 6,
-    "resultsBy": "alliance"
+    "resultsBy": "alliance",
+    "rewardLinesByTile": true
   },
   {
     "id": "trade-route",

@@ -3672,7 +3672,7 @@
     "id": "rw-showdown-horns-1-showdown-win-horn",
     "eventTypeId": "showdown",
     "list": "horns",
-    "band": "Day 1",
+    "band": "1",
     "itemId": "showdown-win-horn",
     "quantity": 1,
     "sortOrder": 336
@@ -3879,7 +3879,7 @@
     "id": "rw-showdown-horns-2-showdown-win-horn",
     "eventTypeId": "showdown",
     "list": "horns",
-    "band": "Day 2",
+    "band": "2",
     "itemId": "showdown-win-horn",
     "quantity": 2,
     "sortOrder": 355
@@ -4086,7 +4086,7 @@
     "id": "rw-showdown-horns-3-showdown-win-horn",
     "eventTypeId": "showdown",
     "list": "horns",
-    "band": "Day 3",
+    "band": "3",
     "itemId": "showdown-win-horn",
     "quantity": 2,
     "sortOrder": 374
@@ -4275,7 +4275,7 @@
     "id": "rw-showdown-horns-4-showdown-win-horn",
     "eventTypeId": "showdown",
     "list": "horns",
-    "band": "Day 4",
+    "band": "4",
     "itemId": "showdown-win-horn",
     "quantity": 2,
     "sortOrder": 393
@@ -4464,7 +4464,7 @@
     "id": "rw-showdown-horns-5-showdown-win-horn",
     "eventTypeId": "showdown",
     "list": "horns",
-    "band": "Day 5",
+    "band": "5",
     "itemId": "showdown-win-horn",
     "quantity": 2,
     "sortOrder": 412
@@ -4671,7 +4671,7 @@
     "id": "rw-showdown-horns-6-showdown-win-horn",
     "eventTypeId": "showdown",
     "list": "horns",
-    "band": "Day 6",
+    "band": "6",
     "itemId": "showdown-win-horn",
     "quantity": 4,
     "sortOrder": 431

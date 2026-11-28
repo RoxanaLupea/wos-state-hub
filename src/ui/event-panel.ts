@@ -313,6 +313,7 @@ function rewardLines(rows: RewardRow[]): string {
     .filter(itemId => order.every(label => (byLabel.get(label) ?? []).some(row => row.itemId === itemId)));
   const extrasOnOwnLine = order.length > 1 && everyRank.length > 1 &&
     order.some(label => (byLabel.get(label) ?? []).length > REWARDS_PER_PHONE_LINE);
+  const anyRowOverflows = order.some(label => (byLabel.get(label) ?? []).length > REWARDS_PER_PHONE_LINE);
   return order.map(label => {
     const inRow = byLabel.get(label) ?? [];
     const extras = inRow.filter(row => !everyRank.includes(row.itemId));
@@ -324,7 +325,9 @@ function rewardLines(rows: RewardRow[]): string {
     // first blue tile, a combatant's before the first tile that is not gold.
     const eventType = eventTypeById(inRow[0]?.eventTypeId ?? '');
     // Skins first, then the rewards every rank gets (Fishing): the break comes after the skins.
-    const tileBreak = eventType?.rewardLinesByTile
+    // By colour only in a list where a row runs over a line (Showdown's Daily, Foundry's), every row of that
+    // list alike; lists whose rows all fit stay one line (Showdown's Star and Ranking).
+    const tileBreak = eventType?.rewardLinesByTile && anyRowOverflows
       ? inRow.findIndex(row => row.section.startsWith('personal') ? row.tile !== 'orange' : row.tile === 'blue')
       : eventType?.skinsOnTop && inRow[0]?.tile === 'none' ? inRow.findIndex(row => row.tile !== 'none') : -1;
     const tiles = tileBreak > 0
@@ -556,7 +559,9 @@ function rewardsFold(eventTypeId: string, state: RewardViewState, merchant = fal
   const present: string[] = [];
   for (const row of all) if (!present.includes(row.list)) present.push(row.list);
   // Missions and the daily chests have folds of their own.
-  const lists = rewardListsOf(eventTypeId, present.filter(one => one !== 'missions' && one !== 'chests' && one !== 'expert' &&
+  // Showdown's Victory Points per day are what its results are counted with, not a reward (Roxanne, 28 Nov
+  // night: "those are the results, aren't they?"): the Total score reads them; Rewards does not show them.
+  const lists = rewardListsOf(eventTypeId, present.filter(one => one !== 'missions' && one !== 'chests' && one !== 'expert' && one !== 'horns' &&
     MERCHANT_LISTS.includes(one) === merchant));
   if (!lists.length) return '';
   const chosenList = state.openList.get(eventTypeId);

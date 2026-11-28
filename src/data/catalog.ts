@@ -89,7 +89,7 @@ export interface EventType {
   noAllianceTimesTab?: boolean;
   // Reward rows split by tile colour, 4 and 3 (Foundry, Roxanne 28 Nov night: "the golden one, then the
   // 3 purple one, on the second round the blue... below it will be all the golden ones, then the purple
-  // gems on the second row first, and then the 2 blue").
+  // gems on the second row first, and then the 2 blue"); Showdown's Daily, "split by purple and blue".
   rewardLinesByTile?: boolean;
   // Reward rows with skins put the skins on the first line and the rewards every rank gets on the
   // second (Fishing's ranking, Roxanne 28 Nov night: "Keep the common rewards on the second row").
