@@ -150,7 +150,8 @@
     "resultType": "winloss",
     "sortOrder": 6,
     "resultsBy": "alliance",
-    "rewardLinesByTile": true
+    "rewardLinesByTile": true,
+    "rewardListTabs": true
   },
   {
     "id": "trade-route",
