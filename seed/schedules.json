@@ -357,7 +357,7 @@
     "firstDate": "2026-11-02",
     "repeatEveryDays": "2",
     "lengthDays": "1",
-    "startTimeUtc": "00:00",
+    "startTimeUtc": "15:00",
     "groupNumber": "1"
   },
   {
@@ -367,7 +367,7 @@
     "firstDate": "2026-11-02",
     "repeatEveryDays": "2",
     "lengthDays": "1",
-    "startTimeUtc": "00:00",
+    "startTimeUtc": "19:00",
     "groupNumber": "2"
   },
   {
@@ -377,7 +377,7 @@
     "firstDate": "2026-11-03",
     "repeatEveryDays": "14",
     "lengthDays": "1",
-    "startTimeUtc": "00:00",
+    "startTimeUtc": "19:00",
     "groupNumber": "1"
   },
   {
@@ -387,7 +387,7 @@
     "firstDate": "2026-11-05",
     "repeatEveryDays": "14",
     "lengthDays": "1",
-    "startTimeUtc": "00:00",
+    "startTimeUtc": "15:00",
     "groupNumber": "2"
   },
   {
@@ -397,7 +397,7 @@
     "firstDate": "2026-11-01",
     "repeatEveryDays": "14",
     "lengthDays": "1",
-    "startTimeUtc": "00:00",
+    "startTimeUtc": "14:00",
     "groupNumber": "1"
   },
   {
@@ -407,7 +407,7 @@
     "firstDate": "2026-11-01",
     "repeatEveryDays": "14",
     "lengthDays": "1",
-    "startTimeUtc": "00:00",
+    "startTimeUtc": "19:00",
     "groupNumber": "2"
   },
   {
@@ -417,7 +417,7 @@
     "firstDate": "2026-10-31",
     "repeatEveryDays": "28",
     "lengthDays": "1",
-    "startTimeUtc": "00:00",
+    "startTimeUtc": "14:00",
     "groupNumber": "1"
   },
   {
@@ -427,7 +427,7 @@
     "firstDate": "2026-10-31",
     "repeatEveryDays": "28",
     "lengthDays": "1",
-    "startTimeUtc": "00:00",
+    "startTimeUtc": "19:00",
     "groupNumber": "2"
   },
   {
@@ -437,7 +437,7 @@
     "firstDate": "2026-11-16",
     "repeatEveryDays": "28",
     "lengthDays": "1",
-    "startTimeUtc": "00:00"
+    "startTimeUtc": "19:00"
   },
   {
     "id": "d-top-bear-1",
@@ -707,33 +707,13 @@
     "startTimeUtc": "00:00"
   },
   {
-    "id": "d-dvl-academy-bear-1",
-    "eventTypeId": "bear",
-    "allianceIds": "dvl-academy",
-    "firstDate": "2026-11-02",
-    "repeatEveryDays": "2",
-    "lengthDays": "1",
-    "startTimeUtc": "00:00",
-    "groupNumber": "1"
-  },
-  {
-    "id": "d-dvl-academy-bear-2",
-    "eventTypeId": "bear",
-    "allianceIds": "dvl-academy",
-    "firstDate": "2026-11-02",
-    "repeatEveryDays": "2",
-    "lengthDays": "1",
-    "startTimeUtc": "00:00",
-    "groupNumber": "2"
-  },
-  {
     "id": "d-dvl-academy-joe-1",
     "eventTypeId": "crazy-joe",
     "allianceIds": "dvl-academy",
     "firstDate": "2026-11-03",
     "repeatEveryDays": "14",
     "lengthDays": "1",
-    "startTimeUtc": "00:00",
+    "startTimeUtc": "15:00",
     "groupNumber": "1"
   },
   {
@@ -743,47 +723,7 @@
     "firstDate": "2026-11-05",
     "repeatEveryDays": "14",
     "lengthDays": "1",
-    "startTimeUtc": "00:00",
-    "groupNumber": "2"
-  },
-  {
-    "id": "d-dvl-academy-foundry-1",
-    "eventTypeId": "foundry",
-    "allianceIds": "dvl-academy",
-    "firstDate": "2026-11-01",
-    "repeatEveryDays": "14",
-    "lengthDays": "1",
-    "startTimeUtc": "00:00",
-    "groupNumber": "1"
-  },
-  {
-    "id": "d-dvl-academy-foundry-2",
-    "eventTypeId": "foundry",
-    "allianceIds": "dvl-academy",
-    "firstDate": "2026-11-01",
-    "repeatEveryDays": "14",
-    "lengthDays": "1",
-    "startTimeUtc": "00:00",
-    "groupNumber": "2"
-  },
-  {
-    "id": "d-dvl-academy-canyon-1",
-    "eventTypeId": "canyon",
-    "allianceIds": "dvl-academy",
-    "firstDate": "2026-10-31",
-    "repeatEveryDays": "28",
-    "lengthDays": "1",
-    "startTimeUtc": "00:00",
-    "groupNumber": "1"
-  },
-  {
-    "id": "d-dvl-academy-canyon-2",
-    "eventTypeId": "canyon",
-    "allianceIds": "dvl-academy",
-    "firstDate": "2026-10-31",
-    "repeatEveryDays": "28",
-    "lengthDays": "1",
-    "startTimeUtc": "00:00",
+    "startTimeUtc": "19:00",
     "groupNumber": "2"
   },
   {
@@ -793,7 +733,7 @@
     "firstDate": "2026-11-16",
     "repeatEveryDays": "28",
     "lengthDays": "1",
-    "startTimeUtc": "00:00"
+    "startTimeUtc": "19:00"
   },
   {
     "id": "d-top-academy-bear-1",
