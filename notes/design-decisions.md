@@ -2012,3 +2012,12 @@ alliance-time forms it opened go to the admin menu (to be designed).
 - The other alliances' times (Roxanne, 28 Nov): "For the other alliances, it's the same. We give them the option to add
   times. Let's remove the defaults and they add them as they need them." The 00:00 placeholders were removed from the
   database and the seed; only DVL's and dvl's times from Ace007's chat remain.
+- Foundry's two cards (Roxanne, 28 Nov): "we have 2 cards for Foundry, and they point to 2 different things. One is Foundry
+  with everything, one is Foundry Battle." (The week's bar opens the panel; the battle day's legions bar opens the old
+  "Tick the times you follow" list.) "The other one should have the button of add results where you placed add times ...
+  they need to add times and results after. So they cannot add results without the times."
+- Legions on the timeline (Roxanne, 28 Nov): "the times should show up in the timeline ... I hate the [pill] and it should
+  be name of the alliance dot and then the legion like we have it in results" (DVL · Legion 1, no pill).
+- Adding a legion's time stays possible after the first time (Roxanne, 28 Nov: "We always need the button because they
+  might add a new [legion]"). Her idea, under discussion: "put the button to add a time for legion on the timeline for
+  battle, like on the row with battle", so it does not overlap the Results button in the head.
