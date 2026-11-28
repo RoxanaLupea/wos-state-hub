@@ -1984,3 +1984,11 @@ alliance-time forms it opened go to the admin menu (to be designed).
 - Showdown ties and results (Roxanne, 28 Nov night): "Okay, then allow tie. Of course, it have to be the results tab.
   Give me a mock-up of it." Mockup: tools/render/mockups/showdown-results.py (the Foundry banner with Victory Points,
   the 6 days with the winner's Victory Points on its side and each day's MVP, both MVPs on a tie, earlier runs under it).
+- Showdown's Results tab, the banner rejected (Roxanne, 28 Nov night): "no, I don't like it at all. Starting from what we
+  already had, we're gonna have aliases, one to the left, one to the right. The tag of the alias has to be a little
+  bigger. The score will be centered with the name of the tag of the alias. The name will be written underneath, and
+  the state wherever... Then we're gonna have stage, which will be centered. It's fine to have the Roman numerals. Then
+  ... they're not matches, they're days ... the name of the day, how many horns they've won, alias, and then MVP. MVP
+  will be last, and it will be a user, and the score will be filled in based on the how many horns we won ... for each
+  day we also have like a number of points to one side and the other, and we can put that underneath like the name of
+  the day." Mockup: tools/render/mockups/showdown-results.py (replaces the banner one).
