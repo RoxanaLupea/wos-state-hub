@@ -91,6 +91,13 @@ export interface EventType {
   // 3 purple one, on the second round the blue... below it will be all the golden ones, then the purple
   // gems on the second row first, and then the 2 blue").
   rewardLinesByTile?: boolean;
+  // Reward rows with skins put the skins on the first line and the rewards every rank gets on the
+  // second (Fishing's ranking, Roxanne 28 Nov night: "Keep the common rewards on the second row").
+  skinsOnTop?: boolean;
+  // Rewards as tabs of their own after the event's guide, each its text and then its rewards (Fishing,
+  // Roxanne 28 Nov night: "I need them at the top after guide. They're all rewards, but they're the tabs
+  // of the minigame"). note: the point source holding the text; list: the reward list shown under it.
+  rewardTabs?: { id: string; label: string; note: string; list: string }[];
 }
 
 interface PhaseRow {

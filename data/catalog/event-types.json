@@ -474,7 +474,34 @@
       "firstDate": "2026-11-24",
       "season": "Summer"
     },
-    "sortOrder": 40
+    "sortOrder": 40,
+    "skinsOnTop": true,
+    "rewardTabs": [
+      {
+        "id": "club",
+        "label": "Ice Fishing Club",
+        "note": "pfi2",
+        "list": "club"
+      },
+      {
+        "id": "leaderboard",
+        "label": "Master Fisher Leaderboard",
+        "note": "pfi3",
+        "list": "ranking"
+      },
+      {
+        "id": "treasure",
+        "label": "Sunken Treasure Hunt",
+        "note": "pfi4",
+        "list": "treasure"
+      },
+      {
+        "id": "collection",
+        "label": "Collection",
+        "note": "pfi5",
+        "list": "collection"
+      }
+    ]
   },
   {
     "id": "tyrant",

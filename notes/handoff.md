@@ -73,8 +73,9 @@ She found agreed rules missing from some panels. Found by rendering every panel:
    7. Foundry Battle panel: designed 27-28 Nov night (notes/design-decisions.md, Foundry entries; mockups in
       tools/render/mockups/). To build: the shared Times button and legion times (kept until changed,
       academies under their main alliance), results per legion with the settled layout, no Mine, no
-      Alliance times tab, no rule line. Facts: data/captures/foundry-battle.md. Open: how many MVPs the
-      Legion Tally has (her screenshot after a battle); the reward items' names before entering them.
+      Alliance times tab, no rule line. Facts: data/captures/foundry-battle.md. MVPs: "We'll figure them out
+      later" (28 Nov night). The four item names (statue, puzzle piece, "?" chest, gold ticket): she will
+      recognise them; tell her where to look (Foundry's Rewards tab; their crops in notes/crops.md).
    7b. Foundry built 28 Nov night (not pushed yet): the generic glass panel with lines in the site's colour,
       no rule line, no Mine, no Alliance times tab, the Buildings tab, Rules and Rewards (split 4 and 3 by
       colour). Still to build, needing database changes and her yes first: legions with their kept times

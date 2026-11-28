@@ -322,9 +322,11 @@ function rewardLines(rows: RewardRow[]): string {
     const half = Math.floor(inRow.length / 2);
     // An event whose rewards split by colour (Foundry): every member's rewards break before the
     // first blue tile, a combatant's before the first tile that is not gold.
-    const byTile = eventTypeById(inRow[0]?.eventTypeId ?? '')?.rewardLinesByTile;
-    const tileBreak = !byTile ? -1 : inRow.findIndex(row =>
-      row.section.startsWith('personal') ? row.tile !== 'orange' : row.tile === 'blue');
+    const eventType = eventTypeById(inRow[0]?.eventTypeId ?? '');
+    // Skins first, then the rewards every rank gets (Fishing): the break comes after the skins.
+    const tileBreak = eventType?.rewardLinesByTile
+      ? inRow.findIndex(row => row.section.startsWith('personal') ? row.tile !== 'orange' : row.tile === 'blue')
+      : eventType?.skinsOnTop && inRow[0]?.tile === 'none' ? inRow.findIndex(row => row.tile !== 'none') : -1;
     const tiles = tileBreak > 0
       ? inRow.slice(0, tileBreak).map(rewardTile).join('') + '<span class="reward-break"></span>' + inRow.slice(tileBreak).map(rewardTile).join('')
       : extrasOnOwnLine && extras.length && shared.length
@@ -547,8 +549,8 @@ const SHOP_CAP = '<svg class="shop-cap" viewBox="0 0 100 12" preserveAspectRatio
 // "merchant has to be separate from rewards because many events have one").
 const MERCHANT_LISTS = ['merchant', 'shop'];
 
-function rewardsFold(eventTypeId: string, state: RewardViewState, merchant = false): string {
-  const all = rewardsOf(eventTypeId);
+function rewardsFold(eventTypeId: string, state: RewardViewState, merchant = false, onlyList = ''): string {
+  const all = rewardsOf(eventTypeId).filter(row => !onlyList || row.list === onlyList);
   if (!all.length) return '';
 
   const present: string[] = [];
@@ -1162,6 +1164,16 @@ function buildingsPage(eventTypeId: string): string {
       '</div></div>').join('') + '</div>';
 }
 
+// An event's rewards as tabs of their own (Fishing): each tab its text, without the name the tab already
+// gives, then its reward list without a heading.
+function rewardTabsOf(eventTypeId: string, rewardView: RewardViewState): InfoTab[] {
+  return (eventTypeById(eventTypeId)?.rewardTabs ?? []).map(tab => {
+    const written = pointSourceTask(tab.note, heroDay).replace(/^[^:\n]{1,40}:\s*/, '');
+    const text = written ? `<details class="points-list no-title" open><summary>${escapeForPage(tab.label)}</summary>${noteRow(written, '')}</details>` : '';
+    return { id: 'reward-' + tab.id, label: tab.label, html: text + rewardsFold(eventTypeId, rewardView, false, tab.list) };
+  });
+}
+
 function rulesPage(eventTypeId: string, requirements: string): string {
   const parts = [
     requirements,
@@ -1240,7 +1252,8 @@ export function eventPanel(occurrence: Occurrence, options: EventPanelOptions): 
     // Fishing's chances are saved (list 'chances') but not shown for now (Roxanne, 27 Nov:
     // "save them but don't display them for now").
     tabFromFold('points', ownPoints),
-    splitRules
+    ...rewardTabsOf(eventTypeId, options.rewardView),
+    rewardTabsOf(eventTypeId, options.rewardView).length ? { id: 'rewards', label: 'Rewards', html: '' } : splitRules
       ? { id: 'rewards', label: 'Rewards', html: joinFolds(
         notesFold(eventTypeId, 'rewards', 'Rewards', true), rewardsFold(eventTypeId, options.rewardView)) }
       : tabFromFold('rewards', joinFolds(

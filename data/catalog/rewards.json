@@ -3672,7 +3672,7 @@
     "id": "rw-showdown-horns-1-showdown-win-horn",
     "eventTypeId": "showdown",
     "list": "horns",
-    "band": "1",
+    "band": "Day 1",
     "itemId": "showdown-win-horn",
     "quantity": 1,
     "sortOrder": 336
@@ -3879,7 +3879,7 @@
     "id": "rw-showdown-horns-2-showdown-win-horn",
     "eventTypeId": "showdown",
     "list": "horns",
-    "band": "2",
+    "band": "Day 2",
     "itemId": "showdown-win-horn",
     "quantity": 2,
     "sortOrder": 355
@@ -4086,7 +4086,7 @@
     "id": "rw-showdown-horns-3-showdown-win-horn",
     "eventTypeId": "showdown",
     "list": "horns",
-    "band": "3",
+    "band": "Day 3",
     "itemId": "showdown-win-horn",
     "quantity": 2,
     "sortOrder": 374
@@ -4275,7 +4275,7 @@
     "id": "rw-showdown-horns-4-showdown-win-horn",
     "eventTypeId": "showdown",
     "list": "horns",
-    "band": "4",
+    "band": "Day 4",
     "itemId": "showdown-win-horn",
     "quantity": 2,
     "sortOrder": 393
@@ -4464,7 +4464,7 @@
     "id": "rw-showdown-horns-5-showdown-win-horn",
     "eventTypeId": "showdown",
     "list": "horns",
-    "band": "5",
+    "band": "Day 5",
     "itemId": "showdown-win-horn",
     "quantity": 2,
     "sortOrder": 412
@@ -4671,7 +4671,7 @@
     "id": "rw-showdown-horns-6-showdown-win-horn",
     "eventTypeId": "showdown",
     "list": "horns",
-    "band": "6",
+    "band": "Day 6",
     "itemId": "showdown-win-horn",
     "quantity": 4,
     "sortOrder": 431
@@ -16987,7 +16987,7 @@
     "section": "",
     "itemId": "gems",
     "tile": "orange",
-    "sortOrder": 5041,
+    "sortOrder": 5042,
     "quantity": 2000
   },
   {
@@ -16998,7 +16998,7 @@
     "section": "",
     "itemId": "fishing-mockup-frame",
     "tile": "none",
-    "sortOrder": 5042
+    "sortOrder": 5041
   },
   {
     "id": "rw-fishing-ranking-43",
@@ -17127,9 +17127,10 @@
     "list": "club",
     "band": "",
     "section": "",
-    "itemId": "fishing-mockup-club-1-0",
-    "tile": "none",
-    "sortOrder": 5054
+    "itemId": "foundry-chest",
+    "tile": "orange",
+    "sortOrder": 5054,
+    "quantity": 5
   },
   {
     "id": "rw-fishing-club-55",

@@ -46,3 +46,17 @@ background taken off.
 
 The other Foundry rewards use pictures the site already had: Arsenal Tokens, the 100 crystals (gems-100),
 the gold key, 10K Meat, Wood and Coal (unsecured), the 1h training speedup and the 5K EXP bottle.
+
+# Fishing (27 Nov 2026, an earlier session), in public/images/items/fishing-mockup/, not checked yet
+
+Cut from her Fishing screenshots of 27 Nov (those screenshots were not kept: Fishing came before the
+screenshots branch), each a whole tile with its amount as the game draws it.
+| File | What |
+|---|---|
+| club-<level>-<n>.png (84 files) | the Ice Fishing Club rewards, level 1 to 21: n 0 the free track, 1 silver, 2 and 3 gold |
+| medal-bronze.png, medal-silver.png, medal-gold.png | the three tracks' medals over the Club |
+| decoration.png, frame.png, whale.png | the 30-day skins in the Master Fisher Leaderboard rewards |
+
+Club level 1's free reward (the claimed chest, club-1-0.png) is no longer shown: the Club shows the Foundry
+"?" chest crop (public/images/foundry/item-chest.png) in its place, with x5 (28 Nov night). That it is the
+same chest is read from the pictures; she confirms.

@@ -1966,3 +1966,13 @@ alliance-time forms it opened go to the admin menu (to be designed).
   is unchanged until she says otherwise.
 - Foundry's expert (Roxanne, 28 Nov night): "I want to add Fabian with his skills, but maybe after. For now
   it's okay to just have expert skill." For now the Rewards tab shows the Expert Bonus only.
+- Fishing's rewards as tabs (Roxanne, 28 Nov night): "Ice Fishing Club, it's the text and then the rewards. That's
+  one item. Master Fisher Leaderboard, it's the same thing with ranking rewards... Sunken Treasure Hunt, you have
+  the rewards that we can get... collection, it's gonna be skins. So all of this, I need them at the top after
+  guide. They're all rewards, but they're the tabs of the minigame." Club: "I don't want the checked one on the
+  first row, and I don't want them to be dimmed or locked or anything. We display them normally." Ranking: the
+  skins on the first row and "the gems and 3 speed ups after"; 16-50: "the one skin on top and the rest on the
+  second row. Keep the common rewards on the second row."
+- Showdown (Roxanne, 28 Nov night): Daily "split by purple and blue"; Star and Ranking "okay like this"; "we are
+  missing the tier on Showdown" (the alliance's Star Rating, which the old app kept); Victory Points: "I don't
+  know what the victory points are" (they are a day's win, by day; the tabs wrongly said stars, now Day 1-6).
