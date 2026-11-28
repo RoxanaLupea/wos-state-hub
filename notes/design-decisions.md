@@ -2009,3 +2009,6 @@ alliance-time forms it opened go to the admin menu (to be designed).
   don't have them." "If he doesn't give the academy to bears, we just don't add them." Every alliance time (Bear traps,
   Foundry and Canyon legions, Mercenary bosses, Crazy Joe) is an added time with its alliance (main or academy); an
   alliance or academy with no time added shows nothing.
+- The other alliances' times (Roxanne, 28 Nov): "For the other alliances, it's the same. We give them the option to add
+  times. Let's remove the defaults and they add them as they need them." The 00:00 placeholders were removed from the
+  database and the seed; only DVL's and dvl's times from Ace007's chat remain.
