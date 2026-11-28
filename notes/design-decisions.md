@@ -1953,3 +1953,16 @@ alliance-time forms it opened go to the admin menu (to be designed).
   and its lines (tab underlines, Edit, the Members arrow) in the site's colour, not the event's. "Okay, this
   is better. This will also be the template for TAL results for each of the games, because it's still a
   Foundry game." Mockup: tools/render/mockups/foundry-legion-result-game.py (and -pc).
+- Foundry tabs (Roxanne, 28 Nov night): "show me the other tabs with information and the buildings... crop each
+  of the buildings and recreate all the information they put there in a tab, including with the bonuses and
+  the hover... the colors". Mockups: a Buildings tab (the game's pictures cut out, its texts, Alliance and
+  Personal Arsenal Points at first control and per minute, the bonus icons with green values and the game's
+  tooltip on hover or tap), Rules and Rewards drawn by the site's own code from a throwaway copy of the data
+  (tools/render/mockups/foundry-tabs/). Not yet accepted.
+- Foundry rewards split 4 and 3 by colour (Roxanne, 28 Nov night): "For the win and loss, it's gonna be the
+  golden one, then the 3 purple one, on the second round the blue. ... below it will be all the golden ones,
+  then the purple gems on the second row first, and then the 2 blue. So again, 4 and 3." Applied to Foundry
+  only: the shared rule (a row of 7 or 8 with nothing extra splits shorter line first, Fishing and Showdown)
+  is unchanged until she says otherwise.
+- Foundry's expert (Roxanne, 28 Nov night): "I want to add Fabian with his skills, but maybe after. For now
+  it's okay to just have expert skill." For now the Rewards tab shows the Expert Bonus only.
