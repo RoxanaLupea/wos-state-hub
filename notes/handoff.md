@@ -121,8 +121,13 @@ She found agreed rules missing from some panels. Found by rendering every panel:
   under the event's row, "Follow another legion" opens every alliance's times in time order with an eye after each name,
   Done closes it; R4s get Edit after the row's name: saved times fixed but for the time box, a bin after the name that asks
   in the site's pop-up, "Add legion" (clock icon) with the alliance and the legion picked apart, suggested on the first one
-  not set, before Cancel and Save. Times are kept for every following run. Not built. Building needs: leaders may only
-  update schedules today (insert and delete are owner-only, supabase/access-by-role.sql), and follows go in schedule_picks.
+  not set, before Cancel and Save. Times are kept for every following run. Built 28 Nov for Foundry and Canyon
+  (src/ui/alliance-times-rows.ts, catalog timesOnRow/groupWord; follows kept in the player's choices: followedScheduleIds
+  for other alliances' times, hiddenScheduleIds for their own). Still to do: Bear, Crazy Joe and Mercenaries ("add time
+  per event", where it sits to settle with her); Tundra Arms League (state planners or admins, legions without a preset
+  time, each match's time set after the game shows it); R4s adding and removing times needs a database change (today only
+  the owner may insert and delete schedules, supabase/access-by-role.sql) — ask her before; the calendar still shows every
+  legion, not only the followed ones (27 Nov decision; ask her).
 - Following ("add to my timeline") is now part of the feature above ("Follow another legion").
 - Alliance times (28 Nov): only DVL's 9 and dvl's 3 times from Ace007's chat are saved; every other alliance adds its own.
 
