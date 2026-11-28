@@ -2036,3 +2036,8 @@ alliance-time forms it opened go to the admin menu (to be designed).
   person following a time from another alliance and removing that, and an R4 adding or removing legions. Because if an R4 is
   adding or removing legions, in that sense he is editing what the alliance sees. Okay, it's different from selecting for
   yourself."
+- Foundry legions mockup with eyes (Roxanne, 28 Nov): "what's the purpose of displaying [it] or not if we are gonna see it
+  anyway on the timeline? So they see everything, but the eye is cut. It doesn't make sense. Something has to get them in the
+  mode where they see everything and they can check or uncheck those with the eyes, which are way to the right. I don't like
+  that." Editing: "the remove thing is for the legions they added. Like, I don't know why we're still showing all design with
+  big DVL, tiny DVL, legion 1, legion 2 ... they don't make sense."
