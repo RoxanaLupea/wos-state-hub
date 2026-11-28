@@ -26,22 +26,32 @@ MOCK = r"""
     .event-page .legion-picks { display: flex; flex-direction: column; gap: 2px; }
     .event-page .legion-picks .pick-words { gap: 0 14px; }
     .event-page .legion-picks .pick-word { font-size: 12px; padding: 2px 0; }
-    .event-page .edit-actions { display: flex; gap: 18px; }
+    .event-page .edit-actions { display: flex; gap: 22px; }
     .event-page .tree-label:has(.legion-picks) { display: flex; align-items: center; }
-    .event-page .legion-bin { margin-left: 18px; padding: 4px; }
-    .event-page .legion-bin .line-icon { width: 17px; height: 17px; }
   `;
   document.head.appendChild(style);
   const lineIcon = (id, d) => `<svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color: var(--word-tint)"/><stop offset="1" style="stop-color: var(--text)"/></linearGradient></defs><path d="${d}" fill="none" stroke="url(#${id})" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   // The clock with a plus (the Times icon): adding a legion is adding a time (Roxanne, 28 Nov: "Put the time thing").
   const addButton = `<button type="button" class="battle-add" aria-label="Add a legion's time"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="add-times-colour" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color: var(--event-color)"/><stop offset="1" style="stop-color: var(--text)"/></linearGradient></defs><g fill="none" stroke="url(#add-times-colour)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="14" r="9.5"/><path d="M14 8.5V14l3.5 2.5"/></g><circle cx="24.5" cy="23.5" r="6" fill="var(--event-color)"/><path d="M24.5 20.5v6M21.5 23.5h6" stroke="#0B1222" stroke-width="2" stroke-linecap="round"/></svg></button>`;
-  const actions = `<span class="edit-actions"><button type="button" class="quiet-word cancel">${lineIcon('m-cancel','M6 6l12 12M18 6L6 18')}<span class="words">Cancel</span></button>` +
-    `<button type="button" class="quiet-word confirm">${lineIcon('m-save','M4.5 12.5l5 5L19.5 6.5')}<span class="words">Save</span></button></span>`;
+  // Editing as on the profile's characters (Roxanne, 28 Nov: "Implement it like it's implemented there, but here, without
+  // the pop-up"): tap a legion to pick it; only the picked one opens (time box, alliance and legion words); under the
+  // legions Cancel (grey, since Remove is the red one) · Remove · Save on one line. Remove takes the picked legion off the
+  // list at once, no pop-up; Save keeps the change, Cancel brings everything back.
+  const quiet = (cls, tint, id, d, word, disabled) => `<button type="button" class="quiet-word ${cls}" style="--word-tint: ${tint}"${disabled ? ' disabled' : ''}>${lineIcon(id, d)}<span class="words">${word}</span></button>`;
+  const CROSS = 'M6 6l12 12M18 6L6 18', BIN = 'M4 7h16M9.5 7V4.5h5V7M6.5 7l1 12.5h9l1-12.5M10.2 11v5M13.8 11v5', TICK = 'M4.5 12.5l5 5L19.5 6.5';
 
   // The saved times (database, from Ace007's chat): DVL Legion 1 14:00, DVL Legion 2 19:00.
-  const legions = [ { tag: 'DVL', legion: 'Legion 1', time: '14:00' }, { tag: 'DVL', legion: 'Legion 2', time: '19:00' } ];
-  const editing = state === 'add' || state === 'remove';
-  const shown = editing ? legions.concat([{ tag: 'dvl', legion: 'Legion 1', time: '', fresh: true }]) : legions;
+  let legions = [ { tag: 'DVL', legion: 'Legion 1', time: '14:00' }, { tag: 'DVL', legion: 'Legion 2', time: '19:00' } ];
+  const editing = ['edit', 'removed', 'new'].includes(state);
+  let picked = -1;
+  if (state === 'edit') picked = 1;
+  if (state === 'removed') legions = legions.slice(0, 1);
+  if (state === 'new') { legions = legions.concat([{ tag: 'DVL', legion: 'Legion 1', time: '', fresh: true }]); picked = 2; }
+  const changed = state === 'removed';
+  const actions = `<span class="edit-actions">` + quiet('neutral', 'var(--text-faint)', 'm-cancel', CROSS, 'Cancel') +
+    quiet('cancel remove', 'var(--notice-red)', 'm-bin', BIN, 'Remove', picked < 0) +
+    quiet('confirm', 'var(--save-green)', 'm-save', TICK, 'Save', !changed) + `</span>`;
+  const shown = legions;
 
   // Results alone in the head, once a legion's time has passed.
   panel.querySelector('.row-buttons').innerHTML = state === 'results' ? resultsButton : '';
@@ -55,24 +65,19 @@ MOCK = r"""
   const label = battle.querySelector('.tree-label');
   label.classList.add('with-add'); label.insertAdjacentHTML('beforeend', addButton);
 
-  const picks = (choices, picked) => `<span class="pick-words">${choices.map(c => `<button type="button" class="pick-word${c === picked ? ' on' : ''}">${c}</button>`).join('')}</span>`;
+  const picks = (choices, chosen) => `<span class="pick-words">${choices.map(c => `<button type="button" class="pick-word${c === chosen ? ' on' : ''}">${c}</button>`).join('')}</span>`;
   const rowHtml = (one, i) => {
-    const when = editing ? `<input class="svs-field mock-time" value="${one.time}" placeholder="--:--">` : `<span>${one.time}</span>`;
-    const name = editing
-      ? `<span class="legion-picks">${picks(['DVL', 'dvl'], one.tag)}${picks(['Legion 1', 'Legion 2'], one.legion)}</span>` +
-        (one.fresh ? '' : `<button type="button" class="quiet-word cancel legion-bin" aria-label="Remove ${one.tag} · ${one.legion}">${lineIcon('m-bin-' + i, 'M4 7h16M9.5 7V4.5h5V7M6.5 7l1 12.5h9l1-12.5M10.2 11v5M13.8 11v5')}</button>`)
+    const open = editing && i === picked;
+    const when = open ? `<input class="svs-field mock-time" value="${one.time}" placeholder="--:--">` : `<span>${one.time}</span>`;
+    const name = open
+      ? `<span class="legion-picks">${picks(['DVL', 'dvl'], one.tag)}${picks(['Legion 1', 'Legion 2'], one.legion)}</span>`
       : `<span class="legion-name"><b>${one.tag}</b> · ${one.legion}</span>`;
-    const pin = state === 'results' && i === 0 ? '<span class="pin-mark"></span>' : '';
-    return `<div class="tree-row nested${editing ? ' editing-row' : ''}"><span class="tree-when">${when}</span>` +
+    return `<div class="tree-row nested"><span class="tree-when">${when}</span>` +
       `<span class="tree-line" style="${lineStyle}"><span class="tree-step-dot" style="background:${one.fresh ? 'transparent' : dot};${one.fresh ? 'box-shadow: inset 0 0 0 1.5px ' + dot : ''}"></span></span>` +
       `<span class="tree-label">${name}</span><span></span></div>`;
   };
   const save = editing ? `<div class="tree-row nested"><span class="tree-when"></span><span class="tree-line" style="${lineStyle}"></span><span class="tree-label">${actions}</span><span></span></div>` : '';
   battle.insertAdjacentHTML('afterend', shown.map(rowHtml).join('') + save);
-  // Tapping a bin asks first, in the profile's pop-up (Roxanne, 25 Nov: "removing needs a confirmation pop-up").
-  if (state === 'remove') document.body.insertAdjacentHTML('beforeend', '<div class="leave-prompt"><div class="leave-prompt-box glass" role="dialog" aria-modal="true">' +
-    '<p class="leave-prompt-text">Are you sure you want to remove <span style="white-space:nowrap">DVL · Legion 2</span>?</p>' +
-    '<div class="leave-prompt-actions"><button type="button" class="ghost-button">Cancel</button><button type="button" class="danger-button">Remove</button></div></div></div>');
   // After a legion's time: the pin moves to the legion playing now (DVL · Legion 1 at 14:00).
   if (state === 'results') {
     const pin = panel.querySelector('.tree-label .pin-icon, .tree-label svg:not(.line-icon)');
@@ -89,7 +94,7 @@ shoot.serve('/tmp/rb', 8835)
 with sync_playwright() as p:
     b = p.chromium.launch(executable_path='/usr/bin/google-chrome', args=['--no-sandbox'])
     for W, H, S, tag in [(384, 832, 2.8125, 'phone'), (1536, 864, 1.25, 'laptop'), (2560, 1440, 1, 'monitor')]:
-        for state in ['view', 'add', 'remove', 'results']:
+        for state in ['view', 'edit', 'removed', 'new', 'results']:
             pg = page.open_site(b, 8835, W, H, S)
             pg.evaluate(f"window.localStorage.setItem('stateHub.preferences', {json.dumps(json.dumps(PREFS))})"); pg.reload(); pg.clock.run_for(3000); pg.wait_for_selector('.calendar-panel'); pg.clock.run_for(2000)
             pg.evaluate(OPEN, 's-foundry|2026-11-23'); pg.clock.run_for(1500)
