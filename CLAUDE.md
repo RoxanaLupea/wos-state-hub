@@ -151,6 +151,11 @@ site (main.ts FADING_BOXES); items never touch (Roxanne, 27 Nov: "Make sure you 
 that from now on"). Run tools/render/scroll-audit.py after every change
 (notes/review-checklist.md); it shows scrollbars, so drawn ones are caught.
 
+Every picture you crop yourself (a game icon, a building, a reward cut from her screenshots) goes on
+notes/crops.md in the same chat, with where it is and the screenshot it came from; she checks each one
+herself (Roxanne, 28 Nov night: "From now on, everything you crop yourself, I need to double check myself...
+just keep track so you can tell me which ones they are"). When showing a page that uses one, say which.
+
 ## What needs her yes
 
 - Pushing and writing to the database: say in a few lines what changed and what is still

@@ -1,8 +1,15 @@
-# Foundry Battle pictures cut by Claude (28 Nov 2026)
+# Pictures Claude cropped (every one, for Roxanne to check)
 
-Cut from Roxanne's game screenshots (screenshots branch, folder foundry-battle/), the game's tile
-or page background taken off. Replace any file with a better crop of the same name and size ratio;
-the site picks it up on the next build.
+Roxanne, 28 Nov night: "From now on, everything you crop yourself, I need to double check myself. You don't
+have to put the images in a folder, just keep track so you can tell me which ones they are." Every picture
+Claude cuts goes on this list in the same chat: where it is in the repo, what it is, the screenshot it came
+from, and whether she has checked it. Replace any file with a better crop of the same name; the site picks it
+up on the next build.
+
+# Foundry Battle (28 Nov 2026), in public/images/foundry/, not checked yet
+
+Cut from her game screenshots (screenshots branch, folder foundry-battle/), the game's tile or page
+background taken off.
 
 ## Buildings (Buildings tab)
 | File | What | From |
