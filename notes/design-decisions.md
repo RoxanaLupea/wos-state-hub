@@ -1981,3 +1981,6 @@ alliance-time forms it opened go to the admin menu (to be designed).
   name. What the hell is a tie? Does that even happen? ... We also need to save the star rating somewhere."
   "This is the equivalent of a tier." (The Star Rating is already saved on My alliance, Results, set by R4/R5,
   and opens the alliance's own band in Rewards; the Showdown panel does not show it.)
+- Showdown ties and results (Roxanne, 28 Nov night): "Okay, then allow tie. Of course, it have to be the results tab.
+  Give me a mock-up of it." Mockup: tools/render/mockups/showdown-results.py (the Foundry banner with Victory Points,
+  the 6 days with the winner's Victory Points on its side and each day's MVP, both MVPs on a tie, earlier runs under it).
