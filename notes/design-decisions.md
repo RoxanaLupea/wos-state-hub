@@ -2048,3 +2048,10 @@ alliance-time forms it opened go to the admin menu (to be designed).
   PC. It has to be solid for PC too." Adding: "on add legion, I should be able to pick the alliance and if it's legion 1 or
   legion 2, not them packed together like that. Of course, having them suggested is nice". Add legion before Cancel and Save:
   "it feels weird ... but I think it's also logical."
+- Alliance times, one feature (Roxanne, 28 Nov, accepting the legions mockup tools/render/mockups/foundry-battle-legions.py):
+  "keep it like this. This will be the flow for now for everything that has legions, which is Canyon and Foundry, but also for
+  mercenaries ... Bear, because there are 2 BT traps there ... Everything that has a set time ... this is a generic flow for all
+  these events, and once we set a time for one of them, the following events will still follow that time." Crazy Joe: "if a
+  time is set for one and another time for another, they will stay like that in following weeks. So it's like 2 of them per
+  event." "when we redesign or change anything about this, then it will be changed on all of them, right? So it's one feature
+  for all of them."

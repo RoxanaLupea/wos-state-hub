@@ -96,8 +96,6 @@ She found agreed rules missing from some panels. Found by rendering every panel:
 
 ## Questions still open (one at a time, never dropped)
 
-- Foundry legion times (28 Nov): how is a time removed? Proposed: the profile's trash can with its "Are you sure you want
-  to remove …?" pop-up, on each legion row while editing. Not answered yet.
 
 - Showdown's trucks (Roxanne, 28 Nov night): "we don't explain what they are, how they work, if they give anything,
   what do they give. And there's an expert for it too. I don't know. Maybe later." To come back to.
@@ -118,13 +116,14 @@ She found agreed rules missing from some panels. Found by rendering every panel:
 
 ## Waiting for their design (do not build without her)
 
-- Foundry legion times (28 Nov, mockup tools/render/mockups/foundry-battle-times.py): the clock-with-plus icon right after
-  BATTLE (no words), always there; legions under Battle as "DVL · Legion 1", no pill; editing in place (time box, alliance
-  and legion as pick words, an empty row added, Cancel and Save under it); Results alone in the head once a legion's time
-  has passed. Then the same element for Bear, Crazy Joe, Mercenaries and Canyon. Still to settle: removing a time.
-- Following other alliances' times ("add to my timeline", her idea 28 Nov): parked, "We'll figure that out when we get
-  there." Until then Bear, Crazy Joe, Canyon and Mercenaries keep the "Tick the times you follow" list; Foundry's
-  battle-day card opens the Foundry panel (committed 28 Nov, not pushed).
+- Alliance times, accepted 28 Nov (mockup tools/render/mockups/foundry-battle-legions.py), one shared feature for Foundry,
+  Canyon, Mercenaries, Bear (2 traps) and Crazy Joe (Tuesday and Thursday, each kept): members see the times they follow
+  under the event's row, "Follow another legion" opens every alliance's times in time order with an eye after each name,
+  Done closes it; R4s get Edit after the row's name: saved times fixed but for the time box, a bin after the name that asks
+  in the site's pop-up, "Add legion" (clock icon) with the alliance and the legion picked apart, suggested on the first one
+  not set, before Cancel and Save. Times are kept for every following run. Not built. Building needs: leaders may only
+  update schedules today (insert and delete are owner-only, supabase/access-by-role.sql), and follows go in schedule_picks.
+- Following ("add to my timeline") is now part of the feature above ("Follow another legion").
 - Alliance times (28 Nov): only DVL's 9 and dvl's 3 times from Ace007's chat are saved; every other alliance adds its own.
 
 - Adding results in place for Foundry, Canyon, Showdown, Winter Siege, TAL and Tyrant (their
