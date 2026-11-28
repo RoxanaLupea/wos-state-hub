@@ -435,6 +435,13 @@ function groupPanelMarkup(key: string, myAllianceIds: string[]): string | null {
   const day = Number(parts[2]);
   if (!eventTypeById(eventTypeId) || Number.isNaN(day)) return null;
 
+  // An event whose times are set in its own panel (Foundry) opens the run that day belongs to.
+  if (eventTypeById(eventTypeId)?.allianceTimesOpenPanel) {
+    const run = runsBetween(day - 40, day + 1).find(one => one.eventTypeId === eventTypeId &&
+      one.allianceIds.length === 0 && one.startDay <= day && one.endDay >= day);
+    if (run) return openEventMarkup(run.key, day, myAllianceIds);
+  }
+
   const window = { start: day * 1440, end: (day + 1) * 1440 };
   const times = runsBetween(day - 1, day + 1)
     .filter(one => one.eventTypeId === eventTypeId && one.allianceIds.length > 0 &&

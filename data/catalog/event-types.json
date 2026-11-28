@@ -235,6 +235,7 @@
     "plainPanel": true,
     "noPersonalEntry": true,
     "noAllianceTimesTab": true,
+    "allianceTimesOpenPanel": true,
     "rewardLinesByTile": true
   },
   {

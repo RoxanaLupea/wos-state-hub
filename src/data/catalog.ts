@@ -87,6 +87,10 @@ export interface EventType {
   plainPanel?: boolean;
   // No Alliance times tab (Foundry, 27 Nov night: the legions' times are set in the event).
   noAllianceTimesTab?: boolean;
+  // The battle day's alliance-times bar opens the event's own panel, not the list of times to follow
+  // (Foundry, Roxanne 28 Nov: "remove the cards from the battle because we are not going to use that. It
+  // has to open the same card").
+  allianceTimesOpenPanel?: boolean;
   // Reward rows split by tile colour, 4 and 3 (Foundry, Roxanne 28 Nov night: "the golden one, then the
   // 3 purple one, on the second round the blue... below it will be all the golden ones, then the purple
   // gems on the second row first, and then the 2 blue"); Showdown's Daily, "split by purple and blue".
