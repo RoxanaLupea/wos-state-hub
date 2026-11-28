@@ -2003,3 +2003,9 @@ alliance-time forms it opened go to the admin menu (to be designed).
   giving me white horns. And also the records, the whatever history you're keeping, that's not a thing." No list of
   earlier runs on the tab; the horns are the gold horn (items/horn-gold).
 - Week view (Roxanne, 28 Nov night): "the week should just follow the month. It's exactly like the month, but for a week."
+- Alliance times are added, never placeholders (Roxanne, 28 Nov): "for bear, just like the legions and mercenaries and
+  everything, we should be able to add a time and select the alliance we're gonna play in ... if both DVL are full, then
+  we can add the academies too. They're optional ... We should be able to add them, but they shouldn't appear there if we
+  don't have them." "If he doesn't give the academy to bears, we just don't add them." Every alliance time (Bear traps,
+  Foundry and Canyon legions, Mercenary bosses, Crazy Joe) is an added time with its alliance (main or academy); an
+  alliance or academy with no time added shows nothing.
