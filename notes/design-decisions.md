@@ -2055,3 +2055,9 @@ alliance-time forms it opened go to the admin menu (to be designed).
   time is set for one and another time for another, they will stay like that in following weeks. So it's like 2 of them per
   event." "when we redesign or change anything about this, then it will be changed on all of them, right? So it's one feature
   for all of them."
+- Tundra Arms League (Hellfire) legions (Roxanne, 28 Nov): the same flow, "but we'll have more for the Hellfire, and it will be
+  restricted to only the state planners or admins or something ... people can watch it, but in there we set every time after
+  it's been told by the game, so those don't come with a preset time, only with a legion. So we'll know how many legions we
+  registered, and after a defeat they are not able to participate anymore, so the records are important there ... after the
+  day of the battle, if we battled today, at the end of today, we will know who we're gonna battle the next time and what the
+  time is." Then: "Take this and push it, because I wanna tap on things myself to see how it works."
