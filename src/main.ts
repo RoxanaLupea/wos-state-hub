@@ -60,7 +60,7 @@ import {
   addAllianceTime, cleanTime, removeAllianceTime, saveAllianceTime, saveDateChange, saveFortAssignment, saveScheduleRepeat
 } from './data/editing.ts';
 import {
-  allianceTimesAsk, allianceTimesHead, allianceTimesRows, type AllianceTimeEntry, type AllianceTimesRowsOptions
+  allianceTimesAsk, allianceTimesHead, allianceTimesRows, freeSlots, type AllianceTimeEntry, type AllianceTimesRowsOptions
 } from './ui/alliance-times-rows.ts';
 import { EDIT_ICON, PENCIL_ICON, allianceTimeForm, dateChangeForm, editButton, fortForm, pencilButton, scheduleForm } from './ui/edit-forms.ts';
 import { deleteRow, loadRows, saveRow, type Row } from './data/records.ts';
@@ -166,7 +166,7 @@ const view = {
   // The alliance-times rows of the open event: choosing what to follow, or editing (R4s, admins),
   // with what is being edited until Save.
   timesMode: null as null | { runKey: string; mode: 'choose' | 'edit' },
-  timesDraft: { times: new Map<string, string>(), removed: new Set<string>(), adding: null as null | { allianceId: string; group: number; time: string }, asking: null as string | null },
+  timesDraft: { times: new Map<string, string>(), removed: new Set<string>(), adding: [] as { allianceId: string; group: number; time: string }[], asking: null as string | null },
   // The rows of the open event whose points are open.
   openPointRows: new Set<string>(),
   // The form a pencil opened: "schedule|<id>", "alliance|<id>", "date|<id>|<date>" or
@@ -598,19 +598,14 @@ function timesOf(occurrence: Occurrence, tree: EventTree, nearby: Occurrence[], 
 
 function closeTimes(): void {
   view.timesMode = null;
-  view.timesDraft = { times: new Map(), removed: new Set(), adding: null, asking: null };
+  view.timesDraft = { times: new Map(), removed: new Set(), adding: [], asking: null };
 }
 
 // The first alliance and group this person may add that has no time yet: the suggestion
 // (Roxanne, 28 Nov: "having them suggested is nice").
-function suggestedTime(times: OpenTimes): { allianceId: string; group: number; time: string } {
-  const taken = new Set(times.options.entries.map(one => one.allianceId + '|' + one.group));
-  for (const alliance of times.options.editableAlliances) {
-    for (let group = 1; group <= times.options.groupCount; group++) {
-      if (!taken.has(alliance.id + '|' + group)) return { allianceId: alliance.id, group, time: '' };
-    }
-  }
-  return { allianceId: times.options.editableAlliances[0]?.id ?? '', group: 1, time: '' };
+function suggestedTime(times: OpenTimes): { allianceId: string; group: number; time: string } | null {
+  const first = freeSlots(times.options)[0];
+  return first ? { ...first, time: '' } : null;
 }
 
 // A tap on the alliance-times rows. Returns whether it was one.
@@ -633,9 +628,19 @@ function handleTimesTap(target: HTMLElement): boolean {
       if (view.followedScheduleIds.has(value)) view.followedScheduleIds.delete(value); else view.followedScheduleIds.add(value);
     }
   }
-  else if (action === 'add') draft.adding = draft.adding ?? suggestedTime(times);
-  else if (action === 'pick-alliance' && draft.adding) draft.adding.allianceId = value;
-  else if (action === 'pick-group' && draft.adding) draft.adding.group = Number(value);
+  else if (action === 'add') { const next = suggestedTime(times); if (next) draft.adding.push(next); }
+  else if (action === 'pick-alliance' || action === 'pick-group') {
+    const [, index, picked] = (button.dataset.times as string).split('|');
+    const adding = draft.adding[Number(index)];
+    if (adding && action === 'pick-group') adding.group = Number(picked);
+    if (adding && action === 'pick-alliance') {
+      // The picked alliance's first free time, counting the other new rows.
+      adding.allianceId = picked;
+      const others = { ...times.options, draft: { ...draft, adding: draft.adding.filter(one => one !== adding) } };
+      const free = freeSlots(others).filter(slot => slot.allianceId === picked).map(slot => slot.group);
+      if (!free.includes(adding.group)) adding.group = free[0] ?? 1;
+    }
+  }
   else if (action === 'remove') draft.asking = value;
   else if (action === 'ask-cancel') draft.asking = null;
   else if (action === 'ask-remove') {
@@ -662,11 +667,11 @@ async function saveTimes(times: OpenTimes): Promise<void> {
     if (!entry || !time || time === entry.timeUtc) continue;
     await saveAllianceTime(scheduleId, { startTimeUtc: time, endTimeUtc: null }, userId);
   }
-  if (draft.adding) {
-    const time = cleanTime(draft.adding.time);
-    if (!time) throw new Error('Type a time for the new ' + times.options.groupWord.toLowerCase() + '.');
+  for (const adding of draft.adding) {
+    const time = cleanTime(adding.time);
+    if (!time) throw new Error('Type a time for every new ' + times.options.groupWord.toLowerCase() + '.');
     await addAllianceTime({
-      eventTypeId: times.eventTypeId, allianceId: draft.adding.allianceId, group: draft.adding.group,
+      eventTypeId: times.eventTypeId, allianceId: adding.allianceId, group: adding.group,
       firstDate: textFromDay(times.day), repeatEveryDays: times.repeatEveryDays, startTimeUtc: time
     }, userId);
   }
@@ -678,7 +683,7 @@ async function saveTimes(times: OpenTimes): Promise<void> {
 function handleTimesTyping(target: HTMLElement): void {
   if (!(target instanceof HTMLInputElement) || !target.dataset.timesBox) return;
   const id = target.dataset.timesBox;
-  if (id === 'new') { if (view.timesDraft.adding) view.timesDraft.adding.time = target.value; }
+  if (id.startsWith('new|')) { const adding = view.timesDraft.adding[Number(id.split('|')[1])]; if (adding) adding.time = target.value; }
   else view.timesDraft.times.set(id, target.value);
   const save = target.closest('.event-tree')?.querySelector<HTMLButtonElement>('[data-times="save"]');
   if (save) save.disabled = false;

@@ -2064,3 +2064,7 @@ alliance-time forms it opened go to the admin menu (to be designed).
 - Bear, Crazy Joe and Mercenaries have no row of their own to hang times on (no state-wide run for Bear and Crazy Joe; the
   Mercenaries' panel has no timeline). Roxanne, 28 Nov: "Then we need to have add time per event." Where it sits on each of
   the three: to settle with her after Foundry and Canyon.
+- Adding times offers only what can be saved (Roxanne, 28 Nov): "Each alliance can have 2 legions. If we already added 2 legions
+  in DVL, then we do not get the option to pick DVL anymore when we add a new one ... if we pick DVL and we already have the
+  first legion set, then we can only add the second legion. Same with Bear. An alliance can only have BT1 and BT2. An alliance
+  can only have one-time set for Mercs or Crazy Joe at a time, so yeah, let's not offer options we cannot save."

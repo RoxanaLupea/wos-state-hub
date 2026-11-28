@@ -26,7 +26,8 @@ export interface AllianceTimeEntry {
 export interface AllianceTimesDraft {
   times: Map<string, string>;
   removed: Set<string>;
-  adding: null | { allianceId: string; group: number; time: string };
+  // New times being added, until Save.
+  adding: { allianceId: string; group: number; time: string }[];
   asking: string | null;
 }
 
@@ -63,6 +64,21 @@ const CLOCK_ADD = '<svg class="edit-icon" viewBox="0 0 32 32" aria-hidden="true"
   '<g fill="none" stroke="url(#times-add-colour)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="14" r="9.5"/>' +
   '<path d="M14 8.5V14l3.5 2.5"/></g><circle cx="24.5" cy="23.5" r="6" fill="var(--event-color)"/>' +
   '<path d="M24.5 20.5v6M21.5 23.5h6" stroke="#0B1222" stroke-width="2" stroke-linecap="round"/></svg>';
+
+// Every alliance's times it may still add: each alliance has as many as the event allows
+// (2 legions, 2 Bear traps; 1 for the Mercenaries), less those set.
+export function freeSlots(options: AllianceTimesRowsOptions): { allianceId: string; group: number }[] {
+  const taken = new Set(options.entries.filter(entry => !options.draft.removed.has(entry.scheduleId))
+    .map(entry => entry.allianceId + '|' + entry.group)
+    .concat(options.draft.adding.map(one => one.allianceId + '|' + one.group)));
+  const free: { allianceId: string; group: number }[] = [];
+  for (const alliance of options.editableAlliances) {
+    for (let group = 1; group <= options.groupCount; group++) {
+      if (!taken.has(alliance.id + '|' + group)) free.push({ allianceId: alliance.id, group });
+    }
+  }
+  return free;
+}
 
 function nameOf(entry: { tag: string; group: number }, groupWord: string, faint = false): string {
   return `<span class="times-name${faint ? ' faint' : ''}"><b>${escapeForPage(entry.tag)}</b> · ${escapeForPage(groupWord)} ${entry.group}</span>`;
@@ -106,20 +122,29 @@ export function allianceTimesRows(options: AllianceTimesRowsOptions, line: strin
         ` data-times-box="${escapeForPage(entry.scheduleId)}" aria-label="${escapeForPage(entry.tag)} · ${escapeForPage(groupWord)} ${entry.group}, time in UTC">`,
         solid, `<span class="times-line">${nameOf(entry, groupWord)}${bin}</span>`);
     }
-    if (draft.adding) {
-      const adding = draft.adding;
+    draft.adding.forEach((adding, index) => {
+      // Only what can be saved (Roxanne, 28 Nov: "let's not offer options we cannot save"): an
+      // alliance with all its times set is not offered, and of the picked one only its free times.
+      // This row's own pick counts as free for it.
+      const others = { ...options, draft: { ...draft, adding: draft.adding.filter((_, at) => at !== index) } };
+      const free = freeSlots(others);
+      const freeAlliances = options.editableAlliances.filter(one => free.some(slot => slot.allianceId === one.id));
+      const groups: [string, string][] = free.filter(slot => slot.allianceId === adding.allianceId)
+        .map(slot => [String(slot.group), `${groupWord} ${slot.group}`]);
       const picks = (choices: [string, string][], chosen: string, data: string) =>
         `<span class="pick-words">${choices.map(([value, text]) =>
-          `<button type="button" class="pick-word${value === chosen ? ' on' : ''}" data-times="${data}|${escapeForPage(value)}">${escapeForPage(text)}</button>`).join('')}</span>`;
-      const groups: [string, string][] = Array.from({ length: options.groupCount }, (_, index) => [String(index + 1), `${groupWord} ${index + 1}`]);
+          `<button type="button" class="pick-word${value === chosen ? ' on' : ''}" data-times="${data}|${index}|${escapeForPage(value)}">${escapeForPage(text)}</button>`).join('')}</span>`;
       html += row(`<input class="svs-field times-box" inputmode="numeric" maxlength="5" placeholder="--:--" value="${escapeForPage(adding.time)}"` +
-        ' data-times-box="new" aria-label="New time in UTC">', hollow,
-        `<span class="times-picks">${picks(options.editableAlliances.map(one => [one.id, one.tag]), adding.allianceId, 'pick-alliance')}` +
-        `${picks(groups, String(adding.group), 'pick-group')}</span>`);
+        ` data-times-box="new|${index}" aria-label="New time in UTC">`, hollow,
+        `<span class="times-picks">${picks(freeAlliances.map(one => [one.id, one.tag]), adding.allianceId, 'pick-alliance')}` +
+        `${options.groupCount > 1 ? picks(groups, String(adding.group), 'pick-group') : ''}</span>`);
+    });
+    // Add only while some alliance this person may edit still has a free time.
+    if (freeSlots(options).length) {
+      html += row('', null, `<button type="button" class="edit-button times-add" data-times="add" style="--edit-colour: var(--event-color)">${CLOCK_ADD}` +
+        `<span><span class="words">Add ${escapeForPage(groupWord.toLowerCase())}</span></span></button>`);
     }
-    html += row('', null, `<button type="button" class="edit-button times-add" data-times="add" style="--edit-colour: var(--event-color)">${CLOCK_ADD}` +
-      `<span><span class="words">Add ${escapeForPage(groupWord.toLowerCase())}</span></span></button>`);
-    const changed = draft.times.size > 0 || draft.removed.size > 0 || draft.adding !== null;
+    const changed = draft.times.size > 0 || draft.removed.size > 0 || draft.adding.length > 0;
     html += row('', null, `<span class="times-actions">${word('cancel', 'var(--notice-red)', CROSS, 'Cancel', 'cancel')}` +
       `${word('confirm', 'var(--save-green)', TICK, 'Save', 'save', !changed)}</span>`);
     return html;
