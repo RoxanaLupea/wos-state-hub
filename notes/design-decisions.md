@@ -2030,3 +2030,9 @@ alliance-time forms it opened go to the admin menu (to be designed).
   pick that from there, they can add one of the bears or other events to their timeline, even if it's another legion, another
   alliance." Foundry mockup (28 Nov): the add icon right after BATTLE, no words ("right after battle, and I want the icon, not
   the words"), and it stays while editing.
+- Removing a legion's time (Roxanne, 28 Nov, after the mockup with a bin on each row and a pop-up): "I don't really like it
+  ... I don't think it's the same ... let's try to follow the same logic ... Implement it like it's implemented there [the
+  profile's characters], but here, without the pop-up. We don't want that pop-up. Because so there's a difference between a
+  person following a time from another alliance and removing that, and an R4 adding or removing legions. Because if an R4 is
+  adding or removing legions, in that sense he is editing what the alliance sees. Okay, it's different from selecting for
+  yourself."
