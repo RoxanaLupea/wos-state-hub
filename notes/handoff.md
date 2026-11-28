@@ -30,7 +30,11 @@ chats applied her rules only on the page she was looking at; she found the gaps 
   event, timelines without mail rows), the shops as game cards, SvS results from the numbers, ticket
   lines, Flame and Fangs (Timeline and Shop, its plan with preparation dots and cores, the shop's
   extra day dashed, red colours, its preparation on the calendar as growing dots).
-- wip-27-nov: merged into main; delete it once the live site is checked with her.
+- Pushed 28 Nov, 04:31 (her yes, build green): Foundry (plain panel, Buildings tab, Rules, Rewards split 4 and 3 by
+  colour, no rule line, no Mine, no Alliance times; result banner and times not built), Fishing's rewards as tabs
+  (Club bright, skins first), Showdown's Rewards as Daily / Star / Ranking tabs with Daily by colour and Victory Points
+  kept for results only, her crops list (notes/crops.md), the mockups (Foundry result, Foundry tabs, Showdown Results).
+- wip-27-nov: same as main; delete it once the live site is checked with her.
 - screenshots: her game screenshots, a folder per event (no code).
 
 ## Now: the panel audit (27 Nov, night)
@@ -76,7 +80,7 @@ She found agreed rules missing from some panels. Found by rendering every panel:
       Alliance times tab, no rule line. Facts: data/captures/foundry-battle.md. MVPs: "We'll figure them out
       later" (28 Nov night). The four item names (statue, puzzle piece, "?" chest, gold ticket): she will
       recognise them; tell her where to look (Foundry's Rewards tab; their crops in notes/crops.md).
-   7b. Foundry built 28 Nov night (not pushed yet): the generic glass panel with lines in the site's colour,
+   7b. Foundry built 28 Nov night, live 28 Nov 04:31: the generic glass panel with lines in the site's colour,
       no rule line, no Mine, no Alliance times tab, the Buildings tab, Rules and Rewards (split 4 and 3 by
       colour). Still to build, needing database changes and her yes first: legions with their kept times
       (the Times button) and results saved per legion, which the result banner shows (mockup accepted:
