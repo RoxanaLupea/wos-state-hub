@@ -57,6 +57,10 @@ screenshots branch), each a whole tile with its amount as the game draws it.
 | medal-bronze.png, medal-silver.png, medal-gold.png | the three tracks' medals over the Club |
 | decoration.png, frame.png, whale.png | the 30-day skins in the Master Fisher Leaderboard rewards |
 
+Levels 2 to 21 were dimmed in her screenshot (she had not bought the packs: "that doesn't mean we have to show
+it like that in the guide", 28 Nov night). Their crops were lifted to level 1's brightness (x1.375, measured on
+the tiles' colours), so the whole Club shows bright.
+
 Club level 1's free reward (the claimed chest, club-1-0.png) is no longer shown: the Club shows the Foundry
 "?" chest crop (public/images/foundry/item-chest.png) in its place, with x5 (28 Nov night). That it is the
 same chest is read from the pictures; she confirms.
