@@ -19,8 +19,8 @@ MOCK = r"""
     .event-page .legion-name { font-size: 12px; font-weight: 600; color: var(--text); }
     .event-page .legion-name b { font-weight: 800; }
     .event-page .legion-name.waiting { color: var(--text-muted); }
-    .event-page .battle-add { margin-left: 14px; padding: 6px; margin-top: -6px; margin-bottom: -6px; }
-    .event-page .battle-add .line-icon { width: 18px; height: 18px; }
+    .event-page .battle-add { margin-left: 16px; padding: 4px; margin-top: -6px; margin-bottom: -6px; border: none; background: none; cursor: pointer; }
+    .event-page .battle-add svg { display: block; width: 24px; height: 24px; }
     .event-page .tree-label.with-add { display: flex; align-items: center; }
     .event-page .mock-time { width: 3.4em; height: 22px; padding: 0 4px; font-size: 12px; font-weight: 700; text-align: center; color: var(--text); margin-left: auto; display: block; }
     .event-page .legion-picks { display: flex; flex-direction: column; gap: 2px; }
@@ -30,7 +30,8 @@ MOCK = r"""
   `;
   document.head.appendChild(style);
   const lineIcon = (id, d) => `<svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color: var(--word-tint)"/><stop offset="1" style="stop-color: var(--text)"/></linearGradient></defs><path d="${d}" fill="none" stroke="url(#${id})" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  const addButton = `<button type="button" class="quiet-word battle-add" aria-label="Add legion" style="--word-tint: var(--accent)">${lineIcon('m-add','M12 5v14M5 12h14')}</button>`;
+  // The clock with a plus (the Times icon): adding a legion is adding a time (Roxanne, 28 Nov: "Put the time thing").
+  const addButton = `<button type="button" class="battle-add" aria-label="Add a legion's time"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="add-times-colour" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color: var(--event-color)"/><stop offset="1" style="stop-color: var(--text)"/></linearGradient></defs><g fill="none" stroke="url(#add-times-colour)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="14" r="9.5"/><path d="M14 8.5V14l3.5 2.5"/></g><circle cx="24.5" cy="23.5" r="6" fill="var(--event-color)"/><path d="M24.5 20.5v6M21.5 23.5h6" stroke="#0B1222" stroke-width="2" stroke-linecap="round"/></svg></button>`;
   const actions = `<span class="edit-actions"><button type="button" class="quiet-word cancel">${lineIcon('m-cancel','M6 6l12 12M18 6L6 18')}<span class="words">Cancel</span></button>` +
     `<button type="button" class="quiet-word confirm">${lineIcon('m-save','M4.5 12.5l5 5L19.5 6.5')}<span class="words">Save</span></button></span>`;
 
